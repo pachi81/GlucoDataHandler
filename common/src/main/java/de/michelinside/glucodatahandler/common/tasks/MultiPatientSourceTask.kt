@@ -1,0 +1,106 @@
+package de.michelinside.glucodatahandler.common.tasks
+
+import android.content.Context
+import android.content.SharedPreferences
+import android.os.Handler
+import android.util.Log
+import de.michelinside.glucodatahandler.common.GlucoDataService
+import de.michelinside.glucodatahandler.common.SourceState
+import de.michelinside.glucodatahandler.common.notifier.DataSource
+import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
+import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import androidx.core.content.edit
+
+abstract class MultiPatientSourceTask(enabledKey: String, source: DataSource) : DataSourceTask(enabledKey, source) {
+    protected abstract val LOG_ID: String
+    protected abstract val patientIdKey: String
+    private val patientData = mutableMapOf<String, String>()
+    private var patientId = ""
+
+    protected abstract fun getPatientData(): MutableMap<String, String>
+
+    protected abstract fun getPatientValue(patientId: String): Boolean
+
+    override fun reset() {
+        patientData.clear()
+        patientId = GlucoDataService.sharedPref!!.getString(patientIdKey, "")!!
+    }
+
+    protected fun needPatientData(): Boolean {
+        return patientId.isEmpty() || !patientData.containsKey(patientId)
+    }
+
+    override fun getValue(): Boolean {
+        if(needPatientData()) {
+            Log.d(LOG_ID, "Need patient data")
+            handlePatientData(getPatientData())
+        }
+        if(patientId.isEmpty()) {
+            if(patientData.isEmpty())
+                return false  // error should be set by source!
+            if(patientData.size > 1) {
+                setState(SourceState.MULTI_PATIENT)
+                return false
+            }
+            setPatientId(patientData.keys.first())
+        }
+        Log.d(LOG_ID, "Get value for patient ${getPatient(patientId)}")
+        return getPatientValue(patientId)
+    }
+
+    private fun handlePatientData(newPatientData: MutableMap<String, String>) {
+        Log.d(LOG_ID, "Handle patient data: $newPatientData")
+        val triggerChange = patientData.size != newPatientData.size
+        newPatientData.toMap(patientData)
+        if (patientId.isNotEmpty() && !patientData.keys.contains(patientId)) {
+            setPatientId(if(patientData.size == 1) patientData.keys.first() else "")
+            Log.w(LOG_ID, "Reset patient as it is not in the list to ${getPatient(patientId)}")
+            return
+        }
+        if(patientId.isEmpty() && patientData.size == 1) {
+            setPatientId(patientData.keys.first())
+        } else {
+            Log.i(LOG_ID, "Using current patient ${getPatient(patientId)}")
+            if(triggerChange) {
+                Handler(GlucoDataService.context!!.mainLooper).post {
+                    InternalNotifier.notify(GlucoDataService.context!!, NotifySource.PATIENT_DATA_CHANGED, null)
+                }
+            }
+        }
+    }
+
+    private fun setPatientId(id: String) {
+        patientId = id
+        Log.i(LOG_ID, "Using patient ${getPatient(patientId)}")
+        GlucoDataService.sharedPref!!.edit {
+            putString(patientIdKey, patientId)
+        }
+        Handler(GlucoDataService.context!!.mainLooper).post {
+            InternalNotifier.notify(GlucoDataService.context!!, NotifySource.PATIENT_DATA_CHANGED, null)
+        }
+    }
+
+    protected fun getPatient(id: String): String {
+        if(patientData.containsKey(id)) {
+            return patientData[id]?: ""
+        }
+        return ""
+    }
+
+    override fun checkPreferenceChanged(sharedPreferences: SharedPreferences, key: String?, context: Context): Boolean {
+        Log.v(LOG_ID, "checkPreferenceChanged called for $key")
+        var trigger = false
+        if (key == null) {
+            patientId = sharedPreferences.getString(patientIdKey, "")!!
+            trigger = true
+        } else if(key == patientIdKey) {
+            if (patientId != sharedPreferences.getString(patientIdKey, "")) {
+                patientId = sharedPreferences.getString(patientIdKey, "")!!
+                Log.d(LOG_ID, "PatientID changed to ${getPatient(patientId)}")
+                trigger = true
+            }
+        }
+        return super.checkPreferenceChanged(sharedPreferences, key, context) || trigger
+    }
+
+}
