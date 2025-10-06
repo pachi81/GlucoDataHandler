@@ -278,7 +278,11 @@ class MedtrumSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_MEDTRUM
         Log.d(LOG_ID, "Handle monitorlist result with ${dataArray.length()} patients - cur patient: $patientId")
         for (i in 0 until dataArray.length()) {
             val data = dataArray.getJSONObject(i)
-            if(data.has("sensor_status") && data.has("username") && data.getString("username") == patientId) {
+            if(data.has("username") && data.getString("username") == patientId) {
+                if(!data.has("sensor_status")) {
+                    setLastError(GlucoDataService.context!!.getString(R.string.no_data_in_server_response))
+                    return false
+                }
                 val sensorData = data.getJSONObject("sensor_status")
                 if(sensorData.has("glucose") && sensorData.has("updateTime")) {
                     val glucose = sensorData.getDouble("glucose").toFloat()

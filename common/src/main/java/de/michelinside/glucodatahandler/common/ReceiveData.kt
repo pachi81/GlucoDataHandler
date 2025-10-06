@@ -1053,4 +1053,32 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             startTimePair = Pair(serial, startTime)
         }
     }
+
+    fun reset(context: Context) {
+        try {
+            Log.w(LOG_ID, "reset called!")
+            time = 0L
+            rawValue = 0
+            glucose = 0.0F
+            sourceRate = Float.NaN
+            calculatedRate = Float.NaN
+            receiveTime = 0L
+            alarm = 0
+            deltaValue1Min = Float.NaN
+            deltaValue5Min = Float.NaN
+            deltaValue15Min = Float.NaN
+            sensorID = ""
+            startTimePair = Pair("", 0L)
+            iobCobTime = 0L
+            iob = Float.NaN
+            cob = Float.NaN
+            deltaFallingCount = 0
+            deltaRisingCount = 0
+            source = DataSource.NONE
+            saveExtras(context)
+            InternalNotifier.notify(context, NotifySource.MESSAGECLIENT, createExtras())
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "reset exception: " + exc.toString() + "\n" + exc.stackTraceToString())
+        }
+    }
 }

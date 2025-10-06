@@ -10,6 +10,7 @@ import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import androidx.core.content.edit
+import de.michelinside.glucodatahandler.common.Constants
 
 abstract class MultiPatientSourceTask(enabledKey: String, source: DataSource) : DataSourceTask(enabledKey, source) {
     protected abstract val LOG_ID: String
@@ -27,7 +28,7 @@ abstract class MultiPatientSourceTask(enabledKey: String, source: DataSource) : 
     }
 
     protected fun needPatientData(): Boolean {
-        return patientId.isEmpty() || !patientData.containsKey(patientId)
+        return (patientId.isEmpty() && patientData.size <= 1) || (patientId.isNotEmpty() && !patientData.containsKey(patientId))
     }
 
     override fun getValue(): Boolean {
@@ -82,22 +83,26 @@ abstract class MultiPatientSourceTask(enabledKey: String, source: DataSource) : 
 
     protected fun getPatient(id: String): String {
         if(patientData.containsKey(id)) {
-            return patientData[id]?: ""
+            if(Constants.RELEASE)
+                return patientData.keys.indexOf(id).toString()
+            return patientData[id]?: "<not found!>"
         }
-        return ""
+        return "<not set>"
     }
 
     override fun checkPreferenceChanged(sharedPreferences: SharedPreferences, key: String?, context: Context): Boolean {
-        Log.v(LOG_ID, "checkPreferenceChanged called for $key")
+        Log.v(LOG_ID, "MultiPatient checkPreferenceChanged called for $key")
         var trigger = false
         if (key == null) {
             patientId = sharedPreferences.getString(patientIdKey, "")!!
+            //setPatientId("")
             trigger = true
         } else if(key == patientIdKey) {
             if (patientId != sharedPreferences.getString(patientIdKey, "")) {
                 patientId = sharedPreferences.getString(patientIdKey, "")!!
-                Log.d(LOG_ID, "PatientID changed to ${getPatient(patientId)}")
-                trigger = true
+                Log.w(LOG_ID, "PatientID changed to ${getPatient(patientId)}")
+                GlucoDataService.resetDB()
+                trigger = false // will be triggered by reset of db!
             }
         }
         return super.checkPreferenceChanged(sharedPreferences, key, context) || trigger

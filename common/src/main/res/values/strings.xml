@@ -935,6 +935,7 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="health_connect_error">Error occured, please send logs to developer.</string>
     <string name="health_connect_not_available">Not available!</string>
     <string name="health_connect_no_permission">Missing permission!</string>
+    <string name="select_patient_title">Select patient</string>
 
 
 </resources>

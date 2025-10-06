@@ -62,6 +62,7 @@ import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.tasks.DexcomShareSourceTask
 import de.michelinside.glucodatahandler.common.ui.Dialogs
+import de.michelinside.glucodatahandler.common.ui.SelectPatientPopup
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.GlucoseStatistics
@@ -100,6 +101,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var tableNotes: TableLayout
     private lateinit var btnSources: Button
     private lateinit var btnHelp: Button
+    private lateinit var btnPatient: Button
     private lateinit var noDataLayout: LinearLayout
     private lateinit var sharedPref: SharedPreferences
     private lateinit var optionsMenu: Menu
@@ -140,6 +142,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             txtLastValue = findViewById(R.id.txtLastValue)
             btnSources = findViewById(R.id.btnSources)
             btnHelp = findViewById(R.id.btnHelp)
+            btnPatient = findViewById(R.id.btnPatient)
             noDataLayout = findViewById(R.id.layout_no_data)
             tableConnections = findViewById(R.id.tableConnections)
             tableAlarms = findViewById(R.id.tableAlarms)
@@ -770,11 +773,32 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private fun updateConnectionsTable() {
         tableConnections.removeViews(1, maxOf(0, tableConnections.childCount - 1))
         if (SourceStateData.lastState != SourceState.NONE) {
+            var onClickListener: OnClickListener? = null
+            if(SourceStateData.lastState == SourceState.MULTI_PATIENT) {
+                btnPatient.visibility = View.VISIBLE
+                btnPatient.setOnClickListener{
+                    try {
+                        SelectPatientPopup.show(this, SourceStateData.lastSource)
+                    } catch (exc: Exception) {
+                        Log.e(LOG_ID, "Dexcom browse exception: " + exc.message.toString() )
+                    }
+                }
+                onClickListener = OnClickListener {
+                    try {
+                        SelectPatientPopup.show(this, SourceStateData.lastSource)
+                    } catch (exc: Exception) {
+                        Log.e(LOG_ID, "Dexcom browse exception: " + exc.message.toString() )
+                    }
+                }
+            } else {
+                btnPatient.visibility = View.GONE
+            }
             val msg = SourceStateData.getStateMessage(this)
             tableConnections.addView(
                 createRow(
                     SourceStateData.lastSource.resId,
-                    msg
+                    msg,
+                    onClickListener
                 )
             )
             if(SourceStateData.lastState == SourceState.ERROR) {

@@ -132,6 +132,14 @@
                     android:autoSizeTextType="uniform"
                     tools:ignore="HardcodedText" />
             </LinearLayout>
+            <Button
+                android:id="@+id/btnPatient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#005CCC"
+                android:visibility="gone"
+                android:layout_marginTop="10dp"
+                android:text="@string/select_patient_title" />
         </LinearLayout>
     </ScrollView>
 
