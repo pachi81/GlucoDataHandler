@@ -4,6 +4,7 @@ import android.util.Log
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.database.GlucoseValue
 import de.michelinside.glucodatahandler.common.database.dbAccess
+import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import io.ktor.server.engine.*
 import io.ktor.server.cio.*
 import io.ktor.server.response.*
@@ -24,8 +25,8 @@ class XDripServer {
                     val brief = call.request.queryParameters["brief_mode"]?.lowercase() == "y"
                     val count: Int = call.request.queryParameters["count"]?.toIntOrNull() ?: 25
 
-                    val values = getGlucoseValues(count)
-                    val response = values.createResponse(brief)
+                    val values = getGlucoseValues()
+                    val response = values.createResponse(brief, count)
                     call.respondText(response)
                 }
             }
@@ -33,23 +34,38 @@ class XDripServer {
     }
 
 
-    fun List<GlucoseValue>.createResponse(brief: Boolean): String {
+    fun List<GlucoseValue>.createResponse(brief: Boolean, count: Int): String {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
         val sortedValues = this.sortedByDescending { it.timestamp } // oldest -> newest
 
 
         val entries = sortedValues.mapIndexed { index, glucose ->
+            val prev = if (index < sortedValues.size-1) sortedValues[index + 1].value.toDouble() else null
+            val delta = prev?.let { sortedValues[index].value - it } ?: 0.0
+
+            Log.i(LOG_ID, "Glucose: ${glucose.value} ${GlucoDataUtils.mgToMmol(glucose.value.toFloat())} delta: ${delta} ${GlucoDataUtils.mgToMmol(delta.toFloat())}")
+
+            val direction = when {
+                GlucoDataUtils.mgToMmol(delta.toFloat()) >= 3.0 -> "DoubleUp"
+                GlucoDataUtils.mgToMmol(delta.toFloat()) >= 2.0 -> "FortyFiveUp"
+                GlucoDataUtils.mgToMmol(delta.toFloat()) >= 1.0 -> "SingleUp"
+                GlucoDataUtils.mgToMmol(delta.toFloat()) <= -1.0 -> "SingleDown"
+                GlucoDataUtils.mgToMmol(delta.toFloat()) <= -2.0 -> "FortyFiveDown"
+                GlucoDataUtils.mgToMmol(delta.toFloat()) <= -3.0 -> "DoubleDown"
+                else -> "Flat"
+            }
+
             XDripSvgEntry(
                 _id = if (brief) null else "${ReceiveData.sensorID}#${index + 1}",
                 dateString = if (brief) null else dateFormat.format(Date(glucose.timestamp)),
                 sysTime = if (brief) null else dateFormat.format(Date(glucose.timestamp)),
                 date = glucose.timestamp,
                 sgv = glucose.value,
-                delta = 0.0,
+                delta = delta,
                 filtered = if (brief) null else glucose.value * 1000,
                 unfiltered = if (brief) null else glucose.value * 1000,
                 device = if (brief) null else "GDH",
-                direction = "flat",
+                direction = direction,
                 noise = 1,
                 rssi = if (brief) null else 100,
                 type = if (brief) null else "svg",
@@ -57,15 +73,16 @@ class XDripServer {
             )
         }
 
-        return Json { prettyPrint = true }.encodeToString(entries)
+        return Json { prettyPrint = true }.encodeToString(entries.take(count))
     }
 
-    fun getGlucoseValues(count: Int): List<GlucoseValue> {
+    fun getGlucoseValues(): List<GlucoseValue> {
         val values = dbAccess.getGlucoseValues(12)
-        values.forEach { glucose ->
-            Log.i(LOG_ID, "Glucose: ${glucose.value} ${glucose.timestamp}")
-        }
-        return values.takeLast(count)
+//        values.forEach { glucose ->
+//            Log.i(LOG_ID, "Glucose: ${glucose.value} ${glucose.timestamp}")
+//        }
+//        return values.takeLast(count)
+        return values
     }
 
 }
