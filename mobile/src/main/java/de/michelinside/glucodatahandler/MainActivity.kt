@@ -171,7 +171,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             }
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
-            sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
 
             ReceiveData.initData(this.applicationContext)
 
@@ -591,6 +591,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                             apply()
                         }
                     }
+                    AlarmState.ALARM -> {
+                        AlarmNotification.stopCurrentNotification(this)
+                    }
                     AlarmState.TEMP_DISABLED -> {
                         AlarmHandler.disableInactiveTime()
                     }
@@ -635,7 +638,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     })
             }
             if(snoozeMenu != null) {
-                snoozeMenu!!.isVisible = (state == AlarmState.ACTIVE || state == AlarmState.SNOOZE)
+                snoozeMenu!!.isVisible = (AlarmState.isActive(state) || state == AlarmState.SNOOZE)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateAlarmIcon exception: " + exc.message.toString() )

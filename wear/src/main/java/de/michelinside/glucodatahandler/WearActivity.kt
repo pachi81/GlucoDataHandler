@@ -74,7 +74,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             super.onCreate(savedInstanceState)
 
             //setTheme(android.R.style.Theme_DeviceDefault)
-            sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
 
             binding = ActivityWearBinding.inflate(layoutInflater)
             setContentView(binding.root)
@@ -316,6 +316,9 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                             putBoolean(Constants.SHARED_PREF_NOTIFICATION_VIBRATE, false)
                             apply()
                         }
+                    }
+                    AlarmState.ALARM -> {
+                        AlarmNotificationWear.stopCurrentNotification(this)
                     }
                     AlarmState.TEMP_DISABLED -> {
                         AlarmHandler.disableInactiveTime()
