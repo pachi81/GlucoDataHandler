@@ -179,7 +179,7 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
                         "            ]"
                 )
             } else {
-                setLastError("Missing data in response!", 500)
+                setLastError(GlucoDataService.context!!.resources.getString(R.string.missing_data), 500)
                 reset()
                 return false
             }
@@ -264,7 +264,7 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
             handleResult(glucoExtras)
             return true
         } else {
-            setLastError("Invalid response data")
+            setLastError(GlucoDataService.context!!.resources.getString(R.string.missing_data))
             Log.w(LOG_ID, "Unsupported format: $data")
         }
         return false
@@ -279,7 +279,7 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
             if (id != INVALID_ID) {
                 return id
             }
-            setLastError("Invalid user ID received!")
+            setLastError(GlucoDataService.context!!.resources.getString(R.string.invalid_user_id))
             Log.w(LOG_ID, "Invalid ID received: $id")
         }
         return null

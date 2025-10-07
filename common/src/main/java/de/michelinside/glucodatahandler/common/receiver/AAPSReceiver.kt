@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
@@ -75,10 +76,10 @@ open class AAPSReceiver: NamedBroadcastReceiver() {
                         ReceiveData.handleIntent(context, DataSource.AAPS, glucoExtras)
                         SourceStateData.setState(DataSource.AAPS, SourceState.NONE)
                     } else {
-                        SourceStateData.setError(DataSource.AAPS, "Invalid glucose value: " + extras.getDouble(BG_VALUE, 0.0))
+                        SourceStateData.setError(DataSource.AAPS, context.resources.getString(R.string.invalid_glucose_value, extras.getDouble(BG_VALUE, 0.0).toString()))
                     }
                 } else {
-                    SourceStateData.setError(DataSource.AAPS, "Missing values in AAPS intent!")
+                    SourceStateData.setError(DataSource.AAPS, context.resources.getString(R.string.source_no_valid_value))
                 }
             }
         } catch (exc: Exception) {

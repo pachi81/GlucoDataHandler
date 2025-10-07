@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
@@ -53,7 +54,7 @@ open class NsEmulatorReceiver: NamedBroadcastReceiver() {
                                     SourceStateData.setState(DataSource.NS_EMULATOR, SourceState.NONE)
                                 } else {
                                     Log.w(LOG_ID, "Missing data: $jsonObject")
-                                    SourceStateData.setError(DataSource.NS_EMULATOR, "Missing data: $jsonObject")
+                                    SourceStateData.setError(DataSource.NS_EMULATOR, context.resources.getString(R.string.missing_data))
                                 }
                             } else {
                                 Log.w(LOG_ID, "Unsupported type received: $jsonObject")
@@ -61,7 +62,7 @@ open class NsEmulatorReceiver: NamedBroadcastReceiver() {
                         }
                     } else {
                         Log.w(LOG_ID, "No data: " + Utils.dumpBundle(intent.extras))
-                        SourceStateData.setError(DataSource.NS_EMULATOR, "Missing data!")
+                        SourceStateData.setError(DataSource.NS_EMULATOR, context.resources.getString(R.string.missing_data))
                     }
                 }
             }

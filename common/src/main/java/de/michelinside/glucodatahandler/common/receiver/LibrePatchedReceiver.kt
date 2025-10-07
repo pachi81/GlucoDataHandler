@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
@@ -56,7 +57,7 @@ open class LibrePatchedReceiver: NamedBroadcastReceiver() {
                         SourceStateData.setState(DataSource.LIBRE_PATCHED, SourceState.NONE)
                     } else {
                         Log.w(LOG_ID, "No data: " + Utils.dumpBundle(intent.extras))
-                        SourceStateData.setError(DataSource.LIBRE_PATCHED, "Missing data!")
+                        SourceStateData.setError(DataSource.LIBRE_PATCHED, context.resources.getString(R.string.missing_data))
                     }
                 } else if(intent.action == Constants.XDRIP_ACTION_SENSOR_ACTIVATE) {
                     if(extras.containsKey("bleManager") && extras.containsKey("sensor")) {

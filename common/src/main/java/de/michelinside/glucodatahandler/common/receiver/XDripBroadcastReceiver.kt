@@ -107,12 +107,12 @@ open class XDripBroadcastReceiver: NamedBroadcastReceiver() {
                         }
                     } else {
                         Log.w(LOG_ID, "Invalid value: " + Utils.dumpBundle(intent.extras))
-                        SourceStateData.setError(DataSource.XDRIP, "Invalid glucose value: " + mgdl )
+                        SourceStateData.setError(DataSource.XDRIP, context.resources.getString(R.string.invalid_glucose_value, mgdl.toString()))
                     }
                 }
                 else {
                     Log.w(LOG_ID, "Missing extras: " + Utils.dumpBundle(intent.extras))
-                    SourceStateData.setError(DataSource.XDRIP, "Missing data in message!" )
+                    SourceStateData.setError(DataSource.XDRIP, context.resources.getString(R.string.source_no_valid_value) )
                 }
             }
         } catch (exc: Exception) {

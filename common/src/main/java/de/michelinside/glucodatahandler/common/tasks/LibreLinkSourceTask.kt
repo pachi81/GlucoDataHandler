@@ -230,14 +230,14 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
                     setLastError(getErrorMessage(jsonObj), status, getStatusMessage(status))
                     return null
                 }
-                setLastError("Error", status)
+                setLastError(GlucoDataService.context!!.resources.getString(R.string.source_state_error), status)
                 return null
             }
         }
         if (jsonObj.has("data")) {
             return jsonObj
         }
-        setLastError("Missing data in response!", 500)
+        setLastError(GlucoDataService.context!!.resources.getString(R.string.missing_data), 500)
         reset()
         retry = true
         return null
@@ -294,7 +294,7 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
                 saveRegion()
                 return true
             } else {
-                setLastError("redirect without region!!!", 500)
+                setLastError(GlucoDataService.context!!.resources.getString(R.string.invalid_redirect), 500)
             }
         }
         return false
@@ -415,7 +415,7 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
         }
 
         Log.e(LOG_ID, "No data found in response: ${replaceSensitiveData(body!!)}")
-        setLastError("Invalid response! Please send logs to developer.")
+        setLastError(GlucoDataService.context!!.resources.getString(R.string.missing_data), -1, GlucoDataService.context!!.resources.getString(R.string.provide_logs))
         reset()
         retry = true
         return false
@@ -485,7 +485,7 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
                 if (array.length() == 0) {
                     Log.w(LOG_ID, "Empty data array in response: ${replaceSensitiveData(body!!)}")
                     if(dataReceived) {
-                        setLastError("Missing data! Please send logs to developer.")
+                        setLastError(GlucoDataService.context!!.resources.getString(R.string.source_no_patient))
                         reset()
                     } else {
                         setLastError(GlucoDataService.context!!.getString(R.string.src_libre_setup_librelink))
@@ -495,7 +495,7 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
                 return getPatientData(array)
             } else {
                 Log.e(LOG_ID, "No data array found in response: ${replaceSensitiveData(body!!)}")
-                setLastError("Invalid response! Please send logs to developer.")
+                setLastError(GlucoDataService.context!!.resources.getString(R.string.missing_data), -1, GlucoDataService.context!!.resources.getString(R.string.provide_logs))
                 reset()
                 retry = true
             }

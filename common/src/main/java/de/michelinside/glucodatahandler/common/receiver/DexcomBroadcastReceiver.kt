@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
@@ -61,7 +62,7 @@ open class DexcomBroadcastReceiver: NamedBroadcastReceiver() {
                         SourceStateData.setState(DataSource.DEXCOM_BYODA, SourceState.NONE)
                     } else {
                         Log.w(LOG_ID, "Invalid value: " + Utils.dumpBundle(intent.extras))
-                        SourceStateData.setError(DataSource.DEXCOM_BYODA, "Invalid glucose value: " + glucoseValue )
+                        SourceStateData.setError(DataSource.DEXCOM_BYODA, context.resources.getString(R.string.invalid_glucose_value,glucoseValue.toString()))
                     }
                 }
             }

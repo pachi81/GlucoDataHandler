@@ -932,10 +932,19 @@ You can manage these permissions at any time in the Health Connect app settings.
 </string>
     <string name="pref_healthconnect">Health Connect</string>
     <string name="pref_healthconnect_summary">To share your data with Health Connect, grant permission to GDH.\nTo sync with Samsung Health, you must also enable "read from Health Connect" in the Samsung Health app.</string>
-    <string name="health_connect_error">Error occured, please send logs to developer.</string>
+    <string name="health_connect_error">Error occurred, please send logs to developer.</string>
     <string name="health_connect_not_available">Not available!</string>
     <string name="health_connect_no_permission">Missing permission!</string>
     <string name="select_patient_title">Select patient</string>
+    <string name="invalid_glucose_value">Invalid glucose value %1$s!</string>
+    <string name="missing_data">Missing data!</string>
+    <string name="timeout">Timeout!</string>
+    <string name="internal_error">Internal error!</string>
+    <string name="provide_logs">Please send logs to the developer.</string>
+    <string name="invalid_user_id">Invalid user ID received!</string>
+    <string name="invalid_redirect">Invalid redirect in response!</string>
+    <string name="invalid_iob_value">Could not parse IOB!</string>
+    <string name="source_iob_notification">IOB Notification</string>
 
 
 </resources>

@@ -15,6 +15,7 @@ import com.eveningoutpost.dexdrip.services.broadcastservice.models.GraphLine
 import com.eveningoutpost.dexdrip.services.broadcastservice.models.Settings
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
+import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
@@ -134,7 +135,7 @@ open class BroadcastServiceAPI: BroadcastReceiver(), NotifierInterface,
             !bundle.containsKey(BG_DELTA_NAME) ||
             !bundle.containsKey(BG_TIMESTAMP)) {
             Log.w(LOG_ID, "Missing data! ${Utils.dumpBundle(bundle)}")
-            SourceStateData.setError(DataSource.XDRIP, "Missing values in service API data!")
+            SourceStateData.setError(DataSource.XDRIP, context.resources.getString(R.string.source_no_valid_value))
             return
         }
 
