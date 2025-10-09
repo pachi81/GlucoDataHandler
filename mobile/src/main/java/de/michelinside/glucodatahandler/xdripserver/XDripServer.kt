@@ -29,15 +29,76 @@ class XDripServer {
                     val response = values.createResponse(brief, count)
                     call.respondText(response)
                 }
+                get("/pebble") {
+                    val values = getGlucoseValues()
+                    val response = values.createPebbleResponse()
+                    call.respondText(response)
+                }
+                get("/status.json") {
+                    val values = getGlucoseValues()
+                    val response = values.createStatusResponse()
+                    call.respondText(response)
+                }
+
             }
         }.start(wait = false)
     }
 
 
+    fun List<GlucoseValue>.createPebbleResponse(): String {
+        if (this.isEmpty()) {
+            return "Error"
+        }
+        val glucose = this.first()
+        var bg = glucose.value.toFloat();
+        if (!GlucoDataUtils.isMmolValue(bg)) {
+            bg = GlucoDataUtils.mgToMmol(bg)        // Seems to be always mmol in Juggluco
+        }
+        var iob = ReceiveData.iob
+        iob = if (iob.isNaN()) 0.0f else iob
+
+        val status = PebbleStatus(now = GlucoDataUtils.getGlucoseTime(System.currentTimeMillis()))
+        val bgs = PebbleBg(
+            bg.toString(),
+            trend = 4,                  // Doesn't seem to change in Juggluco
+            direction = "flat",         // Doesn't seem to change in Juggluco
+            datetime = glucose.timestamp,
+            bgdelta = GlucoDataUtils.mgToMmol(ReceiveData.delta).toString(),
+            iob = iob.toString())
+
+        val entry = PebbleEntry(status = listOf(status), bgs = listOf(bgs), cals = emptyList<Int>())
+        return Json { prettyPrint = true }.encodeToString(entry)
+    }
+
+
+    fun List<GlucoseValue>.createStatusResponse(): String {
+        val units = if (ReceiveData.isMmol) "mmol/L" else "mg/dL"
+        var min = ReceiveData.low;
+        min = if (GlucoDataUtils.isMmolValue(min)) GlucoDataUtils.mmolToMg(min) else min
+        var max = ReceiveData.high;
+        max = if (GlucoDataUtils.isMmolValue(max)) GlucoDataUtils.mmolToMg(max) else max
+
+        val response = SettingsEntry(
+            settings = SettingsData(
+                units = units,
+                thresholds = SettingsThresholds(
+                    bgHigh = max.toInt(),
+                    bgLow = min.toInt()
+                )
+            )
+        )
+
+        return Json { prettyPrint = true }.encodeToString(response)
+    }
+
     fun List<GlucoseValue>.createResponse(brief: Boolean, count: Int): String {
+        if (this.isEmpty()) {
+            return "Error"
+        }
+
         val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
         val sortedValues = this.sortedByDescending { it.timestamp } // oldest -> newest
-
+        val units = if (ReceiveData.isMmol) "mmol" else "mgdl"
 
         val entries = sortedValues.mapIndexed { index, glucose ->
             val prev = if (index < sortedValues.size-1) sortedValues[index + 1].value.toDouble() else null
@@ -69,7 +130,7 @@ class XDripServer {
                 noise = 1,
                 rssi = if (brief) null else 100,
                 type = if (brief) null else "svg",
-                units_hint = if (index == 0) "mmol" else null
+                units_hint = units
             )
         }
 
@@ -78,6 +139,7 @@ class XDripServer {
 
     fun getGlucoseValues(): List<GlucoseValue> {
         val values = dbAccess.getGlucoseValues(12)
+//        val values = dbAccess.getLiveValuesByTimeSpan(1);
 //        values.forEach { glucose ->
 //            Log.i(LOG_ID, "Glucose: ${glucose.value} ${glucose.timestamp}")
 //        }
