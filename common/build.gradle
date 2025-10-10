@@ -64,7 +64,7 @@ dependencies {
     //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'
 
     //Room
-    def roomVersion = "2.7.2"
+    def roomVersion = "2.8.2"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")
