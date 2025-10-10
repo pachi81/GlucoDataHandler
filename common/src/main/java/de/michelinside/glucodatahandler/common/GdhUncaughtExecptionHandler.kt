@@ -1,6 +1,6 @@
 package de.michelinside.glucodatahandler.common
 
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import java.lang.Exception
 import kotlin.system.exitProcess
 
@@ -64,6 +64,7 @@ object GdhUncaughtExecptionHandler : Thread.UncaughtExceptionHandler {
                         }
                         apply()
                         Thread.sleep(100) // wait for saving
+                        Log.flushLogBuffer(true)
                         Log.v(LOG_ID, "Exception saved!")
                     }
                 }
