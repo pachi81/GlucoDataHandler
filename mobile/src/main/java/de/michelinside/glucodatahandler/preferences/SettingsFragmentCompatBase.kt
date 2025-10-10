@@ -1,7 +1,7 @@
 package de.michelinside.glucodatahandler.preferences
 
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.fragment.app.DialogFragment
 import androidx.preference.Preference
 import com.takisoft.preferencex.TimePickerPreference

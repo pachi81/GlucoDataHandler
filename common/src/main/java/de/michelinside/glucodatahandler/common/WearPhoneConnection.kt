@@ -3,7 +3,7 @@ package de.michelinside.glucodatahandler.common
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.*
 import de.michelinside.glucodatahandler.common.database.dbSync
@@ -539,7 +539,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 checkNodeConnect(p0.sourceNodeId)
             }
             if(extras!= null) {
-                if(Log.isLoggable(LOG_ID, Log.VERBOSE))
+                if(Log.isLoggable(LOG_ID, android.util.Log.VERBOSE))
                     Log.v(LOG_ID, "Received extras: ${Utils.dumpBundle(extras)}")
                 if (extras.containsKey(Constants.SETTINGS_BUNDLE)) {
                     val bundle = extras.getBundle(Constants.SETTINGS_BUNDLE)

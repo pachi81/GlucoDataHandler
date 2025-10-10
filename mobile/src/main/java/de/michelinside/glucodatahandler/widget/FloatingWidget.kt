@@ -7,7 +7,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.PixelFormat
 import android.provider.Settings
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.*
 import android.view.View.*
 import android.widget.ImageView

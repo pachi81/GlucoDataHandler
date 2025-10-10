@@ -2,7 +2,7 @@ package de.michelinside.glucodatahandler.preferences
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.preference.DialogPreference
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.notification.VibratePattern

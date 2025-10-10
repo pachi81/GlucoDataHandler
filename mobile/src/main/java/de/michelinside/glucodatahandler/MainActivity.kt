@@ -12,7 +12,7 @@ import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
 import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem

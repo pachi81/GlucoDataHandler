@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService

@@ -7,7 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Paint
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.View
 import android.widget.RemoteViews
 import de.michelinside.glucodatahandler.GlucoDataServiceMobile

@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.os.Handler
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.widget.Toast
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.ChannelClient

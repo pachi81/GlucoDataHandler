@@ -3,7 +3,7 @@ package de.michelinside.glucodatahandler.common.tasks
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Handler
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.notifier.DataSource

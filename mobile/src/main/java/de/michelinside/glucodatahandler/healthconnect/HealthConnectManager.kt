@@ -7,7 +7,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.health.connect.client.HealthConnectClient

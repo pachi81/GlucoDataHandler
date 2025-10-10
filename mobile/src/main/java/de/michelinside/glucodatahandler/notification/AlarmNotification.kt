@@ -12,7 +12,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.Toast

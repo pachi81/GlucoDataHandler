@@ -1,7 +1,7 @@
 package de.michelinside.glucodatahandler
 
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity

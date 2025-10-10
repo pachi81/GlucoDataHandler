@@ -12,7 +12,7 @@ import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.text.style.ImageSpan
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View

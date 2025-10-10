@@ -1,7 +1,7 @@
 package de.michelinside.glucodataauto.preferences
 
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.SeekBarPreference

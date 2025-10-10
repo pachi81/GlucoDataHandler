@@ -10,7 +10,7 @@ import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import com.eveningoutpost.dexdrip.services.broadcastservice.models.GraphLine
 import com.eveningoutpost.dexdrip.services.broadcastservice.models.Settings
 import de.michelinside.glucodatahandler.common.Constants

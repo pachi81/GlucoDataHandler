@@ -8,7 +8,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.preference.MultiSelectListPreference
 import androidx.preference.SwitchPreferenceCompat
 import de.michelinside.glucodatahandler.R

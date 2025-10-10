@@ -1,7 +1,7 @@
 package de.michelinside.glucodataauto.preferences
 
 import android.content.SharedPreferences
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.preference.*
 import de.michelinside.glucodataauto.R
 import de.michelinside.glucodatahandler.common.R as CR

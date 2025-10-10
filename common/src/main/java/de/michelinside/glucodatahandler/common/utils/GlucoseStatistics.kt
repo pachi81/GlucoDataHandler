@@ -1,7 +1,7 @@
 package de.michelinside.glucodatahandler.common.utils
 
 import android.content.Context
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.database.dbAccess

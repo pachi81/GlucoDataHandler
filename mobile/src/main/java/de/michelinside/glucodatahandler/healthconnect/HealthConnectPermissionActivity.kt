@@ -2,7 +2,7 @@ package de.michelinside.glucodatahandler.healthconnect
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher

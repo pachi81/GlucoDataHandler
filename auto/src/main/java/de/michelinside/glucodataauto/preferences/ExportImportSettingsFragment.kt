@@ -6,7 +6,7 @@ import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Environment
 import android.provider.DocumentsContract
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.preference.Preference
 import de.michelinside.glucodataauto.R
 import de.michelinside.glucodatahandler.common.Constants

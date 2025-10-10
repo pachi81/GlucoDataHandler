@@ -8,7 +8,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Process
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUpdateRequester
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService

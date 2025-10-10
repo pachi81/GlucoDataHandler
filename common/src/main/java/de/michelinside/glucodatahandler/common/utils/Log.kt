@@ -28,7 +28,7 @@ object Log: SharedPreferences.OnSharedPreferenceChangeListener {
     private val logBuffer = Collections.synchronizedList(mutableListOf<LogEntry>())
     private val maxLogBufferSize: Int get() {
         if(minLevel <= android.util.Log.DEBUG)
-            return 30
+            return 50
         return 10
     }
 
@@ -83,6 +83,10 @@ object Log: SharedPreferences.OnSharedPreferenceChangeListener {
 
     fun e(tag: String, msg: String, throwable: Throwable?): Int {
         return println(android.util.Log.ERROR, tag, msg, throwable = throwable)
+    }
+
+    fun isLoggable(tag: String, priority: Int): Boolean {
+        return android.util.Log.isLoggable(tag, priority)
     }
 
     private fun println(priority: Int, tag: String, msg: String, forUser: Boolean = false, throwable: Throwable? = null): Int {

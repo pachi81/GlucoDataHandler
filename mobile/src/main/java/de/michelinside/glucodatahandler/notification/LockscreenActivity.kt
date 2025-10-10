@@ -5,7 +5,7 @@ import android.content.Context
 import android.graphics.Paint
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsController

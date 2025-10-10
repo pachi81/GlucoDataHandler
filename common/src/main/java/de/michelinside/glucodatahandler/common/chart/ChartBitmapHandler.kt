@@ -5,7 +5,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.View
 import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.GlucoDataService

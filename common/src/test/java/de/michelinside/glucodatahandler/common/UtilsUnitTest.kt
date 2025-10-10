@@ -1,6 +1,6 @@
 package de.michelinside.glucodatahandler.common
 
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.utils.Utils
 import io.mockk.every
 import io.mockk.mockkStatic

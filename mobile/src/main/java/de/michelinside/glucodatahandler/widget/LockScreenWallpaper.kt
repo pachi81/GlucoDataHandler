@@ -7,7 +7,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.core.graphics.drawable.toDrawable
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.notifier.NotifySource

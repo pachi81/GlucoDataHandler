@@ -3,7 +3,7 @@ package de.michelinside.glucodatahandler.common.receiver
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData

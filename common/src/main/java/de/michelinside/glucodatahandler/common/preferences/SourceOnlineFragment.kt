@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.preference.*
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.Constants
