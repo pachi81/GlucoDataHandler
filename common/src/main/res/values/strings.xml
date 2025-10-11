@@ -220,6 +220,8 @@
     <string name="pref_switch_send_xdrip_broadcast_summary">Send broadcast like xDrip+ is sending. For example to AAPS.</string>
     <string name="pref_button_select_xdrip_broadcast_target">Identify xDrip+ broadcast receivers</string>
     <string name="pref_button_select_xdrip_broadcast_target_summary">Choose receivers sending the xDrip+ broadcast to. A global broadcast will send to every app registering dynamically on the broadcast.</string>
+    <string name="pref_switch_xdrip_server">XDrip server</string>
+    <string name="pref_switch_xdrip_server_summary">Create local XDrip server on port 17850</string>
     <string name="pref_switch_use_mmol">Use mmol/l</string>
     <string name="pref_switch_use_mmol_summary">Use mmol/l instead of mg/dl.</string>
     <string name="pref_switch_use_5_min_delta">5 minute delta</string>

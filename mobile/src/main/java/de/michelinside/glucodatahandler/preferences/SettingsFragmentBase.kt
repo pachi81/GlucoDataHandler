@@ -34,6 +34,7 @@ import de.michelinside.glucodatahandler.common.receiver.GlucoseDataReceiver
 import de.michelinside.glucodatahandler.common.ui.SelectReceiverPreference
 import de.michelinside.glucodatahandler.common.utils.GlucoseStatistics
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
+import de.michelinside.glucodatahandler.xdripserver.XDripServer
 import kotlin.collections.HashMap
 import kotlin.collections.List
 import kotlin.collections.mutableSetOf
@@ -449,7 +450,19 @@ class TransferSettingsFragment: SettingsFragmentBase(R.xml.pref_transfer) {
         setupReceivers(Intents.XDRIP_BROADCAST_ACTION, Constants.SHARED_PREF_XDRIP_BROADCAST_RECEIVERS)
     }
 
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        Log.v(LOG_ID, "onSharedPreferenceChanged called")
+
+        when (key) {
+            Constants.SHARED_PREF_XDRIP_SERVER -> {
+                val pref = sharedPreferences!!.getBoolean(Constants.SHARED_PREF_XDRIP_SERVER, false )
+                Log.v(LOG_ID, "Xdrip server: ${pref}")
+                XDripServer.setServerState(pref)
+            }
+        }
+    }
 }
+
 class GDASettingsFragment: SettingsFragmentBase(R.xml.pref_gda) {
     override fun initPreferences() {
         Log.v(LOG_ID, "initPreferences called")

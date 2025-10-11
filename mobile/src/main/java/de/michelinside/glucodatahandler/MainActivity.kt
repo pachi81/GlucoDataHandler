@@ -120,7 +120,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var chartCreator: ChartCreator
     private var systemBars: Insets? = null
 
-    private lateinit var xdripServer: XDripServer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
@@ -236,8 +235,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             chartCreator = MainChartCreator(chart, this, Constants.SHARED_PREF_GRAPH_DURATION_PHONE_MAIN, Constants.SHARED_PREF_GRAPH_TRANSPARENCY_PHONE_MAIN)
             chartCreator.create()
 
-            xdripServer = XDripServer()
-            xdripServer.startServer()
+            val xdripServerActive = sharedPref.getBoolean(Constants.SHARED_PREF_XDRIP_SERVER, false)
+            XDripServer.setServerState(xdripServerActive)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
