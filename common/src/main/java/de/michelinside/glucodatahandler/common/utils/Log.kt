@@ -134,12 +134,12 @@ object Log: SharedPreferences.OnSharedPreferenceChangeListener {
                 runBlocking {
                     d(LOG_ID, "Waiting for ${entriesToSave.size} log entries to be flushed...")
                     job.join()
-                    i(LOG_ID, "Flushed ${entriesToSave.size} log entries to database.")
+                    d(LOG_ID, "Flushed ${entriesToSave.size} log entries to database.")
                 }
             }
             lastSaveTime = System.currentTimeMillis()
             if(!wait) {
-                i(LOG_ID, "Flushed ${entriesToSave.size} log entries to database asynchronously.")
+                d(LOG_ID, "Flushed ${entriesToSave.size} log entries to database asynchronously.")
             }
             clearLogs()
         }
@@ -149,7 +149,7 @@ object Log: SharedPreferences.OnSharedPreferenceChangeListener {
         try {
             if(!dbAccess.active)
                 return  // wait for database is ready
-            v(LOG_ID, "Clearing logs - force=$force - logDuration=$logDuration")
+            v(LOG_ID, "Check clearing logs - force=$force - lastClearTime=${Utils.getUiTimeStamp(lastClearTime)} - logDuration=$logDuration - time elapsed: ${Utils.getElapsedTimeMinute(lastClearTime)}")
             if(logDuration <= 0) {
                 if(force) {
                     dbAccess.deleteAllLogs()
@@ -159,7 +159,7 @@ object Log: SharedPreferences.OnSharedPreferenceChangeListener {
             }
             if(force || (Utils.getElapsedTimeMinute(lastClearTime) >= 15)) {  // remove old entries every 15 minutes
                 d(LOG_ID, "Clearing logs - force=$force - lastClearTime=${Utils.getUiTimeStamp(lastClearTime)} - logDuration=${Duration.ofMillis(logDuration.toLong()).toHours()}h")
-
+                lastClearTime = System.currentTimeMillis()
                 val removeTime = System.currentTimeMillis() - logDuration
                 dbAccess.deleteOldLogs(removeTime)
 
@@ -169,7 +169,6 @@ object Log: SharedPreferences.OnSharedPreferenceChangeListener {
                 } else if(force) {
                     dbAccess.deleteOldDebugLogs(System.currentTimeMillis())
                 }
-                lastClearTime = System.currentTimeMillis()
             }
         } catch (exc: Exception) {
             android.util.Log.e(LOG_ID, "Error while logging", exc)
