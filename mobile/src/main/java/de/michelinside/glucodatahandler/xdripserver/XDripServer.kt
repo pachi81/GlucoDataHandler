@@ -1,6 +1,6 @@
 package de.michelinside.glucodatahandler.xdripserver
 
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.database.GlucoseValue
 import de.michelinside.glucodatahandler.common.database.dbAccess
