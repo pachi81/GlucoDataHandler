@@ -416,7 +416,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         if(GlucoDataService.appSource != AppSource.WEAR_APP)
             return AlarmType.OBSOLETE.setting!!.isActive
         if(AlarmType.OBSOLETE.setting!!.isActive) {  // on wear: only notification is used for alarms -> check to save battery for timer thread
-            if(AlarmNotificationBase.instance?.getAlarmState(GlucoDataService.context!!) == AlarmState.ACTIVE) {
+            if(AlarmState.isActive(AlarmNotificationBase.instance?.getAlarmState(GlucoDataService.context!!))) {
                 if(ScreenEventReceiver.isDisplayOff()) {
                     // if display is off and the phone does not send new data to wear, the obsolete alarm should not trigger!
                     if(GlucoDataService.sharedPref != null)

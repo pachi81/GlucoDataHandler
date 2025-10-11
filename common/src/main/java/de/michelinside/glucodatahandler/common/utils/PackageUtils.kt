@@ -164,6 +164,7 @@ object PackageUtils {
             receiverFilter.add("com.medtronic.")  // Medtronic MiniMed
             receiverFilter.add("com.microtech.aidexx.") // LinX CGM
             receiverFilter.add("com.medtrum.")  // Medtrum
+            receiverFilter.add("com.signos.")  // Signos
         }
         return receiverFilter
     }

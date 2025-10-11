@@ -12,6 +12,7 @@ enum class SourceState(val resId: Int) {
     CONNECTED(R.string.connected_label),
     NO_NEW_VALUE(R.string.source_state_no_new_value),
     NO_CONNECTION(R.string.source_state_no_connection),
+    MULTI_PATIENT(R.string.source_select_patient),
     ERROR(R.string.source_state_error);
 }
 object SourceStateData {

@@ -21,6 +21,7 @@ import de.michelinside.glucodatahandler.common.receiver.GlucoseDataReceiver
 import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.utils.Utils.isScreenReaderOn
+import de.michelinside.glucodatahandler.healthconnect.HealthConnectManager
 import de.michelinside.glucodatahandler.tasker.setWearConnectionState
 import de.michelinside.glucodatahandler.watch.WatchDrip
 import de.michelinside.glucodatahandler.widget.BatteryLevelWidgetNotifier
@@ -40,7 +41,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
     }
 
     companion object {
-        private val LOG_ID = "GDH.GlucoDataServiceMobile"
+        private const val LOG_ID = "GDH.GlucoDataServiceMobile"
         private var starting = false
         private var migrated = false
         fun start(context: Context) {
@@ -68,7 +69,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                     return
 
                 migrated = true
-                val sharedPrefs = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+                val sharedPrefs = context.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
                 Log.i(LOG_ID, "migrateSettings called")
                 if(!sharedPrefs.contains(Constants.SHARED_PREF_GLUCODATA_RECEIVERS)) {
                     val receivers = HashSet<String>()
@@ -205,7 +206,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                         && sharedPrefs.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, "").isNullOrEmpty()
                         && sharedPrefs.getString(Constants.SHARED_PREF_NIGHTSCOUT_URL, "")!!.trim().trimEnd('/') == GlucoseDataReceiver.JUGGLUCO_WEBSERVER
                         ) {
-                        val sharedGlucosePref = context.getSharedPreferences(Constants.GLUCODATA_BROADCAST_ACTION, Context.MODE_PRIVATE)
+                        val sharedGlucosePref = context.getSharedPreferences(Constants.GLUCODATA_BROADCAST_ACTION, MODE_PRIVATE)
                         if(DataSource.fromIndex(sharedGlucosePref.getInt(Constants.EXTRA_SOURCE_INDEX, DataSource.NONE.ordinal)) == DataSource.JUGGLUCO) {
                             webServer = true
                         }
@@ -221,6 +222,28 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                     }
                 }
 
+                // notification icon
+                if(!sharedPrefs.contains(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON)
+                    || sharedPrefs.getString(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, PermanentNotification.StatusBarIcon.GLUCOSE.pref) == PermanentNotification.StatusBarIcon.APP.pref) {
+                    with(sharedPrefs.edit()) {
+                        putString(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, PermanentNotification.StatusBarIcon.GLUCOSE.pref)
+                        apply()
+                    }
+                }
+                if(!sharedPrefs.contains(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON)
+                    || sharedPrefs.getString(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON, PermanentNotification.StatusBarIcon.TREND.pref) == PermanentNotification.StatusBarIcon.APP.pref) {
+                    with(sharedPrefs.edit()) {
+                        putString(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON, PermanentNotification.StatusBarIcon.TREND.pref)
+                        apply()
+                    }
+                }
+                if(!sharedPrefs.contains(Constants.SHARED_PREF_THIRD_PERMANENT_NOTIFICATION_ICON)
+                    || sharedPrefs.getString(Constants.SHARED_PREF_THIRD_PERMANENT_NOTIFICATION_ICON, PermanentNotification.StatusBarIcon.DELTA.pref) == PermanentNotification.StatusBarIcon.APP.pref) {
+                    with(sharedPrefs.edit()) {
+                        putString(Constants.SHARED_PREF_THIRD_PERMANENT_NOTIFICATION_ICON, PermanentNotification.StatusBarIcon.DELTA.pref)
+                        apply()
+                    }
+                }
 
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "migrateSettings exception: " + exc.message.toString() )
@@ -252,6 +275,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             floatingWidget.create()
             lockScreenWallpaper.create()
             AlarmNotification.initNotifications(this)
+            HealthConnectManager.init(this.applicationContext)
             InternalNotifier.addNotifier(
                 this,
                 TaskerDataReceiver,
@@ -301,6 +325,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             WatchDrip.close(applicationContext)
             floatingWidget.destroy()
             lockScreenWallpaper.destroy()
+            HealthConnectManager.close(this.applicationContext)
             super.onDestroy()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.message.toString() )
@@ -349,7 +374,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         Log.v(LOG_ID, "forwardBroadcast called")
         CarModeReceiver.sendToGlucoDataAuto(context)
 
-        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
         /*
         if (sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_BANGLEJS, false)) {
             sendToBangleJS(context)

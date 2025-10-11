@@ -192,23 +192,23 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
         return delayResult
     }
 
-    fun checkTimer() {
+    fun checkTimer(force: Boolean = false) {
         try {
             if (context == null)
                 return // not yet initialized
             val newInterval = getInterval()
             val newDelay = getDelay()
-            Log.d(LOG_ID, "checkTimer for current: ${curInterval}m+${curDelay}ms and new: ${newInterval}m+${newDelay}ms - initialExecution=$initialExecution")
-            if (curInterval != newInterval || curDelay != newDelay) {
-                Log.i(LOG_ID, "Interval has changed from ${curInterval}m+${curDelay}ms to ${newInterval}m+${newDelay}ms - initialExecution=$initialExecution")
-                var triggerExecute = initialExecution && (curInterval <= 0 && newInterval > 0)  // changed from inactive to active so trigger an initial execution
+            Log.d(LOG_ID, "checkTimer for current: ${curInterval}m+${curDelay}ms and new: ${newInterval}m+${newDelay}ms - initialExecution=$initialExecution - force=$force")
+            if (curInterval != newInterval || curDelay != newDelay || (force && elapsedTimeMinute >= 1)) {
+                Log.i(LOG_ID, "Interval has changed from ${curInterval}m+${curDelay}ms to ${newInterval}m+${newDelay}ms - initialExecution=$initialExecution - elapsedTimeMinute=$elapsedTimeMinute")
+                var triggerExecute = (force && newInterval > 0) || initialExecution && (curInterval <= 0 && newInterval > 0)  // changed from inactive to active so trigger an initial execution
                 if (!triggerExecute && newInterval > 0 && curInterval > newInterval && elapsedTimeMinute >= newInterval) {
                     // interval get decreased, so check for execution is needed
                     triggerExecute = true
                 }
                 curInterval = newInterval
                 curDelay = newDelay
-                if(triggerExecute && initialExecution && elapsedTimeMinute >= newInterval) {
+                if(triggerExecute && initialExecution && elapsedTimeMinute >= 1) {
                     Log.i(LOG_ID, "Trigger initial execution")
                     executeTasks(true)
                 } else if (curInterval > 0) {
@@ -339,7 +339,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                             changed = true
                     }
                     if (changed) {
-                        checkTimer()
+                        checkTimer(true)
                     }
                 }
         } catch (ex: Exception) {

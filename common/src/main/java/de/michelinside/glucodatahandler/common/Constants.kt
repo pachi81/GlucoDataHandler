@@ -53,6 +53,9 @@ object Constants {
     const val EXTRA_GRAPH_DATA = "gdh.graph_data"
     const val EXTRA_NODE_ID = "gdh.node_id"
 
+    const val EXTRA_START_TIME = "gdh.start_time"
+    const val EXTRA_END_TIME = "gdh.end_time"
+
     const val XDRIP_ACTION_GLUCOSE_READING = "com.librelink.app.ThirdPartyIntegration.GLUCOSE_READING"
     const val XDRIP_ACTION_SENSOR_ACTIVATE = "com.librelink.app.ThirdPartyIntegration.SENSOR_ACTIVATE"
 
@@ -79,6 +82,8 @@ object Constants {
     const val SHARED_PREF_XDRIP_BROADCAST_RECEIVERS = "xdrip_broadcast_receivers"
     const val SHARED_PREF_XDRIP_BROADCAST_SERVICE_API = "xdrip_broadcast_service_api"
     const val SHARED_PREF_XDRIP_SERVER = "xdrip_server"
+    const val SHARED_PREF_SEND_TO_HEALTH_CONNECT = "send_to_health_connect"
+    const val SHARED_PREF_HEALTH_CONNECT_LAST_VALUE_TIME = "health_connect_last_value_time"
     const val SHARED_PREF_TARGET_MIN = "target_min_value"
     const val SHARED_PREF_TARGET_MAX = "target_max_value"
     const val SHARED_PREF_USE_MMOL = "use_mmol"

@@ -32,6 +32,15 @@ object Dialogs {
             .show()
     }
 
+    fun showSelectItemDialog(context: Context, titleResId: Int, items: Array<String>, selectedItem: Int, okListener: DialogInterface.OnClickListener?, selectItemListener: DialogInterface.OnClickListener?, cancelListener: DialogInterface.OnClickListener? = null) {
+        MaterialAlertDialogBuilder(context)
+            .setTitle(context.resources.getString(titleResId))
+            .setPositiveButton(context.resources.getText(R.string.button_ok), okListener)
+            .setNeutralButton(context.resources.getText(R.string.button_cancel), cancelListener)
+            .setSingleChoiceItems(items, selectedItem,selectItemListener)
+            .show()
+    }
+
     fun updateColorScheme(context: Context) {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         val colorScheme = sharedPref.getString(Constants.SHARED_PREF_APP_COLOR_SCHEME, "")

@@ -37,10 +37,16 @@
             app:iconSpaceReserved="false" />
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
+            android:key="send_to_health_connect"
+            android:summary="@string/pref_healthconnect_summary"
+            android:title="@string/pref_healthconnect"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
             android:key="xdrip_server"
             android:title="@string/pref_switch_xdrip_server"
             app:iconSpaceReserved="false"
             app:summary="@string/pref_switch_xdrip_server_summary" />
+
         <PreferenceCategory
             android:title="@string/advanced_settings"
             app:iconSpaceReserved="false">

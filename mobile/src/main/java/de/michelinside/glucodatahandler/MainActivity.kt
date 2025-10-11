@@ -62,11 +62,13 @@ import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.tasks.DexcomShareSourceTask
 import de.michelinside.glucodatahandler.common.ui.Dialogs
+import de.michelinside.glucodatahandler.common.ui.SelectPatientPopup
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.GlucoseStatistics
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
+import de.michelinside.glucodatahandler.healthconnect.HealthConnectManager
 import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.preferences.AlarmGeneralFragment
 import de.michelinside.glucodatahandler.preferences.LockscreenSettingsFragment
@@ -100,6 +102,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var tableNotes: TableLayout
     private lateinit var btnSources: Button
     private lateinit var btnHelp: Button
+    private lateinit var btnPatient: Button
     private lateinit var noDataLayout: LinearLayout
     private lateinit var sharedPref: SharedPreferences
     private lateinit var optionsMenu: Menu
@@ -141,6 +144,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             txtLastValue = findViewById(R.id.txtLastValue)
             btnSources = findViewById(R.id.btnSources)
             btnHelp = findViewById(R.id.btnHelp)
+            btnPatient = findViewById(R.id.btnPatient)
             noDataLayout = findViewById(R.id.layout_no_data)
             tableConnections = findViewById(R.id.tableConnections)
             tableAlarms = findViewById(R.id.tableAlarms)
@@ -169,7 +173,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             }
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
-            sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
 
             ReceiveData.initData(this.applicationContext)
 
@@ -592,6 +596,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                             apply()
                         }
                     }
+                    AlarmState.ALARM -> {
+                        AlarmNotification.stopCurrentNotification(this)
+                    }
                     AlarmState.TEMP_DISABLED -> {
                         AlarmHandler.disableInactiveTime()
                     }
@@ -636,7 +643,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     })
             }
             if(snoozeMenu != null) {
-                snoozeMenu!!.isVisible = (state == AlarmState.ACTIVE || state == AlarmState.SNOOZE)
+                snoozeMenu!!.isVisible = (AlarmState.isActive(state) || state == AlarmState.SNOOZE)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateAlarmIcon exception: " + exc.message.toString() )
@@ -774,11 +781,32 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private fun updateConnectionsTable() {
         tableConnections.removeViews(1, maxOf(0, tableConnections.childCount - 1))
         if (SourceStateData.lastState != SourceState.NONE) {
+            var onClickListener: OnClickListener? = null
+            if(SourceStateData.lastState == SourceState.MULTI_PATIENT) {
+                btnPatient.visibility = View.VISIBLE
+                btnPatient.setOnClickListener{
+                    try {
+                        SelectPatientPopup.show(this, SourceStateData.lastSource)
+                    } catch (exc: Exception) {
+                        Log.e(LOG_ID, "Dexcom browse exception: " + exc.message.toString() )
+                    }
+                }
+                onClickListener = OnClickListener {
+                    try {
+                        SelectPatientPopup.show(this, SourceStateData.lastSource)
+                    } catch (exc: Exception) {
+                        Log.e(LOG_ID, "Dexcom browse exception: " + exc.message.toString() )
+                    }
+                }
+            } else {
+                btnPatient.visibility = View.GONE
+            }
             val msg = SourceStateData.getStateMessage(this)
             tableConnections.addView(
                 createRow(
                     SourceStateData.lastSource.resId,
-                    msg
+                    msg,
+                    onClickListener
                 )
             )
             if(SourceStateData.lastState == SourceState.ERROR) {
@@ -833,7 +861,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         if (WatchDrip.connected) {
             tableConnections.addView(createRow(CR.string.pref_switch_watchdrip_enabled, resources.getString(CR.string.connected_label)))
         }
-
+        if(HealthConnectManager.enabled && HealthConnectManager.state.resId != 0) {
+            tableConnections.addView(createRow(CR.string.pref_healthconnect, resources.getString(HealthConnectManager.state.resId)))
+        }
         if (CarModeReceiver.AA_connected) {
             tableConnections.addView(createRow(CR.string.pref_cat_android_auto, resources.getString(CR.string.connected_label)))
         }

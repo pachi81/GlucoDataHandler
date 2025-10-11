@@ -1,11 +1,16 @@
 package de.michelinside.glucodatahandler.tasker
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.joaomgcd.taskerpluginlibrary.config.TaskerPluginConfig
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInput
+import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.databinding.TaskerWriteSettingBinding
 
@@ -41,8 +46,18 @@ class WriteSettingConfigureActivity : AppCompatActivity(),
             Log.d(LOG_ID, "onCreate called")
             super.onCreate(savedInstanceState)
             helper.onCreate()
-
+            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P)
+                enableEdgeToEdge()
             setContentView(binding.root)
+
+            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+                ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_layout)) { v, insets ->
+                    val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                    Log.d(LOG_ID, "Insets: " + systemBars.toString())
+                    v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+                    insets
+                }
+            }
 
             val supportedValues = resources
                 .getStringArray(CR.array.tasker_supported_settings_values)

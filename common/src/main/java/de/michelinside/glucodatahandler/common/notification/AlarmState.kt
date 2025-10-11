@@ -9,6 +9,7 @@ import de.michelinside.glucodatahandler.common.R
 enum class AlarmState(val icon: Int, val descr: Int) {
     DISABLED(R.drawable.notification_disabled, R.string.disabled),
     ACTIVE(R.drawable.notification_on, R.string.enabled),
+    ALARM(R.drawable.notification_alarm, R.string.info_label_alarm),
     SNOOZE(R.drawable.notification_snooze, R.string.alarm_state_snooze),
     INACTIVE(R.drawable.notification_minus, R.string.alarm_state_inactive),
     TEMP_DISABLED(R.drawable.notification_clock_snooze, R.string.alarm_state_temp_disabled);
@@ -28,6 +29,10 @@ enum class AlarmState(val icon: Int, val descr: Int) {
             }
             // disabled
             return DISABLED
+        }
+
+        fun isActive(state: AlarmState?): Boolean {
+            return state == ACTIVE || state == ALARM
         }
     }
 }

@@ -3,7 +3,6 @@ package de.michelinside.glucodatahandler.common.tasks
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
@@ -23,12 +22,14 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
+import androidx.core.content.edit
 
 
 // API docu: https://libreview-unofficial.stoplight.io/
 
-class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, DataSource.LIBRELINK) {
-    private val LOG_ID = "GDH.Task.Source.LibreLinkTask"
+class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, DataSource.LIBRELINK) {
+    override val LOG_ID = "GDH.Task.Source.LibreLinkTask"
+    override val patientIdKey = Constants.SHARED_PREF_LIBRE_PATIENT_ID
     companion object {
         private var user = ""
         private var password = ""
@@ -38,7 +39,6 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         private var userId = ""
         private var region = ""
         private var topLevelDomain = "io"
-        private var patientId = ""
         private var dataReceived = false   // mark this endpoint as already received data
         private var autoAcceptTOU = true
         val patientData = mutableMapOf<String, String>()
@@ -61,7 +61,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
     private fun getHeader(): MutableMap<String, String> {
         val result = mutableMapOf(
             "product" to "llu.android",
-            "version" to "4.14.0",
+            "version" to "4.16.0",
             "Accept" to "application/json",
             "Content-Type" to "application/json",
             "cache-control" to "no-cache",
@@ -76,21 +76,20 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
 
     override fun reset() {
         Log.i(LOG_ID, "reset called")
+        super.reset()
         token = ""
         tokenExpire = 0L
         region = ""
         userId = ""
         dataReceived = false
         patientData.clear()
-        patientId = GlucoDataService.sharedPref!!.getString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, "")!!
         try {
             Log.d(LOG_ID, "Save reset")
-            with (GlucoDataService.sharedPref!!.edit()) {
+            GlucoDataService.sharedPref!!.edit {
                 putString(Constants.SHARED_PREF_LIBRE_TOKEN, token)
                 putString(Constants.SHARED_PREF_LIBRE_USER_ID, userId)
                 putLong(Constants.SHARED_PREF_LIBRE_TOKEN_EXPIRE, tokenExpire)
                 putString(Constants.SHARED_PREF_LIBRE_REGION, region)
-                apply()
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "save reset exception: " + exc.toString() )
@@ -231,14 +230,14 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                     setLastError(getErrorMessage(jsonObj), status, getStatusMessage(status))
                     return null
                 }
-                setLastError("Error", status)
+                setLastError(GlucoDataService.context!!.resources.getString(R.string.source_state_error), status)
                 return null
             }
         }
         if (jsonObj.has("data")) {
             return jsonObj
         }
-        setLastError("Missing data in response!", 500)
+        setLastError(GlucoDataService.context!!.resources.getString(R.string.missing_data), 500)
         reset()
         retry = true
         return null
@@ -295,7 +294,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                 saveRegion()
                 return true
             } else {
-                setLastError("redirect without region!!!", 500)
+                setLastError(GlucoDataService.context!!.resources.getString(R.string.invalid_redirect), 500)
             }
         }
         return false
@@ -308,9 +307,8 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
             if(user != null && user.has("id")) {
                 userId = user.optString("id")
                 Log.i(LOG_ID, "User ID set!")
-                with(GlucoDataService.sharedPref!!.edit()) {
+                GlucoDataService.sharedPref!!.edit {
                     putString(Constants.SHARED_PREF_LIBRE_USER_ID, userId)
-                    apply()
                 }
             }
         }
@@ -325,11 +323,10 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                             Date(tokenExpire)
                         ))
                     }
-                    with(GlucoDataService.sharedPref!!.edit()) {
+                    GlucoDataService.sharedPref!!.edit {
                         putString(Constants.SHARED_PREF_LIBRE_TOKEN, token)
                         putLong(Constants.SHARED_PREF_LIBRE_TOKEN_EXPIRE, tokenExpire)
                         putBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, false)
-                        apply()
                     }
                 }
             }
@@ -339,9 +336,8 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
     private fun saveRegion() {
         try {
             Log.d(LOG_ID, "Save region $region")
-            with (GlucoDataService.sharedPref!!.edit()) {
+            GlucoDataService.sharedPref!!.edit {
                 putString(Constants.SHARED_PREF_LIBRE_REGION, region)
-                apply()
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "saveRegion exception: " + exc.toString() )
@@ -355,9 +351,8 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
             reset()
             if (reconnect) {
                 reconnect = false
-                with(GlucoDataService.sharedPref!!.edit()) {
+                GlucoDataService.sharedPref!!.edit {
                     putBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, false)
-                    apply()
                 }
             }
         }
@@ -370,11 +365,12 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         return true
     }
 
-    override fun getValue(): Boolean {
-        if((patientId.isNotEmpty() && patientData.isNotEmpty()) || handleConnectionResponse(httpGet(getUrl(CONNECTION_ENDPOINT), getHeader()))) {
-            return handleGraphResponse(httpGet(getUrl(GRAPH_ENDPOINT.format(patientId)), getHeader()))
-        }
-        return false
+    override fun getPatientData(): MutableMap<String, String> {
+        return handleConnectionResponse(httpGet(getUrl(CONNECTION_ENDPOINT), getHeader()))
+    }
+
+    override fun getPatientValue(patientId: String): Boolean {
+        return handleGraphResponse(httpGet(getUrl(GRAPH_ENDPOINT.format(patientId)), getHeader()))
     }
 
     private fun getRateFromTrend(trend: Int): Float {
@@ -419,7 +415,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         }
 
         Log.e(LOG_ID, "No data found in response: ${replaceSensitiveData(body!!)}")
-        setLastError("Invalid response! Please send logs to developer.")
+        setLastError(GlucoDataService.context!!.resources.getString(R.string.missing_data), -1, GlucoDataService.context!!.resources.getString(R.string.provide_logs))
         reset()
         retry = true
         return false
@@ -454,7 +450,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         }
     }
 
-    private fun handleConnectionResponse(body: String?): Boolean {
+    private fun handleConnectionResponse(body: String?): MutableMap<String, String> {
         /*  used for getting patient id
             {
               "status": 0,
@@ -489,22 +485,22 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                 if (array.length() == 0) {
                     Log.w(LOG_ID, "Empty data array in response: ${replaceSensitiveData(body!!)}")
                     if(dataReceived) {
-                        setLastError("Missing data! Please send logs to developer.")
+                        setLastError(GlucoDataService.context!!.resources.getString(R.string.source_no_patient))
                         reset()
                     } else {
                         setLastError(GlucoDataService.context!!.getString(R.string.src_libre_setup_librelink))
                     }
-                    return false
+                    return mutableMapOf()
                 }
                 return getPatientData(array)
             } else {
                 Log.e(LOG_ID, "No data array found in response: ${replaceSensitiveData(body!!)}")
-                setLastError("Invalid response! Please send logs to developer.")
+                setLastError(GlucoDataService.context!!.resources.getString(R.string.missing_data), -1, GlucoDataService.context!!.resources.getString(R.string.provide_logs))
                 reset()
                 retry = true
             }
         }
-        return false
+        return mutableMapOf()
     }
 
     private fun parseGlucoseData(data: JSONObject): Boolean {
@@ -545,10 +541,9 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         return false
     }
 
-    private fun getPatientData(dataArray: JSONArray): Boolean {
+    private fun getPatientData(dataArray: JSONArray): MutableMap<String, String> {
         if(dataArray.length() > patientData.size) {
             // create patientData map
-            val checkPatienId = patientData.isEmpty() && patientId.isNotEmpty()
             patientData.clear()
             for (i in 0 until dataArray.length()) {
                 val data = dataArray.getJSONObject(i)
@@ -559,33 +554,9 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                     patientData[id] = name
                 }
             }
-            if (checkPatienId && !patientData.keys.contains(patientId)) {
-                Log.i(LOG_ID, "Reset patient ID as it is not in the list")
-                patientId = ""
-                with (GlucoDataService.sharedPref!!.edit()) {
-                    putString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, "")
-                    apply()
-                }
-            }
-            Handler(GlucoDataService.context!!.mainLooper).post {
-                InternalNotifier.notify(GlucoDataService.context!!, NotifySource.PATIENT_DATA_CHANGED, null)
-            }
+            return patientData
         }
-        if(patientId.isNotEmpty()) {
-            Log.d(LOG_ID, "Using patient ID $patientId")
-            for (i in 0 until dataArray.length()) {
-                val data = dataArray.getJSONObject(i)
-                if (data.has("patientId") && data.getString("patientId") == patientId) {
-                    return true
-                }
-            }
-            return false
-        } else if (patientData.isNotEmpty()) {
-            patientId = patientData.keys.first()
-            Log.d(LOG_ID, "Using patient ID $patientId")
-            return true
-        }
-        return false  // no patient found
+        return mutableMapOf()  // no patient found
     }
 
     override fun interrupt() {
@@ -607,7 +578,6 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
             }
             tokenExpire = sharedPreferences.getLong(Constants.SHARED_PREF_LIBRE_TOKEN_EXPIRE, 0L)
             region = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_REGION, "")!!
-            patientId = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, "")!!
             autoAcceptTOU = sharedPreferences.getBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, true)
             topLevelDomain = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_SERVER, "io")?: "io"
             InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
@@ -634,13 +604,6 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                     if (reconnect != sharedPreferences.getBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, false)) {
                         reconnect = sharedPreferences.getBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, false)
                         Log.d(LOG_ID, "Reconnect triggered")
-                        trigger = true
-                    }
-                }
-                Constants.SHARED_PREF_LIBRE_PATIENT_ID -> {
-                    if (patientId != sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, "")) {
-                        patientId = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, "")!!
-                        Log.d(LOG_ID, "PatientID changed to $patientId")
                         trigger = true
                     }
                 }

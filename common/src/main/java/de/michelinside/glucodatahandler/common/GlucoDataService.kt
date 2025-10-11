@@ -16,6 +16,7 @@ import android.provider.Settings
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.google.android.gms.wearable.WearableListenerService
+import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.notifier.DataSource
@@ -38,6 +39,7 @@ import de.michelinside.glucodatahandler.common.tasks.BackgroundWorker
 import de.michelinside.glucodatahandler.common.tasks.SourceTaskService
 import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.utils.GlucoseStatistics
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
@@ -170,7 +172,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 Log.i(LOG_ID, "Trigger start service - foreground: $foreground - alarm active: ${alarmManager != null && alarmPendingIntent != null}")
                 if(foreground || (alarmManager != null && alarmPendingIntent != null))
                     return
-                alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                alarmManager = context.getSystemService(ALARM_SERVICE) as AlarmManager
                 var hasExactAlarmPermission = true
                 if (!Utils.canScheduleExactAlarms(context)) {
                     Log.d(LOG_ID, "Need permission to set exact alarm!")
@@ -251,6 +253,18 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     LOG_ID,
                     "sendCommand exception: " + exc.message.toString()
                 )
+            }
+        }
+
+        fun resetDB() {
+            try {
+                Log.w(LOG_ID, "reset database called!")
+                ReceiveData.reset(context!!)
+                dbAccess.deleteAllValues()
+                GlucoseStatistics.reset()
+                sendCommand(Command.CLEAN_UP_DB)
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "resetDB exception: " + exc.message.toString())
             }
         }
 

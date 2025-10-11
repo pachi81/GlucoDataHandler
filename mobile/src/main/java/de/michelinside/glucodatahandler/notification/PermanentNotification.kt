@@ -147,10 +147,21 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         Channels.getNotificationManager().cancel(THIRD_NOTIFICATION_ID)
     }
 
+
+
+    private fun getDefaultIcon(iconKey: String): StatusBarIcon {
+        return when(iconKey) {
+            Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON -> StatusBarIcon.GLUCOSE
+            Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON -> StatusBarIcon.TREND
+            Constants.SHARED_PREF_THIRD_PERMANENT_NOTIFICATION_ICON -> StatusBarIcon.DELTA
+            else -> StatusBarIcon.APP
+        }
+    }
+
     private fun getStatusBarIcon(iconKey: String): Icon {
         val bigIcon = sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON, false)
         val coloredIcon = sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_COLORED_ICON, true)
-        return when(sharedPref.getString(iconKey, StatusBarIcon.APP.pref)) {
+        return when(sharedPref.getString(iconKey, getDefaultIcon(iconKey).pref)) {
             StatusBarIcon.GLUCOSE.pref -> BitmapUtils.getGlucoseAsIcon(
                 iconKey,
                 roundTarget=!bigIcon,

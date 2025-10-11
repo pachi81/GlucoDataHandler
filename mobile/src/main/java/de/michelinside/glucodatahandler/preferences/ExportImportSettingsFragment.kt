@@ -13,11 +13,9 @@ import androidx.preference.Preference
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.AppSource
-import de.michelinside.glucodatahandler.common.Command
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
-import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -95,8 +93,7 @@ class ExportImportSettingsFragment: SettingsFragmentBase(R.xml.pref_export_impor
             prefResetDb!!.setOnPreferenceClickListener {
                 Dialogs.showOkCancelDialog(requireContext(), resources.getString(CR.string.reset_db), resources.getString(CR.string.reset_db_warning),
                     { _, _ ->
-                        dbAccess.deleteAllValues()
-                        GlucoDataService.sendCommand(Command.CLEAN_UP_DB)
+                        GlucoDataService.resetDB()
                     }
                 )
                 true

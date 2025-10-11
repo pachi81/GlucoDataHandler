@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.*
-import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.database.dbSync
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
@@ -42,6 +41,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
     private val LOG_ID = "GDH.WearPhoneConnection"
     private lateinit var context: Context
     private var lastSendValuesTime = 0L
+    private var cleanUpDbOnWatchConnected = false
 
     private val capabilityName: String get() {
         if(GlucoDataService.appSource == AppSource.PHONE_APP)  // phone sends to wear
@@ -470,6 +470,9 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 sendMessage(NotifySource.SETTINGS, GlucoDataService.getSettings(), filterReceiverId = nodeId)
                 sendMessage(NotifySource.SOURCE_SETTINGS, DataSourceTask.getSettingsBundle(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)), filterReceiverId = nodeId)
                 sendMessage(NotifySource.ALARM_SETTINGS, AlarmHandler.getSettings(), filterReceiverId = nodeId)
+                if(cleanUpDbOnWatchConnected) {
+                    sendCommand(Command.CLEAN_UP_DB, null)
+                }
                 dbSync.requestDbSync(context)   // update data on phone first, before sending data to wear
             }
             val bundle = Bundle()
@@ -484,23 +487,28 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
 
     fun sendCommand(command: Command, extras: Bundle?) {
         // Send command to all nodes in parallel
-        Log.d(LOG_ID, "sendCommand called for $command with extras: ${Utils.dumpBundle(extras)}")
-        val commandBundle = Bundle()
-        commandBundle.putString(Constants.COMMAND_EXTRA, command.toString())
-        if(extras != null) {
-            commandBundle.putBundle(Constants.COMMAND_BUNDLE, extras)
-            if(BatteryReceiver.batteryPercentage >= 0) {
-                commandBundle.putInt(BatteryReceiver.LEVEL, BatteryReceiver.batteryPercentage)
-            }
-        }
-        connectedNodes.forEach { node ->
-            Thread {
-                try {
-                    sendMessage(node.value, getPath(NotifySource.COMMAND, nodeHasJson(node.value.id)), Utils.bundleToBytes(commandBundle, nodeHasJson(node.value.id)), NotifySource.COMMAND)
-                } catch (exc: Exception) {
-                    Log.e(LOG_ID, "sendCommand to " + node.value.toString() + " exception: " + exc.toString())
+        Log.d(LOG_ID, "sendCommand called for $command with extras: ${Utils.dumpBundle(extras)} - nodesConnected: $nodesConnected")
+        if(nodesConnected) {
+            val commandBundle = Bundle()
+            commandBundle.putString(Constants.COMMAND_EXTRA, command.toString())
+            if(extras != null) {
+                commandBundle.putBundle(Constants.COMMAND_BUNDLE, extras)
+                if(BatteryReceiver.batteryPercentage >= 0) {
+                    commandBundle.putInt(BatteryReceiver.LEVEL, BatteryReceiver.batteryPercentage)
                 }
-            }.start()
+            }
+            connectedNodes.forEach { node ->
+                Thread {
+                    try {
+                        sendMessage(node.value, getPath(NotifySource.COMMAND, nodeHasJson(node.value.id)), Utils.bundleToBytes(commandBundle, nodeHasJson(node.value.id)), NotifySource.COMMAND)
+                    } catch (exc: Exception) {
+                        Log.e(LOG_ID, "sendCommand to " + node.value.toString() + " exception: " + exc.toString())
+                    }
+                }.start()
+            }
+        } else if(command == Command.CLEAN_UP_DB) {
+            Log.i(LOG_ID, "Queue command clean up db for next connected watch")
+            cleanUpDbOnWatchConnected = true
         }
     }
 
@@ -708,7 +716,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     }
                 }
                 Command.DB_SYNC -> dbSync.sendData(context, nodeId)
-                Command.CLEAN_UP_DB -> dbAccess.deleteAllValues()
+                Command.CLEAN_UP_DB -> GlucoDataService.resetDB()
                 Command.REQUEST_DB_SYNC -> dbSync.requestDbSync(context)
             }
 

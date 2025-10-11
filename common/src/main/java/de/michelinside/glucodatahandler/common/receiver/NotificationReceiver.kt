@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.RemoteViews
 import android.widget.TextView
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
@@ -245,9 +246,9 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                         if(!value.isNaN())
                             handleIobValue(value, sbn.postTime)
                         else if(parsedTextViews.size > 0) {
-                            SourceStateData.setError(DataSource.NOTIFICATION, "Could not parse IOB from ${parsedTextViews.distinct()}")
+                            SourceStateData.setError(DataSource.NOTIFICATION_IOB, applicationContext.resources.getString(R.string.invalid_iob_value) + "\n${parsedTextViews.distinct()}")
                         } else {
-                            SourceStateData.setError(DataSource.NOTIFICATION, "No text found for parsing IOB!")
+                            SourceStateData.setError(DataSource.NOTIFICATION_IOB, applicationContext.resources.getString(R.string.missing_data))
                         }
                     }
                 }
@@ -264,9 +265,9 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             lastValueNotificationTime = sbn.postTime
             handleGlucoseValue(value, sbn)
         } else if(parsedTextViews.size > 0) {
-            SourceStateData.setError(DataSource.NOTIFICATION, "Could not parse glucose from $parsedTextViews")
+            SourceStateData.setError(DataSource.NOTIFICATION, applicationContext.resources.getString(R.string.source_no_valid_value) + "\n${parsedTextViews.distinct()}")
         } else {
-            SourceStateData.setError(DataSource.NOTIFICATION, "No text found for parsing!")
+            SourceStateData.setError(DataSource.NOTIFICATION, applicationContext.resources.getString(R.string.missing_data))
         }
     }
 
@@ -462,7 +463,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         } else {
             SourceStateData.setError(
                 DataSource.NOTIFICATION,
-                "Invalid glucose value: $glucoseValue"
+                applicationContext.resources.getString(R.string.invalid_glucose_value, glucoseValue.toString())
             )
         }
     }
@@ -479,7 +480,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         glucoExtras.putLong(ReceiveData.IOBCOB_TIME, time)
         glucoExtras.putFloat(ReceiveData.IOB, iobValue)
 
-        ReceiveData.handleIobCob(applicationContext, DataSource.NOTIFICATION, glucoExtras)
-        SourceStateData.setState(DataSource.NOTIFICATION, SourceState.NONE)
+        ReceiveData.handleIobCob(applicationContext, DataSource.NOTIFICATION_IOB, glucoExtras)
+        SourceStateData.setState(DataSource.NOTIFICATION_IOB, SourceState.NONE)
     }
 }

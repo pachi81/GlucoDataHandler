@@ -8,6 +8,7 @@ import android.util.Log
 import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
+import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
@@ -280,7 +281,8 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
                             }
                         } else {
                             Log.w(LOG_ID, "Could not parse IOB data from Juggluco: ${result.take(1000)}")
-                            SourceStateData.setError(DataSource.JUGGLUCO, "Could not parse IOB data from Juggluco.")
+                            SourceStateData.setError(DataSource.JUGGLUCO, context.resources!!.getString(
+                                R.string.invalid_iob_value))
                         }
                     } catch (exc: Exception) {
                         Log.e(LOG_ID, "IOB request exception: " + exc.message.toString() )

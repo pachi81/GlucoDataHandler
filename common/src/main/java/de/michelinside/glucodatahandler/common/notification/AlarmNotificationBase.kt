@@ -116,6 +116,8 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     "Inactive causes by active: $active"
                 )
                 state = AlarmState.INACTIVE
+            } else if(notificationActive) {
+                state = AlarmState.ALARM
             }
         } else if(state == AlarmState.TEMP_DISABLED || state == AlarmState.SNOOZE) {
             if(!AlarmHandler.isInactive(alarmType)) {
@@ -204,7 +206,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
 
     fun stopCurrentNotification(context: Context? = null, fromClient: Boolean = false) {
         Log.v(LOG_ID, "stopCurrentNotification fromClient=$fromClient - curNotification=$curNotification")
-        if (curNotification > 0) {
+        if (notificationActive) {
             stopNotification(curNotification, context, fromClient = fromClient)
         } else {
             stopVibrationAndSound()  // force stop!
@@ -231,6 +233,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     curTestAlarmType = AlarmType.NONE
                     if(!fromClient)
                         GlucoDataService.sendCommand(Command.STOP_ALARM)
+                    InternalNotifier.notify(GlucoDataService.context!!, NotifySource.ALARM_STATE_CHANGED, null)
                     InternalNotifier.notify(GlucoDataService.context!!, NotifySource.NOTIFICATION_STOPPED, null)
                 }
             }
@@ -268,7 +271,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         try {
             WakeLockHelper(context).use {
                 Log.d(LOG_ID, "triggerNotification called for $alarmType - active=$active - curNotification=$curNotification - forTest=$forTest")
-                if (getAlarmState(context, alarmType) == AlarmState.ACTIVE || forTest) {
+                if (AlarmState.isActive(getAlarmState(context, alarmType)) || forTest) {
                     stopCurrentNotification(context, true)  // do not send stop to client! -> to prevent, that the client will stop the newly created notification!
                     curNotification = getNotificationId(alarmType)
                     retriggerCount = 0
@@ -283,6 +286,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     if(canShowNotification())
                         showNotification(alarmType, context)
                     triggerVibrationAndSound(alarmType, context)
+                    InternalNotifier.notify(GlucoDataService.context!!, NotifySource.ALARM_STATE_CHANGED, null)
                 }
             }
         } catch (exc: Exception) {
@@ -442,7 +446,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             Log.w(LOG_ID, "Start sound thread is already running!")
             return
         }
-        if(curNotification > 0) {
+        if(notificationActive) {
             // else
             startDelayThread = Thread {
                 try {
@@ -451,7 +455,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                         Log.i(LOG_ID, "Start sound and vibration with a delay of $startDelay ms")
                         if (startDelay > 0)
                             Thread.sleep(startDelay.toLong())
-                        if (curNotification > 0) {
+                        if (notificationActive) {
                             checkCreateSound(alarmType, context)
                             startVibrationAndSound(alarmType, context)
                         }
@@ -508,7 +512,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
 
     private fun vibrate(alarmType: AlarmType, repeat: Boolean = false, forceReturnDuration: Boolean = false) : Int {
         try {
-            if (curNotification > 0 && getRingerMode() >= AudioManager.RINGER_MODE_VIBRATE) {
+            if (notificationActive && getRingerMode() >= AudioManager.RINGER_MODE_VIBRATE) {
                 val vibratePattern = getVibrationPattern(alarmType) ?: return 0
                 val duration = if(repeat && !forceReturnDuration) -1 else vibratePattern.sum().toInt()
                 Log.i(LOG_ID, "start vibration for $alarmType - repeat: $repeat - duration: $duration ms")
@@ -565,7 +569,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             var soundDuration = 0
             val repeat = getRepeat(alarmType)
             var repeatVibration = false
-            if (getRingerMode() >= AudioManager.RINGER_MODE_NORMAL && (forTest || curNotification > 0)) {
+            if (getRingerMode() >= AudioManager.RINGER_MODE_NORMAL && (forTest || notificationActive)) {
                 val soundUri = getSound(alarmType, context, forTest)
                 if (soundUri != null && !isRingtonePlaying()) {
                     ringtoneRWLock.write {
@@ -950,7 +954,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     }
                 }
                 NotifySource.ALARM_STATE_CHANGED -> {
-                    if (getAlarmState(context) != AlarmState.ACTIVE) {
+                    if (!AlarmState.isActive(getAlarmState(context))) {
                         stopCurrentNotification(context)
                     }
                 }
@@ -980,7 +984,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             retriggerCount++
             triggerDelay(TriggerAction.RETRIGGER_SOUND, getAlarmType(), context, (retriggerTime*60).toFloat() + (soundDuration.toFloat()/1000))
             return true
-        } else if(autoCloseNotification && curNotification > 0) {
+        } else if(autoCloseNotification && notificationActive) {
             val delaySec =
                 if(soundDuration==0) {
                     if(curAlarmTime > 0) {
@@ -1049,7 +1053,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
 
     private fun checkNotificationActive(context: Context) {
         Log.v(LOG_ID, "Check notification for $curNotification")
-        if(curNotification > 0) {
+        if(notificationActive) {
             Channels.getNotificationManager(context).activeNotifications.forEach {
                 if(it.id == curNotification) {
                     Log.d(LOG_ID, "Notification found for current id $curNotification")

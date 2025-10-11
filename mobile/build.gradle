@@ -40,7 +40,7 @@ android {
             applicationIdSuffix '.second'
             versionNameSuffix '_SECOND'
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-dev-rules.pro'
             resValue "string", "app_name", "GDH Second"
             signingConfig signingConfigs.debug
         }

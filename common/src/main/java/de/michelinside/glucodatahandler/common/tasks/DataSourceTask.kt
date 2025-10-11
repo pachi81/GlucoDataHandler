@@ -222,7 +222,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             if(firstCall) {
                 executeRequest(false)
             } else {
-                setLastError("Timeout")
+                setLastError(context.resources.getString(R.string.timeout))
             }
         }
     }
@@ -243,7 +243,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                 throw ex // re throw interruption
             } catch(ex: SocketTimeoutException) {
                 Log.w(LOG_ID, "Timeout for $source: " + ex)
-                setLastError("Timeout")
+                setLastError(context.resources.getString(R.string.timeout))
             } catch (ex: UnknownHostException) {
                 Log.w(LOG_ID, "Internet connection issue for $source: " + ex)
                 setState(SourceState.NO_CONNECTION)
@@ -307,10 +307,19 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                 Log.d(LOG_ID, "handleResult for $source in main thread")
                 ReceiveData.handleIntent(GlucoDataService.context!!, source, extras)
                 if(ReceiveData.getElapsedTimeMinute(RoundingMode.UP) > interval) {
-                    setState(
-                        SourceState.NO_NEW_VALUE,
-                        GlucoDataService.context!!.resources.getString(R.string.source_delay_too_short)
-                    )
+                    if(ReceiveData.getElapsedTimeMinute(RoundingMode.UP) < interval * 2) {
+                        setState(
+                            SourceState.NO_NEW_VALUE,
+                            GlucoDataService.context!!.resources.getString(R.string.source_delay_too_short)
+                        )
+                    } else {
+                        setState(
+                            SourceState.NO_NEW_VALUE,
+                            GlucoDataService.context!!.resources.getString(R.string.last_value_on_server, Utils.getUiTimeStamp(extras.getLong(ReceiveData.TIME))),
+                            -1,
+                            getNoNewValueInfo(extras.getLong(ReceiveData.TIME))
+                        )
+                    }
                 } else {
                     setState(SourceState.CONNECTED)
                 }
@@ -333,7 +342,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         if(!done.get()) {
             Log.e(LOG_ID, "Handler for $source not finished after $count ms! Active: ${active.get()} - Stop it!")
             handler.removeCallbacksAndMessages(null)
-            setLastError("Internal error!")
+            setLastError(GlucoDataService.context!!.resources.getString(R.string.internal_error), -1, GlucoDataService.context!!.resources.getString(R.string.provide_logs))
         }
         Log.d(LOG_ID, "handleResult for " + source + " done!")
     }
