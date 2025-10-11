@@ -515,6 +515,7 @@
     <string name="pref_cat_watchdrip">MiBand and Amazfit watches</string>
     <string name="pref_cat_wear_os">Wear OS watches</string>
     <string name="pref_cat_watch">Watch</string>
+    <string name="pref_cat_garminpebble">Garmin and Pebble watches</string>
     <string name="pref_cat_watch_summary">Settings for connected smartwatches.</string>
     <string name="pref_cat_transfer_summary">Settings to transfer glucose values to other applications.</string>
     <string name="pref_cat_transfer">Transfer values</string>
