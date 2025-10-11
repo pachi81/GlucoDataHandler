@@ -13,7 +13,6 @@ import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import androidx.annotation.RequiresApi
 import com.google.android.gms.wearable.WearableListenerService
 import de.michelinside.glucodatahandler.common.database.dbAccess
@@ -40,6 +39,7 @@ import de.michelinside.glucodatahandler.common.tasks.SourceTaskService
 import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.GlucoseStatistics
+import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
@@ -689,6 +689,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             service = this
             isRunning = true
 
+            Log.init(this)
+
             ReceiveData.initData(this)
             SourceTaskService.run(this)
             PackageUtils.updatePackages(this)
@@ -753,6 +755,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             isRunning = false
             isForegroundService = false
             TextToSpeechUtils.destroyTextToSpeech(this)
+
+            Log.close(this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.toString())
         }

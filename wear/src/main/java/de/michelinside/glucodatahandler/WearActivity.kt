@@ -8,7 +8,7 @@ import android.graphics.Paint
 import android.graphics.drawable.Icon
 import android.os.*
 import android.provider.Settings
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.Button

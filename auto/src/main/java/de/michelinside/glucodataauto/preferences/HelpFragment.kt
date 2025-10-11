@@ -1,7 +1,7 @@
 package de.michelinside.glucodataauto.preferences
 
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodataauto.R
 import de.michelinside.glucodatahandler.common.preferences.PreferenceFragmentCompatBase

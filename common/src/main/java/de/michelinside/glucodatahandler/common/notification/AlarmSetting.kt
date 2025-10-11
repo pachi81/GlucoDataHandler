@@ -3,7 +3,7 @@ package de.michelinside.glucodatahandler.common.notification
 import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.utils.Utils
 import java.time.DayOfWeek

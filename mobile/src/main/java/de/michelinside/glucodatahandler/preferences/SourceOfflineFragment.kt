@@ -1,6 +1,6 @@
 package de.michelinside.glucodatahandler.preferences
 
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.preference.*
 import de.michelinside.glucodatahandler.common.ui.Dialogs
 import de.michelinside.glucodatahandler.R

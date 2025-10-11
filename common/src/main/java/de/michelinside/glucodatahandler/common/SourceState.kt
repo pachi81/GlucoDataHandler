@@ -2,7 +2,7 @@ package de.michelinside.glucodatahandler.common
 
 import android.content.Context
 import android.os.Handler
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource

@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.View
 import com.github.mikephil.charting.charts.LineChart.generateViewId
 import de.michelinside.glucodatahandler.common.Constants

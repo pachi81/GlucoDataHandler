@@ -2,7 +2,7 @@ package de.michelinside.glucodatahandler.tasker
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import com.joaomgcd.taskerpluginlibrary.action.TaskerPluginRunnerActionNoOutput
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInput
 import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResult

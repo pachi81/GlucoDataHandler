@@ -1,6 +1,6 @@
 package de.michelinside.glucodatahandler.common.chart
 
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.renderer.XAxisRenderer
 import com.github.mikephil.charting.utils.Utils

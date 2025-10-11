@@ -2,7 +2,7 @@ package de.michelinside.glucodatahandler.common.preferences
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.fragment.app.DialogFragment
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat

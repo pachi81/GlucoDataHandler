@@ -137,6 +137,8 @@ object Constants {
     const val SHARED_PREF_IMPORT_SETTINGS = "import_settings"
     const val SHARED_PREF_SAVE_MOBILE_LOGS = "save_mobile_logs"
     const val SHARED_PREF_SAVE_WEAR_LOGS = "save_wear_logs"
+    const val SHARED_PREF_LOG_DURATION = "log_duration"
+    const val SHARED_PREF_LOG_DEBUG = "log_debug"
 
 
     const val SHARED_PREF_WATCHFACES_PUJIE = "pref_watchfaces_pujie"

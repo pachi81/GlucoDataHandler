@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+        <PreferenceCategory
+            android:title="@string/menu_save_logs"
+            app:iconSpaceReserved="false">
+                <Preference
+                    android:key="save_mobile_logs"
+                    android:title="@string/menu_save_mobile_logs"
+                    android:summary="@string/menu_save_mobile_logs_summary"
+                    app:iconSpaceReserved="false" />
+                <Preference
+                    android:key="save_wear_logs"
+                    android:title="@string/menu_save_wear_logs"
+                    android:summary="@string/menu_save_wear_logs_summary"
+                    app:iconSpaceReserved="false" />
+        </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/pref_cat_log_to_db"
+        app:iconSpaceReserved="false">
+        <Preference
+            android:key="log_to_db_info"
+            android:title="@string/pref_information"
+            android:summary="@string/pref_log_to_db_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SeekBarPreference
+            android:defaultValue="0"
+            app:showSeekBarValue="true"
+            app:seekBarIncrement="1"
+            app:min="0"
+            android:max="8"
+            android:key="log_duration"
+            android:summary="@string/pref_log_duration_summary"
+            android:title="@string/pref_log_duration_size"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="log_debug"
+            android:summary="@string/pref_log_debug_summary"
+            android:title="@string/pref_log_debug"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+</PreferenceScreen>

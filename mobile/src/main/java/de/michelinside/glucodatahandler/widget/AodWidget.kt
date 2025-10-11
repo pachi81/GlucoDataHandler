@@ -3,7 +3,7 @@ package de.michelinside.glucodatahandler.widget
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.AODAccessibilityService
 import de.michelinside.glucodatahandler.common.Constants
 

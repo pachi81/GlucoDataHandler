@@ -8,7 +8,7 @@ import android.content.IntentFilter
 import android.graphics.PixelFormat
 import android.os.Bundle
 import android.os.PowerManager
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager

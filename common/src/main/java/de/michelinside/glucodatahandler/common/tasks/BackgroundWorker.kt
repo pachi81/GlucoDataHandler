@@ -4,7 +4,7 @@ import android.app.Notification
 import android.content.Context
 import android.content.pm.ServiceInfo
 import android.os.Build
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.core.app.NotificationCompat
 import androidx.work.Constraints
 import androidx.work.ForegroundInfo

@@ -6,9 +6,8 @@ import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Environment
 import android.provider.DocumentsContract
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.preference.Preference
-import de.michelinside.glucodataauto.MainActivity.Companion.CREATE_FILE
 import de.michelinside.glucodataauto.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.utils.Utils
@@ -20,7 +19,6 @@ import java.util.Locale
 class ExportImportSettingsFragment: SettingsFragmentBase(R.xml.pref_export_import) {
 
     companion object {
-        const val CREATE_PHONE_FILE = 1
         const val EXPORT_PHONE_SETTINGS = 2
         const val IMPORT_PHONE_SETTINGS = 3
     }
@@ -62,32 +60,6 @@ class ExportImportSettingsFragment: SettingsFragmentBase(R.xml.pref_export_impor
             startActivityForResult(intent, IMPORT_PHONE_SETTINGS)
             true
         }
-
-        val prefSaveMobileLogs = findPreference<Preference>(Constants.SHARED_PREF_SAVE_MOBILE_LOGS)
-        prefSaveMobileLogs!!.setOnPreferenceClickListener {
-            SaveLogs(downloadUri)
-            true
-        }
-    }
-
-    private fun SaveLogs(downloadUri: Uri?) {
-        try {
-            Log.v(LOG_ID, "Save mobile logs called")
-            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
-                addCategory(Intent.CATEGORY_OPENABLE)
-                type = "text/plain"
-                val currentDateandTime = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(
-                    Date()
-                )
-                val fileName = "GDA_" + currentDateandTime + ".txt"
-                putExtra(Intent.EXTRA_TITLE, fileName)
-                putExtra(DocumentsContract.EXTRA_INITIAL_URI, downloadUri)
-            }
-            startActivityForResult(intent, CREATE_FILE)
-
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "Saving mobile logs exception: " + exc.message.toString() )
-        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -98,7 +70,6 @@ class ExportImportSettingsFragment: SettingsFragmentBase(R.xml.pref_export_impor
                 data?.data?.also { uri ->
                     Log.i(LOG_ID, "Export/Import for ${requestCode} to $uri")
                     when(requestCode) {
-                        CREATE_PHONE_FILE -> Utils.saveLogs(requireContext(), uri)
                         EXPORT_PHONE_SETTINGS -> Utils.saveSettings(requireContext(), uri)
                         IMPORT_PHONE_SETTINGS -> Utils.readSettings(requireContext(), uri)
                     }

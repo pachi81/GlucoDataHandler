@@ -3,7 +3,7 @@ package de.michelinside.glucodatahandler.common.preferences
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat

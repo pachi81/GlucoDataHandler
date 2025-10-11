@@ -949,6 +949,13 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="invalid_iob_value">Could not parse IOB!</string>
     <string name="source_iob_notification">IOB Notification</string>
 
-
+    <string name="pref_cat_logs">Logs</string>
+    <string name="pref_cat_logs_summary">Configure logging and save logs to a file.</string>
+    <string name="pref_cat_log_to_db">Log to database</string>
+    <string name="pref_log_to_db_summary">Warning: Saving logs to the database can impact performance and battery life.\nPlease enable this option only when instructed by the developer to help analyze an issue.</string>
+    <string name="pref_log_duration_size">Log retention period</string>
+    <string name="pref_log_duration_summary">Number of hours to keep logs in the database.\nSet to 0 to disable logging to the database.</string>
+    <string name="pref_log_debug">Enable debug logging</string>
+    <string name="pref_log_debug_summary">Enable saving of detailed debug messages to the database (max. last 30 minutes).\nOnly enable this if requested by the developer.</string>
 </resources>
 

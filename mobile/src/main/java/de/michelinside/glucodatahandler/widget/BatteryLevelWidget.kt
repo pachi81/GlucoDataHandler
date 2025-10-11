@@ -4,7 +4,7 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.widget.RemoteViews
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants

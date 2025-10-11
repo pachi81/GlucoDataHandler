@@ -13,7 +13,7 @@ import android.graphics.Rect
 import android.graphics.Typeface
 import android.graphics.drawable.Icon
 import android.hardware.display.DisplayManager
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.View
 import androidx.window.layout.WindowMetricsCalculator
 import de.michelinside.glucodatahandler.common.Constants

@@ -2,7 +2,7 @@ package de.michelinside.glucodatahandler.common.utils
 
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.json.JSONObject
@@ -158,7 +158,7 @@ object JsonUtils {
             val map = bundleToTypedMap(bundle) ?: return null
             val gson = Gson()
             val jsonString = gson.toJson(map)
-            if(Log.isLoggable(LOG_ID, Log.VERBOSE))
+            if(Log.isLoggable(LOG_ID, android.util.Log.VERBOSE))
                 Log.v(LOG_ID, "Created jsonString: ${jsonString.take(4000)}")
             jsonString.toByteArray(Charsets.UTF_8)
         } catch (e: Exception) {
@@ -437,7 +437,7 @@ object JsonUtils {
         if (bytes == null || bytes.isEmpty()) return null
         return try {
             val jsonString = String(bytes, Charsets.UTF_8)
-            if(Log.isLoggable(LOG_ID, Log.VERBOSE))
+            if(Log.isLoggable(LOG_ID, android.util.Log.VERBOSE))
                 Log.v(LOG_ID, "Received jsonString: $jsonString")
             val mapType = object : TypeToken<Map<String, Any?>>() {}.type
             val gson = Gson()

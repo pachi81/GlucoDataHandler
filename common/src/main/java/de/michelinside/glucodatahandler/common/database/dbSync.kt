@@ -1,7 +1,7 @@
 package de.michelinside.glucodatahandler.common.database
 
 import android.content.Context
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.ChannelClient
 import com.google.android.gms.wearable.Wearable

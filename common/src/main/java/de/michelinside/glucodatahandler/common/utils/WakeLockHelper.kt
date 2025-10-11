@@ -2,7 +2,7 @@ package de.michelinside.glucodatahandler.common.utils
 
 import android.content.Context
 import android.os.PowerManager
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import java.io.Closeable
 
 class WakeLockHelper(val context: Context) : Closeable {

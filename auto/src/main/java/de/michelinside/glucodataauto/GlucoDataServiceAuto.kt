@@ -9,7 +9,6 @@ import android.content.SharedPreferences
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.car.app.connection.CarConnection
 import de.michelinside.glucodataauto.android_auto.CarMediaBrowserService
@@ -41,6 +40,7 @@ import de.michelinside.glucodatahandler.common.receiver.GlucoseDataReceiver
 import de.michelinside.glucodatahandler.common.tasks.BackgroundWorker
 import de.michelinside.glucodatahandler.common.tasks.SourceTaskService
 import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
+import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import de.michelinside.glucodatahandler.common.R as CR
@@ -74,6 +74,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
             if(!init) {
                 GlucoDataService.appSource = AppSource.AUTO_APP
                 GlucoDataService.context = context.applicationContext
+                Log.init(context)
                 migrateSettings(context)
                 CarNotification.initNotification(context)
                 startService(context, false)
@@ -456,6 +457,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
         val sharedPref = getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         sharedPref.unregisterOnSharedPreferenceChangeListener(this)
         TextToSpeechUtils.destroyTextToSpeech(this)
+        Log.close(this)
         super.onDestroy()
     }
 

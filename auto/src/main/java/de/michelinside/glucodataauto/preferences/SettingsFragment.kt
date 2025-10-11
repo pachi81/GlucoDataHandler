@@ -2,7 +2,7 @@ package de.michelinside.glucodataauto.preferences
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.preference.*
 import de.michelinside.glucodataauto.BuildConfig
 import de.michelinside.glucodataauto.GlucoDataServiceAuto

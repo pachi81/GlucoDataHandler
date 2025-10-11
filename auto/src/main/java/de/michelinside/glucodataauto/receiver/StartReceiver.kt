@@ -3,7 +3,7 @@ package de.michelinside.glucodataauto.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 
 class StartReceiver: BroadcastReceiver() {
 

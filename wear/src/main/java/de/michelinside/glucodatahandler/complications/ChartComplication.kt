@@ -13,7 +13,7 @@ import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.wear.watchface.complications.data.ComplicationData
 import androidx.wear.watchface.complications.data.ComplicationType
 import androidx.wear.watchface.complications.data.PhotoImageComplicationData

@@ -2,7 +2,7 @@ package de.michelinside.glucodatahandler.common.chart
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.View
 import android.widget.ImageView
 import de.michelinside.glucodatahandler.common.Constants

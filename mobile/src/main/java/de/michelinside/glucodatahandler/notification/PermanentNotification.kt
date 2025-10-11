@@ -10,7 +10,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.Icon
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.View
 import android.widget.RemoteViews
 import de.michelinside.glucodatahandler.common.Constants

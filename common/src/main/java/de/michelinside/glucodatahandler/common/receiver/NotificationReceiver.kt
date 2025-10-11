@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RemoteViews

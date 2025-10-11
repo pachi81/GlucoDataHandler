@@ -1,7 +1,7 @@
 package de.michelinside.glucodatahandler.common.ui
 
 import android.content.Context
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.core.content.edit
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.notifier.DataSource

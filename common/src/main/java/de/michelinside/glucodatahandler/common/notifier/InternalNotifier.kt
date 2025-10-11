@@ -2,7 +2,7 @@ package de.michelinside.glucodatahandler.common.notifier
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import java.util.Collections
 
 object InternalNotifier {

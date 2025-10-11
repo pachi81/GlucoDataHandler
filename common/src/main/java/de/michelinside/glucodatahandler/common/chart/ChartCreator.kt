@@ -6,7 +6,7 @@ import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.View
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis

@@ -15,12 +15,4 @@
                     android:summary="@string/pref_import_settings_summary"
                     app:iconSpaceReserved="false" />
         </PreferenceCategory>
-        <PreferenceCategory
-            app:iconSpaceReserved="false">
-                <Preference
-                    android:key="save_mobile_logs"
-                    android:title="@string/menu_save_logs"
-                    android:summary="@string/menu_save_mobile_logs_summary"
-                    app:iconSpaceReserved="false" />
-        </PreferenceCategory>
 </PreferenceScreen>

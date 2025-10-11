@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
@@ -222,7 +222,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             if(firstCall) {
                 executeRequest(false)
             } else {
-                setLastError(context.resources.getString(R.string.timeout))
+                setLastError(GlucoDataService.context!!.resources.getString(R.string.timeout))
             }
         }
     }
