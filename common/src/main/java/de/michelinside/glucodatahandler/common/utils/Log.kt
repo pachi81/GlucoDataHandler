@@ -157,13 +157,12 @@ object Log: SharedPreferences.OnSharedPreferenceChangeListener {
                 }
                 return
             }
-            if(force || (System.currentTimeMillis() - lastClearTime >= 15*60*1000)) {  // remove old entries every 15 minutes
+            if(force || (Utils.getElapsedTimeMinute(lastClearTime) >= 15)) {  // remove old entries every 15 minutes
                 d(LOG_ID, "Clearing logs - force=$force - lastClearTime=${Utils.getUiTimeStamp(lastClearTime)} - logDuration=${Duration.ofMillis(logDuration.toLong()).toHours()}h")
 
-                if(force || System.currentTimeMillis() - lastClearTime > logDuration) {
-                    val removeTime = System.currentTimeMillis() - logDuration
-                    dbAccess.deleteOldLogs(removeTime)
-                }
+                val removeTime = System.currentTimeMillis() - logDuration
+                dbAccess.deleteOldLogs(removeTime)
+
                 if(minLevel == android.util.Log.DEBUG) {
                     val removeTime = System.currentTimeMillis() - 30*60*1000 // remove old debug entries after 30 minutes
                     dbAccess.deleteOldDebugLogs(removeTime)
