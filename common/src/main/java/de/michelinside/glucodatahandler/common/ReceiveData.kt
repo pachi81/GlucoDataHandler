@@ -735,7 +735,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     fun handleIobCob(context: Context, dataSource: DataSource, extras: Bundle, interApp: Boolean = false) {
-        Log.v(LOG_ID, "handleIobCob for source " + dataSource + ": " + Utils.dumpBundle(extras))
+        if(Log.isLoggable(LOG_ID, android.util.Log.VERBOSE))
+            Log.v(LOG_ID, "handleIobCob for source " + dataSource + ": " + Utils.dumpBundle(extras))
         if (hasNewIobCob(extras)) {
             var iobCobChange = false
             iobCobTime = if(extras.containsKey(IOBCOB_TIME))

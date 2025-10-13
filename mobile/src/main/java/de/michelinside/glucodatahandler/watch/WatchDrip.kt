@@ -294,7 +294,8 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
         }
     }
     private fun sendBroadcastToReceiver(context: Context, receiver: String?, bundle: Bundle) {
-        Log.d(LOG_ID, "Sending broadcast to " + receiver + ":\n" + Utils.dumpBundle(bundle))
+        if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
+            Log.d(LOG_ID, "Sending broadcast to " + receiver + ":\n" + Utils.dumpBundle(bundle))
         val intent = Intent(BroadcastServiceAPI.BROADCAST_SENDER_ACTION)
         if(receiver != null)
             intent.setPackage(receiver)

@@ -55,7 +55,8 @@ class ChartBitmapHandlerView(val imageView: ImageView, val context: Context): No
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
-        Log.d(LOG_ID, "OnNotifyData for $dataSource - id ${ChartBitmapHandler.chartId} - extras: ${Utils.dumpBundle(extras)}")
+        if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
+            Log.d(LOG_ID, "OnNotifyData for $dataSource - id ${ChartBitmapHandler.chartId} - extras: ${Utils.dumpBundle(extras)}")
         if(dataSource == NotifySource.GRAPH_CHANGED && extras?.getInt(Constants.GRAPH_ID) == ChartBitmapHandler.chartId) {
             GlobalScope.launch(Dispatchers.Main) {
                 try {

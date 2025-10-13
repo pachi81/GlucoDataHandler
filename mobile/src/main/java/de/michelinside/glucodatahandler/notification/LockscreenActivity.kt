@@ -79,7 +79,8 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
-            Log.d(LOG_ID, "onCreate called with params ${Utils.dumpBundle(this.intent.extras)}")
+            if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
+                Log.d(LOG_ID, "onCreate called with params ${Utils.dumpBundle(this.intent.extras)}")
             activity = this
             showWhenLockedAndTurnScreenOn()
             super.onCreate(savedInstanceState)

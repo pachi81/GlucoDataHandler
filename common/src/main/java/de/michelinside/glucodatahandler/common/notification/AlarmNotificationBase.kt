@@ -1019,7 +1019,8 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     open fun canShowNotification(): Boolean = true
 
     fun handleTimerAction(context: Context, action: String, extras: Bundle?) {
-        Log.d(LOG_ID, "handleTimerAction called for ${action} with extras: ${Utils.dumpBundle(extras)}")
+        if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
+            Log.d(LOG_ID, "handleTimerAction called for ${action} with extras: ${Utils.dumpBundle(extras)}")
         if(extras?.containsKey(Constants.ALARM_TYPE_EXTRA) == true && instance != null) {
             val alarmType = AlarmType.fromIndex(extras.getInt(Constants.ALARM_TYPE_EXTRA, ReceiveData.getAlarmType().ordinal))
             when(TriggerAction.valueOf(action)) {
@@ -1111,7 +1112,8 @@ class AlarmIntentReceiver: BroadcastReceiver() {
     private val LOG_ID = "GDH.AlarmIntentReceiver"
     override fun onReceive(context: Context, intent: Intent) {
         try {
-            Log.d(LOG_ID, "onReceive called for ${intent.action} with extras: ${Utils.dumpBundle(intent.extras)}")
+            if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
+                Log.d(LOG_ID, "onReceive called for ${intent.action} with extras: ${Utils.dumpBundle(intent.extras)}")
             AlarmNotificationBase.instance!!.handleTimerAction(context, intent.action!!, intent.extras)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onReceive exception: " + exc.toString())

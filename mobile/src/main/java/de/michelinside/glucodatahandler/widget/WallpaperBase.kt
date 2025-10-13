@@ -160,7 +160,8 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
-            Log.d(LOG_ID, "OnNotifyData called for source $dataSource with extras ${Utils.dumpBundle(extras)} - active: $active - graph-id: ${if(hasBitmap()) ChartBitmapHandler.chartId else -1} - elapsed: ${ReceiveData.getElapsedTimeMinute()}")
+            if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
+                Log.d(LOG_ID, "OnNotifyData called for source $dataSource with extras ${Utils.dumpBundle(extras)} - active: $active - graph-id: ${if(hasBitmap()) ChartBitmapHandler.chartId else -1} - elapsed: ${ReceiveData.getElapsedTimeMinute()}")
             if(!active)
                 return
             if (dataSource == NotifySource.GRAPH_CHANGED && ChartBitmapHandler.active && extras?.getInt(Constants.GRAPH_ID) != ChartBitmapHandler.chartId) {

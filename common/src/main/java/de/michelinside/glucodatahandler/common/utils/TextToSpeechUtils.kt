@@ -189,7 +189,8 @@ class LocaleChangeNotifier: BroadcastReceiver() {
     private val LOG_ID = "GDH.LocaleChangeNotifier"
     override fun onReceive(context: Context, intent: Intent) {
         try {
-            Log.d(LOG_ID, "Action received: ${intent.action} - bundle: ${Utils.dumpBundle(intent.extras)}")
+            if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
+                Log.d(LOG_ID, "Action received: ${intent.action} - bundle: ${Utils.dumpBundle(intent.extras)}")
             if (TextToSpeechUtils.localChanged(context)) {
                 val workRequest =
                     OneTimeWorkRequestBuilder<TextToSpeechWorker>().build()
