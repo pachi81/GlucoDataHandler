@@ -25,30 +25,32 @@ import kotlin.math.abs
 import kotlin.time.Instant
 
 object XDripServer {
-
     private val LOG_ID = "GDH.XDripServer"
 
     private var server: EmbeddedServer<*, *>? = null
     private val Port = 17580
     private val NumRecords = 24
 
-
     fun startServer(): Boolean
     {
         if (!isPortOpen())
             return false
 
-        start()
-        return true;
+        return start()
     }
 
     fun stopServer()
     {
-        if (isServerRunning()) {
-            stopServer {
-                server = null
-                Log.i(LOG_ID, "Server stopped")
+        try {
+            if (isServerRunning()) {
+                stopServer {
+                    server = null
+                    Log.i(LOG_ID, "XDrip+ server stopped")
+                }
             }
+        } catch (e: Exception) {
+            Log.i(LOG_ID, "XDrip+ server failed to stop")
+            server = null
         }
     }
 
@@ -70,32 +72,41 @@ object XDripServer {
         return server != null
     }
 
-    private fun start() {
-        server = embeddedServer(CIO, port = Port) {
-            routing {
-                get("/sgv.json") {
-                    val brief = call.request.queryParameters["brief_mode"]?.lowercase() == "y"
-                    val count: Int = call.request.queryParameters["count"]?.toIntOrNull() ?: 24
-                    val sensor = call.request.queryParameters["sensor"]?.lowercase() == "y"
+    private fun start(): Boolean {
+        var started = false
 
-                    val values = getGlucoseValues(brief)
-                    val response = values.createResponse(brief, count, sensor)
-                    call.respondText(response)
-                }
-                get("/pebble") {
-                    val values = getGlucoseValues(false)
-                    val response = values.createPebbleResponse()
-                    call.respondText(response)
-                }
-                get("/status.json") {
-                    val values = getGlucoseValues(false)
-                    val response = values.createStatusResponse()
-                    call.respondText(response)
-                }
+        try {
+            server = embeddedServer(CIO, port = Port) {
+                routing {
+                    get("/sgv.json") {
+                        val brief = call.request.queryParameters["brief_mode"]?.lowercase() == "y"
+                        val count: Int = call.request.queryParameters["count"]?.toIntOrNull() ?: 24
+                        val sensor = call.request.queryParameters["sensor"]?.lowercase() == "y"
 
-            }
-        }.start(wait = false)
-        Log.i(LOG_ID, "Server started")
+                        val values = getGlucoseValues(brief)
+                        val response = values.createResponse(brief, count, sensor)
+                        call.respondText(response)
+                    }
+                    get("/pebble") {
+                        val values = getGlucoseValues(false)
+                        val response = values.createPebbleResponse()
+                        call.respondText(response)
+                    }
+                    get("/status.json") {
+                        val values = getGlucoseValues(false)
+                        val response = values.createStatusResponse()
+                        call.respondText(response)
+                    }
+
+                }
+            }.start(wait = false)
+            Log.i(LOG_ID, "XDrip+ server started")
+            started = true
+        } catch (e: Exception) {
+            Log.i(LOG_ID, "Failed to start XDrip+ server")
+        }
+
+        return started
     }
 
     fun stopServer(onStopped: (() -> Unit)? = null) {

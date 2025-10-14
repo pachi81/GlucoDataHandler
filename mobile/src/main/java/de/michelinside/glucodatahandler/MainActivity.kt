@@ -240,8 +240,15 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             chartCreator.create()
 
             val xdripServerActive = sharedPref.getBoolean(Constants.SHARED_PREF_XDRIP_SERVER, false)
-            if (xdripServerActive)
-                XDripServer.startServer()
+            if (xdripServerActive) {
+                val started = XDripServer.startServer()
+                if (!started) {
+                    with(sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_XDRIP_SERVER, false)
+                        apply()
+                    }
+                }
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }

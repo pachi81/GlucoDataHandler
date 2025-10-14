@@ -446,10 +446,19 @@ class WatchSettingsFragment: SettingsFragmentBase(R.xml.pref_watch) {
 
         when (key) {
             Constants.SHARED_PREF_XDRIP_SERVER -> {
-                val pref = sharedPreferences!!.getBoolean(Constants.SHARED_PREF_XDRIP_SERVER, false )
+                val pref = sharedPreferences!!.getBoolean(Constants.SHARED_PREF_XDRIP_SERVER, false)
                 Log.v(LOG_ID, "Xdrip server: ${pref}")
-                if (pref)
-                    XDripServer.startServer()
+                if (pref) {
+                    val started = XDripServer.startServer()
+                    if (!started) {
+                        val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_XDRIP_SERVER)
+                        pref?.isChecked = false
+                        with(preferenceManager.sharedPreferences!!.edit()) {
+                            putBoolean(Constants.SHARED_PREF_XDRIP_SERVER, false)
+                            apply()
+                        }
+                    }
+                }
                 else
                     XDripServer.stopServer()
             }
