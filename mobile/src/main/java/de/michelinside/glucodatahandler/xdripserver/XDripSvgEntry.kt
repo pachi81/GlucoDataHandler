@@ -17,7 +17,8 @@ data class XDripSvgEntry(
     val unfiltered: Int? = null,
     val rssi: Int? = null,
     val type: String? = null,
-    val units_hint: String? = null
+    val units_hint: String? = null,
+    val sensor_status: String? = null
 )
 
 @Serializable
