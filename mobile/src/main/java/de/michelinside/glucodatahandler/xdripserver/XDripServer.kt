@@ -31,18 +31,27 @@ object XDripServer {
     private var server: EmbeddedServer<*, *>? = null
     private val Port = 17580
     private val NumRecords = 24
-    fun setServerState(startServer: Boolean) {
-        if (!isPortOpen())
-            return
 
-        if (startServer && !isServerRunning())
-            startServer()
-        else if (isServerRunning())
+
+    fun startServer(): Boolean
+    {
+        if (!isPortOpen())
+            return false
+
+        start()
+        return true;
+    }
+
+    fun stopServer()
+    {
+        if (isServerRunning()) {
             stopServer {
                 server = null
                 Log.i(LOG_ID, "Server stopped")
             }
+        }
     }
+
 
     fun isPortOpen(port: Int = Port): Boolean {
         try {
@@ -61,7 +70,7 @@ object XDripServer {
         return server != null
     }
 
-    fun startServer() {
+    private fun start() {
         server = embeddedServer(CIO, port = Port) {
             routing {
                 get("/sgv.json") {
@@ -98,7 +107,7 @@ object XDripServer {
         }
     }
 
-    fun List<GlucoseValue>.createPebbleResponse(): String {
+    private fun List<GlucoseValue>.createPebbleResponse(): String {
         if (this.isEmpty()) {
             return "Error"
         }
@@ -127,7 +136,7 @@ object XDripServer {
     }
 
 
-    fun List<GlucoseValue>.createStatusResponse(): String {
+    private fun List<GlucoseValue>.createStatusResponse(): String {
         val units = if (ReceiveData.isMmol) "mmol/L" else "mg/dL"
         var min = ReceiveData.low;
         min = if (GlucoDataUtils.isMmolValue(min)) GlucoDataUtils.mmolToMg(min) else min
@@ -147,7 +156,7 @@ object XDripServer {
         return Json { prettyPrint = true }.encodeToString(response)
     }
 
-    fun List<GlucoseValue>.createResponse(brief: Boolean, count: Int, sensor: Boolean): String {
+    private fun List<GlucoseValue>.createResponse(brief: Boolean, count: Int, sensor: Boolean): String {
         if (this.isEmpty()) {
             return "Error"
         }
@@ -200,7 +209,7 @@ object XDripServer {
         return Json { prettyPrint = true }.encodeToString(entries.take(count))
     }
 
-    fun getSensorAge(timestamp: Long): String {
+    private fun getSensorAge(timestamp: Long): String {
         val now = System.currentTimeMillis()
         val diffMs = now - timestamp
 
@@ -214,7 +223,7 @@ object XDripServer {
         return "$dateStr $ageStr"
     }
 
-    fun getGlucoseValues(brief: Boolean): List<GlucoseValue> {
+    private fun getGlucoseValues(brief: Boolean): List<GlucoseValue> {
         val values: List<GlucoseValue> = runBlocking {
             dbAccess.getLiveValuesByTimeSpan(2).first()
         }
@@ -238,7 +247,7 @@ object XDripServer {
     }
 
 
-    fun List<GlucoseValue>.filterList(intervalMinutes: Int = 5, toleranceSeconds: Int = 30): List<GlucoseValue> {
+    private fun List<GlucoseValue>.filterList(intervalMinutes: Int = 5, toleranceSeconds: Int = 30): List<GlucoseValue> {
         if (isEmpty()) return emptyList()
 
         val result = mutableListOf<GlucoseValue>()

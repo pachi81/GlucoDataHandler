@@ -429,6 +429,16 @@ class WatchSettingsFragment: SettingsFragmentBase(R.xml.pref_watch) {
         }
 
         PreferenceHelper.setLinkOnClick(findPreference(Constants.SHARED_PREF_OPEN_WATCH_DRIP_LINK), CR.string.watchdrip_link, requireContext())
+
+        val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_XDRIP_SERVER)
+        if (!XDripServer.isServerRunning() && !XDripServer.isPortOpen()) {
+            pref?.isChecked = false
+            pref?.isEnabled = false
+            with(preferenceManager.sharedPreferences!!.edit()) {
+                putBoolean(Constants.SHARED_PREF_XDRIP_SERVER, false)
+                apply()
+            }
+        }
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
@@ -438,7 +448,10 @@ class WatchSettingsFragment: SettingsFragmentBase(R.xml.pref_watch) {
             Constants.SHARED_PREF_XDRIP_SERVER -> {
                 val pref = sharedPreferences!!.getBoolean(Constants.SHARED_PREF_XDRIP_SERVER, false )
                 Log.v(LOG_ID, "Xdrip server: ${pref}")
-                XDripServer.setServerState(pref)
+                if (pref)
+                    XDripServer.startServer()
+                else
+                    XDripServer.stopServer()
             }
         }
     }

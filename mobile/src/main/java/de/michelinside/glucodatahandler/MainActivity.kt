@@ -240,7 +240,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             chartCreator.create()
 
             val xdripServerActive = sharedPref.getBoolean(Constants.SHARED_PREF_XDRIP_SERVER, false)
-            XDripServer.setServerState(xdripServerActive)
+            if (xdripServerActive)
+                XDripServer.startServer()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
@@ -866,6 +867,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         }
         if (CarModeReceiver.AA_connected) {
             tableConnections.addView(createRow(CR.string.pref_cat_android_auto, resources.getString(CR.string.connected_label)))
+        }
+        if (XDripServer.isServerRunning()) {
+            tableConnections.addView(createRow(CR.string.pref_switch_xdrip_server, resources.getString(CR.string.connected_label)))
         }
         checkTableVisibility(tableConnections)
     }
