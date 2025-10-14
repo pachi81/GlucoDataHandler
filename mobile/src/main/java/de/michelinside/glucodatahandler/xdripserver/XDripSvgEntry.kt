@@ -10,9 +10,11 @@ data class XDripSvgEntry(
     val sysTime: String? = null,
     val date: Long,
     val sgv: Int,
-    val delta: Double,
-    val direction: String,
-    val noise: Int,
+
+    val delta: Double? = null,
+    val direction: String? = null,
+    val noise: Int? = null,
+
     val filtered: Int? = null,
     val unfiltered: Int? = null,
     val rssi: Int? = null,

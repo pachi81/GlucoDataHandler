@@ -1,5 +1,7 @@
 package de.michelinside.glucodatahandler.xdripserver
 
+import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GlucoDataService.Companion.sharedPref
 import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.database.GlucoseValue
@@ -7,6 +9,7 @@ import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import io.ktor.server.engine.*
 import io.ktor.server.cio.*
+import io.ktor.server.request.uri
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.coroutines.CoroutineScope
@@ -31,16 +34,14 @@ object XDripServer {
     private val Port = 17580
     private val NumRecords = 24
 
-    fun startServer(): Boolean
-    {
+    fun startServer(): Boolean {
         if (!isPortOpen())
             return false
 
         return start()
     }
 
-    fun stopServer()
-    {
+    fun stopServer() {
         try {
             if (isServerRunning()) {
                 stopServer {
@@ -79,20 +80,24 @@ object XDripServer {
             server = embeddedServer(CIO, port = Port) {
                 routing {
                     get("/sgv.json") {
+                        Log.i(LOG_ID, "XDrip+ server request: ${call.request.uri}")
                         val brief = call.request.queryParameters["brief_mode"]?.lowercase() == "y"
                         val count: Int = call.request.queryParameters["count"]?.toIntOrNull() ?: 24
                         val sensor = call.request.queryParameters["sensor"]?.lowercase() == "y"
+                        val reduced = sharedPref?.getBoolean(Constants.SHARED_PREF_XDRIP_SERVER_REDUCE_DATA, false) ?: false
 
                         val values = getGlucoseValues(brief)
-                        val response = values.createResponse(brief, count, sensor)
+                        val response = values.createResponse(brief, count, sensor, reduced)
                         call.respondText(response)
                     }
                     get("/pebble") {
+                        Log.i(LOG_ID, "XDrip+ server request: ${call.request.uri}")
                         val values = getGlucoseValues(false)
                         val response = values.createPebbleResponse()
                         call.respondText(response)
                     }
                     get("/status.json") {
+                        Log.i(LOG_ID, "XDrip+ server request: ${call.request.uri}")
                         val values = getGlucoseValues(false)
                         val response = values.createStatusResponse()
                         call.respondText(response)
@@ -167,7 +172,12 @@ object XDripServer {
         return Json { prettyPrint = true }.encodeToString(response)
     }
 
-    private fun List<GlucoseValue>.createResponse(brief: Boolean, count: Int, sensor: Boolean): String {
+    private fun List<GlucoseValue>.createResponse(
+        brief: Boolean,
+        count: Int,
+        sensor: Boolean,
+        reduced: Boolean
+    ): String {
         if (this.isEmpty()) {
             return "Error"
         }
@@ -181,12 +191,12 @@ object XDripServer {
                 if (index < this.size - 1) this[index + 1].value.toDouble() else null
             val delta = prev?.let { this[index].value - it } ?: 0.0
 
-            Log.i(
-                LOG_ID,
-                "Glucose: ${glucose.value} ${GlucoDataUtils.mgToMmol(glucose.value.toFloat())} delta: ${delta} ${
-                    GlucoDataUtils.mgToMmol(delta.toFloat())
-                }"
-            )
+//            Log.i(
+//                LOG_ID,
+//                "Glucose: ${glucose.value} ${GlucoDataUtils.mgToMmol(glucose.value.toFloat())} delta: ${delta} ${
+//                    GlucoDataUtils.mgToMmol(delta.toFloat())
+//                }"
+//            )
 
             val direction = when {
                 GlucoDataUtils.mgToMmol(delta.toFloat()) >= 3.0 -> "DoubleUp"
@@ -204,16 +214,16 @@ object XDripServer {
                 sysTime = if (brief) null else dateFormat.format(Date(glucose.timestamp)),
                 date = glucose.timestamp,
                 sgv = glucose.value,
-                delta = delta,
+                delta = if (index > 0 && brief && reduced) null else delta,
                 filtered = if (brief) null else glucose.value * 1000,
                 unfiltered = if (brief) null else glucose.value * 1000,
                 device = if (brief) null else "GDH",
-                direction = direction,
-                noise = 1,
+                direction = if (index > 0 && brief && reduced) null else direction,
+                noise = if (index > 0 && brief && reduced) null else 1,
                 rssi = if (brief) null else 100,
                 type = if (brief) null else "svg",
                 units_hint = if (index == 0) units else null,
-                sensor_status = if (index == 0) sensorStatus else null
+                sensor_status = if (index == 0 && sensor) sensorStatus else null
             )
         }
 
@@ -240,41 +250,52 @@ object XDripServer {
         }
 
         val sorted = values.sortedByDescending { it.timestamp }
-        for (glucose in sorted) {
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
-            Log.i(LOG_ID, "Sorted - ${dateFormat.format(Date(glucose.timestamp))}")
-        }
+//        for (glucose in sorted) {
+//            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
+//            Log.i(LOG_ID, "Sorted - ${dateFormat.format(Date(glucose.timestamp))}")
+//        }
 
         if (brief) {
             val filtered = sorted.filterList()
-            for (glucose in filtered) {
-                val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
-                Log.i(LOG_ID, "Filtered - ${dateFormat.format(Date(glucose.timestamp))}")
-            }
+//            for (glucose in filtered) {
+//                val dateFormat =
+//                    SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
+//                Log.i(LOG_ID, "Filtered - ${dateFormat.format(Date(glucose.timestamp))}")
+//            }
             return filtered
-        }
-        else
+        } else
             return sorted.take(NumRecords)
     }
 
 
-    private fun List<GlucoseValue>.filterList(intervalMinutes: Int = 5, toleranceSeconds: Int = 30): List<GlucoseValue> {
+    private fun List<GlucoseValue>.filterList(
+    intervalMinutes: Int = 5,
+    toleranceSeconds: Int = 30
+    ): List<GlucoseValue> {
         if (isEmpty()) return emptyList()
 
+        val sorted = this.sortedBy { it.timestamp } // ascending timestamps
         val result = mutableListOf<GlucoseValue>()
-        var lastTimestamp = first().timestamp
-        result.add(first())
 
         val intervalMs = intervalMinutes * 60 * 1000L
-        val halfToleranceMs = toleranceSeconds * 1000L / 2
+        val toleranceMs = toleranceSeconds * 1000L
 
-        for (glucose in drop(1)) {
-            val diff = abs(glucose.timestamp - lastTimestamp)
-            if (diff in (intervalMs - halfToleranceMs)..(intervalMs + halfToleranceMs)) {
+        // Always keep the first reading
+        var lastKeptTimestamp = sorted.first().timestamp
+        result.add(sorted.first())
+
+        for (glucose in sorted.drop(1)) {
+            val diff = glucose.timestamp - lastKeptTimestamp
+
+            // Keep if it's within tolerance or after the interval
+            if (diff >= intervalMs - toleranceMs) {
                 result.add(glucose)
-                lastTimestamp = glucose.timestamp
+                lastKeptTimestamp = glucose.timestamp
             }
         }
 
-        return result
-    }}
+        // Reverse to match original input order
+        return result.reversed()
+    }
+
+}
