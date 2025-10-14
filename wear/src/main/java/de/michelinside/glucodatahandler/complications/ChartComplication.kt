@@ -306,7 +306,8 @@ object ChartComplicationUpdater: NotifierInterface {
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
-        Log.d(LOG_ID, "OnNotifyData called for source $dataSource with extras ${Utils.dumpBundle(extras)} - graph-id ${ChartComplicationBase.getChartId()}" )
+        if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
+            Log.d(LOG_ID, "OnNotifyData called for source $dataSource with extras ${Utils.dumpBundle(extras)} - graph-id ${ChartComplicationBase.getChartId()}" )
         if(dataSource==NotifySource.DISPLAY_STATE_CHANGED) {
             if(ScreenEventReceiver.isDisplayOff())
                 ChartComplicationBase.pauseBitmap()

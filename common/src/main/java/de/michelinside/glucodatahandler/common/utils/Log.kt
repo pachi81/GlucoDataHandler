@@ -2,6 +2,7 @@ package de.michelinside.glucodatahandler.common.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import de.michelinside.glucodatahandler.common.BuildConfig
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.database.LogEntry
 import de.michelinside.glucodatahandler.common.database.dbAccess
@@ -29,7 +30,15 @@ object Log: SharedPreferences.OnSharedPreferenceChangeListener {
     private val maxLogBufferSize: Int get() {
         if(minLevel <= android.util.Log.DEBUG)
             return 50
-        return 10
+        if(dbLoggingEnabled)
+            return 30
+        return 5 // user logs only
+    }
+
+    private val clearLogTimeMinute: Int get() {
+        if(minLevel <= android.util.Log.DEBUG)
+            return 10
+        return 15
     }
 
     val dbLoggingEnabled: Boolean get() {
@@ -62,7 +71,10 @@ object Log: SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     fun v(tag: String, msg: String): Int {
-        return println(android.util.Log.VERBOSE, tag, msg)
+        if (BuildConfig.DEBUG) {
+            return android.util.Log.println(android.util.Log.VERBOSE, tag, msg)
+        }
+        return 0
     }
 
     fun d(tag: String, msg: String): Int {
@@ -86,6 +98,12 @@ object Log: SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     fun isLoggable(tag: String, priority: Int): Boolean {
+        if(dbLoggingEnabled && priority >= minLevel)
+            return true
+        if(Constants.RELEASE && priority <= android.util.Log.DEBUG)
+            return false
+        if(priority < android.util.Log.DEBUG)
+            return BuildConfig.DEBUG
         return android.util.Log.isLoggable(tag, priority)
     }
 
@@ -134,12 +152,12 @@ object Log: SharedPreferences.OnSharedPreferenceChangeListener {
                 runBlocking {
                     d(LOG_ID, "Waiting for ${entriesToSave.size} log entries to be flushed...")
                     job.join()
-                    i(LOG_ID, "Flushed ${entriesToSave.size} log entries to database.")
+                    d(LOG_ID, "Flushed ${entriesToSave.size} log entries to database.")
                 }
             }
             lastSaveTime = System.currentTimeMillis()
             if(!wait) {
-                i(LOG_ID, "Flushed ${entriesToSave.size} log entries to database asynchronously.")
+                d(LOG_ID, "Flushed ${entriesToSave.size} log entries to database asynchronously.")
             }
             clearLogs()
         }
@@ -149,7 +167,7 @@ object Log: SharedPreferences.OnSharedPreferenceChangeListener {
         try {
             if(!dbAccess.active)
                 return  // wait for database is ready
-            v(LOG_ID, "Clearing logs - force=$force - logDuration=$logDuration")
+            v(LOG_ID, "Check clearing logs - force=$force - lastClearTime=${Utils.getUiTimeStamp(lastClearTime)} - logDuration=$logDuration - time elapsed: ${Utils.getElapsedTimeMinute(lastClearTime)}")
             if(logDuration <= 0) {
                 if(force) {
                     dbAccess.deleteAllLogs()
@@ -157,9 +175,9 @@ object Log: SharedPreferences.OnSharedPreferenceChangeListener {
                 }
                 return
             }
-            if(force || (Utils.getElapsedTimeMinute(lastClearTime) >= 15)) {  // remove old entries every 15 minutes
+            if(force || (Utils.getElapsedTimeMinute(lastClearTime) >= clearLogTimeMinute)) {  // remove old entries every 15 minutes
                 d(LOG_ID, "Clearing logs - force=$force - lastClearTime=${Utils.getUiTimeStamp(lastClearTime)} - logDuration=${Duration.ofMillis(logDuration.toLong()).toHours()}h")
-
+                lastClearTime = System.currentTimeMillis()
                 val removeTime = System.currentTimeMillis() - logDuration
                 dbAccess.deleteOldLogs(removeTime)
 
@@ -169,7 +187,6 @@ object Log: SharedPreferences.OnSharedPreferenceChangeListener {
                 } else if(force) {
                     dbAccess.deleteOldDebugLogs(System.currentTimeMillis())
                 }
-                lastClearTime = System.currentTimeMillis()
             }
         } catch (exc: Exception) {
             android.util.Log.e(LOG_ID, "Error while logging", exc)

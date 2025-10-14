@@ -336,7 +336,9 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         try {
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
             var receivers = sharedPref.getStringSet(receiverPrefKey, HashSet<String>())
-            Log.i(LOG_ID, "Forward " + receiverPrefKey + " Broadcast to " + receivers?.size.toString() + " receivers: ${Utils.dumpBundle(intent.extras)}")
+            Log.i(LOG_ID, "Forward " + receiverPrefKey + " Broadcast to " + receivers?.size.toString() + " receivers")
+            if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
+                Log.d(LOG_ID, "Forward package: ${Utils.dumpBundle(intent.extras)}")
             if (receivers == null || receivers.size == 0) {
                 receivers = setOf("")
             }

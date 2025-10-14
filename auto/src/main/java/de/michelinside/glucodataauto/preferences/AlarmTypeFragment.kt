@@ -41,7 +41,8 @@ class AlarmTypeFragment : PreferenceFragmentCompatBase() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         try {
-            Log.v(LOG_ID, "onCreatePreferences called for key: ${Utils.dumpBundle(this.arguments)}" )
+            if(Log.isLoggable(LOG_ID, android.util.Log.VERBOSE))
+                Log.v(LOG_ID, "onCreatePreferences called for key: ${Utils.dumpBundle(this.arguments)}" )
             preferenceManager.sharedPreferencesName = Constants.SHARED_PREF_TAG
             setPreferencesFromResource(R.xml.alarm_type, rootKey)
             if (requireArguments().containsKey("type")) {

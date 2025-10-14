@@ -258,7 +258,8 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     open fun getNoNewValueInfo(time: Long): String = ""
 
     protected fun handleIobResult(extras: Bundle) {
-        Log.d(LOG_ID, "handleIobResult for $source: ${Utils.dumpBundle(extras)}")
+        if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
+            Log.d(LOG_ID, "handleIobResult for $source: ${Utils.dumpBundle(extras)}")
         if(!ReceiveData.hasNewIobCob(extras)) {
             setState(SourceState.CONNECTED)
             return
@@ -275,7 +276,8 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     }
 
     protected fun handleResult(extras: Bundle) {
-        Log.d(LOG_ID, "handleResult for $source: ${Utils.dumpBundle(extras)}")
+        if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
+            Log.d(LOG_ID, "handleResult for $source: ${Utils.dumpBundle(extras)}")
         if(!ReceiveData.hasNewValue(extras)) {
             if(extras.containsKey(ReceiveData.TIME)) {
                 setState(

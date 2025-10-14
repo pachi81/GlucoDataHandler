@@ -661,7 +661,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         try {
-            Log.v(LOG_ID, "onActivityResult called for requestCode: " + requestCode + " - resultCode: " + resultCode + " - data: " + Utils.dumpBundle(data?.extras))
+            if(Log.isLoggable(LOG_ID, android.util.Log.VERBOSE))
+                Log.v(LOG_ID, "onActivityResult called for requestCode: " + requestCode + " - resultCode: " + resultCode + " - data: " + Utils.dumpBundle(data?.extras))
             super.onActivityResult(requestCode, resultCode, data)
             if (resultCode == Activity.RESULT_OK) {
                 if (requestCode == CREATE_FILE) {
