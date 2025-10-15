@@ -3,7 +3,7 @@ package de.michelinside.glucodatahandler.xdripserver
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class XDripSvgEntry(
+data class XDripSvgEntry (
     val _id: String? = null,
     val device: String? = null,
     val dateString: String? = null,

@@ -238,17 +238,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 GlucoDataServiceMobile.start(this)
             chartCreator = MainChartCreator(chart, this, Constants.SHARED_PREF_GRAPH_DURATION_PHONE_MAIN, Constants.SHARED_PREF_GRAPH_TRANSPARENCY_PHONE_MAIN)
             chartCreator.create()
-
-            val xdripServerActive = sharedPref.getBoolean(Constants.SHARED_PREF_XDRIP_SERVER, false)
-            if (xdripServerActive) {
-                val started = XDripServer.startServer()
-                if (!started) {
-                    with(sharedPref.edit()) {
-                        putBoolean(Constants.SHARED_PREF_XDRIP_SERVER, false)
-                        apply()
-                    }
-                }
-            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
@@ -875,8 +864,15 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         if (CarModeReceiver.AA_connected) {
             tableConnections.addView(createRow(CR.string.pref_cat_android_auto, resources.getString(CR.string.connected_label)))
         }
-        if (XDripServer.isServerRunning()) {
-            tableConnections.addView(createRow(CR.string.pref_switch_xdrip_server, resources.getString(CR.string.connected_label)))
+        if(XDripServer.enabled) {
+            if (XDripServer.isServerRunning()) {
+                tableConnections.addView(createRow(CR.string.pref_switch_xdrip_server, resources.getString(CR.string.state_active)))
+            } else if(!XDripServer.lastError.isNullOrEmpty()) {
+                tableConnections.addView(createRow(CR.string.pref_switch_xdrip_server, XDripServer.lastError!!))
+            } else {
+                tableConnections.addView(createRow(CR.string.pref_switch_xdrip_server, resources.getString(CR.string.health_connect_error)))
+            }
+
         }
         checkTableVisibility(tableConnections)
     }

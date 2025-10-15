@@ -36,7 +36,6 @@ import de.michelinside.glucodatahandler.common.receiver.GlucoseDataReceiver
 import de.michelinside.glucodatahandler.common.ui.SelectReceiverPreference
 import de.michelinside.glucodatahandler.common.utils.GlucoseStatistics
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
-import de.michelinside.glucodatahandler.xdripserver.XDripServer
 import kotlinx.coroutines.launch
 import kotlin.collections.HashMap
 import kotlin.collections.List
@@ -429,42 +428,7 @@ class WatchSettingsFragment: SettingsFragmentBase(R.xml.pref_watch) {
         }
 
         PreferenceHelper.setLinkOnClick(findPreference(Constants.SHARED_PREF_OPEN_WATCH_DRIP_LINK), CR.string.watchdrip_link, requireContext())
-
-        val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_XDRIP_SERVER)
-        if (!XDripServer.isServerRunning() && !XDripServer.isPortOpen()) {
-            pref?.isChecked = false
-            pref?.isEnabled = false
-            with(preferenceManager.sharedPreferences!!.edit()) {
-                putBoolean(Constants.SHARED_PREF_XDRIP_SERVER, false)
-                apply()
-            }
-        }
     }
-
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        Log.v(LOG_ID, "onSharedPreferenceChanged called")
-
-        when (key) {
-            Constants.SHARED_PREF_XDRIP_SERVER -> {
-                val pref = sharedPreferences!!.getBoolean(Constants.SHARED_PREF_XDRIP_SERVER, false)
-                Log.v(LOG_ID, "Xdrip server: ${pref}")
-                if (pref) {
-                    val started = XDripServer.startServer()
-                    if (!started) {
-                        val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_XDRIP_SERVER)
-                        pref?.isChecked = false
-                        with(preferenceManager.sharedPreferences!!.edit()) {
-                            putBoolean(Constants.SHARED_PREF_XDRIP_SERVER, false)
-                            apply()
-                        }
-                    }
-                }
-                else
-                    XDripServer.stopServer()
-            }
-        }
-    }
-
 }
 
 class WatchFaceFragment: SettingsFragmentBase(R.xml.pref_watchfaces) {
