@@ -504,8 +504,8 @@ class TransferSettingsFragment: SettingsFragmentBase(R.xml.pref_transfer) {
         } else
             super.onSharedPreferenceChanged(sharedPreferences, key)
     }
-
 }
+
 class GDASettingsFragment: SettingsFragmentBase(R.xml.pref_gda) {
     override fun initPreferences() {
         Log.v(LOG_ID, "initPreferences called")

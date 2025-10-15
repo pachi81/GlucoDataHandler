@@ -28,6 +28,7 @@ import de.michelinside.glucodatahandler.widget.BatteryLevelWidgetNotifier
 import de.michelinside.glucodatahandler.widget.FloatingWidget
 import de.michelinside.glucodatahandler.widget.GlucoseBaseWidget
 import de.michelinside.glucodatahandler.widget.LockScreenWallpaper
+import de.michelinside.glucodatahandler.xdripserver.XDripServer
 import java.math.RoundingMode
 
 
@@ -276,6 +277,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             lockScreenWallpaper.create()
             AlarmNotification.initNotifications(this)
             HealthConnectManager.init(this.applicationContext)
+            XDripServer.init(this.applicationContext)
             InternalNotifier.addNotifier(
                 this,
                 TaskerDataReceiver,
@@ -326,6 +328,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             floatingWidget.destroy()
             lockScreenWallpaper.destroy()
             HealthConnectManager.close(this.applicationContext)
+            XDripServer.close(this.applicationContext)
             super.onDestroy()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.message.toString() )

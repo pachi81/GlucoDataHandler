@@ -74,6 +74,7 @@ import de.michelinside.glucodatahandler.preferences.AlarmGeneralFragment
 import de.michelinside.glucodatahandler.preferences.LockscreenSettingsFragment
 import de.michelinside.glucodatahandler.watch.WatchDrip
 import de.michelinside.glucodatahandler.widget.BatteryLevelWidget
+import de.michelinside.glucodatahandler.xdripserver.XDripServer
 import java.text.DateFormat
 import java.text.DecimalFormat
 import java.time.Duration
@@ -121,6 +122,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private var doNotUpdate = false
     private lateinit var chartCreator: ChartCreator
     private var systemBars: Insets? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
@@ -861,6 +863,16 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         }
         if (CarModeReceiver.AA_connected) {
             tableConnections.addView(createRow(CR.string.pref_cat_android_auto, resources.getString(CR.string.connected_label)))
+        }
+        if(XDripServer.enabled) {
+            if (XDripServer.isServerRunning()) {
+                tableConnections.addView(createRow(CR.string.pref_switch_xdrip_server, resources.getString(CR.string.state_active)))
+            } else if(!XDripServer.lastError.isNullOrEmpty()) {
+                tableConnections.addView(createRow(CR.string.pref_switch_xdrip_server, XDripServer.lastError!!))
+            } else {
+                tableConnections.addView(createRow(CR.string.pref_switch_xdrip_server, resources.getString(CR.string.health_connect_error)))
+            }
+
         }
         checkTableVisibility(tableConnections)
     }

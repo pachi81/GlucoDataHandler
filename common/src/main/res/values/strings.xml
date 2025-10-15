@@ -513,6 +513,7 @@
     <string name="pref_cat_watchdrip">MiBand and Amazfit watches</string>
     <string name="pref_cat_wear_os">Wear OS watches</string>
     <string name="pref_cat_watch">Watch</string>
+    <string name="pref_cat_garminpebble">Garmin and Pebble watches</string>
     <string name="pref_cat_watch_summary">Settings for connected smartwatches.</string>
     <string name="pref_cat_transfer_summary">Settings to transfer glucose values to other applications.</string>
     <string name="pref_cat_transfer">Transfer values</string>
@@ -954,5 +955,15 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="pref_log_duration_summary">Number of hours to keep logs in the database.\nSet to 0 to disable logging to the database.</string>
     <string name="pref_log_debug">Enable debug logging</string>
     <string name="pref_log_debug_summary">Enable saving of detailed debug messages to the database (max. last 30 minutes).\nOnly enable this if requested by the developer.</string>
+
+    <string name="pref_switch_xdrip_server">Local web server</string>
+    <string name="pref_switch_xdrip_server_summary">Allows watchfaces designed for xDrip+ to receive glucose data from this app. It emulates the xDrip+ web server feature on port 17580.</string>
+    <string name="pref_switch_xdrip_server_reduce_data">Simplified Data Mode</string>
+    <string name="pref_switch_xdrip_server_reduce_data_summary">This will reduce the provided data to a minimum to prevent memory issues on some Garmin watches.\nPlease check compatibility with you watchface.</string>
+    <string name="error_port_in_use">Port is in use!\nPlease stop other web server running on this port and restart local web server again.</string>
+    <string name="state_active">active</string>
+
 </resources>
+
+
 

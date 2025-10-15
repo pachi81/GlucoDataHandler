@@ -55,6 +55,22 @@
                     app:iconSpaceReserved="false" />
         </PreferenceCategory>
         <PreferenceCategory
+            android:title="@string/pref_cat_garminpebble"
+            app:iconSpaceReserved="false">
+                <androidx.preference.SwitchPreferenceCompat
+                    android:defaultValue="false"
+                    android:key="xdrip_server"
+                    android:title="@string/pref_switch_xdrip_server"
+                    app:iconSpaceReserved="false"
+                    app:summary="@string/pref_switch_xdrip_server_summary" />
+                <androidx.preference.SwitchPreferenceCompat
+                    android:defaultValue="false"
+                    android:key="xdrip_server_reduce_data"
+                    android:title="@string/pref_switch_xdrip_server_reduce_data"
+                    app:iconSpaceReserved="false"
+                    app:summary="@string/pref_switch_xdrip_server_reduce_data_summary" />
+        </PreferenceCategory>
+        <PreferenceCategory
             android:title="@string/advanced_settings"
             app:iconSpaceReserved="false">
                 <androidx.preference.SeekBarPreference
