@@ -109,6 +109,17 @@ object GlucoDataUtils {
         }
     }
 
+    fun getTrendFromRate(rate: Float): Int = when {
+        rate >= 3.0f -> 1  // DoubleUp
+        rate >= 2.0f -> 2  // SingleUp
+        rate >= 1.0f -> 3  // FortyFiveUp
+        rate > -1.0f -> 4  // Flat
+        rate > -2.0f -> 5  // FortyFiveDown
+        rate > -3.0f -> 6  // SingleDown
+        rate <= -3.0f -> 7 // DoubleDown
+        else -> 4          // Default to Flat
+    }
+
     fun getRateLabel(context: Context, rate: Float): String {
         if (rate >= 3.0f) return context.getString(R.string.rate_double_up)
         if (rate >= 2.0f) return context.getString(R.string.rate_single_up)

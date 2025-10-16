@@ -161,21 +161,20 @@ object XDripServer : SharedPreferences.OnSharedPreferenceChangeListener {
             return "Error"
         }
         val glucose = this.first()
-        var bg = glucose.value.toFloat()
-        if (!GlucoDataUtils.isMmolValue(bg)) {
-            bg = GlucoDataUtils.mgToMmol(bg)        // Seems to be always mmol in Juggluco
-        }
-        var iob = ReceiveData.iob
-        iob = if (iob.isNaN()) 0.0f else iob
+        val delta = if (this.size > 1) glucose.value - this[1].value else 0f
+        val rate = if (ReceiveData.calculatedRate.isNaN()) 0.0f else ReceiveData.calculatedRate
+        val trend = GlucoDataUtils.getTrendFromRate(rate)
+        val iob = if (ReceiveData.iob.isNaN()) 0.0f else ReceiveData.iob
+
 
         val status =
             PebbleStatus(now = GlucoDataUtils.getGlucoseTime(System.currentTimeMillis()))
         val bgs = PebbleBg(
-            bg.toString(),
-            trend = 4,                  // Doesn't seem to change in Juggluco
-            direction = "flat",         // Doesn't seem to change in Juggluco
+            glucose.value.toString(),
+            trend = trend,
+            direction = GlucoDataUtils.getDexcomLabel(rate),
             datetime = glucose.timestamp,
-            bgdelta = GlucoDataUtils.mgToMmol(ReceiveData.delta).toString(),
+            bgdelta = delta.toString(),
             iob = iob.toString()
         )
 
@@ -231,15 +230,7 @@ object XDripServer : SharedPreferences.OnSharedPreferenceChangeListener {
 //                }"
 //            )
 
-            val direction = when {
-                GlucoDataUtils.mgToMmol(delta.toFloat()) >= 3.0 -> "DoubleUp"
-                GlucoDataUtils.mgToMmol(delta.toFloat()) >= 2.0 -> "FortyFiveUp"
-                GlucoDataUtils.mgToMmol(delta.toFloat()) >= 1.0 -> "SingleUp"
-                GlucoDataUtils.mgToMmol(delta.toFloat()) <= -1.0 -> "SingleDown"
-                GlucoDataUtils.mgToMmol(delta.toFloat()) <= -2.0 -> "FortyFiveDown"
-                GlucoDataUtils.mgToMmol(delta.toFloat()) <= -3.0 -> "DoubleDown"
-                else -> "Flat"
-            }
+            val direction = GlucoDataUtils.getDexcomLabel(delta.toFloat())
 
             XDripSvgEntry(
                 _id = if (brief) null else "${ReceiveData.sensorID}#${index + 1}",
@@ -304,8 +295,8 @@ object XDripServer : SharedPreferences.OnSharedPreferenceChangeListener {
 
 
     private fun List<GlucoseValue>.filterList(
-    intervalMinutes: Int = 5,
-    toleranceSeconds: Int = 30
+        intervalMinutes: Int = 5,
+        toleranceSeconds: Int = 30
     ): List<GlucoseValue> {
         if (isEmpty()) return emptyList()
 
