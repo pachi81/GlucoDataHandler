@@ -358,7 +358,7 @@
     <string name="alarm_cat_all">Alle Alarme</string>
     <string name="wear_alarm_notifications_enabled">Uhr: Alarmbenachrichtigungen</string>
     <string name="alarm_notifications_enabled">Alarmbenachrichtigungen</string>
-    <string name="alarm_notifications_enabled_summary_on">Alarmbenachrichtigungen sind aktiv auf dem Telefon.\nHinweise: die Alarme benutzen die Alarm-/Weckerlautstärke Einstellungen vom Telefon.</string>
+    <string name="alarm_notifications_enabled_summary_on">Alarmbenachrichtigungen sind aktiv auf dem Telefon.\nHinweis: die Alarme benutzen die Alarm-/Weckerlautstärke Einstellungen vom Telefon.</string>
     <string name="alarm_notifications_enabled_summary_off">Alarmbenachrichtigungen sind ausgeschaltet auf dem Telefon.</string>
     <string name="stop_snooze">Stop</string>
     <string name="very_low_alarm_text">Sehr tief!</string>

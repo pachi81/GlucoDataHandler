@@ -11,6 +11,8 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.database.GlucoseValue
 import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
 import io.ktor.server.engine.*
 import io.ktor.server.cio.*
 import io.ktor.server.request.uri
@@ -108,29 +110,28 @@ object XDripServer : SharedPreferences.OnSharedPreferenceChangeListener {
         var started = false
 
         try {
-            server = embeddedServer(CIO, port = Port) {
+            server = embeddedServer(CIO, port = Port, host="127.0.0.1") {
                 routing {
                     get("/sgv.json") {
                         Log.i(LOG_ID, "XDrip+ server request: ${call.request.uri}")
-                        val brief = call.request.queryParameters["brief_mode"]?.lowercase() == "y"
+                        val brief = call.request.queryParameters.contains("brief_mode")
                         val count: Int = call.request.queryParameters["count"]?.toIntOrNull() ?: 24
-                        val sensor = call.request.queryParameters["sensor"]?.lowercase() == "y"
+                        val sensor = call.request.queryParameters.contains("sensor")
 
                         val values = getGlucoseValues(brief)
                         val response = values.createResponse(brief, count, sensor, reducedData)
-                        call.respondText(response)
+                        call.respondText(response, ContentType.Application.Json, HttpStatusCode.OK)
                     }
                     get("/pebble") {
                         Log.i(LOG_ID, "XDrip+ server request: ${call.request.uri}")
                         val values = getGlucoseValues(false)
                         val response = values.createPebbleResponse()
-                        call.respondText(response)
+                        call.respondText(response, ContentType.Application.Json, HttpStatusCode.OK)
                     }
                     get("/status.json") {
                         Log.i(LOG_ID, "XDrip+ server request: ${call.request.uri}")
-                        val values = getGlucoseValues(false)
                         val response = createStatusResponse()
-                        call.respondText(response)
+                        call.respondText(response, ContentType.Application.Json, HttpStatusCode.OK)
                     }
 
                 }

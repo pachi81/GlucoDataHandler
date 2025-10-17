@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
         <PreferenceCategory
             android:title="@string/pref_cat_wear_os"
-            app:iconSpaceReserved="false">
+            app:iconSpaceReserved="false"
+            app:initialExpandedChildrenCount="2">
                 <Preference
                     android:key="wearos_info"
                     android:title="@string/setup"
@@ -57,6 +58,11 @@
         <PreferenceCategory
             android:title="@string/pref_cat_garminpebble"
             app:iconSpaceReserved="false">
+                <Preference
+                    android:key="open_garmin_info"
+                    android:title="@string/pref_information"
+                    android:summary="@string/pref_garmin_info_summary"
+                    app:iconSpaceReserved="false" />
                 <androidx.preference.SwitchPreferenceCompat
                     android:defaultValue="false"
                     android:key="xdrip_server"

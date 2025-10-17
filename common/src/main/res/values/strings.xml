@@ -962,6 +962,7 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="pref_switch_xdrip_server_reduce_data_summary">This will reduce the provided data to a minimum to prevent memory issues on some Garmin watches.\nPlease check compatibility with you watchface.</string>
     <string name="error_port_in_use">Port is in use!\nPlease stop other web server running on this port and restart local web server again.</string>
     <string name="state_active">active</string>
+    <string name="pref_garmin_info_summary">There is no dedicated app for Garmin or Pebble, just a local web server, which is used by watchfaces with xDrip+ support.\nJust search for such watchfaces in Connect IQ Store and setup xDrip+ source for these watchfaces.\nIMPORTANT: if you also use xDrip+ or Juggluco, you can enable the local web server only in one app, as there are using the same port (17580)!</string>
 
 </resources>
 
