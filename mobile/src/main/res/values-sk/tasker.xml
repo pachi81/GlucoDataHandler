@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="glucose_label">Glukóza</string>
+    <string name="glucose_html_label">Hodnota glukózy</string>
+    <string name="sensor_id_label">ID sensora</string>
+    <string name="sensor_id_html_label">ID aktuálneho aktívneho senzora</string>
+    <string name="raw_value_label">Nespracovaná hodnota</string>
+    <string name="raw_value_html_label">Hodnota glukózy v mg/dl</string>
+    <string name="rate_label">Trend</string>
+    <string name="rate_html_label">Trend hladiny glukózy</string>
+    <string name="rate_label_label">Označenie trendu</string>
+    <string name="rate_label_html_label">Označenie pre aktuálny trend</string>
+    <string name="dexcom_label">DexcomLabel</string>
+    <string name="dexcom_html_label">Označenie trendu pre Dexcom</string>
+    <string name="alarm_label">Alarm</string>
+    <string name="alarm_html_label">Hodnota alarmu (0: žiadny alarm, 6/14: veľmi vysoká, 2/10: vysoká, 3/11: nízka, 7/15: veľmi nízka)</string>
+    <string name="time_label">Čas</string>
+    <string name="time_html_label">Čas v msek</string>
+    <string name="time_diff_label">Časový rozdiel</string>
+    <string name="time_diff_html_label">Časový rozdiel medzi touto a predchádzajúcou hodnotou v milisekundách</string>
+    <string name="arrow_label">Šípka</string>
+    <string name="arrow_html_label">Smerová šípka Unicode</string>
+    <string name="delta_label">Rozdiel</string>
+    <string name="delta_html_label">Rozdiel aktuálnej a predchádzajúcej hodnoty glukózy (za minútu)</string>
+    <string name="unit_label">Jednotka</string>
+    <string name="unit_html_label">Jednotka hodnoty glukózy (mg/dl alebo mmol/l)</string>
+    <string name="obsolete_time_label">Čas od poslednej hodnoty</string>
+    <string name="obsolete_time_html_label">Čas v minútach (5 alebo 10) od prijatia poslednej hodnoty.</string>
+    <string name="iob_label">IOB</string>
+    <string name="iob_html_label">Aktívny inzulín v tele</string>
+    <string name="cob_label">COB</string>
+    <string name="cob_html_label">Sacharidy v tele</string>
+</resources>
