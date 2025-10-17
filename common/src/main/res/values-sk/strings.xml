@@ -901,5 +901,5 @@ Tieto povolenia môžete kedykoľvek spravovať v nastaveniach aplikácie Health
     <string name="pref_switch_xdrip_server_reduce_data_summary">Tým sa zníži množstvo poskytovaných údajov na minimum, aby sa predišlo problémom s pamäťou na niektorých hodinkách Garmin.\nSkontrolujte prosím kompatibilitu s ciferníkom vašich hodiniek.</string>
     <string name="error_port_in_use">Port sa používa!\nZastavte ostatné webové servery bežiace na tomto porte a reštartujte lokálny webový server.</string>
     <string name="state_active">aktívny</string>
-
+    <string name="pref_garmin_info_summary">Pre Garmin alebo Pebble neexistuje žiadna špeciálna aplikácia, len lokálny webový server, ktorý sa používa pre ciferníky s podporou xDrip+.\nStačí vyhľadať takéto ciferníky v obchode Connect IQ Store a nastaviť zdroj xDrip+ pre tieto ciferníky.\nDÔLEŽITÉ: ak používate aj xDrip+ alebo Juggluco, lokálny webový server môžete aktivovať len v jednej aplikácii, pretože používajú rovnaký port (17580)!</string>
 </resources>
