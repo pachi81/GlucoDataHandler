@@ -760,7 +760,7 @@
     <string name="source_libre_server_russian">Russian (.ru)</string>
 
     <string name="patient_name">Name</string>
-    <string name="patient_name_summary">Name of the user/patient, which should be shown in notification and during speaking.\nThis should be used, if you are using multiple variants of GlucoDataAuto, otherwise it could be empty.</string>
+    <string name="patient_name_gda_summary">Name of the user/patient, which should be shown in notification and during speaking.\nThis should be used, if you are using multiple variants of GlucoDataAuto, otherwise it could be empty.</string>
 
     <string name="video_tutorial">Video Tutorial</string>
     <string name="video_tutorial_summary">Click here to go to the YouTube video that illustrates the setup of this source. Many thanks to Diabetic Masked Man for creating the videos.</string>
@@ -963,6 +963,30 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="error_port_in_use">Port is in use!\nPlease stop other web server running on this port and restart local web server again.</string>
     <string name="state_active">active</string>
     <string name="pref_garmin_info_summary">There is no dedicated app for Garmin or Pebble, just a local web server, which is used by watchfaces with xDrip+ support.\nJust search for such watchfaces in Connect IQ Store and setup xDrip+ source for these watchfaces.\nIMPORTANT: if you also use xDrip+ or Juggluco, you can enable the local web server only in one app, as there are using the same port (17580)!</string>
+    <string name="remaining">Remaining</string>
+    <string name="pref_switch_xdrip_open_server">Open web server</string>
+    <string name="pref_switch_xdrip_open_server_summary">Make the web server open for other devices in the network.\nThis may cause security problems, so only enable it, if you really need to access the data of the web server from the network.\nThe Garmin watchfaces request data direct on the phone, so no open server is needed!</string>
+    <string name="last_request">Last request</string>
+    <string name="close_activitiy">Close screen</string>
+    <string name="collapse_view">Collapse view</string>
+    <string name="expand_view">Expand view</string>
+    <string name="patient_name_summary">Name of the user/patient, which should be shown in notification, widgets and so on.</string>
+    <string name="pref_switch_xdrip_server_1_minute_interval">1 Minute Interval</string>
+    <string name="pref_switch_xdrip_server_1_minute_interval_summary">Return list of values in 1 minute interval instead of 5 minute interval.\nPlease only enable this setting, if you know, that the watchface or widget can handle it!\nNormal watchface are created to handle 5 minute interval.</string>
+
+
+    <plurals name="minutes_long">
+        <item quantity="one">%d minute</item>
+        <item quantity="other">%d minutes</item>
+    </plurals>
+    <plurals name="days_long">
+        <item quantity="one">%d day</item>
+        <item quantity="other">%d days</item>
+    </plurals>
+    <plurals name="hours_long">
+        <item quantity="one">%d hour</item>
+        <item quantity="other">%d hours</item>
+    </plurals>
 
 </resources>
 

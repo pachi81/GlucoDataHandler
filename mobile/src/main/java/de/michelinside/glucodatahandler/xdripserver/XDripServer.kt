@@ -10,7 +10,10 @@ import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.database.GlucoseValue
 import de.michelinside.glucodatahandler.common.database.dbAccess
+import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
+import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.utils.Utils
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.engine.*
@@ -20,9 +23,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import java.net.ServerSocket
@@ -30,6 +31,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 
 // Docu: https://github.com/NightscoutFoundation/xDrip/blob/master/Documentation/technical/Local_Web_Services.md
 
@@ -39,13 +41,18 @@ object XDripServer : SharedPreferences.OnSharedPreferenceChangeListener {
     private var server: EmbeddedServer<*, *>? = null
     private val Port = 17580
     private val NumRecords = 24
-    private var reducedData = false
+    private var reducedData = true
+    private var openServer = false
+    private var oneMinuteInterval = false
     private val json = Json { prettyPrint = BuildConfig.DEBUG }  // pretty print only for debugging
 
     var lastError: String? = null
         private set
 
     var enabled = false
+        private set
+
+    var lastRequest = 0L
         private set
 
     fun init(context: Context) {
@@ -63,8 +70,10 @@ object XDripServer : SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     private fun startServer(): Boolean {
-        if (!isPortOpen())
+        if (!isPortOpen()) {
+            InternalNotifier.notifyAsync(GlucoDataService.context!!, NotifySource.UPDATE_MAIN, null)
             return false
+        }
 
         return start()
     }
@@ -74,14 +83,34 @@ object XDripServer : SharedPreferences.OnSharedPreferenceChangeListener {
             if (isServerRunning()) {
                 stopServer {
                     server = null
-                    Log.i(LOG_ID, "XDrip+ server stopped")
+                    Log.i(LOG_ID, "Server stopped")
                 }
             }
         } catch (e: Exception) {
-            Log.e(LOG_ID, "XDrip+ server failed to stop: ${e.message}")
+            Log.e(LOG_ID, "Server failed to stop: ${e.message}")
             server = null
         }
         lastError = null
+    }
+
+    private fun restartServer() {
+        try {
+            Log.d(LOG_ID, "Server restarting")
+            if (isServerRunning()) {
+                stopServer {
+                    server = null
+                    Log.i(LOG_ID, "Server stopped")
+                    startServer()
+                }
+            } else {
+                startServer()
+            }
+        } catch (e: Exception) {
+            Log.e(LOG_ID, "Server failed to restart: ${e.message}")
+            lastError = GlucoDataService.context!!.resources.getString(R.string.source_state_error) + ": ${e.message}"
+            server = null
+        }
+        InternalNotifier.notifyAsync(GlucoDataService.context!!, NotifySource.UPDATE_MAIN, null)
     }
 
 
@@ -110,41 +139,50 @@ object XDripServer : SharedPreferences.OnSharedPreferenceChangeListener {
         var started = false
 
         try {
-            server = embeddedServer(CIO, port = Port, host="127.0.0.1") {
+            server = embeddedServer(CIO, port = Port, host=if(openServer) "0.0.0.0" else "127.0.0.1") {
                 routing {
                     get("/sgv.json") {
-                        Log.i(LOG_ID, "XDrip+ server request: ${call.request.uri}")
+                        Log.i(LOG_ID, "Request: ${call.request.uri}")
+                        lastRequest = System.currentTimeMillis()
                         val brief = call.request.queryParameters.contains("brief_mode")
-                        val count: Int = call.request.queryParameters["count"]?.toIntOrNull() ?: 24
+                        val count: Int = call.request.queryParameters["count"]?.toIntOrNull() ?: NumRecords
                         val sensor = call.request.queryParameters.contains("sensor")
 
-                        val values = getGlucoseValues(brief)
+                        val values = getGlucoseValues(oneMinuteInterval, count)
                         val response = values.createResponse(brief, count, sensor, reducedData)
+                        Log.d(LOG_ID, "Response: ${response.take(500)}")
                         call.respondText(response, ContentType.Application.Json, HttpStatusCode.OK)
+                        InternalNotifier.notifyAsync(GlucoDataService.context!!, NotifySource.UPDATE_MAIN, null)
                     }
                     get("/pebble") {
-                        Log.i(LOG_ID, "XDrip+ server request: ${call.request.uri}")
-                        val values = getGlucoseValues(false)
+                        Log.i(LOG_ID, "Request: ${call.request.uri}")
+                        lastRequest = System.currentTimeMillis()
+                        val values = getGlucoseValues(false, 1)
                         val response = values.createPebbleResponse()
+                        Log.d(LOG_ID, "Response: ${response.take(500)}")
                         call.respondText(response, ContentType.Application.Json, HttpStatusCode.OK)
+                        InternalNotifier.notifyAsync(GlucoDataService.context!!, NotifySource.UPDATE_MAIN, null)
                     }
                     get("/status.json") {
-                        Log.i(LOG_ID, "XDrip+ server request: ${call.request.uri}")
+                        Log.i(LOG_ID, "Request: ${call.request.uri}")
+                        lastRequest = System.currentTimeMillis()
                         val response = createStatusResponse()
+                        Log.d(LOG_ID, "Response: ${response.take(500)}")
                         call.respondText(response, ContentType.Application.Json, HttpStatusCode.OK)
+                        InternalNotifier.notifyAsync(GlucoDataService.context!!, NotifySource.UPDATE_MAIN, null)
                     }
 
                 }
             }.start(wait = false)
-            Log.i(LOG_ID, "XDrip+ server started")
+            Log.i(LOG_ID, "Server started on port $Port (${if(openServer) "open" else "local only"})")
             started = true
             lastError = null
         } catch (e: Exception) {
-            Log.e(LOG_ID, "Failed to start XDrip+ server: ${e.message}")
+            Log.e(LOG_ID, "Failed to start server: ${e.message}")
             server = null
             lastError = GlucoDataService.context!!.resources.getString(R.string.source_state_error) + ": ${e.message}"
         }
-
+        InternalNotifier.notifyAsync(GlucoDataService.context!!, NotifySource.UPDATE_MAIN, null)
         return started
     }
 
@@ -152,6 +190,7 @@ object XDripServer : SharedPreferences.OnSharedPreferenceChangeListener {
         CoroutineScope(Dispatchers.IO).launch {
             server?.stop(1000, 1000, TimeUnit.MILLISECONDS)
             withContext(Dispatchers.Main) {
+                InternalNotifier.notifyAsync(GlucoDataService.context!!, NotifySource.UPDATE_MAIN, null)
                 onStopped?.invoke()
             }
         }
@@ -219,17 +258,12 @@ object XDripServer : SharedPreferences.OnSharedPreferenceChangeListener {
         val units = if (ReceiveData.isMmol) "mmol" else "mgdl"
         val sensorStatus = getSensorAge(ReceiveData.sensorStartTime)
 
+        Log.i(LOG_ID, "createResponse - brief=$brief - count=$count - sensor=$sensor - reduced=$reduced - values: ${this.size} - first value time=${Utils.getUiTimeStamp(this.first().timestamp)}")
+
         val entries = this.mapIndexed { index, glucose ->
             val prev =
                 if (index < this.size - 1) this[index + 1].value.toDouble() else null
             val delta = prev?.let { this[index].value - it } ?: 0.0
-
-//            Log.i(
-//                LOG_ID,
-//                "Glucose: ${glucose.value} ${GlucoDataUtils.mgToMmol(glucose.value.toFloat())} delta: ${delta} ${
-//                    GlucoDataUtils.mgToMmol(delta.toFloat())
-//                }"
-//            )
 
             val direction = GlucoDataUtils.getDexcomLabel(delta.toFloat())
 
@@ -271,58 +305,43 @@ object XDripServer : SharedPreferences.OnSharedPreferenceChangeListener {
         return "$dateStr $ageStr"
     }
 
-    private fun getGlucoseValues(brief: Boolean): List<GlucoseValue> {
-        val values: List<GlucoseValue> = runBlocking {
-            dbAccess.getLiveValuesByTimeSpan(2).first()
-        }
-
-        val sorted = values.sortedByDescending { it.timestamp }
-//        for (glucose in sorted) {
-//            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
-//            Log.i(LOG_ID, "Sorted - ${dateFormat.format(Date(glucose.timestamp))}")
-//        }
-
-        if (brief) {
-            val filtered = sorted.filterList()
-//            for (glucose in filtered) {
-//                val dateFormat =
-//                    SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
-//                Log.i(LOG_ID, "Filtered - ${dateFormat.format(Date(glucose.timestamp))}")
-//            }
-            return filtered
-        } else
-            return sorted.take(NumRecords)
+    private fun getGlucoseValues(oneMinuteInterval: Boolean, count: Int): List<GlucoseValue> {
+        val values: List<GlucoseValue> = dbAccess.getLastTopNGlucoseValues(if(oneMinuteInterval) count else count * 5)
+        if(!oneMinuteInterval)
+            return values.filterList(count)
+        return values
     }
 
 
     private fun List<GlucoseValue>.filterList(
+        maxCount: Int,
         intervalMinutes: Int = 5,
         toleranceSeconds: Int = 30
     ): List<GlucoseValue> {
         if (isEmpty()) return emptyList()
 
-        val sorted = this.sortedBy { it.timestamp } // ascending timestamps
         val result = mutableListOf<GlucoseValue>()
 
         val intervalMs = intervalMinutes * 60 * 1000L
         val toleranceMs = toleranceSeconds * 1000L
 
         // Always keep the first reading
-        var lastKeptTimestamp = sorted.first().timestamp
-        result.add(sorted.first())
+        var lastKeptTimestamp = first().timestamp
+        result.add(first())
 
-        for (glucose in sorted.drop(1)) {
-            val diff = glucose.timestamp - lastKeptTimestamp
+        for (glucose in drop(1)) {
+            val diff = abs(lastKeptTimestamp - glucose.timestamp)
 
             // Keep if it's within tolerance or after the interval
             if (diff >= intervalMs - toleranceMs) {
                 result.add(glucose)
                 lastKeptTimestamp = glucose.timestamp
+                if (result.size >= maxCount) break
             }
         }
 
         // Reverse to match original input order
-        return result.reversed()
+        return result.take(maxCount)
     }
 
 
@@ -339,11 +358,28 @@ object XDripServer : SharedPreferences.OnSharedPreferenceChangeListener {
                     stopServer()
             }
         }
+        if( key == null || key == Constants.SHARED_PREF_XDRIP_OPEN_SERVER) {
+            if(openServer != sharedPreferences.getBoolean(Constants.SHARED_PREF_XDRIP_OPEN_SERVER, false)) {
+                openServer = sharedPreferences.getBoolean(Constants.SHARED_PREF_XDRIP_OPEN_SERVER, false)
+                Log.i(LOG_ID, "Using open server: ${openServer}")
+                if(enabled) {
+                    restartServer()
+                }
+            }
+        }
         if(key == null || key == Constants.SHARED_PREF_XDRIP_SERVER_REDUCE_DATA) {
-            if(reducedData != sharedPreferences.getBoolean(Constants.SHARED_PREF_XDRIP_SERVER_REDUCE_DATA, false)) {
-                reducedData = sharedPreferences.getBoolean(Constants.SHARED_PREF_XDRIP_SERVER_REDUCE_DATA, false)
+            if(reducedData != sharedPreferences.getBoolean(Constants.SHARED_PREF_XDRIP_SERVER_REDUCE_DATA, true)) {
+                reducedData = sharedPreferences.getBoolean(Constants.SHARED_PREF_XDRIP_SERVER_REDUCE_DATA, true)
                 Log.i(LOG_ID, "Using reduced data: ${reducedData}")
             }
         }
+        if(key == null || key == Constants.SHARED_PREF_XDRIP_SERVER_1_MINUTE_INTERVAL) {
+            if(oneMinuteInterval != sharedPreferences.getBoolean(Constants.SHARED_PREF_XDRIP_SERVER_1_MINUTE_INTERVAL, false)) {
+                oneMinuteInterval = sharedPreferences.getBoolean(Constants.SHARED_PREF_XDRIP_SERVER_1_MINUTE_INTERVAL, false)
+                Log.i(LOG_ID, "Using 1 minute interval: ${oneMinuteInterval}")
+            }
+        }
+
+
     }
 }

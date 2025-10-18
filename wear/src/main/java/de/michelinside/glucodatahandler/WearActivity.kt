@@ -197,7 +197,8 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.CAR_CONNECTION,
                 NotifySource.TIME_VALUE,
                 NotifySource.SOURCE_STATE_CHANGE,
-                NotifySource.ALARM_STATE_CHANGED))
+                NotifySource.ALARM_STATE_CHANGED,
+                NotifySource.UPDATE_MAIN))
             if (requestNotificationPermission && Utils.checkPermission(this.applicationContext, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
                 Log.i(LOG_ID, "Notification permission granted")
                 requestNotificationPermission = false

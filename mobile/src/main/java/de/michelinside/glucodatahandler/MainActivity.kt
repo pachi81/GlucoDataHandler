@@ -273,7 +273,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.CAR_CONNECTION,
                 NotifySource.TIME_VALUE,
                 NotifySource.ALARM_STATE_CHANGED,
-                NotifySource.SOURCE_STATE_CHANGE))
+                NotifySource.SOURCE_STATE_CHANGE,
+                NotifySource.UPDATE_MAIN))
             checkUncaughtException()
             checkMissingPermissions()
             checkNewSettings()
@@ -867,6 +868,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         if(XDripServer.enabled) {
             if (XDripServer.isServerRunning()) {
                 tableConnections.addView(createRow(CR.string.pref_switch_xdrip_server, resources.getString(CR.string.state_active)))
+                if(XDripServer.lastRequest > 0L) {
+                    tableConnections.addView(createRow(CR.string.last_request, Utils.getUiTimeStamp(XDripServer.lastRequest)))
+                }
             } else if(!XDripServer.lastError.isNullOrEmpty()) {
                 tableConnections.addView(createRow(CR.string.pref_switch_xdrip_server, XDripServer.lastError!!))
             } else {

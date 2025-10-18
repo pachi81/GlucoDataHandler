@@ -152,6 +152,23 @@ object dbAccess {
         }
     }
 
+
+    fun getLastTopNGlucoseValues(count: Int): List<GlucoseValue> = runBlocking {
+        if(active) {
+            scope.async {
+                try {
+                    Log.d(LOG_ID, "getTopNGlucoseValues - count: $count")
+                    database!!.glucoseValuesDao().getLastTopNValues(count)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "getGlucoseValues exception: $exc")
+                    emptyList()
+                }
+            }.await()
+        } else {
+            emptyList()
+        }
+    }
+
     fun getGlucoseValuesInRange(minTime: Long, maxTime: Long): List<GlucoseValue> = runBlocking {
         if(active) {
             scope.async {

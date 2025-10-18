@@ -205,7 +205,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.TIME_VALUE,
                 NotifySource.SOURCE_STATE_CHANGE,
                 NotifySource.NEW_VERSION_AVAILABLE,
-                NotifySource.TTS_STATE_CHANGED))
+                NotifySource.TTS_STATE_CHANGED,
+                NotifySource.UPDATE_MAIN))
 
             GlucoDataServiceAuto.startDataSync()
             if(!GlucoDataService.isServiceRunning)
