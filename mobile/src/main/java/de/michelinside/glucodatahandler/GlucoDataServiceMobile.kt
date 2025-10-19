@@ -176,6 +176,15 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                         apply()
                     }
                 }
+                if(!sharedPrefs.contains(Constants.SHARED_PREF_FULLSCREEN_LANDSCAPE)) {
+                    val isScreenReader = context.isScreenReaderOn()
+                    Log.i(LOG_ID, "Setting default fullscreen mode for screenReader: $isScreenReader")
+                    with(sharedPrefs.edit()) {
+                        putBoolean(Constants.SHARED_PREF_FULLSCREEN_LANDSCAPE, !isScreenReader)
+                        apply()
+                    }
+                }
+
                 if(sharedPrefs.contains(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_PHONE_WIDGET)) {
                     val oldDuration = sharedPrefs.getInt(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_PHONE_WIDGET, 0)
                     Log.i(LOG_ID, "Migratate old widget duration of $oldDuration hours to bitmap duration")

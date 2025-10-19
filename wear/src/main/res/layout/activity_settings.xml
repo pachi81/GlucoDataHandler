@@ -65,6 +65,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@android:color/darker_gray"
+                android:importantForAccessibility="no"
                 android:layout_marginVertical="5dp"/>
 
             <androidx.appcompat.widget.SwitchCompat
@@ -96,6 +97,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@android:color/darker_gray"
+                android:importantForAccessibility="no"
                 android:layout_marginVertical="10dp"/>
 
             <RelativeLayout
@@ -103,9 +105,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:screenReaderFocusable="true"
                 android:orientation="horizontal">
                 <TextView
                     android:id="@+id/txtGraphDurationTitle"
+                    android:focusable="false"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/graph_duration"
@@ -113,6 +117,7 @@
 
                 <TextView
                     android:id="@+id/txtGraphDurationLevel"
+                    android:focusable="false"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -142,6 +147,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@android:color/darker_gray"
+                android:importantForAccessibility="no"
                 android:layout_marginVertical="10dp"/>
 
             <RelativeLayout
@@ -149,9 +155,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:screenReaderFocusable="true"
                 android:orientation="horizontal">
                 <TextView
                     android:id="@+id/txtLogDurationTitle"
+                    android:focusable="false"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/pref_log_duration_size"
@@ -159,6 +167,7 @@
 
                 <TextView
                     android:id="@+id/txtLogDurationLevel"
+                    android:focusable="false"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"

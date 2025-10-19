@@ -165,6 +165,7 @@
                 android:minWidth="60dp"
                 android:layout_weight="1"
                 android:scaleType="fitCenter"
+                android:importantForAccessibility="no"
                 android:contentDescription="@string/graph"
                 android:src="@drawable/icon_graph"/>
             <RelativeLayout

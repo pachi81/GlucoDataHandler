@@ -530,6 +530,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
         val textView = TextView(this)
         textView.layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1F)
         textView.text = text
+        textView.isFocusable = false
         textView.textSize = 14F
         if (end)
             textView.gravity = Gravity.CENTER_VERTICAL or Gravity.END
@@ -546,6 +547,8 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
 
     private fun createRow(key: String, value: String, onClickListener: View.OnClickListener? = null) : TableRow {
         val row = TableRow(this)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+            row.isScreenReaderFocusable = true
         row.weightSum = 2f
         //row.setBackgroundColor(resources.getColor(R.color.table_row))
         row.setPadding(Utils.dpToPx(5F, this))
@@ -560,6 +563,8 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
 
     private fun createRow(value: String, onClickListener: View.OnClickListener? = null) : TableRow {
         val row = TableRow(this)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+            row.isScreenReaderFocusable = true
         row.weightSum = 1f
         //row.setBackgroundColor(resources.getColor(R.color.table_row))
         row.setPadding(Utils.dpToPx(5F, this))

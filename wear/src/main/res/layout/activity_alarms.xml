@@ -37,6 +37,7 @@
 
             <TextView
                 android:id="@+id/snooze"
+                android:accessibilityHeading="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/snooze"
@@ -100,6 +101,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@android:color/darker_gray"
+                android:importantForAccessibility="no"
                 android:layout_marginVertical="5dp"/>
             <Button
                 android:id="@+id/btnAlarmAdvancedSettings"
@@ -110,6 +112,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@android:color/darker_gray"
+                android:importantForAccessibility="no"
                 android:layout_marginVertical="5dp"/>
             <Button
                 android:id="@+id/btnVeryLowAlarm"
@@ -135,6 +138,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@android:color/darker_gray"
+                android:importantForAccessibility="no"
                 android:layout_marginVertical="5dp"/>
             <Button
                 android:id="@+id/btnObsoleteAlarm"

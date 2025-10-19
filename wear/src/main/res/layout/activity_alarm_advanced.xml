@@ -47,6 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@android:color/darker_gray"
+                android:importantForAccessibility="no"
                 android:layout_marginVertical="10dp"/>
 
             <androidx.appcompat.widget.SwitchCompat
@@ -68,6 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@android:color/darker_gray"
+                android:importantForAccessibility="no"
                 android:layout_marginVertical="10dp"/>
 
             <androidx.appcompat.widget.SwitchCompat
@@ -81,6 +83,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@android:color/darker_gray"
+                android:importantForAccessibility="no"
                 android:layout_marginVertical="10dp"/>
 
             <androidx.appcompat.widget.SwitchCompat
@@ -102,6 +105,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@android:color/darker_gray"
+                android:importantForAccessibility="no"
                 android:layout_marginVertical="10dp"/>
 
             <RelativeLayout
@@ -152,6 +156,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@android:color/darker_gray"
+                android:importantForAccessibility="no"
                 android:layout_marginVertical="10dp"/>
 
             <androidx.appcompat.widget.SwitchCompat

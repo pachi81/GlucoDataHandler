@@ -45,9 +45,11 @@
             app:layout_constraintTop_toTopOf="parent"
             android:gravity="center"
             android:layout_marginTop="5dp"
+            android:screenReaderFocusable="true"
             tools:ignore="UselessParent">
             <TextView
                 android:id="@+id/txtBgValue"
+                android:focusable="false"
                 android:layout_weight="4"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -62,6 +64,7 @@
 
             <ImageView
                 android:id="@+id/viewIcon"
+                android:focusable="false"
                 android:layout_weight="3"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -77,10 +80,12 @@
                 android:layout_height="20dp"
                 android:gravity="center|top"
                 android:orientation="horizontal"
+                android:screenReaderFocusable="true"
                 tools:ignore="UselessParent">
 
                 <TextView
                     android:id="@+id/timeText"
+                    android:focusable="false"
                     android:text="🕒 0 min"
                     android:layout_width="0dp"
                     android:layout_weight="4"
@@ -94,6 +99,7 @@
                     tools:ignore="HardcodedText,NestedWeights,RtlSymmetry" />
                 <TextView
                     android:id="@+id/deltaText"
+                    android:focusable="false"
                     android:text="Δ +0.06"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -111,9 +117,11 @@
                 android:layout_height="20dp"
                 android:gravity="center|top"
                 android:orientation="horizontal"
+                android:screenReaderFocusable="true"
                 tools:ignore="UselessParent">
                 <TextView
                     android:id="@+id/iobText"
+                    android:focusable="false"
                     android:text="💉 1.30U"
                     android:layout_width="0dp"
                     android:layout_weight="4"
@@ -128,6 +136,7 @@
 
                 <TextView
                     android:id="@+id/cobText"
+                    android:focusable="false"
                     android:text="🍔 31.2g"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -156,6 +165,7 @@
                 android:id="@+id/graphImage"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
+                android:importantForAccessibility="no"
                 android:contentDescription="@string/graph" />
 
             <View
@@ -177,6 +187,7 @@
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:layout_weight="1"
+                        android:accessibilityHeading="true"
                         android:text="@string/info_label_notes"/>
                 </TableRow>
             </TableLayout>
@@ -196,6 +207,7 @@
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:layout_weight="1"
+                        android:accessibilityHeading="true"
                         android:text="@string/alarm_header"/>
                 </TableRow>
             </TableLayout>
@@ -215,6 +227,7 @@
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:layout_weight="1"
+                        android:accessibilityHeading="true"
                         android:text="@string/info_label_delta"/>
                 </TableRow>
             </TableLayout>
@@ -234,6 +247,7 @@
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:layout_weight="1"
+                        android:accessibilityHeading="true"
                         android:text="@string/table_header_details"/>
                 </TableRow>
             </TableLayout>
@@ -253,6 +267,7 @@
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:layout_weight="1"
+                        android:accessibilityHeading="true"
                         android:text="@string/table_header_connections"/>
                 </TableRow>
             </TableLayout>

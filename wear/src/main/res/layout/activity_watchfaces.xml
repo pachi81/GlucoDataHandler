@@ -40,10 +40,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@android:color/darker_gray"
+                android:importantForAccessibility="no"
                 android:layout_marginVertical="10dp"/>
 
             <TextView
                 android:id="@+id/txtThirdPartyWatchfaces"
+                android:accessibilityHeading="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/pref_watchfaces_cat"
@@ -63,6 +65,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@android:color/darker_gray"
+                android:importantForAccessibility="no"
                 android:layout_marginVertical="10dp"/>
 
             <TextView
@@ -82,6 +85,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@android:color/darker_gray"
+                android:importantForAccessibility="no"
                 android:layout_marginVertical="10dp"/>
 
             <TextView

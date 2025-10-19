@@ -963,12 +963,16 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         checkTableVisibility(tableDetails)
     }
 
-    private fun getSensorAgeAsString(duration: Duration): String {
+    private fun getSensorAgeAsString(duration: Duration, longFormat: Boolean = false): String {
         if(duration.isNegative || duration.toMinutes() < 60) {
+            if(longFormat)
+                return resources.getQuantityString(CR.plurals.minutes_long, duration.toMinutes().toInt(), duration.toMinutes().toInt())
             return resources.getString(CR.string.elapsed_time).format(duration.toMinutes())
         }
         val days = duration.toDays()
         val hours = duration.minusDays(days).toHours()
+        if(longFormat)
+            return (if(days > 0) resources.getQuantityString(CR.plurals.days_long, days.toInt(), days.toInt()) + ", " else "") + resources.getQuantityString(CR.plurals.hours_long, hours.toInt(), hours.toInt())
         return resources.getString(CR.string.sensor_age_value).format(days, hours)
     }
 
@@ -985,12 +989,16 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             }
         }
         val showRemaining = sharedPref.getBoolean(Constants.SHARED_PREF_SHOW_SENSOR_AGE_REMAIN_TIME, false)
-        return if(showRemaining) {
+        if(showRemaining) {
             val runtimeDuration = Duration.ofMinutes(runtimeMinutes.toLong())
             val diffDuration = runtimeDuration.minus(duration)
-            createColumn(getSensorAgeAsString(diffDuration) + " >", true, onClickListener)
+            val col = createColumn(getSensorAgeAsString(diffDuration) + " >", true, onClickListener)
+            col.contentDescription = resources.getString(CR.string.remaining) + ": " + getSensorAgeAsString(diffDuration, true)
+            return col
         } else {
-            createColumn("< " + getSensorAgeAsString(duration), true, onClickListener)
+            val col = createColumn("< " + getSensorAgeAsString(duration), true, onClickListener)
+            col.contentDescription = getSensorAgeAsString(duration, true)
+            return col
         }
     }
 
@@ -1022,6 +1030,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         val textView = TextView(this)
         textView.layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, initWeight)
         textView.text = text
+        textView.isFocusable = false
         textView.textSize = 18F
         if (end)
             textView.gravity = Gravity.CENTER_VERTICAL or Gravity.END
@@ -1038,6 +1047,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     private fun createRow(key: String, value: String, onClickListener: OnClickListener? = null) : TableRow {
         val row = TableRow(this)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+            row.isScreenReaderFocusable = true
         row.weightSum = 2f
         //row.setBackgroundColor(resources.getColor(R.color.table_row))
         row.setPadding(Utils.dpToPx(5F, this))
@@ -1053,6 +1064,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         progressBar.max = max
         progressBar.scaleY = 3F
         progressBar.contentDescription = description
+        progressBar.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
         progressBar.setProgressTintList(ColorStateList.valueOf(color))
         return progressBar
     }
@@ -1064,6 +1076,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         val row = TableRow(this)
         row.weightSum = 11f
         row.gravity = Gravity.CENTER_VERTICAL
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+            row.isScreenReaderFocusable = true
         row.setPadding(Utils.dpToPx(5F, this))
         row.addView(createColumn(key, false, null, 4F))
         row.addView(createProgressBar(percentage.toInt(), 100, color, key))
@@ -1085,6 +1099,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private fun createRow(value: String, onClickListener: OnClickListener? = null) : TableRow {
         val row = TableRow(this)
         row.weightSum = 1f
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+            row.isScreenReaderFocusable = true
         //row.setBackgroundColor(resources.getColor(R.color.table_row))
         row.setPadding(Utils.dpToPx(5F, this))
         row.addView(createColumn(value, false, onClickListener))
@@ -1131,6 +1147,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     borderLeft?.visibility = View.GONE
                     borderRight?.visibility = View.GONE
                     expandCollapseView!!.setImageDrawable(ContextCompat.getDrawable(this, CR.drawable.icon_collapse))
+                    expandCollapseView!!.contentDescription = resources.getString(CR.string.collapse_view)
                     if(Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM && systemBars!=null)
                         view?.setPadding(systemBars!!.left, systemBars!!.top/2, systemBars!!.right, systemBars!!.bottom)
                 } else {
@@ -1141,6 +1158,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     borderLeft?.visibility = View.VISIBLE
                     borderRight?.visibility = View.VISIBLE
                     expandCollapseView!!.setImageDrawable(ContextCompat.getDrawable(this, CR.drawable.icon_expand))
+                    expandCollapseView!!.contentDescription = resources.getString(CR.string.expand_view)
                     if(Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM && systemBars!=null)
                         view?.setPadding(systemBars!!.left, systemBars!!.top, systemBars!!.right, systemBars!!.bottom)
                 }
