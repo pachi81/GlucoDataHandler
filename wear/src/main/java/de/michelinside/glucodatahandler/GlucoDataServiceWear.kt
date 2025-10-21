@@ -179,7 +179,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
             .build()
     }
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         try {
             Log.d(LOG_ID, "onSharedPreferenceChanged called with key $key")
             super.onSharedPreferenceChanged(sharedPreferences, key)

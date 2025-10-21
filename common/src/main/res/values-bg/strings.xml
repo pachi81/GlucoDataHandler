@@ -703,7 +703,7 @@
     <string name="source_libre_server_russian">Руски (.ru)</string>
 
     <string name="patient_name">Име</string>
-    <string name="patient_name_summary">Име на потребителя/пациента, което трябва да се показва в известието и по време на говорене.\nТова трябва да се използва, ако използвате множество варианти на GlucoDataAuto, в противен случай може да е празно.</string>
+    <string name="patient_name_gda_summary">Име на потребителя/пациента, което трябва да се показва в известието и по време на говорене.\nТова трябва да се използва, ако използвате множество варианти на GlucoDataAuto, в противен случай може да е празно.</string>
 
     <string name="video_tutorial">Видео урок</string>
     <string name="video_tutorial_summary">Щракнете тук, за да отидете на видеоклипа в YouTube, който илюстрира настройката на този източник. Много благодаря на Diabetic Masked Man за създаването на видеоклиповете.</string>

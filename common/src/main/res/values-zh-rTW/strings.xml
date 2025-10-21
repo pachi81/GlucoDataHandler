@@ -700,7 +700,7 @@
     <string name="source_libre_server_russian">俄羅斯 (.ru)</string>
 
     <string name="patient_name">名稱</string>
-    <string name="patient_name_summary">使用者/病患名稱會顯示在通知和語音播報中\n如果您同時使用多個 GlucoDataAuto 程式則須使用此選項，否則請留空</string>
+    <string name="patient_name_gda_summary">使用者/病患名稱會顯示在通知和語音播報中\n如果您同時使用多個 GlucoDataAuto 程式則須使用此選項，否則請留空</string>
 
     <string name="video_tutorial">影片教學</string>
     <string name="video_tutorial_summary">按這裡可以連到 YouTube 影片說明如何設定資料來源。非常感謝 Diabetic Masked Man 製作影片</string>

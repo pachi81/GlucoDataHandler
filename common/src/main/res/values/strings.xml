@@ -973,6 +973,7 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="patient_name_summary">Name of the user/patient, which should be shown in notification, widgets and so on.</string>
     <string name="pref_switch_xdrip_server_1_minute_interval">1 Minute Interval</string>
     <string name="pref_switch_xdrip_server_1_minute_interval_summary">Return list of values in 1 minute interval instead of 5 minute interval.\nPlease only enable this setting, if you know, that the watchface or widget can handle it!\nNormal watchface are created to handle 5 minute interval.</string>
+    <string name="short_value_patient_name">Glucose and name</string>
 
 
     <plurals name="minutes_long">

@@ -64,6 +64,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var tableAlarms: TableLayout
     private lateinit var tableNotes: TableLayout
     private lateinit var chartImage: ImageView
+    private lateinit var txtPatientName: TextView
     private var doNotUpdate = false
     private var requestNotificationPermission = false
     private lateinit var chartBitmap: ChartBitmapHandlerView
@@ -93,6 +94,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             tableDelta = findViewById(R.id.tableDelta)
             tableNotes = findViewById(R.id.tableNotes)
             chartImage = findViewById(R.id.graphImage)
+            txtPatientName = findViewById(R.id.patient_name)
 
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
@@ -274,6 +276,13 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             cobText.visibility = iobText.visibility
 
             txtValueInfo.visibility = if(ReceiveData.time>0) View.GONE else View.VISIBLE
+
+            if(GlucoDataService.patientName.isNullOrEmpty()) {
+                txtPatientName.visibility = View.GONE
+            } else {
+                txtPatientName.visibility = View.VISIBLE
+            }
+            txtPatientName.text = GlucoDataService.patientName
 
             updateNotesTable()
             updateAlarmsTable()

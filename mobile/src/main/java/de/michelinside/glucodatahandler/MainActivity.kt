@@ -681,6 +681,13 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
             noDataLayout.visibility = if(ReceiveData.time>0) View.GONE else View.VISIBLE
 
+            if(GlucoDataService.patientName.isNullOrEmpty()) {
+                if(title != resources.getString(R.string.app_name))
+                    setTitle(R.string.app_name)
+            } else {
+                setTitle(GlucoDataService.patientName)
+            }
+
             //chartHandler.update()
             updateNotesTable()
             updateAlarmsTable()

@@ -299,7 +299,7 @@ A dupla idő után teljesen eltűnik.</string>
     <string name="other_alarm_cat_categories">További riasztások</string>
     <string name="other_unit">Másik egység</string>
     <string name="patient_name">Név</string>
-    <string name="patient_name_summary">A felhasználó/beteg neve, amely megjelenik az értesítésben és felolvasáskor.
+    <string name="patient_name_gda_summary">A felhasználó/beteg neve, amely megjelenik az értesítésben és felolvasáskor.
 Ezt akkor kell használni, ha több GlucoDataAuto változatot használ, egyébként üresen hagyható.</string>
     <string name="permission_alarm_notification_message">A riasztások használatához engedélyezni kell a riasztási értesítési kategóriát!
 Az OK gomb megnyomása után megnyílnak az értesítési beállítások.

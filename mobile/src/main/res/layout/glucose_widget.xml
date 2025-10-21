@@ -1,15 +1,31 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/widget"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/transparent_widget_background">
+    android:background="@color/transparent_widget_background"
+    android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/patient_name"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="Patient Name"
+        android:autoSizeMinTextSize="5sp"
+        android:autoSizeMaxTextSize="30sp"
+        android:autoSizeStepGranularity="1sp"
+        android:autoSizeTextType="uniform"
+        android:maxLines="1"
+        android:layout_marginHorizontal="10dp"
+        android:textColor="@color/transparent_widget_textcolor" />
     <TextView
         android:id="@+id/glucose"
         android:layout_margin="6dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
         android:gravity="center"
         android:autoSizeMinTextSize="1sp"
         android:autoSizeStepGranularity="1sp"
@@ -17,4 +33,4 @@
         android:text="12.3"
         android:maxLines="1"
         tools:ignore="HardcodedText,NestedWeights" />
-</FrameLayout>
+</LinearLayout>

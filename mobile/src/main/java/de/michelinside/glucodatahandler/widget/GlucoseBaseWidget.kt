@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Paint
 import android.os.Bundle
+import android.util.TypedValue
 import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.View
 import android.widget.RemoteViews
@@ -14,6 +15,7 @@ import de.michelinside.glucodatahandler.GlucoDataServiceMobile
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
@@ -209,6 +211,14 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
             } else {
                 remoteViews.setInt(R.id.glucose, "setPaintFlags", 0)
             }
+        }
+
+        if(GlucoDataService.patientName.isNullOrEmpty()) {
+            remoteViews.setViewVisibility(R.id.patient_name, View.GONE)
+            remoteViews.setTextViewText(R.id.patient_name, "")
+        } else {
+            remoteViews.setViewVisibility(R.id.patient_name, View.VISIBLE)
+            remoteViews.setTextViewText(R.id.patient_name, GlucoDataService.patientName)
         }
 
         if (hasTrend) {

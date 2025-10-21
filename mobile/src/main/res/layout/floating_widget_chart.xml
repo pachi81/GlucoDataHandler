@@ -16,35 +16,55 @@
         tools:ignore="NestedWeights,UselessParent">
 
         <LinearLayout
-            android:id="@+id/layout_glucose_trend"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:gravity="center|start"
-            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="6dp"
             android:paddingHorizontal="5dp"
-            tools:ignore="UselessParent">
-
+            android:orientation="vertical">
             <TextView
-                android:id="@+id/glucose"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="4"
-                android:textSize="60sp"
+                android:id="@+id/patient_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="Patient Name"
+                android:autoSizeMinTextSize="5sp"
+                android:autoSizeMaxTextSize="30sp"
+                android:autoSizeStepGranularity="1sp"
+                android:autoSizeTextType="uniform"
                 android:maxLines="1"
-                android:text="---"
-                android:gravity="center_vertical|end"
-                tools:ignore="HardcodedText" />
+                android:textColor="@color/transparent_widget_textcolor" />
 
-            <ImageView
-                android:id="@+id/trendImage"
+            <LinearLayout
+                android:id="@+id/layout_glucose_trend"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="3"
-                android:minWidth="65dp"
-                android:paddingVertical="2dp"
-                android:gravity="center"
-                android:src="@drawable/icon_question"
-                tools:ignore="ContentDescription" />
+                android:gravity="center|start"
+                android:orientation="horizontal"
+                tools:ignore="UselessParent">
+
+                <TextView
+                    android:id="@+id/glucose"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
+                    android:textSize="60sp"
+                    android:maxLines="1"
+                    android:text="---"
+                    android:gravity="center_vertical|end"
+                    tools:ignore="HardcodedText" />
+
+                <ImageView
+                    android:id="@+id/trendImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:minWidth="65dp"
+                    android:paddingVertical="2dp"
+                    android:gravity="center"
+                    android:src="@drawable/icon_question"
+                    tools:ignore="ContentDescription" />
+            </LinearLayout>
         </LinearLayout>
 
             <LinearLayout

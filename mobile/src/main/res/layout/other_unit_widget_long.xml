@@ -3,62 +3,86 @@
     android:id="@+id/widget"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/transparent_widget_background">
 
     <TextView
-        android:id="@+id/glucose"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:id="@+id/patient_name"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:gravity="center"
-        android:layout_weight="3"
-        android:layout_marginStart="6dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp"
-        android:autoSizeMinTextSize="1sp"
+        android:text="Patient Name"
+        android:autoSizeMinTextSize="5sp"
+        android:autoSizeMaxTextSize="30sp"
         android:autoSizeStepGranularity="1sp"
         android:autoSizeTextType="uniform"
-        android:text="333"
         android:maxLines="1"
-        tools:ignore="ContentDescription,HardcodedText" />
-
+        android:layout_marginHorizontal="10dp"
+        android:textColor="@color/transparent_widget_textcolor" />
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
         android:minWidth="60dp"
-        android:layout_weight="2"
-        android:layout_marginStart="6dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp"
-        android:layout_marginEnd="6dp"
-        android:orientation="vertical">
+        android:layout_margin="6dp"
+        android:orientation="horizontal"
+        tools:ignore="UselessParent">
         <TextView
-            android:id="@+id/deltaText"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="4"
-            android:autoSizeMinTextSize="1sp"
-            android:autoSizeMaxTextSize="24sp"
-            android:autoSizeStepGranularity="1sp"
-            android:autoSizeTextType="uniform"
+            android:id="@+id/glucose"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:gravity="center"
-            android:text="+0.06"
-            android:maxLines="1"
-            android:textColor="@color/transparent_widget_textcolor"
-            tools:ignore="HardcodedText,NestedWeights" />
-        <TextView
-            android:id="@+id/unitText"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
             android:layout_weight="3"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp"
             android:autoSizeMinTextSize="1sp"
-            android:autoSizeMaxTextSize="20sp"
             android:autoSizeStepGranularity="1sp"
             android:autoSizeTextType="uniform"
-            android:gravity="center"
-            android:text="mg/dl"
+            android:text="333"
             android:maxLines="1"
-            android:textColor="@color/transparent_widget_textcolor"
-            tools:ignore="HardcodedText,NestedWeights" />
+            tools:ignore="ContentDescription,HardcodedText" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:minWidth="60dp"
+            android:layout_weight="2"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp"
+            android:layout_marginEnd="6dp"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/deltaText"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="4"
+                android:autoSizeMinTextSize="1sp"
+                android:autoSizeMaxTextSize="24sp"
+                android:autoSizeStepGranularity="1sp"
+                android:autoSizeTextType="uniform"
+                android:gravity="center"
+                android:text="+0.06"
+                android:maxLines="1"
+                android:textColor="@color/transparent_widget_textcolor"
+                tools:ignore="HardcodedText,NestedWeights" />
+            <TextView
+                android:id="@+id/unitText"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="3"
+                android:autoSizeMinTextSize="1sp"
+                android:autoSizeMaxTextSize="20sp"
+                android:autoSizeStepGranularity="1sp"
+                android:autoSizeTextType="uniform"
+                android:gravity="center"
+                android:text="mg/dl"
+                android:maxLines="1"
+                android:textColor="@color/transparent_widget_textcolor"
+                tools:ignore="HardcodedText,NestedWeights" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

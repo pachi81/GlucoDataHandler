@@ -410,6 +410,9 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         if (resId == null)
             return null
 
+        var text = ReceiveData.getGlucoseAsString()  + " (Δ " + ReceiveData.getDeltaAsString() + ")"
+        if(!GlucoDataService.patientName.isNullOrEmpty())
+            text = GlucoDataService.patientName + ": " + text
         val notificationBuilder = Notification.Builder(context, channelId)
             .setSmallIcon(CR.mipmap.ic_launcher)
             //.setContentIntent(createStopIntent(context, getNotificationId(alarmType), true))
@@ -425,7 +428,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             .setLocalOnly(false)
             .setStyle(Notification.DecoratedCustomViewStyle())
             .setContentTitle(context.getString(resId))
-            .setContentText(ReceiveData.getGlucoseAsString()  + " (Δ " + ReceiveData.getDeltaAsString() + ")")
+            .setContentText(text)
 
         val extender = Notification.WearableExtender()
         extender.addAction(createStopAction(context, context.resources.getString(CR.string.btn_dismiss), getNotificationId(alarmType)))

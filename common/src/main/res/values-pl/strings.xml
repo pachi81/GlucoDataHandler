@@ -704,7 +704,7 @@
     <string name="source_libre_server_russian">Rosyjski (.ru)</string>
 
     <string name="patient_name">Nazwa</string>
-    <string name="patient_name_summary">Nazwa użytkownika/pacjenta, która ma być widoczna w powiadomieniach i w odczytach na głos.\nZ nazwy tej należy korzystać, jeżeli używa się wielu wariantów GlucoDataAuto, ponieważ w przeciwnym razie pole to może być puste.</string>
+    <string name="patient_name_gda_summary">Nazwa użytkownika/pacjenta, która ma być widoczna w powiadomieniach i w odczytach na głos.\nZ nazwy tej należy korzystać, jeżeli używa się wielu wariantów GlucoDataAuto, ponieważ w przeciwnym razie pole to może być puste.</string>
 
     <string name="video_tutorial">Przewodnik wideo</string>
     <string name="video_tutorial_summary">Naciśnij tutaj, by przejść do filmu na kanale YouTube, który pokazuje, jak ustawić to źródło. Wielkie dzięki dla Diabetic Masked Mana za przygotowanie tych filmów.</string>

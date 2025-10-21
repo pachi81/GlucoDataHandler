@@ -5,33 +5,63 @@
     android:layout_height="match_parent"
     android:background="@color/transparent_widget_background">
 
-    <TextView
-        android:id="@+id/glucose"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:layout_weight="3"
-        android:layout_marginStart="6dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp"
-        android:autoSizeStepGranularity="1sp"
-        android:autoSizeMinTextSize="1sp"
-        android:autoSizeTextType="uniform"
-        android:text="333"
-        android:maxLines="1"
-        tools:ignore="ContentDescription,HardcodedText" />
+        android:layout_weight="6"
+        android:layout_margin="6dp"
+        android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/trendImage"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_marginStart="6dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp"
-        android:contentDescription="@string/trend"
-        android:layout_weight="3"
-        android:gravity="center"
-        android:src="@drawable/icon_question" />
+        <TextView
+            android:id="@+id/patient_name"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:autoSizeMinTextSize="5sp"
+            android:autoSizeMaxTextSize="30sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:gravity="center"
+            android:maxLines="1"
+            android:layout_marginStart="10dp"
+            android:text="Patient Name"
+            android:textColor="@color/transparent_widget_textcolor" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/glucose"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_weight="3"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
+                android:autoSizeStepGranularity="1sp"
+                android:autoSizeMinTextSize="1sp"
+                android:autoSizeTextType="uniform"
+                android:text="333"
+                android:maxLines="1"
+                tools:ignore="ContentDescription,HardcodedText" />
+
+            <ImageView
+                android:id="@+id/trendImage"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
+                android:contentDescription="@string/trend"
+                android:layout_weight="3"
+                android:gravity="center"
+                android:src="@drawable/icon_question" />
+        </LinearLayout>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/deltaText"

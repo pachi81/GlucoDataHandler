@@ -1,10 +1,11 @@
 package de.michelinside.glucodatahandler
 
 import androidx.wear.watchface.complications.data.*
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.utils.Utils
 
-open class ShortClucoseComplication:  BgValueComplicationService() {
+open class ShortGlucoseComplication:  BgValueComplicationService() {
     override fun getDescription(): String {
         return getDescriptionForContent(glucose = true)
     }
@@ -24,14 +25,14 @@ class ShortGlucoseWithTrendComplication: BgValueComplicationService() {
     }
 }
 
-class ShortGlucoseWithDeltaComplication: ShortClucoseComplication() {
+class ShortGlucoseWithDeltaComplication: ShortGlucoseComplication() {
     override fun getTitle(): PlainComplicationText = deltaText()
     override fun getDescription(): String {
         return getDescriptionForContent(glucose = true, delta = true)
     }
 }
 
-class ShortGlucoseWithDeltaAndTrendComplication: ShortClucoseComplication() {
+class ShortGlucoseWithDeltaAndTrendComplication: ShortGlucoseComplication() {
     override fun getTitle(): PlainComplicationText = deltaText()
     override fun getIcon(): MonochromaticImage = arrowIcon()
     override fun getLongTextComplicationData(): ComplicationData {
@@ -68,7 +69,7 @@ open class ShortGlucoseWithTrendRangeComplication: BgValueComplicationService() 
     }
 }
 
-open class ShortDeltaComplication: ShortClucoseComplication() {
+open class ShortDeltaComplication: ShortGlucoseComplication() {
     override fun getText(): PlainComplicationText = deltaText()
     override fun getDescription(): String {
         return getDescriptionForContent(delta = true)
@@ -94,3 +95,16 @@ class OtherUnitComplication: BgValueComplicationService() {
     }
 }
 
+class ShortGlucoseWithNameComplication: ShortGlucoseComplication() {
+    override fun getTitle(): PlainComplicationText = plainText(GlucoDataService.patientName?:"")
+    override fun getDescription(): String {
+        return getDescriptionForContent(patientName = true, glucose = true)
+    }
+}
+
+open class ShortNameComplication:  BgValueComplicationService() {
+    override fun getText(): PlainComplicationText = plainText(GlucoDataService.patientName?:"n/a")
+    override fun getDescription(): String {
+        return getDescriptionForContent(patientName = true)
+    }
+}

@@ -704,7 +704,7 @@
     <string name="source_libre_server_russian">Ruský (.ru)</string>
 
     <string name="patient_name">Meno</string>
-    <string name="patient_name_summary">Meno používateľa/pacienta, ktoré sa má zobraziť v upozorneniach a počas vyslovovania.\nToto by sa malo používať, ak používate viacero verzií GlucoDataAuto, inak môže pole zostať prázdne.</string>
+    <string name="patient_name_gda_summary">Meno používateľa/pacienta, ktoré sa má zobraziť v upozorneniach a počas vyslovovania.\nToto by sa malo používať, ak používate viacero verzií GlucoDataAuto, inak môže pole zostať prázdne.</string>
 
     <string name="video_tutorial">Video návod</string>
     <string name="video_tutorial_summary">Kliknite sem, aby ste sa dostali na YouTube video, ktoré ilustruje nastavenie tohto zdroja. Veľká vďaka Diabetic Masked Man za vytvorenie videí.</string>

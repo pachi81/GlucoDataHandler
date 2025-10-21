@@ -22,6 +22,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.ncorti.slidetoact.SlideToActView
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.chart.ChartBitmapHandlerView
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
@@ -123,6 +124,10 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             graphImage = findViewById(R.id.graphImage)
 
             val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            if(!GlucoDataService.patientName.isNullOrEmpty()) {
+                setTitle(GlucoDataService.patientName)
+            }
+
             val snoozeValues = AlarmNotification.getSnoozeValues()
             if (snoozeValues.isEmpty())
                 layoutSnooze.visibility = View.GONE

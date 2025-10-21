@@ -1,6 +1,7 @@
 package de.michelinside.glucodatahandler
 
 import androidx.wear.watchface.complications.data.*
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.utils.Utils
 import java.util.*
@@ -16,11 +17,21 @@ open class TimeComplicationBase : BgValueComplicationService() {
 
 class LongGlucoseWithDeltaAndTrendAndTimeComplication: TimeComplicationBase() {
     override fun getLongTextComplicationData(): ComplicationData {
+        val text: PlainComplicationText
+        val title: PlainComplicationText
+        if(GlucoDataService.patientName.isNullOrEmpty()) {
+            text = plainText("Δ: " + ReceiveData.getDeltaAsString())
+            title = timeText()
+        } else {
+            text = plainText( ReceiveData.getElapsedTimeMinuteAsString(this, false) + " Δ: " + ReceiveData.getDeltaAsString())
+            title = plainText(GlucoDataService.patientName!!)
+        }
+
         return LongTextComplicationData.Builder(
-            plainText("Δ: " + ReceiveData.getDeltaAsString()),
+            text,
             descriptionText()
         )
-            .setTitle(timeText())
+            .setTitle(title)
             .setSmallImage(getGlucoseTrendImage())
             .setTapAction(getTapAction())
             .build()

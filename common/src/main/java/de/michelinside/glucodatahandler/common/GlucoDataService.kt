@@ -15,6 +15,7 @@ import android.os.Bundle
 import android.provider.Settings
 import androidx.annotation.RequiresApi
 import com.google.android.gms.wearable.WearableListenerService
+import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
@@ -72,6 +73,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
         private var isRunning = false
         val running get() = isRunning
         private var created = false
+        var patientName: String? = null
+            private set
 
         @SuppressLint("StaticFieldLeak")
         var service: GlucoDataService? = null
@@ -600,6 +603,13 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     }
                 }
             }
+
+            if(Constants.IS_SECOND && !sharedPrefs.contains(Constants.PATIENT_NAME)) {
+                with(sharedPrefs.edit()) {
+                    putString(Constants.PATIENT_NAME, "SECOND")
+                    apply()
+                }
+            }
         }
 
         fun getSettings(): Bundle {
@@ -616,6 +626,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 bundle.putBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false))
                 bundle.putBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, sharedPref!!.getBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, true))
                 bundle.putString(Constants.SHARED_PREF_SENSOR_RUNTIME, sharedPref!!.getString(Constants.SHARED_PREF_SENSOR_RUNTIME, "14"))
+                bundle.putString(Constants.PATIENT_NAME, sharedPref!!.getString(Constants.PATIENT_NAME, ""))
             }
             if(Log.isLoggable(LOG_ID, android.util.Log.VERBOSE))
                 Log.v(LOG_ID, "getSettings called with bundle ${(Utils.dumpBundle(bundle))}")
@@ -637,6 +648,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 putBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, bundle.getBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, true))
                 putBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false))
                 putString(Constants.SHARED_PREF_SENSOR_RUNTIME, bundle.getString(Constants.SHARED_PREF_SENSOR_RUNTIME, "14"))
+                putString(Constants.PATIENT_NAME, bundle.getString(Constants.PATIENT_NAME, ""))
                 apply()
             }
             ReceiveData.setSettings(sharedPref, bundle)
@@ -707,6 +719,10 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             updateScreenReceiver()
 
             sharedPref!!.registerOnSharedPreferenceChangeListener(this)
+
+            patientName = sharedPref!!.getString(Constants.PATIENT_NAME, "")
+            if(BuildConfig.DEBUG && patientName.isNullOrEmpty())
+                patientName = "Wusel Dusel"
 
             TextToSpeechUtils.initTextToSpeech(this)
             created = true
@@ -790,7 +806,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
     }
 
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         try {
             Log.d(LOG_ID, "onSharedPreferenceChanged called with key $key")
             var shareSettings = false
@@ -814,6 +830,10 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 }
                 Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE -> {
                     updateScreenReceiver()
+                    shareSettings = true
+                }
+                Constants.PATIENT_NAME -> {
+                    patientName = sharedPreferences.getString(Constants.PATIENT_NAME, "")
                     shareSettings = true
                 }
             }

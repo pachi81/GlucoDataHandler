@@ -35,44 +35,58 @@
                 android:gravity="center"
                 tools:ignore="ContentDescription" />
 
-        <LinearLayout
-            android:id="@+id/test"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintStart_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:gravity="center"
-            android:layout_marginTop="5dp"
-            android:screenReaderFocusable="true"
-            tools:ignore="UselessParent">
             <TextView
-                android:id="@+id/txtBgValue"
-                android:focusable="false"
-                android:layout_weight="4"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:text="---"
-                android:maxLines="1"
-                android:textAlignment="viewEnd"
-                android:textColor="#FFFFFF"
+                android:id="@+id/patient_name"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:text="Patient Name"
+                android:autoSizeMinTextSize="5sp"
+                android:autoSizeMaxTextSize="30sp"
                 android:autoSizeStepGranularity="1sp"
                 android:autoSizeTextType="uniform"
-                android:textStyle="bold"
-                tools:ignore="HardcodedText" />
+                android:maxLines="1"
+                android:layout_marginHorizontal="5dp"
+                android:textColor="@color/transparent_widget_textcolor" />
 
-            <ImageView
-                android:id="@+id/viewIcon"
-                android:focusable="false"
-                android:layout_weight="3"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/icon_question"
-                android:paddingVertical="2dp"
-                tools:ignore="ContentDescription" />
+            <LinearLayout
+                android:id="@+id/test"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:gravity="center"
+                android:layout_marginTop="5dp"
+                android:screenReaderFocusable="true"
+                tools:ignore="UselessParent">
+                <TextView
+                    android:id="@+id/txtBgValue"
+                    android:focusable="false"
+                    android:layout_weight="4"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:text="---"
+                    android:maxLines="1"
+                    android:textAlignment="viewEnd"
+                    android:textColor="#FFFFFF"
+                    android:autoSizeStepGranularity="1sp"
+                    android:autoSizeTextType="uniform"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
 
-        </LinearLayout>
+                <ImageView
+                    android:id="@+id/viewIcon"
+                    android:focusable="false"
+                    android:layout_weight="3"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/icon_question"
+                    android:paddingVertical="2dp"
+                    tools:ignore="ContentDescription" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/layout_delta_time"

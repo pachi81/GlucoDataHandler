@@ -697,7 +697,7 @@
     <string name="source_libre_server_russian">Russo (.ru)</string>
 
     <string name="patient_name">Nome</string>
-    <string name="patient_name_summary">Nome do usuário/paciente, que deve ser mostrado na notificação e durante a fala.\nIsso deve ser usado se você estiver usando várias variantes do GlucoDataAuto, caso contrário, poderá estar vazio.</string>
+    <string name="patient_name_gda_summary">Nome do usuário/paciente, que deve ser mostrado na notificação e durante a fala.\nIsso deve ser usado se você estiver usando várias variantes do GlucoDataAuto, caso contrário, poderá estar vazio.</string>
 
     <string name="video_tutorial">Vídeo tutorial</string>
     <string name="video_tutorial_summary">Clique aqui para ir ao vídeo do YouTube que ilustra a configuração desta fonte. Muito obrigado ao Diabetic Masked Man por criar os vídeos.</string>
