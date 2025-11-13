@@ -16,6 +16,12 @@
             android:summary="@string/pref_target_range_summary"
             app:fragment="de.michelinside.glucodatahandler.preferences.RangeSettingsFragment"
             app:iconSpaceReserved="false" />
+        <Preference
+            android:key="pref_general_advanced"
+            android:title="@string/advanced_settings"
+            android:summary="@string/pref_cat_general_advanced_summary"
+            app:fragment="de.michelinside.glucodatahandler.preferences.GeneralAdvancedSettingsFragment"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/pref_cat_visualisation"

@@ -53,6 +53,12 @@
         <PreferenceCategory
             android:title="@string/pref_second_notification"
             app:iconSpaceReserved="false">
+                <Preference
+                    android:key="api_36_notification_info"
+                    android:title="@string/important"
+                    app:isPreferenceVisible="false"
+                    android:summary="@string/api_36_notification_info"
+                    app:iconSpaceReserved="false" />
                 <androidx.preference.SwitchPreferenceCompat
                     android:defaultValue="false"
                     android:key="second_permanent_notification"

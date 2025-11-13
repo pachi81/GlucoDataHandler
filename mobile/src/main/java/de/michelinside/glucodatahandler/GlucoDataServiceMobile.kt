@@ -30,6 +30,7 @@ import de.michelinside.glucodatahandler.widget.GlucoseBaseWidget
 import de.michelinside.glucodatahandler.widget.LockScreenWallpaper
 import de.michelinside.glucodatahandler.xdripserver.XDripServer
 import java.math.RoundingMode
+import androidx.core.content.edit
 
 
 class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInterface {
@@ -252,6 +253,18 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                     with(sharedPrefs.edit()) {
                         putString(Constants.SHARED_PREF_THIRD_PERMANENT_NOTIFICATION_ICON, PermanentNotification.StatusBarIcon.DELTA.pref)
                         apply()
+                    }
+                }
+
+                // special Android 16 handling
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
+                    if(!sharedPrefs.contains(Constants.SHARED_PREF_API_36_DISABLE_NOTIFICATION)) {
+                        Log.w(LOG_ID, "Disable second and third notification for Android 16")
+                        sharedPrefs.edit {
+                            putBoolean(Constants.SHARED_PREF_API_36_DISABLE_NOTIFICATION, true)
+                            putBoolean(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION, false)
+                            putBoolean(Constants.SHARED_PREF_THIRD_PERMANENT_NOTIFICATION, false)
+                        }
                     }
                 }
 

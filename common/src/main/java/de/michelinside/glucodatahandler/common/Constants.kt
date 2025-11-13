@@ -113,6 +113,7 @@ object Constants {
     const val SHARED_PREF_THIRD_PERMANENT_NOTIFICATION_ICON = "third_status_bar_notification_icon"
     const val SHARED_PREF_THIRD_PERMANENT_NOTIFICATION_TAP_ACTION = "third_permanent_notification_tap_action"
     const val SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON = "status_bar_notification_big_icon"
+    const val SHARED_PREF_API_36_NOTIFICATION_INFO = "api_36_notification_info"
     const val SHARED_PREF_LARGE_ARROW_ICON = "large_arrow_icon"
     const val SHARED_PREF_FLOATING_WIDGET = "floating_widget"
     const val SHARED_PREF_FLOATING_WIDGET_STYLE = "floating_widget_style"
@@ -374,6 +375,8 @@ object Constants {
     const val SHARED_PREF_GRAPH_BITMAP_CIRCLE_RADIUS = "graph_bitmap_circle_radius"
 
 
+    // special version handling:
+    const val SHARED_PREF_API_36_DISABLE_NOTIFICATION = "API_36_disable_notification"  // in API 36 notifications are grouped, so 2. and 3. should be disabled once
 
     // deprecated:
     const val DEPRECATED_SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION = "graph_duration_phone_notification"

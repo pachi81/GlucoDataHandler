@@ -271,32 +271,45 @@ class GeneralSettingsFragment: SettingsFragmentBase(R.xml.pref_general) {
                 it.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
             }
         }
-        updateSummary()
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         try {
             super.onSharedPreferenceChanged(sharedPreferences, key)
             when (key) {
-                Constants.SHARED_PREF_USE_MMOL -> updateSummary()
                 Constants.SHARED_PREF_SENSOR_RUNTIME -> {
                     InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SETTINGS, null)
-                }
-                Constants.SHARED_PREF_STANDARD_STATISTICS -> {
-                    GlucoseStatistics.reset()
                 }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
         }
     }
+}
 
-    private fun updateSummary() {
-        val useMmol = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_USE_MMOL)
+class GeneralAdvancedSettingsFragment: SettingsFragmentBase(R.xml.pref_general_advanced) {
+
+    override fun initPreferences() {
+        Log.v(LOG_ID, "initPreferences called")
+        super.initPreferences()
+        val useMmol = preferenceManager.sharedPreferences!!.getBoolean(Constants.SHARED_PREF_USE_MMOL, false)
         val otherUnitPref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_SHOW_OTHER_UNIT)
         if(otherUnitPref != null && useMmol != null) {
-            val otherUnit = if(useMmol.isChecked) "mg/dl" else "mmol/l"
+            val otherUnit = if(useMmol) "mg/dl" else "mmol/l"
             otherUnitPref.summary = requireContext().resources.getString(CR.string.pref_show_other_unit_summary).format(otherUnit)
+        }
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        try {
+            super.onSharedPreferenceChanged(sharedPreferences, key)
+            when (key) {
+                Constants.SHARED_PREF_STANDARD_STATISTICS -> {
+                    GlucoseStatistics.reset()
+                }
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
         }
     }
 }
@@ -410,7 +423,17 @@ class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen)  {
     }
 }
 
-class NotificaitonSettingsFragment: SettingsFragmentBase(R.xml.pref_notification) {}
+class NotificaitonSettingsFragment: SettingsFragmentBase(R.xml.pref_notification) {
+    override fun initPreferences() {
+        Log.v(LOG_ID, "initPreferences called")
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
+            val prefApi36Info = findPreference<Preference>(Constants.SHARED_PREF_API_36_NOTIFICATION_INFO)
+            prefApi36Info?.isVisible = true
+        }
+
+        PreferenceHelper.setLinkOnClick(findPreference(Constants.SHARED_PREF_OPEN_WATCH_DRIP_LINK), CR.string.watchdrip_link, requireContext())
+    }
+}
 
 class WatchSettingsFragment: SettingsFragmentBase(R.xml.pref_watch) {
     override fun initPreferences() {
