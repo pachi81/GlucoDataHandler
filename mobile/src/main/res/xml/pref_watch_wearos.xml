@@ -13,26 +13,30 @@
         app:fragment="de.michelinside.glucodatahandler.preferences.WatchFaceFragment"
         app:iconSpaceReserved="false">
     </Preference>
-    <androidx.preference.SwitchPreferenceCompat
-        android:defaultValue="true"
-        android:key="battery_receiver_enabled"
-        android:summary="@string/pref_send_battery_level_to_watch_summary"
-        android:title="@string/pref_send_battery_level_to_watch"
-        app:iconSpaceReserved="false" />
-    <androidx.preference.SwitchPreferenceCompat
-        android:defaultValue="true"
-        android:key="phone_wear_screen_off_update"
-        android:title="@string/pref_phone_wear_screen_off_update"
-        android:summary="@string/pref_phone_wear_screen_off_update_summary"
-        app:iconSpaceReserved="false" />
-    <Preference
-        android:key="wear_os_check_connection"
-        android:title="@string/pref_wear_os_check_connection"
-        android:summary="@string/pref_wear_os_check_connection_summary"
-        app:iconSpaceReserved="false" />
-    <Preference
-        android:key="wear_os_reset_connection"
-        android:title="@string/pref_wear_os_reset_connection"
-        android:summary="@string/pref_wear_os_reset_connection_summary"
-        app:iconSpaceReserved="false" />
+    <PreferenceCategory
+        android:title="@string/advanced_settings"
+        app:iconSpaceReserved="false">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="battery_receiver_enabled"
+            android:summary="@string/pref_send_battery_level_to_watch_summary"
+            android:title="@string/pref_send_battery_level_to_watch"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="phone_wear_screen_off_update"
+            android:title="@string/pref_phone_wear_screen_off_update"
+            android:summary="@string/pref_phone_wear_screen_off_update_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="wear_os_check_connection"
+            android:title="@string/pref_wear_os_check_connection"
+            android:summary="@string/pref_wear_os_check_connection_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="wear_os_reset_connection"
+            android:title="@string/pref_wear_os_reset_connection"
+            android:summary="@string/pref_wear_os_reset_connection_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
 </PreferenceScreen>

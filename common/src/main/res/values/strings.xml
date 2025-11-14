@@ -965,7 +965,7 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="pref_switch_xdrip_server_reduce_data_summary">This will reduce the provided data to a minimum to prevent memory issues on some Garmin watches.\nPlease check compatibility with you watchface.</string>
     <string name="error_port_in_use">Port is in use!\nPlease stop other web server running on this port and restart local web server again.</string>
     <string name="state_active">active</string>
-    <string name="pref_garmin_info_summary">There is no dedicated app for Garmin or Pebble, just a local web server, which is used by watchfaces with xDrip+ support.\nJust search for such watchfaces in Connect IQ Store and setup xDrip+ source for these watchfaces.\nIMPORTANT: if you also use xDrip+ or Juggluco, you can enable the local web server only in one app, as there are using the same port (17580)!</string>
+    <string name="pref_garmin_info_summary">There is no dedicated app for Garmin, Fitbit or Pebble, just a local web server, which is used by watchfaces with xDrip+ support.\nJust search for such watchfaces in Connect IQ Store and setup xDrip+ source for these watchfaces.\nIMPORTANT: if you also use xDrip+ or Juggluco, you can enable the local web server only in one app, as there are using the same port (17580)!</string>
     <string name="remaining">Remaining</string>
     <string name="pref_switch_xdrip_open_server">Open web server</string>
     <string name="pref_switch_xdrip_open_server_summary">Make the web server open for other devices in the network.\nThis may cause security problems, so only enable it, if you really need to access the data of the web server from the network.\nThe Garmin watchfaces request data direct on the phone, so no open server is needed!</string>
@@ -994,7 +994,7 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="src_ns_summary">Remotely follow Nightscout web service.</string>
     <string name="pref_cat_wear_os_summary">For Wear OS watches, e.g., all Google Pixel Watches, Samsung Galaxy Watch 4 and newer, and many others.</string>
     <string name="pref_cat_watchdrip_summary">For watches supported by the external WatchDrip+ app, such as most MiBand and Amazfit models.</string>
-    <string name="pref_cat_garminpebble_summary">For devices and apps that can receive glucose data from an xDrip+ web service, such as Garmin, Pebble, and some Fitbit watches.</string>
+    <string name="pref_cat_garminpebble_summary">For devices and apps that can receive glucose data from xDrip+ web service, such as Garmin, Pebble, and some Fitbit watches.</string>
     <string name="pref_garmin_watchfaces_summary">Press here to open Connect IQ store for xDrip+ watchfaces.\nIf the watchfaces supports xDrip+, they should also be compatible to this app.</string>
     <string name="pref_garmin_watchfaces">Garmin</string>
     <string name="pref_fitbit_watchfaces">Fitbit</string>
