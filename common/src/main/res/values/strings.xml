@@ -30,6 +30,9 @@
     <string name="playstore_gdc_watchfaces" translatable="false">https://play.google.com/store/apps/dev?id=7197840107055554214</string>
     <string name="playstore_dmm_watchfaces" translatable="false">https://play.google.com/store/apps/dev?id=6551812103351455972</string>
     <string name="playstore_pujie_watchfaces" translatable="false">https://play.google.com/store/apps/dev?id=7780011900367662392</string>
+    <string name="garmin_watchfaces" translatable="false">https://apps.garmin.com/search?keywords=xdrip</string>
+    <string name="pebble_watchfaces" translatable="false">https://apps.rebble.io/en_US/search/watchfaces/1?native=false&amp;query=xdrip</string>
+    <string name="glance_watchfaces" translatable="false">https://glancewatchface.com</string>
 
     <string name="video_tutorial_librelinkup" translatable="false">https://youtu.be/YRs9nY4DgnA?si=v108UhnBNfQSeK2I</string>
     <string name="video_tutorial_juggluco" translatable="false">https://youtu.be/evS5rXDiciY?si=DTxlGYhYm-nNboHl</string>
@@ -513,7 +516,7 @@
     <string name="pref_cat_watchdrip">MiBand and Amazfit watches</string>
     <string name="pref_cat_wear_os">Wear OS watches</string>
     <string name="pref_cat_watch">Watch</string>
-    <string name="pref_cat_garminpebble">Garmin and Pebble watches</string>
+    <string name="pref_cat_garminpebble">Garmin, Fitbit and Pebble watches</string>
     <string name="pref_cat_watch_summary">Settings for connected smartwatches.</string>
     <string name="pref_cat_transfer_summary">Settings to transfer glucose values to other applications.</string>
     <string name="pref_cat_transfer">Transfer values</string>
@@ -989,6 +992,15 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="src_dexcom_share_summary">Remotely follow Dexcom app.</string>
     <string name="src_medtrum_summary">Remotely follow Medtrum app.</string>
     <string name="src_ns_summary">Remotely follow Nightscout web service.</string>
+    <string name="pref_cat_wear_os_summary">For Wear OS watches, e.g., all Google Pixel Watches, Samsung Galaxy Watch 4 and newer, and many others.</string>
+    <string name="pref_cat_watchdrip_summary">For watches supported by the external WatchDrip+ app, such as most MiBand and Amazfit models.</string>
+    <string name="pref_cat_garminpebble_summary">For devices and apps that can receive glucose data from an xDrip+ web service, such as Garmin, Pebble, and some Fitbit watches.</string>
+    <string name="pref_garmin_watchfaces_summary">Press here to open Connect IQ store for xDrip+ watchfaces.\nIf the watchfaces supports xDrip+, they should also be compatible to this app.</string>
+    <string name="pref_garmin_watchfaces">Garmin</string>
+    <string name="pref_fitbit_watchfaces">Fitbit</string>
+    <string name="pref_fitbit_watchfaces_summary">Press here to open Glance web page, which supports xDrip+ web services.</string>
+    <string name="pref_pebble_watchfaces">Pebble</string>
+    <string name="pref_pebble_watchfaces_summary">Press here to open Pebble watchfaces designed for xDrip+, which should also be compatible to this app.</string>
 
 
     <plurals name="minutes_long">

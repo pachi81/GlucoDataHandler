@@ -454,6 +454,40 @@ class WatchSettingsFragment: SettingsFragmentBase(R.xml.pref_watch) {
     }
 }
 
+class WatchWearOsFragment: SettingsFragmentBase(R.xml.pref_watch_wearos) {
+    override fun initPreferences() {
+        Log.v(LOG_ID, "initPreferences called")
+        val prefCheckWearOS = findPreference<Preference>(Constants.SHARED_PREF_CHECK_WEAR_OS_CONNECTION)
+        prefCheckWearOS!!.setOnPreferenceClickListener {
+            GlucoDataService.checkForConnectedNodes()
+            true
+        }
+
+        val prefResetWearOS = findPreference<Preference>(Constants.SHARED_PREF_RESET_WEAR_OS_CONNECTION)
+        prefResetWearOS!!.setOnPreferenceClickListener {
+            GlucoDataService.resetWearPhoneConnection()
+            true
+        }
+    }
+}
+
+class WatchDripFragement: SettingsFragmentBase(R.xml.pref_watch_watchdrip) {
+    override fun initPreferences() {
+        Log.v(LOG_ID, "initPreferences called")
+        PreferenceHelper.setLinkOnClick(findPreference(Constants.SHARED_PREF_OPEN_WATCH_DRIP_LINK), CR.string.watchdrip_link, requireContext())
+    }
+}
+
+class WatchWebserviceFragment: SettingsFragmentBase(R.xml.pref_watch_webservice) {
+    override fun initPreferences() {
+        Log.v(LOG_ID, "initPreferences called")
+        PreferenceHelper.setLinkOnClick(findPreference("open_garmin_link"), CR.string.garmin_watchfaces, requireContext())
+        PreferenceHelper.setLinkOnClick(findPreference("open_fitbit_link"), CR.string.glance_watchfaces, requireContext())
+        PreferenceHelper.setLinkOnClick(findPreference("open_pebble_link"), CR.string.pebble_watchfaces, requireContext())
+    }
+}
+
+
 class WatchFaceFragment: SettingsFragmentBase(R.xml.pref_watchfaces) {
     override fun initPreferences() {
         Log.v(LOG_ID, "initPreferences called")

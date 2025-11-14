@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:key="open_garmin_info"
+        android:title="@string/pref_information"
+        android:summary="@string/pref_garmin_info_summary"
+        app:iconSpaceReserved="false" />
+    <androidx.preference.SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="xdrip_server"
+        android:title="@string/pref_switch_xdrip_server"
+        app:iconSpaceReserved="false"
+        app:summary="@string/pref_switch_xdrip_server_summary" />
+    <PreferenceCategory
+        android:title="@string/wearos_watchfaces"
+        app:iconSpaceReserved="false">
+        <Preference
+            android:key="open_garmin_link"
+            android:title="@string/pref_garmin_watchfaces"
+            android:summary="@string/pref_garmin_watchfaces_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="open_fitbit_link"
+            android:title="@string/pref_fitbit_watchfaces"
+            android:summary="@string/pref_fitbit_watchfaces_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="open_pebble_link"
+            android:title="@string/pref_pebble_watchfaces"
+            android:summary="@string/pref_pebble_watchfaces_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/advanced_settings"
+        app:iconSpaceReserved="false">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="xdrip_open_server"
+            android:title="@string/pref_switch_xdrip_open_server"
+            app:iconSpaceReserved="false"
+            app:summary="@string/pref_switch_xdrip_open_server_summary" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="xdrip_server_1_minute_interval"
+            android:title="@string/pref_switch_xdrip_server_1_minute_interval"
+            app:iconSpaceReserved="false"
+            app:summary="@string/pref_switch_xdrip_server_1_minute_interval_summary" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="xdrip_server_reduce_data"
+            android:title="@string/pref_switch_xdrip_server_reduce_data"
+            app:iconSpaceReserved="false"
+            app:summary="@string/pref_switch_xdrip_server_reduce_data_summary" />
+    </PreferenceCategory>
+</PreferenceScreen>
