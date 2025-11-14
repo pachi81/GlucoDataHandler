@@ -58,8 +58,10 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     var sourceRate = Float.NaN
     var calculatedRate = Float.NaN
     val rate: Float get() {
-        if((useRateCalculation && !calculatedRate.isNaN()) || sourceRate.isNaN())
-            return calculatedRate
+        if(!calculatedRate.isInfinite()) {
+            if((useRateCalculation && !calculatedRate.isNaN()) || sourceRate.isNaN())
+                return calculatedRate
+        }
         return sourceRate
     }
     private var useRateCalculation = false
@@ -404,7 +406,11 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         if(count > 0) {
             calculatedRate = (sum*10/count)/Constants.GLUCOSE_CONVERSION_FACTOR
             Log.d(LOG_ID, "Calculated rate for $count values - sum $sum: $calculatedRate")
-        } else if(!sourceRate.isNaN()) {
+            if(calculatedRate.isInfinite()) {
+                calculatedRate = sourceRate
+                Log.e(LOG_ID, "Calculated rate for $count values - sum $sum is infinite!")
+            }
+        } else {
             calculatedRate = sourceRate
         }
     }

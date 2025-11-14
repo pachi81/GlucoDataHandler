@@ -133,7 +133,7 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
                             retry += 1
                             // if the sensor start time is not set, get at least 10 minutes to be able to calculate the interval
                             val seconds = max(if(interval <= 0L) 600 else 120, if(firstValueTime > 0) (Utils.getElapsedTimeMinute(firstValueTime)+1) * 60 else 3600)
-                            Log.i(LOG_ID, "${retry}. request webserver data for $seconds seconds with firstNeededValue=${Utils.getUiTimeStamp(firstValueTime)}, interval= and sensorStartTime=${Utils.getUiTimeStamp(ReceiveData.sensorStartTime)} and sensorID=${ReceiveData.sensorID} - last server time ${Utils.getUiTimeStamp( lastServerTime)}")
+                            Log.i(LOG_ID, "${retry}. request webserver data for $seconds seconds with firstNeededValue=${Utils.getUiTimeStamp(firstValueTime)}, interval=$interval and sensorStartTime=${Utils.getUiTimeStamp(ReceiveData.sensorStartTime)} and sensorID=${ReceiveData.sensorID} - last server time ${Utils.getUiTimeStamp( lastServerTime)}")
                             val httpRequest = HttpRequest()
                             val responseCode = httpRequest.get(JUGGLUCO_WEBSERVER + STREAM_DATA_ENDPOINT.format(seconds))
                             if (!checkResponse(responseCode, httpRequest)) {
