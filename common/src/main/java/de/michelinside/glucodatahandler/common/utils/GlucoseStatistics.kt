@@ -61,6 +61,9 @@ class StatisticsData(val days: Int) {
     val percentVeryHigh: Float get() {
         return (veryHigh.toFloat() / count.toFloat()) * 100f
     }
+    val gmiValue: Float get() {
+        return 3.31F + (0.02392F*averageGlucose)
+    }
 
     fun update(standardStats: Boolean) {
         try {

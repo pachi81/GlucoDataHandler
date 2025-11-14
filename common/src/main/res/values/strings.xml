@@ -1001,6 +1001,7 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="pref_fitbit_watchfaces_summary">Press here to open Glance web page, which supports xDrip+ web services.</string>
     <string name="pref_pebble_watchfaces">Pebble</string>
     <string name="pref_pebble_watchfaces_summary">Press here to open Pebble watchfaces designed for xDrip+, which should also be compatible to this app.</string>
+    <string name="gmi">GMI</string>
 
 
     <plurals name="minutes_long">
