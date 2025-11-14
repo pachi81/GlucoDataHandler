@@ -4,9 +4,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.InputType
+import androidx.core.content.ContextCompat
 import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.preference.*
-import de.michelinside.glucodatahandler.common.R as CR
+import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
@@ -16,9 +17,114 @@ import de.michelinside.glucodatahandler.common.tasks.DexcomShareSourceTask
 import de.michelinside.glucodatahandler.common.tasks.LibreLinkSourceTask
 import de.michelinside.glucodatahandler.common.tasks.MedtrumSourceTask
 
+class SourceOnlineFragment : PreferenceFragmentCompatBase(), SharedPreferences.OnSharedPreferenceChangeListener {
+    private val LOG_ID = "GDH.SourceOnlineFragment"
+    private var settingsChanged = false
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        Log.d(LOG_ID, "onCreatePreferences called")
+        try {
+            preferenceManager.sharedPreferencesName = Constants.SHARED_PREF_TAG
+            setPreferencesFromResource(R.xml.sources_online, rootKey)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onCreatePreferences exception: " + exc.toString())
+        }
+    }
 
-class SourceOnlineFragment : PreferenceFragmentCompatBase(), SharedPreferences.OnSharedPreferenceChangeListener, NotifierInterface {
-    private val LOG_ID = "GDH.SourceFragment"
+    private fun setListSummary(key: String, defaultResId: Int) {
+        val listPref = findPreference<ListPreference>(key)
+        if(listPref != null) {
+            val value = listPref.entry
+            listPref.summary = if(value.isNullOrEmpty())
+                resources.getString(defaultResId)
+            else
+                value
+        }
+    }
+
+    private fun updateIntervalSummary() {
+        val listPref = findPreference<ListPreference>(Constants.SHARED_PREF_SOURCE_INTERVAL)
+        if(listPref != null) {
+            val curValue = preferenceManager.sharedPreferences?.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "")
+            if(!curValue.isNullOrEmpty()) {
+                Log.d(LOG_ID, "Update interval summary to $curValue")
+                listPref.value = curValue
+                setListSummary(Constants.SHARED_PREF_SOURCE_INTERVAL, R.string.source_interval_summary)
+            }
+        }
+    }
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
+        Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
+        try {
+            if(DataSourceTask.preferencesToSend.contains(key))
+                settingsChanged = true
+
+            when(key) {
+                Constants.SHARED_PREF_SOURCE_INTERVAL -> {
+                    updateIntervalSummary()
+                }
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
+        }
+    }
+    override fun onResume() {
+        Log.d(LOG_ID, "onResume called")
+        try {
+            super.onResume()
+            preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
+            updateIntervalSummary()
+            updateEnableStates()
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onResume exception: " + exc.toString())
+        }
+    }
+
+    private fun updateEnableStates() {
+        try {
+            val prefSources = findPreference<PreferenceCategory>("pref_cat_sources")
+            if(prefSources != null && preferenceManager.sharedPreferences != null) {
+                Log.d(LOG_ID, "Update enable icons for ${prefSources.preferenceCount} sources")
+                for (i in 0 until prefSources.preferenceCount) {
+                    val pref: Preference = prefSources.getPreference(i)
+                    if(!pref.key.isNullOrEmpty()) {
+                        if(preferenceManager.sharedPreferences!!.getBoolean(pref.key, false)) {
+                            pref.icon = ContextCompat.getDrawable(requireContext(), R.drawable.switch_on)
+                        } else {
+                            pref.icon = ContextCompat.getDrawable(requireContext(), R.drawable.switch_off)
+                        }
+                    }
+                }
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())
+        }
+    }
+
+    override fun onPause() {
+        Log.d(LOG_ID, "onPause called")
+        try {
+            super.onPause()
+            preferenceManager.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onPause exception: " + exc.toString())
+        }
+    }
+
+    override fun onDestroyView() {
+        Log.d(LOG_ID, "onDestroyView called")
+        try {
+            if (settingsChanged) {
+                InternalNotifier.notify(requireContext(), NotifySource.SOURCE_SETTINGS, DataSourceTask.getSettingsBundle(preferenceManager.sharedPreferences!!))
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onDestroyView exception: " + exc.toString())
+        }
+        super.onDestroyView()
+    }
+}
+
+abstract class SourceOnlineFragmentBase(val preferenceResId: Int) : PreferenceFragmentCompatBase(), SharedPreferences.OnSharedPreferenceChangeListener, NotifierInterface {
+    protected val LOG_ID = "GDH.SourceOnlineFragment"
     private var settingsChanged = false
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -26,21 +132,18 @@ class SourceOnlineFragment : PreferenceFragmentCompatBase(), SharedPreferences.O
         try {
             settingsChanged = false
             preferenceManager.sharedPreferencesName = Constants.SHARED_PREF_TAG
-            setPreferencesFromResource(CR.xml.sources_online, rootKey)
+            setPreferencesFromResource(preferenceResId, rootKey)
+            setPasswordPref(getPasswordPref())
 
-            setPasswordPref(Constants.SHARED_PREF_LIBRE_PASSWORD)
-            setPasswordPref(Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD)
-            setPasswordPref(Constants.SHARED_PREF_NIGHTSCOUT_SECRET)
-            setPasswordPref(Constants.SHARED_PREF_MEDTRUM_PASSWORD)
+            PreferenceHelper.setLinkOnClick(findPreference("source_librelinkup_video"), R.string.video_tutorial_librelinkup, requireContext())
 
-            PreferenceHelper.setLinkOnClick(findPreference("source_librelinkup_video"), CR.string.video_tutorial_librelinkup, requireContext())
-
-            setupLibrePatientData()
-            setupMedtrumPatientData()
+            setupPatientData()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreatePreferences exception: " + exc.toString())
         }
     }
+
+    abstract fun getPasswordPref(): String
 
     private fun setPasswordPref(prefName: String) {
         val pwdPref = findPreference<EditTextPreference>(prefName)
@@ -105,15 +208,10 @@ class SourceOnlineFragment : PreferenceFragmentCompatBase(), SharedPreferences.O
                 }
                 Constants.SHARED_PREF_LIBRE_PATIENT_ID,
                 Constants.SHARED_PREF_LIBRE_SERVER,
+                Constants.SHARED_PREF_DEXCOM_SHARE_SERVER,
                 Constants.SHARED_PREF_MEDTRUM_PATIENT_ID,
                 Constants.SHARED_PREF_MEDTRUM_SERVER -> {
                     update()
-                }
-                Constants.SHARED_PREF_DEXCOM_SHARE_SERVER -> {
-                    updateDexcomAccountLink()
-                }
-                Constants.SHARED_PREF_SOURCE_INTERVAL -> {
-                    updateIntervalSummary()
                 }
                 Constants.SHARED_PREF_DEXCOM_SHARE_ENABLED,
                 Constants.SHARED_PREF_LIBRE_ENABLED,
@@ -186,18 +284,15 @@ class SourceOnlineFragment : PreferenceFragmentCompatBase(), SharedPreferences.O
         }
     }
 
-    private fun setSummary(key: String, defaultResId: Int) {
+    protected fun setSummary(key: String, defaultResId: Int) {
         val pref = findPreference<Preference>(key)
         if(pref != null) {
             val value = preferenceManager.sharedPreferences!!.getString(key, "")!!.trim()
-            pref.summary = if(value.isEmpty())
-                 resources.getString(defaultResId)
-            else
-                value
+            pref.summary = value.ifEmpty { resources.getString(defaultResId) }
         }
     }
 
-    private fun setListSummary(key: String, defaultResId: Int) {
+    protected fun setListSummary(key: String, defaultResId: Int) {
         val listPref = findPreference<ListPreference>(key)
         if(listPref != null) {
             val value = listPref.entry
@@ -208,30 +303,49 @@ class SourceOnlineFragment : PreferenceFragmentCompatBase(), SharedPreferences.O
         }
     }
 
-    private fun update() {
-        setSummary(Constants.SHARED_PREF_LIBRE_USER, CR.string.src_libre_user_summary)
-        setListSummary(Constants.SHARED_PREF_LIBRE_SERVER, CR.string.source_libre_server_default)
-        setSummary(Constants.SHARED_PREF_NIGHTSCOUT_URL, CR.string.src_ns_url_summary)
-        setSummary(Constants.SHARED_PREF_DEXCOM_SHARE_USER, CR.string.src_dexcom_share_user_summary)
-        setSummary(Constants.SHARED_PREF_MEDTRUM_USER, CR.string.src_medtrum_user_summary)
-        setListSummary(Constants.SHARED_PREF_MEDTRUM_SERVER, CR.string.source_medtrum_server_default)
-        updateDexcomAccountLink()
-        setLibrePatientSummary()
-        setMedtrumPatientSummary()
-        updateIntervalSummary()
-    }
+    protected abstract fun update()
 
-    private fun updateIntervalSummary() {
-        val listPref = findPreference<ListPreference>(Constants.SHARED_PREF_SOURCE_INTERVAL)
-        if(listPref != null) {
-            val curValue = preferenceManager.sharedPreferences?.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "")
-            if(!curValue.isNullOrEmpty()) {
-                Log.d(LOG_ID, "Update interval summary to $curValue")
-                listPref.value = curValue
-                setListSummary(Constants.SHARED_PREF_SOURCE_INTERVAL, CR.string.source_interval_summary)
+    open fun setupPatientData() {}
+
+    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
+        try {
+            Log.v(LOG_ID, "OnNotifyData called for source $dataSource")
+            if (dataSource == NotifySource.PATIENT_DATA_CHANGED) {
+                setupPatientData()
             }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "OnNotifyData exception for source $dataSource: $exc")
         }
     }
+}
+
+//**************************************************************************************************
+
+class SourceLibreLinkUp: SourceOnlineFragmentBase(R.xml.source_librelinkup) {
+    override fun getPasswordPref(): String = Constants.SHARED_PREF_LIBRE_PASSWORD
+
+    override fun setupPatientData() {
+        try {
+            val listPreference = findPreference<ListPreference>(Constants.SHARED_PREF_LIBRE_PATIENT_ID)
+            if(listPreference != null) {
+                // force "global broadcast" to be the first entry
+                listPreference.entries = LibreLinkSourceTask.patientData.values.toTypedArray()
+                listPreference.entryValues = LibreLinkSourceTask.patientData.keys.toTypedArray()
+                listPreference.isVisible = LibreLinkSourceTask.patientData.size > 1
+                if(listPreference.isVisible)
+                    setLibrePatientSummary()
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "setupLibrePatientData exception: $exc")
+        }
+    }
+
+    override fun update() {
+        setSummary(Constants.SHARED_PREF_LIBRE_USER, R.string.src_libre_user_summary)
+        setListSummary(Constants.SHARED_PREF_LIBRE_SERVER, R.string.source_libre_server_default)
+        setLibrePatientSummary()
+    }
+
 
     private fun setLibrePatientSummary() {
         val listPreference = findPreference<ListPreference>(Constants.SHARED_PREF_LIBRE_PATIENT_ID)
@@ -243,26 +357,23 @@ class SourceOnlineFragment : PreferenceFragmentCompatBase(), SharedPreferences.O
                     ""
                 )!!.trim()
                 if (value.isEmpty() || !LibreLinkSourceTask.patientData.containsKey(value))
-                    pref.summary = resources.getString(CR.string.src_libre_patient_summary)
+                    pref.summary = resources.getString(R.string.src_libre_patient_summary)
                 else {
                     pref.summary = LibreLinkSourceTask.patientData[value]
                 }
             }
         }
     }
+}
 
-    private fun setupLibrePatientData() {
-        try {
-            val listPreference = findPreference<ListPreference>(Constants.SHARED_PREF_LIBRE_PATIENT_ID)
-            // force "global broadcast" to be the first entry
-            listPreference!!.entries = LibreLinkSourceTask.patientData.values.toTypedArray()
-            listPreference.entryValues = LibreLinkSourceTask.patientData.keys.toTypedArray()
-            listPreference.isVisible = LibreLinkSourceTask.patientData.size > 1
-            if(listPreference.isVisible)
-                setLibrePatientSummary()
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "setupLibrePatientData exception: $exc")
-        }
+
+//**************************************************************************************************
+
+class SourceDexcomShare: SourceOnlineFragmentBase(R.xml.source_dexcom_share) {
+    override fun getPasswordPref(): String = Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD
+    override fun update() {
+        setSummary(Constants.SHARED_PREF_DEXCOM_SHARE_USER, R.string.src_dexcom_share_user_summary)
+        updateDexcomAccountLink()
     }
 
     private fun updateDexcomAccountLink() {
@@ -279,7 +390,18 @@ class SourceOnlineFragment : PreferenceFragmentCompatBase(), SharedPreferences.O
             Log.e(LOG_ID, "updateDexcomAccountLink exception: $exc")
         }
     }
+}
 
+//**************************************************************************************************
+
+class SourceMedtrum: SourceOnlineFragmentBase(R.xml.source_medtrum) {
+    override fun getPasswordPref(): String = Constants.SHARED_PREF_MEDTRUM_PASSWORD
+
+    override fun update() {
+        setSummary(Constants.SHARED_PREF_MEDTRUM_USER, R.string.src_medtrum_user_summary)
+        setListSummary(Constants.SHARED_PREF_MEDTRUM_SERVER, R.string.source_medtrum_server_default)
+        setMedtrumPatientSummary()
+    }
 
     private fun setMedtrumPatientSummary() {
         val listPreference = findPreference<ListPreference>(Constants.SHARED_PREF_MEDTRUM_PATIENT_ID)
@@ -291,7 +413,7 @@ class SourceOnlineFragment : PreferenceFragmentCompatBase(), SharedPreferences.O
                     ""
                 )!!.trim()
                 if (value.isEmpty() || !MedtrumSourceTask.patientData.containsKey(value))
-                    pref.summary = resources.getString(CR.string.src_medtrum_patient_summary)
+                    pref.summary = resources.getString(R.string.src_medtrum_patient_summary)
                 else {
                     pref.summary = MedtrumSourceTask.patientData[value]
                 }
@@ -299,30 +421,28 @@ class SourceOnlineFragment : PreferenceFragmentCompatBase(), SharedPreferences.O
         }
     }
 
-    private fun setupMedtrumPatientData() {
+    override fun setupPatientData() {
         try {
             val listPreference = findPreference<ListPreference>(Constants.SHARED_PREF_MEDTRUM_PATIENT_ID)
-            // force "global broadcast" to be the first entry
-            listPreference!!.entries = MedtrumSourceTask.patientData.values.toTypedArray()
-            listPreference.entryValues = MedtrumSourceTask.patientData.keys.toTypedArray()
-            listPreference.isVisible = MedtrumSourceTask.patientData.size > 1
-            if(listPreference.isVisible)
-                setMedtrumPatientSummary()
+            if(listPreference != null) {
+                // force "global broadcast" to be the first entry
+                listPreference!!.entries = MedtrumSourceTask.patientData.values.toTypedArray()
+                listPreference.entryValues = MedtrumSourceTask.patientData.keys.toTypedArray()
+                listPreference.isVisible = MedtrumSourceTask.patientData.size > 1
+                if(listPreference.isVisible)
+                    setMedtrumPatientSummary()
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "setupMedtrumPatientData exception: $exc")
         }
     }
+}
 
-    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
-        try {
-            Log.v(LOG_ID, "OnNotifyData called for source $dataSource")
-            if (dataSource == NotifySource.PATIENT_DATA_CHANGED) {
-                setupLibrePatientData()
-                setupMedtrumPatientData()
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "OnNotifyData exception for source $dataSource: $exc")
-        }
+class SourceNightscout : SourceOnlineFragmentBase(R.xml.source_nightscout) {
+    override fun getPasswordPref(): String = Constants.SHARED_PREF_NIGHTSCOUT_SECRET
+
+    override fun update() {
+        setSummary(Constants.SHARED_PREF_NIGHTSCOUT_URL, R.string.src_ns_url_summary)
     }
 
 }

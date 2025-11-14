@@ -526,7 +526,7 @@
     <string name="pref_source_offline">Lokálne aplikácie</string>
     <string name="pref_source_offline_summary">Aplikácie na rovnakom zariadení, ktoré poskytujú hodnoty glukózy ako interné vysielané správy, ako napríklad Juggluco, xDrip+, AAPS a podobne.</string>
     <string name="pref_cat_follower_summary">Cloudové služby poskytujúce hodnoty glukózy cez internet, ako napríklad LibreLinkUp, Dexcom Share, Nightscout a Medtrum.</string>
-    <string name="pref_source_xdrip_broadcast">Alternatíva: Vysielať lokálne</string>
+    <string name="pref_source_xdrip_broadcast">xDrip+ Vysielať lokálne</string>
     <string name="pref_source_dexcom_byoda_info_summary">Ak chcete prijímať hodnoty z Dexcom BYODA, musíte pri vytváraní aplikácie povoliť vysielanie do AAPS.</string>
     <string name="pref_source_eversense_info_summary">Ak chcete prijímať hodnoty z Eversense, musíte použiť ESEL buď v sprievodnom režime (čítanie upozornení), alebo pripojený k upravenej aplikácii Eversense.\nViac informácií o ESEL nájdete tu.</string>
     <string name="pref_source_eversense_byoda_info_summary">Aby ste mohli prijímať hodnoty z Dexcom BYODA, musíte počas vytvárania aplikácie povoliť vysielanie do xDrip+..</string>

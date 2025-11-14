@@ -2,7 +2,7 @@ package de.michelinside.glucodatahandler.preferences
 
 import android.os.Bundle
 import de.michelinside.glucodatahandler.common.utils.Log
-import de.michelinside.glucodatahandler.R
+import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.preferences.PreferenceHelper
 

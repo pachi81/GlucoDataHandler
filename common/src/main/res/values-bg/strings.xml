@@ -527,7 +527,7 @@
     <string name="pref_source_offline">Локални приложения</string>
     <string name="pref_source_offline_summary">Приложения на същото устройство, предоставящи стойности на глюкозата като вътрешно broadcast съобщение, като Juggluco, xDrip+, AAPS и т.н.</string>
     <string name="pref_cat_follower_summary">Облачни услуги, предоставящи стойности на глюкозата през интернет, като LibreLinkUp, Dexcom Share, Nightscout и Medtrum.</string>
-    <string name="pref_source_xdrip_broadcast">Алтернатива: Broadcast локално</string>
+    <string name="pref_source_xdrip_broadcast">xDrip+ Broadcast локално</string>
     <string name="pref_source_dexcom_byoda_info_summary">За да получавате стойности от Dexcom BYODA, трябва да активирате broadcast към AAPS, докато изграждате приложението.</string>
     <string name="pref_source_eversense_info_summary">За да получавате стойности от Eversense, трябва да използвате ESEL или в режим на компаньон (четене на известия), или свързан с patched приложението Eversense.\nЗа повече информация относно ESEL, натиснете тук.</string>
     <string name="pref_source_eversense_byoda_info_summary">За да получавате стойности от Dexcom BYODA, трябва да активирате broadcast към xDrip+, докато изграждате приложението.</string>

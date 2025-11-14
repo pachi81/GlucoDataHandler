@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <androidx.preference.SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="src_ns_enabled"
+        android:title="@string/src_ns_enabled"
+        android:summary="@string/src_ns_enabled_summary"
+        app:iconSpaceReserved="false" />
+    <androidx.preference.EditTextPreference
+        android:defaultValue=""
+        android:key="src_ns_url"
+        android:title="@string/src_ns_url"
+        android:summary="@string/src_ns_url_summary"
+        app:iconSpaceReserved="false" />
+    <androidx.preference.EditTextPreference
+        android:defaultValue=""
+        android:key="src_ns_secret"
+        android:title="@string/src_ns_secret"
+        android:summary="@string/src_ns_secret_summary"
+        android:inputType="textPassword"
+        app:iconSpaceReserved="false" />
+    <androidx.preference.EditTextPreference
+        android:defaultValue=""
+        android:key="src_ns_token"
+        android:title="@string/src_ns_token"
+        android:summary="@string/src_ns_token_summary"
+        app:iconSpaceReserved="false" />
+    <androidx.preference.SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="src_ns_iob_cob"
+        android:title="@string/src_ns_iob_cob"
+        android:summary="@string/src_ns_iob_cob_summary"
+        app:iconSpaceReserved="false" />
+</PreferenceScreen>

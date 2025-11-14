@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <androidx.preference.SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="source_dexcom_share_enabled"
+        android:title="@string/src_enabled"
+        android:summary="@string/src_dexcom_share_enabled_summary"
+        app:iconSpaceReserved="false" />
+    <androidx.preference.ListPreference
+        android:defaultValue="eu"
+        android:entries="@array/source_dexcom_server_labels"
+        android:entryValues="@array/source_dexcom_server_values"
+        android:key="source_dexcom_server"
+        android:title="@string/src_libre_server"
+        android:summary="@string/source_dexcom_server_summary"
+        app:iconSpaceReserved="false" />
+    <androidx.preference.EditTextPreference
+        android:defaultValue=""
+        android:key="source_dexcom_share_user"
+        android:title="@string/src_username"
+        android:summary="@string/src_dexcom_share_user_summary"
+        app:iconSpaceReserved="false" />
+    <androidx.preference.EditTextPreference
+        android:defaultValue=""
+        android:key="source_dexcom_share_password"
+        android:title="@string/src_password"
+        android:summary="@string/src_dexcom_share_password_summary"
+        android:inputType="textPassword"
+        app:iconSpaceReserved="false" />
+    <androidx.preference.SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="source_dexcom_share_reconnect"
+        android:title="@string/src_libre_reconnect"
+        android:summary="@string/src_libre_reconnect_summary"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="source_dexcom_share_info"
+        android:title="@string/pref_source_dexcom_share_info"
+        android:summary="@string/pref_source_dexcom_share_info_1_summary"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="source_dexcom_share_info"
+        android:summary="@string/pref_source_dexcom_share_info_2_summary"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="source_dexcom_account_link"
+        android:summary="@string/dexcom_share_check_non_us_account"
+        app:iconSpaceReserved="false" />
+</PreferenceScreen>

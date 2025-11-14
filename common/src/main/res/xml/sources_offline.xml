@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="cat_gdh_info"
+        app:isPreferenceVisible="false"
+        android:title="@string/source_gdh"
+        app:iconSpaceReserved="false">
+        <Preference
+            android:key="source_gdh_info"
+            android:summary="@string/pref_source_gdh_info_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="pref_cat_sources">
+        <Preference
+            android:key="source_juggluco_enabled"
+            android:title="@string/pref_source_juggluco_info"
+            android:summary="@string/pref_source_juggluco_summary"
+            app:fragment="de.michelinside.glucodatahandler.common.preferences.SourceJuggluco"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_xdrip_enabled"
+            android:title="@string/pref_source_xdrip_broadcast"
+            android:summary="@string/pref_source_xdrip_summary"
+            app:fragment="de.michelinside.glucodatahandler.common.preferences.SourceXDrip"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="xdrip_broadcast_service_api"
+            android:title="@string/pref_source_xdrip_broadcast_service_api_info"
+            android:summary="@string/pref_source_xdrip_broadcast_service_api_info_summary"
+            app:fragment="de.michelinside.glucodatahandler.common.preferences.SourceXDripBroadcastAPI"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_aaps_enabled"
+            android:title="@string/pref_source_aaps_info"
+            android:summary="@string/pref_source_aaps_summary"
+            app:fragment="de.michelinside.glucodatahandler.common.preferences.SourceAaps"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_eversense_enabled"
+            android:title="@string/pref_source_eversense_info"
+            android:summary="@string/pref_source_eversense_summary"
+            app:fragment="de.michelinside.glucodatahandler.common.preferences.SourceEversense"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_diabox_enabled"
+            android:title="@string/source_diabox"
+            android:summary="@string/pref_source_diabox_summary"
+            app:fragment="de.michelinside.glucodatahandler.common.preferences.SourceDiabox"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_libre_patched_enabled"
+            android:title="@string/pref_source_libre_patched"
+            android:summary="@string/pref_source_libre_patched_summary"
+            app:fragment="de.michelinside.glucodatahandler.common.preferences.SourceLibrePatched"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_byoda_enabled"
+            android:title="@string/pref_source_dexcom_byoda_info"
+            android:summary="@string/pref_source_dexcom_byoda_not_working_info_summary"
+            app:fragment="de.michelinside.glucodatahandler.common.preferences.SourceDexcomByodaAaps"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+</PreferenceScreen>

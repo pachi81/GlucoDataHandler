@@ -529,7 +529,7 @@
     <string name="pref_source_offline">Applications locales</string>
     <string name="pref_source_offline_summary">Applications sur le même appareil fournissant des valeurs de glycémie sous forme de message de diffusion interne, telles que Juggluco, xDrip+, AAPS, etc.</string>
     <string name="pref_cat_follower_summary">Services cloud fournissant des valeurs de glycémie sur Internet, tels que LibreLinkUp, Dexcom Share, Nightscout et Medtrum.</string>
-    <string name="pref_source_xdrip_broadcast">Alternative: Diffuser localement</string>
+    <string name="pref_source_xdrip_broadcast">xDrip+ Diffuser localement</string>
     <string name="pref_source_dexcom_byoda_info_summary">Pour recevoir des valeurs de Dexcom BYODA, vous devez activer la diffusion vers AAPS lors de la création de l\'application.</string>
     <string name="pref_source_eversense_info_summary">Pour recevoir des valeurs d\'Eversense, vous devez utiliser ESEL soit en mode compagnon (lecture de la notification), soit connecté à l\'application Eversense corrigée.\nPour plus d\'informations sur ESEL, appuyez ici.</string>
     <string name="pref_source_eversense_byoda_info_summary">Pour recevoir des valeurs de Dexcom BYODA, vous devez activer la diffusion vers xDrip+ lors de la création de l\'application.</string>

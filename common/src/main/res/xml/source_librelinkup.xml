@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <androidx.preference.SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="source_libre_enabled"
+        android:title="@string/src_enabled"
+        android:summary="@string/src_libre_enabled_summary"
+        app:iconSpaceReserved="false" />
+    <androidx.preference.SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="source_libre_auto_accept_tou"
+        android:title="@string/source_libre_auto_accept_tou"
+        android:summary="@string/source_libre_auto_accept_tou_summary"
+        app:iconSpaceReserved="false" />
+    <androidx.preference.EditTextPreference
+        android:defaultValue=""
+        android:key="source_libre_user"
+        android:title="@string/src_libre_user"
+        android:summary="@string/src_libre_user_summary"
+        app:iconSpaceReserved="false" />
+    <androidx.preference.EditTextPreference
+        android:defaultValue=""
+        android:key="source_libre_password"
+        android:title="@string/src_password"
+        android:summary="@string/src_libre_password_summary"
+        android:inputType="textPassword"
+        app:iconSpaceReserved="false" />
+    <androidx.preference.ListPreference
+        android:defaultValue="io"
+        android:entries="@array/source_libre_server_labels"
+        android:entryValues="@array/source_libre_server_values"
+        android:key="source_libre_server"
+        android:title="@string/src_libre_server"
+        android:summary="@string/source_libre_server_default"
+        app:iconSpaceReserved="false" />
+    <androidx.preference.ListPreference
+        android:key="source_libre_patient_id"
+        android:title="@string/src_libre_patient"
+        android:summary="@string/src_libre_patient_summary"
+        app:iconSpaceReserved="false" />
+    <androidx.preference.SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="source_libre_reconnect"
+        android:title="@string/src_libre_reconnect"
+        android:summary="@string/src_libre_reconnect_summary"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="source_librelinkup_info"
+        android:title="@string/pref_source_librelinkup_info"
+        android:summary="@string/pref_source_librelinkup_info_summary"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="source_librelinkup_video"
+        android:title="@string/video_tutorial"
+        android:summary="@string/video_tutorial_summary"
+        app:iconSpaceReserved="false" />
+</PreferenceScreen>

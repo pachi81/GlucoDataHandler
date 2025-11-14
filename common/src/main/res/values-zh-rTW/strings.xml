@@ -528,7 +528,7 @@
     <string name="pref_source_offline">本機程式</string>
     <string name="pref_source_offline_summary">在同裝置中以內部廣播訊息提供血糖值的程式，如 Juggluco、xDrip+、AAPS 等</string>
     <string name="pref_cat_follower_summary">透過網路的雲端服務提供血糖值，如 LibreLinkUp、Dexcom Share 和 Nightscout</string>
-    <string name="pref_source_xdrip_broadcast">替代來源: 本機廣播</string>
+    <string name="pref_source_xdrip_broadcast">xDrip+ 本機廣播</string>
     <string name="pref_source_dexcom_byoda_info_summary">若要從 Dexcom BYODA 接收血糖值，您必須在建置程式時啟用對 AAPS 的廣播功能</string>
     <string name="pref_source_eversense_info_summary">若要從 Eversense 接收數值，您必須使用 ESEL，無論是在夥伴模式（讀取通知）還是連線到修補的 Eversense 應用程式。\n若要取得更多關於 ESEL 的資訊，請按這裡。</string>
     <string name="pref_source_eversense_byoda_info_summary">若要從 Dexcom BYODA 接收數值，您必須在建置應用程式時啟用對 xDrip+ 的廣播。</string>
