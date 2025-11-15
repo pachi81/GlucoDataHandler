@@ -1002,6 +1002,8 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="pref_pebble_watchfaces">Pebble</string>
     <string name="pref_pebble_watchfaces_summary">Press here to open Pebble watchfaces designed for xDrip+, which should also be compatible to this app.</string>
     <string name="gmi">GMI</string>
+    <string name="pref_lockscreen_x_pos">Horizontal position</string>
+    <string name="pref_lockscreen_x_pos_summary">Horizontal position of the image:\n0 is the left of the display\n40 is the right of the display</string>
 
 
     <plurals name="minutes_long">

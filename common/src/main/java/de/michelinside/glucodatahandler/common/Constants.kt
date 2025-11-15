@@ -230,6 +230,7 @@ object Constants {
     const val SHARED_PREF_DUMMY_VALUES = "dummy_values"
 
     const val SHARED_PREF_LOCKSCREEN_WP_ENABLED = "lockscreen_enabled"
+    const val SHARED_PREF_LOCKSCREEN_WP_X_POS = "lockscreen_x_pos"
     const val SHARED_PREF_LOCKSCREEN_WP_Y_POS = "lockscreen_y_pos"
     const val SHARED_PREF_LOCKSCREEN_WP_STYLE = "lockscreen_style"
     const val SHARED_PREF_LOCKSCREEN_WP_SIZE = "lockscreen_size"
@@ -244,6 +245,7 @@ object Constants {
     // aod
     const val SHARED_PREF_AOD_WP_ENABLED = "aod_enabled"
     const val SHARED_PREF_AOD_WP_Y_POS = "aod_y_pos"
+    const val SHARED_PREF_AOD_WP_X_POS = "aod_x_pos"
     const val SHARED_PREF_AOD_WP_STYLE = "aod_style"
     const val SHARED_PREF_AOD_WP_SIZE = "aod_size"
     const val SHARED_PREF_AOD_WP_COLOURED = "aod_coloured"
