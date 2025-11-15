@@ -229,16 +229,20 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             remoteViews.setTextColor(R.id.deltaText, ReceiveData.getAlarmTypeColor(AlarmType.OBSOLETE) )
         }
         if(ReceiveData.isIobCobObsolete()) {
+            remoteViews.setTextViewText(R.id.iobText, "")
+            remoteViews.setTextViewText(R.id.cobText, "")
             remoteViews.setViewVisibility(R.id.iobText, View.GONE)
             remoteViews.setViewVisibility(R.id.cobText, View.GONE)
         } else {
             remoteViews.setTextViewText(R.id.iobText, "💉 ${ReceiveData.getIobAsString()}")
-            remoteViews.setTextViewText(R.id.cobText, "🍔 ${ReceiveData.getCobAsString()}")
             remoteViews.setViewVisibility(R.id.iobText, View.VISIBLE)
-            if (ReceiveData.cob.isNaN())
+            if (ReceiveData.cob.isNaN()) {
+                remoteViews.setTextViewText(R.id.cobText, "")
                 remoteViews.setViewVisibility(R.id.cobText, View.GONE)
-            else
+            } else {
+                remoteViews.setTextViewText(R.id.cobText, "🍔 ${ReceiveData.getCobAsString()}")
                 remoteViews.setViewVisibility(R.id.cobText, View.VISIBLE)
+            }
         }
 
         if(withGraph) {
