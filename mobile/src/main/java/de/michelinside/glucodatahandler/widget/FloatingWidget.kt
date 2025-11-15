@@ -86,7 +86,7 @@ class FloatingWidget(context: Context): WallpaperBase(context, "GDH.FloatingWidg
         receycleOldWallpaper()
     }
 
-    override fun update() {
+    override open fun update() {
         Log.d(LOG_ID, "update called - enabled: $enabled")
         try {
             if (enabled) {

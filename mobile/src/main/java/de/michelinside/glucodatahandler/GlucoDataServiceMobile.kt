@@ -498,6 +498,8 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         Log.i(LOG_ID, "onConfigurationChanged called: $newConfig")
+        lockScreenWallpaper.update()
+        floatingWidget.update()
         if(!PermanentNotification.recreateBitmap())
             PermanentNotification.showNotifications()
     }

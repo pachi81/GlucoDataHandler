@@ -104,7 +104,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
 
     protected abstract fun enable()
     protected abstract fun disable()
-    protected abstract fun update()
+    abstract fun update()
 
     protected open fun initSettings(sharedPreferences: SharedPreferences) {
         style = sharedPreferences.getString(stylePref, style)?: style

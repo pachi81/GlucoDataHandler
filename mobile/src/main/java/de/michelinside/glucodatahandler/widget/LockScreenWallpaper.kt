@@ -54,7 +54,7 @@ class LockScreenWallpaper(context: Context): WallpaperBase(context, "GDH.LockScr
                 drawable.setBounds(0, 0, screenWidth, screenHeigth)
                 val xOffset = (screenWidth-bitmap.width) * xPos/40F
                 val yOffset = max(0F, ((screenHeigth-bitmap.height)*yPos/100F)) //-(screenDPI*0.3F))
-                Log.d(LOG_ID, "Create wallpaper at x=$xOffset/$screenWidth and y=$yOffset/$screenHeigth DPI=$screenDPI")
+                Log.d(LOG_ID, "Create wallpaper (x*y:${bitmap.width}*${bitmap.height}) at x=$xOffset/$screenWidth and y=$yOffset/$screenHeigth DPI=$screenDPI")
                 canvas.drawBitmap(bitmap, xOffset, yOffset, Paint(Paint.ANTI_ALIAS_FLAG))
             }
             return wallpaper
@@ -79,7 +79,7 @@ class LockScreenWallpaper(context: Context): WallpaperBase(context, "GDH.LockScr
         setWallpaper(null, context)
     }
 
-    override fun update() {
+    override open fun update() {
         try {
             Log.v(LOG_ID, "updateLockScreen called - active=$active")
             if (active) {

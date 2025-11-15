@@ -208,10 +208,12 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
             setEnableState<SelectReceiverPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_TAP_ACTION, Constants.SHARED_PREF_FLOATING_WIDGET)
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_SEND_PREF_TO_GLUCODATAAUTO, Constants.SHARED_PREF_SEND_TO_GLUCODATAAUTO, defValue = true)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_LOCKSCREEN_WP_Y_POS, Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED)
+            setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_LOCKSCREEN_WP_X_POS, Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE, Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_LOCKSCREEN_WP_SIZE, Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED)
 
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_AOD_WP_Y_POS, Constants.SHARED_PREF_AOD_WP_ENABLED)
+            setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_AOD_WP_X_POS, Constants.SHARED_PREF_AOD_WP_ENABLED)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_AOD_WP_STYLE, Constants.SHARED_PREF_AOD_WP_ENABLED)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_AOD_WP_SIZE, Constants.SHARED_PREF_AOD_WP_ENABLED)
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_AOD_WP_COLOURED, Constants.SHARED_PREF_AOD_WP_ENABLED)
@@ -256,6 +258,14 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
                 arrayOf<CharSequence>(resources.getString(CR.string.pref_global_broadcast)) + receivers.keys.toTypedArray()
             selectTargets.entryValues = arrayOf<CharSequence>("") + receivers.values.toTypedArray()
         }
+    }
+
+
+
+    protected fun setSeekBarMaxValue(prefKey: String, maxValue: Int) {
+        val pref = findPreference<SeekBarPreference>(prefKey)
+        if(pref != null)
+            pref.max = maxValue
     }
 }
 
@@ -323,6 +333,10 @@ class WidgetSettingsFragment: SettingsFragmentBase(R.xml.pref_widgets) {
         Log.v(LOG_ID, "initPreferences called")
         super.initPreferences()
         updateStyleSummary()
+
+        if(resources.getBoolean(R.bool.isTablet)) {
+            setSeekBarMaxValue(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, 100)
+        }
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
@@ -357,6 +371,11 @@ class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen)  {
         super.initPreferences()
         updateStyleSummary()
         updateEnabledInitial()
+
+        if(resources.getBoolean(R.bool.isTablet)) {
+            setSeekBarMaxValue(Constants.SHARED_PREF_LOCKSCREEN_WP_SIZE, 100)
+            setSeekBarMaxValue(Constants.SHARED_PREF_AOD_WP_SIZE, 100)
+        }
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
