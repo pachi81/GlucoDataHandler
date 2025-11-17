@@ -1004,7 +1004,13 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="gmi">GMI</string>
     <string name="pref_lockscreen_x_pos">Horizontal position</string>
     <string name="pref_lockscreen_x_pos_summary">Horizontal position of the image:\n0 is the left of the display\n40 is the right of the display</string>
-
+    <string name="notification_cat_iob_cob">Read IOB/COB value</string>
+    <string name="notification_cat_glucose_summary">Reading glucose value from a notification of an external app, which shows the glucose value in notification.</string>
+    <string name="notification_cat_iob_cob_summary">Reading IOB and/or COB value from a notification of an external app, which shows these values in notification.</string>
+    <string name="source_notification_iob_enabled_summary">Enable this, if the notification contains IOB value.</string>
+    <string name="source_notification_cob_enabled_summary">Enable this, if the notification contains COB value.</string>
+    <string name="source_notification_iob_cob_irregular">Special Handling</string>
+    <string name="source_notification_iob_cob_irregular_summary">Enable this for notifications that update too frequently. This ensures all values are processed correctly. Please only enable this option if requested by the developer to analyze an issue.</string>
 
     <plurals name="minutes_long">
         <item quantity="one">%d minute</item>

@@ -9,7 +9,6 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.os.Build
-import de.michelinside.glucodatahandler.common.utils.Log
 import com.google.android.gms.wearable.WearableListenerService.RECEIVER_EXPORTED
 import com.google.android.gms.wearable.WearableListenerService.RECEIVER_VISIBLE_TO_INSTANT_APPS
 import de.michelinside.glucodatahandler.common.Constants
@@ -165,6 +164,7 @@ object PackageUtils {
             receiverFilter.add("com.microtech.aidexx.") // LinX CGM
             receiverFilter.add("com.medtrum.")  // Medtrum
             receiverFilter.add("com.signos.")  // Signos
+            receiverFilter.add("com.gluroo.")  // Gluroo
         }
         return receiverFilter
     }

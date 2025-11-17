@@ -736,6 +736,10 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             if(!isIobCob() || (newTime > iobCobTime && (newTime-iobCobTime) > 30000)) {
                 return true
             }
+            if(iob != extras.getFloat(IOB, Float.NaN) || cob != extras.getFloat(COB, Float.NaN)) {
+                // IOB or COB has changed
+                return true
+            }
         }
         return false
     }

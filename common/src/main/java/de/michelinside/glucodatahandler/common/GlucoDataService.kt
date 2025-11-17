@@ -15,7 +15,6 @@ import android.os.Bundle
 import android.provider.Settings
 import androidx.annotation.RequiresApi
 import com.google.android.gms.wearable.WearableListenerService
-import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
@@ -507,6 +506,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             Log.v(LOG_ID, "migrateSettings called")
 
             val oldVersion = sharedPrefs.getInt(Constants.SHARED_PREF_GDH_VERSION, 0)
+            val isUpgrade = oldVersion < BuildConfig.BASE_VERSION
             if(oldVersion != BuildConfig.BASE_VERSION) {
                 Log.i(LOG_ID, "Migrate settings from version $oldVersion to ${BuildConfig.BASE_VERSION}")
                 with(sharedPrefs.edit()) {
@@ -584,23 +584,43 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 }
             }
 
-            if(!sharedPrefs.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)) {  // only of notification reader is not enabled!
-                // change old notification regex
-                if(sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX)) {
-                    if(sharedPrefs.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX, "") == "(\\d*\\.?\\d+)") {
-                        with(sharedPrefs.edit()) {
-                            putString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX, NotificationReceiver.defaultGlucoseRegex)
-                            apply()
-                        }
+
+            if(isUpgrade && sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX)) {
+                val oldRegex = sharedPrefs.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX, "")
+                if(oldRegex.isNullOrEmpty() || oldRegex == "(\\d*\\.?\\d+)" || oldRegex == "(?:^|\\s)(\\d*\\.?\\d+)(?=\\s|\$)") {
+                    Log.i(LOG_ID, "Change notification regex from $oldRegex to ${NotificationReceiver.defaultGlucoseRegex}")
+                    with(sharedPrefs.edit()) {
+                        putString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX, NotificationReceiver.defaultGlucoseRegex)
+                        apply()
                     }
                 }
-                if(sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX)) {
-                    if(sharedPrefs.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX, "") == "IOB: (\\d*\\.?\\d+) U") {
-                        with(sharedPrefs.edit()) {
-                            putString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX, NotificationReceiver.defaultIobRegex)
-                            apply()
-                        }
+            } else if(!sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX)) {
+                with(sharedPrefs.edit()) {
+                    putString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX, NotificationReceiver.defaultGlucoseRegex)
+                    apply()
+                }
+            }
+
+            if(isUpgrade && sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX)) {
+                val oldRegex = sharedPrefs.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX, "")
+                if(oldRegex.isNullOrEmpty() || oldRegex == "IOB: (\\d*\\.?\\d+) U" || oldRegex == "(\\d*\\.?\\d+) U") {
+                    Log.i(LOG_ID, "Change IOB notification regex from $oldRegex to ${NotificationReceiver.defaultIobRegex}")
+                    with(sharedPrefs.edit()) {
+                        putString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX, NotificationReceiver.defaultIobRegex)
+                        apply()
                     }
+                }
+            } else if(!sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX)) {
+                with(sharedPrefs.edit()) {
+                    putString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX, NotificationReceiver.defaultIobRegex)
+                    apply()
+                }
+            }
+
+            if(!sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_COB_APP_REGEX)) {
+                with(sharedPrefs.edit()) {
+                    putString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_COB_APP_REGEX, NotificationReceiver.defaultCobRegex)
+                    apply()
                 }
             }
 

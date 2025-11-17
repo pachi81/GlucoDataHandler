@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <de.michelinside.glucodatahandler.common.ui.SelectReceiverPreference
+        android:key="notification_reader_app"
+        android:title="@string/notification_reader_app"
+        android:summary="@string/notification_reader_app_summary"
+        app:description="@string/notification_reader_app_summary"
+        app:iconSpaceReserved="false" />
+    <PreferenceCategory
+        android:title="@string/advanced_settings"
+        app:iconSpaceReserved="false">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="notification_reader_five_minute_interval"
+            android:title="@string/notification_reader_five_minute_interval"
+            android:summary="@string/notification_reader_five_minute_interval_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.EditTextPreference
+            android:key="notification_reader_app_regex"
+            android:title="@string/notification_reader_app_regex"
+            android:summary="@string/notification_reader_app_regex_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+</PreferenceScreen>
