@@ -106,7 +106,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     }
 
     fun getAlarmState(context: Context, alarmType: AlarmType = AlarmType.NONE): AlarmState {
-        var state = AlarmState.currentState(context)
+        var state = if(notificationActive) AlarmState.ALARM else AlarmState.currentState(context)
         if(state == AlarmState.DISABLED || !channelActive(context)) {
             state = AlarmState.DISABLED
         } else if(state == AlarmState.ACTIVE) {
@@ -116,8 +116,6 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     "Inactive causes by active: $active"
                 )
                 state = AlarmState.INACTIVE
-            } else if(notificationActive) {
-                state = AlarmState.ALARM
             }
         } else if(state == AlarmState.TEMP_DISABLED || state == AlarmState.SNOOZE) {
             if(!AlarmHandler.isInactive(alarmType)) {
@@ -778,7 +776,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         }
     }
 
-    private fun getAlarmType(notificationId: Int): AlarmType {
+    private fun getCurNotificationAlarmType(notificationId: Int = curNotification): AlarmType {
         return when(notificationId) {
             VERY_LOW_NOTIFICATION_ID -> AlarmType.VERY_LOW
             LOW_NOTIFICATION_ID -> AlarmType.LOW
@@ -957,7 +955,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     }
                 }
                 NotifySource.ALARM_STATE_CHANGED -> {
-                    if (!AlarmState.isActive(getAlarmState(context))) {
+                    if (!AlarmState.isActive(getAlarmState(context, getCurNotificationAlarmType()))) {
                         stopCurrentNotification(context)
                     }
                 }
@@ -1065,7 +1063,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                 }
             }
             Log.w(LOG_ID, "Notification not found for current id $curNotification - restart it")
-            showNotification(getAlarmType(curNotification), context)
+            showNotification(getCurNotificationAlarmType(), context)
             return
         }
         Log.d(LOG_ID, "Notification still closed...")

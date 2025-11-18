@@ -23,6 +23,18 @@
                     android:title="@string/alarm_snooze_on_notification_enabled"
                     android:summary="@string/alarm_snooze_on_notification_summary"
                     app:iconSpaceReserved="false" />
+                <androidx.preference.SwitchPreferenceCompat
+                    android:defaultValue="false"
+                    android:key="alarm_force_very_low"
+                    android:title="@string/alarm_ignore_snooze_for_very_low"
+                    android:summary="@string/alarm_ignore_snooze_for_very_low_summary"
+                    app:iconSpaceReserved="false" />
+            <androidx.preference.SwitchPreferenceCompat
+                android:defaultValue="false"
+                android:key="alarm_force_obsolete"
+                android:title="@string/alarm_ignore_snooze_for_obsolete"
+                android:summary="@string/alarm_ignore_snooze_for_obsolete_summary"
+                app:iconSpaceReserved="false" />
         </PreferenceCategory>
         <PreferenceCategory
             android:title="@string/alarm_cat_quiet_hours"

@@ -921,6 +921,8 @@
         <item quantity="other">%dd</item>
     </plurals>
 
+    <!-- v2.2 -->
+
     <string name="alarm_general_settings_summary">General alarm settings for all alarms.</string>
     <string name="alarm_cat_quiet_hours">Quiet hours</string>
     <string name="source_delay_too_short">New value is older than the interval. If this happens more often, go to sources - Cloud services and increase delay!</string>
@@ -1011,6 +1013,8 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="source_notification_cob_enabled_summary">Enable this, if the notification contains COB value.</string>
     <string name="source_notification_iob_cob_irregular">Special Handling</string>
     <string name="source_notification_iob_cob_irregular_summary">Enable this for notifications that update too frequently. This ensures all values are processed correctly. Please only enable this option if requested by the developer to analyze an issue.</string>
+    <string name="alarm_ignore_snooze_for_obsolete">Always alert for obsolete values</string>
+    <string name="alarm_ignore_snooze_for_obsolete_summary">This alarm will notify you even if snooze or the general quiet hours for all alarms are active, ensuring you are alerted, if there is no new glucose value.</string>
 
     <plurals name="minutes_long">
         <item quantity="one">%d minute</item>
