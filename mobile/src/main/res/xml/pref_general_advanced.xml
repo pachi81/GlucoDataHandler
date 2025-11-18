@@ -19,7 +19,7 @@
             android:summary="@string/obsolete_time_summary"
             app:iconSpaceReserved="false" />
         <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="standard_statistics"
             android:title="@string/pref_switch_standard_statistics"
             android:summary="@string/pref_switch_standard_statistics_summary"

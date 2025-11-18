@@ -1011,7 +1011,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     private fun updateStatisticsTable() {
         tableStatistics.removeViews(1, maxOf(0, tableStatistics.childCount - 1))
-        val standardStats = sharedPref.getBoolean(Constants.SHARED_PREF_STANDARD_STATISTICS, false)
+        val standardStats = sharedPref.getBoolean(Constants.SHARED_PREF_STANDARD_STATISTICS, true)
         GlucoseStatistics.update(standardStats)
         if(GlucoseStatistics.hasStatistics) {
             val statData = if(btnStat1d.isChecked) GlucoseStatistics.statData1d else GlucoseStatistics.statData7d

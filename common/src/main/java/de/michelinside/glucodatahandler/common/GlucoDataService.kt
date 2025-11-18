@@ -630,6 +630,19 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     apply()
                 }
             }
+
+            if(appSource == AppSource.PHONE_APP) {
+                if(isUpgrade && oldVersion == 156) {
+                    // for existing users use the old setting
+                    if(!sharedPrefs.contains(Constants.SHARED_PREF_STANDARD_STATISTICS)) {
+                        with(sharedPrefs.edit()) {
+                            putBoolean(Constants.SHARED_PREF_STANDARD_STATISTICS, false)
+                            apply()
+                        }
+                    }
+                }
+            }
+
         }
 
         fun getSettings(): Bundle {
