@@ -52,6 +52,7 @@ import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.chart.ChartCreator
 import de.michelinside.glucodatahandler.common.chart.GlucoseChart
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
+import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
 import de.michelinside.glucodatahandler.common.notification.AlarmState
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notification.ChannelType
@@ -576,7 +577,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private fun toggleAlarm() {
         try {
             doNotUpdate = true
-            val state = AlarmNotification.getAlarmState(this)
+            val state = AlarmNotificationBase.currentAlarmState
             if(AlarmNotification.channelActive(this)) {
                 Log.v(LOG_ID, "toggleAlarm called for state $state")
                 when (state) {
@@ -628,7 +629,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     apply()
                 }
             }
-            val state = AlarmNotification.getAlarmState(this)
+            val state = AlarmNotificationBase.currentAlarmState
             Log.v(LOG_ID, "updateAlarmIcon called for state $state")
             if(alarmIcon != null) {
                 alarmIcon!!.isEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_ENABLE_ALARM_ICON_TOGGLE, true)

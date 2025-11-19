@@ -404,6 +404,7 @@
         <receiver android:name=".common.notification.AlarmIntentReceiver" />
         <receiver android:name=".common.receiver.InternalActionReceiver" />
         <receiver android:name=".common.notification.AlarmSnoozeEndReceiver" />
+        <receiver android:name=".common.notification.AlarmInactiveTimeReceiver" />
         <receiver android:name=".StartServiceReceiver" />
         <receiver
             android:name=".common.utils.LocaleChangeNotifier"

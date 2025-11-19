@@ -52,6 +52,8 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
 
     private var alarmManager: AlarmManager? = null
     private var snoozeEndPendingIntent: PendingIntent? = null
+    private var inactiveTimePendingIntent: PendingIntent? = null
+
 
     val isSnoozeActive: Boolean get() {
         return snoozeTime >= System.currentTimeMillis()
@@ -173,7 +175,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
             Log.i(LOG_ID, "New snooze-time: $snoozeTimestamp")
             saveExtras()
             if(GlucoDataService.context != null) {
-                InternalNotifier.notify(GlucoDataService.context!!, NotifySource.ALARM_STATE_CHANGED, null)
+                AlarmNotificationBase.instance?.updateAlarmState(GlucoDataService.context!!)
                 triggerSnoozeEnd(GlucoDataService.context!!)
             }
             if(!fromClient) {
@@ -419,13 +421,30 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         readSettings(sharedPref, key)
         if (key == null || key == AlarmType.OBSOLETE.setting!!.getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_ENABLED))
             checkNotifier(context)
+
+        when(key) {
+            null -> {
+                checkNotifier(context)
+                updateInactiveTimeAlarm(context)
+            }
+            AlarmType.OBSOLETE.setting!!.getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_ENABLED) -> {
+                checkNotifier(context)
+            }
+            Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED,
+            Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME,
+            Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME,
+            Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS -> {
+                updateInactiveTimeAlarm(context)
+            }
+        }
     }
 
     private fun isObsoleteAlarmActive(): Boolean {
         if(GlucoDataService.appSource != AppSource.WEAR_APP)
             return AlarmType.OBSOLETE.setting!!.isActive
         if(AlarmType.OBSOLETE.setting!!.isActive) {  // on wear: only notification is used for alarms -> check to save battery for timer thread
-            if(AlarmState.isActive(AlarmNotificationBase.instance?.getAlarmState(GlucoDataService.context!!))) {
+            AlarmNotificationBase.instance?.updateAlarmState(GlucoDataService.context!!)
+            if(AlarmNotificationBase.isAlarmTypeActive(AlarmType.OBSOLETE)) {
                 if(ScreenEventReceiver.isDisplayOff()) {
                     // if display is off and the phone does not send new data to wear, the obsolete alarm should not trigger!
                     if(GlucoDataService.sharedPref != null)
@@ -527,6 +546,61 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
             snoozeEndPendingIntent = null
         }
     }
+
+    fun updateInactiveTimeAlarm(context: Context) {
+        Log.i(LOG_ID, "Update inactive time alarm - enabled=$inactiveEnabled - tempInactive=${isTempInactive}")
+        stopInactiveTimeAlarm()
+        AlarmNotificationBase.instance?.updateAlarmState(context)
+        if(inactiveEnabled) {
+            val nextTimeString = if(isTempInactive) inactiveEndTime else inactiveStartTime
+            val nextTime = Utils.parseTimeAndGetNextTimestamp(nextTimeString, inactiveWeekdays)
+            triggerInactiveTimeAlarm(context, nextTime)
+        }
+    }
+
+    private fun stopInactiveTimeAlarm() {
+        if(alarmManager != null && inactiveTimePendingIntent != null) {
+            Log.i(LOG_ID, "Stop inactive time alarm triggered")
+            alarmManager!!.cancel(inactiveTimePendingIntent!!)
+            alarmManager = null
+            inactiveTimePendingIntent = null
+        }
+    }
+
+    private fun triggerInactiveTimeAlarm(context: Context, nextTime: Long) {
+        Log.d(LOG_ID, "Trigger inactive time alarm at ${Utils.getUiTimeStamp(nextTime)} - enabled=$inactiveEnabled - tempInactive=$isTempInactive")
+        stopInactiveTimeAlarm()
+        if(inactiveEnabled && nextTime > 0) {
+            alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            var hasExactAlarmPermission = true
+            if (!Utils.canScheduleExactAlarms(context)) {
+                Log.d(LOG_ID, "Need permission to set exact alarm!")
+                hasExactAlarmPermission = false
+            }
+            Log.i(LOG_ID, "Trigger inactive time alarm at ${Utils.getUiTimeStamp(nextTime)} - exact-alarm=$hasExactAlarmPermission")
+            val intent = Intent(context, AlarmInactiveTimeReceiver::class.java)
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+            inactiveTimePendingIntent = PendingIntent.getBroadcast(
+                context,
+                801,
+                intent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
+            )
+            if (hasExactAlarmPermission) {
+                alarmManager!!.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    nextTime,
+                    inactiveTimePendingIntent!!
+                )
+            } else {
+                alarmManager!!.setAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    nextTime,
+                    inactiveTimePendingIntent!!
+                )
+            }
+        }
+    }
 }
 
 
@@ -537,8 +611,23 @@ class AlarmSnoozeEndReceiver: BroadcastReceiver() {
             Log.d(LOG_ID, "onReceive called snoozeActive:${AlarmHandler.isSnoozeActive}")
             if(!AlarmHandler.isSnoozeActive) {
                 Log.i(LOG_ID, "End of snooze reached")
-                InternalNotifier.notify(context, NotifySource.ALARM_STATE_CHANGED, null)
+                AlarmNotificationBase.instance?.updateAlarmState(context)
                 AlarmHandler.stopSnoozeEnd()
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onReceive exception: " + exc.toString())
+        }
+    }
+}
+
+class AlarmInactiveTimeReceiver: BroadcastReceiver() {
+    private val LOG_ID = "GDH.AlarmInactiveTimeReceiver"
+    override fun onReceive(context: Context, intent: Intent) {
+        try {
+            Log.d(LOG_ID, "onReceive called tempInactive:${AlarmHandler.isTempInactive}")
+            if(!AlarmHandler.isSnoozeActive) {
+                Log.i(LOG_ID, "Inactive time trigger ${AlarmHandler.isTempInactive}")
+                AlarmHandler.updateInactiveTimeAlarm(context)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onReceive exception: " + exc.toString())

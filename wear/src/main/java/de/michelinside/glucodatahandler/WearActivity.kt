@@ -28,6 +28,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.setPadding
 import de.michelinside.glucodatahandler.common.chart.ChartBitmapHandlerView
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
+import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
 import de.michelinside.glucodatahandler.common.notification.AlarmState
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notification.ChannelType
@@ -298,7 +299,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     private fun toggleAlarm() {
         try {
             doNotUpdate = true
-            val state = AlarmNotificationWear.getAlarmState(this.applicationContext)
+            val state = AlarmNotificationBase.currentAlarmState
             if(AlarmNotificationWear.channelActive(this.applicationContext)) {
                 Log.d(LOG_ID, "toggleAlarm called for state $state")
                 when (state) {
@@ -357,7 +358,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                     apply()
                 }
             }
-            val state = AlarmNotificationWear.getAlarmState(this.applicationContext)
+            val state = AlarmNotificationBase.currentAlarmState
             Log.v(LOG_ID, "updateAlarmIcon called for state $state")
             alarmIcon.isEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_ENABLE_ALARM_ICON_TOGGLE, true)
             alarmIcon.setImageIcon(Icon.createWithResource(this, state.icon))

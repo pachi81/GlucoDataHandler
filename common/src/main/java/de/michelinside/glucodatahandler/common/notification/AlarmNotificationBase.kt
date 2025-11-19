@@ -35,7 +35,6 @@ import de.michelinside.glucodatahandler.common.R as CR
 
 
 abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
-    protected val LOG_ID = "GDH.AlarmNotification"
     private val MIN_AUTO_CLOSE_DELAY = 30F
     private var enabled: Boolean = false
     private val VERY_LOW_NOTIFICATION_ID = 801
@@ -64,7 +63,6 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     private var useAlarmSound: Boolean = true
     val useAlarmStream: Boolean get() = useAlarmSound
     private var autoCloseNotification: Boolean = false
-    private var currentAlarmState: AlarmState = AlarmState.DISABLED
     private var startDelayThread: Thread? = null
     private var checkSoundThread: Thread? = null
     private var checkNotificationThread: Thread? = null
@@ -82,9 +80,11 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     private var lastSoundLevel = -1
 
     companion object {
+        protected val LOG_ID = "GDH.AlarmNotification"
         private var classInstance: AlarmNotificationBase? = null
         val instance: AlarmNotificationBase? get() = classInstance
-
+        var currentAlarmState: AlarmState = AlarmState.DISABLED
+            private set
 
         fun getAlarmTextRes(alarmType: AlarmType): Int? {
             return when(alarmType) {
@@ -98,6 +98,16 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                 else -> null
             }
         }
+
+        fun isAlarmTypeActive(alarmType: AlarmType): Boolean {
+            if(currentAlarmState == AlarmState.TEMP_DISABLED || currentAlarmState == AlarmState.SNOOZE) {
+                if(!AlarmHandler.isInactive(alarmType)) {
+                    Log.i(LOG_ID, "Force $alarmType")
+                    return true
+                }
+            }
+            return AlarmState.isActive(currentAlarmState)
+        }
     }
 
     abstract val active: Boolean
@@ -105,7 +115,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         return curNotification > 0
     }
 
-    fun getAlarmState(context: Context, alarmType: AlarmType = AlarmType.NONE): AlarmState {
+    fun updateAlarmState(context: Context) {
         var state = if(notificationActive) AlarmState.ALARM else AlarmState.currentState(context)
         if(state == AlarmState.DISABLED || !channelActive(context)) {
             state = AlarmState.DISABLED
@@ -117,17 +127,12 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                 )
                 state = AlarmState.INACTIVE
             }
-        } else if(state == AlarmState.TEMP_DISABLED || state == AlarmState.SNOOZE) {
-            if(!AlarmHandler.isInactive(alarmType)) {
-                Log.i(LOG_ID, "Force $alarmType")
-                state = AlarmState.ACTIVE  // force alarm
-            }
         }
         if(currentAlarmState != state) {
             Log.i(LOG_ID, "Current alarm state: $state - last state: $currentAlarmState")
             currentAlarmState = state
+            InternalNotifier.notify(GlucoDataService.context!!, NotifySource.ALARM_STATE_CHANGED, null)
         }
-        return state
     }
 
     fun initNotifications(context: Context) {
@@ -231,7 +236,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     curTestAlarmType = AlarmType.NONE
                     if(!fromClient)
                         GlucoDataService.sendCommand(Command.STOP_ALARM)
-                    InternalNotifier.notify(GlucoDataService.context!!, NotifySource.ALARM_STATE_CHANGED, null)
+                    updateAlarmState(GlucoDataService.context!!)
                     InternalNotifier.notify(GlucoDataService.context!!, NotifySource.NOTIFICATION_STOPPED, null)
                 }
             }
@@ -269,7 +274,8 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         try {
             WakeLockHelper(context).use {
                 Log.d(LOG_ID, "triggerNotification called for $alarmType - active=$active - curNotification=$curNotification - forTest=$forTest")
-                if (AlarmState.isActive(getAlarmState(context, alarmType)) || forTest) {
+                updateAlarmState(context)
+                if (forTest || isAlarmTypeActive(alarmType)) {
                     stopCurrentNotification(context, true)  // do not send stop to client! -> to prevent, that the client will stop the newly created notification!
                     curNotification = getNotificationId(alarmType)
                     retriggerCount = 0
@@ -284,7 +290,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     if(canShowNotification())
                         showNotification(alarmType, context)
                     triggerVibrationAndSound(alarmType, context)
-                    InternalNotifier.notify(GlucoDataService.context!!, NotifySource.ALARM_STATE_CHANGED, null)
+                    updateAlarmState(context)
                 }
             }
         } catch (exc: Exception) {
@@ -312,7 +318,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         intent.putExtra(Constants.ALARM_TYPE_EXTRA, alarmType.ordinal)
         alarmPendingIntent = PendingIntent.getBroadcast(
             context,
-            800,
+            700,
             intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
         )
@@ -908,7 +914,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                 }
             }
             if(alarmStatePreferences.contains(key))
-                InternalNotifier.notify(GlucoDataService.context!!, NotifySource.ALARM_STATE_CHANGED, null)
+                updateAlarmState(GlucoDataService.context!!)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
         }
@@ -955,7 +961,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     }
                 }
                 NotifySource.ALARM_STATE_CHANGED -> {
-                    if (!AlarmState.isActive(getAlarmState(context, getCurNotificationAlarmType()))) {
+                    if (!AlarmState.isActive(currentAlarmState)) {
                         stopCurrentNotification(context)
                     }
                 }
