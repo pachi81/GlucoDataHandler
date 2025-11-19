@@ -66,5 +66,11 @@
                     android:title="@string/alarm_inactive_weekdays"
                     android:summary="@string/alarm_inactive_weekdays_summary"
                     app:iconSpaceReserved="false" />
+                <androidx.preference.SwitchPreferenceCompat
+                    android:defaultValue="false"
+                    android:key="alarm_inactive_auto_reenable"
+                    android:title="@string/alarm_inactive_auto_reenable"
+                    android:summary="@string/alarm_inactive_auto_reenable_summary"
+                    app:iconSpaceReserved="false" />
         </PreferenceCategory>
 </PreferenceScreen>

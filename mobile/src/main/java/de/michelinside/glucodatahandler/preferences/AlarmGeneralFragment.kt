@@ -122,10 +122,12 @@ class AlarmGeneralFragment : SettingsFragmentCompatBase(), SharedPreferences.OnS
         ) { DayOfWeek.of(it.toInt()).getDisplayName(TextStyle.SHORT, Locale.getDefault()) }
 
         val inactivePref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED)
+        val autoReenablePref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_ALARM_INACTIVE_AUTO_RE_ENABLE)
         if (inactivePref != null) {
             val prefStart = findPreference<MyTimeTickerPreference>(Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME)
             val prefEnd = findPreference<MyTimeTickerPreference>(Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME)
             inactivePref.isEnabled = Utils.isValidTime(prefStart!!.getTimeString()) && Utils.isValidTime(prefEnd!!.getTimeString()) && prefWeekdays.values.isNotEmpty()
+            autoReenablePref?.isEnabled = inactivePref.isEnabled
         }
     }
 

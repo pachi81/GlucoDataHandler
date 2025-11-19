@@ -26,6 +26,7 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.Date
+import androidx.core.content.edit
 
 object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, NotifierInterface {
     private const val LOG_ID = "GDH.AlarmHandler"
@@ -43,6 +44,8 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
     private var initialized = false
     private var snoozeTime = 0L
     private var inactiveEnabled = false
+    var inactiveAutoReenable = false
+        private set
     private var inactiveStartTime = ""
     private var inactiveEndTime = ""
     private var inactiveWeekdays = defaultWeekdays
@@ -197,6 +200,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
             if(!fromClient) {
                 GlucoDataService.sendCommand(Command.DISABLE_INACTIVE_TIME)
             }
+            updateInactiveTimeAlarm(GlucoDataService.context!!)
         }
     }
 
@@ -294,6 +298,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
             Constants.SHARED_PREF_ALARM_SNOOZE_NOTIFICATION_BUTTONS,
             Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED,
             Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED,
+            Constants.SHARED_PREF_ALARM_INACTIVE_AUTO_RE_ENABLE,
             Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME,
             Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME,
             Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS,
@@ -357,6 +362,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         }
         bundle.putLong(SNOOZE_TIME, snoozeTime)
         bundle.putBoolean(Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED, inactiveEnabled)
+        bundle.putBoolean(Constants.SHARED_PREF_ALARM_INACTIVE_AUTO_RE_ENABLE, inactiveAutoReenable)
         bundle.putString(Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME, inactiveStartTime)
         bundle.putString(Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME, inactiveEndTime)
         bundle.putStringArray(Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS, inactiveWeekdays.toTypedArray())
@@ -378,6 +384,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
             }
             if(bundle.containsKey(Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED)) {
                 putBoolean(Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED, inactiveEnabled))
+                putBoolean(Constants.SHARED_PREF_ALARM_INACTIVE_AUTO_RE_ENABLE, bundle.getBoolean(Constants.SHARED_PREF_ALARM_INACTIVE_AUTO_RE_ENABLE, inactiveAutoReenable))
                 putString(Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME, bundle.getString(Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME, inactiveStartTime))
                 putString(Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME, bundle.getString(Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME, inactiveEndTime))
                 putStringSet(Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS, bundle.getStringArray(Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS)?.toMutableSet() ?: defaultWeekdays)
@@ -394,6 +401,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
     private fun readSettings(sharedPref: SharedPreferences, key: String?) {
         if (key == null) {
             readSettings(sharedPref, Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED)
+            readSettings(sharedPref, Constants.SHARED_PREF_ALARM_INACTIVE_AUTO_RE_ENABLE)
             readSettings(sharedPref, Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME)
             readSettings(sharedPref, Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME)
             readSettings(sharedPref, Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS)
@@ -402,6 +410,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         } else {
             when(key) {
                 Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED -> inactiveEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED, inactiveEnabled)
+                Constants.SHARED_PREF_ALARM_INACTIVE_AUTO_RE_ENABLE -> inactiveAutoReenable = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_INACTIVE_AUTO_RE_ENABLE, inactiveAutoReenable)
                 Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME -> inactiveStartTime = sharedPref.getString(Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME, inactiveStartTime) ?: ""
                 Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME -> inactiveEndTime = sharedPref.getString(Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME, inactiveEndTime) ?: ""
                 Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS -> inactiveWeekdays = sharedPref.getStringSet(Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS, defaultWeekdays) ?: defaultWeekdays
@@ -431,6 +440,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
                 checkNotifier(context)
             }
             Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED,
+            Constants.SHARED_PREF_ALARM_INACTIVE_AUTO_RE_ENABLE,
             Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME,
             Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME,
             Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS -> {
@@ -547,13 +557,23 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         }
     }
 
-    fun updateInactiveTimeAlarm(context: Context) {
-        Log.i(LOG_ID, "Update inactive time alarm - enabled=$inactiveEnabled - tempInactive=${isTempInactive}")
+    fun updateInactiveTimeAlarm(context: Context, fromTimer: Boolean = false) {
+        Log.i(LOG_ID, "Update inactive time alarm - enabled=$inactiveEnabled - tempInactive=${isTempInactive} - auto re-enable=$inactiveAutoReenable - fromTime=$fromTimer")
         stopInactiveTimeAlarm()
+        if(fromTimer && !inactiveEnabled && inactiveAutoReenable) {
+            Log.i(LOG_ID, "Re-enable inactive time alarm from timer")
+            GlucoDataService.sharedPref!!.edit {
+                putBoolean(Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED, true)
+            }
+            return
+        }
         AlarmNotificationBase.instance?.updateAlarmState(context)
         if(inactiveEnabled) {
             val nextTimeString = if(isTempInactive) inactiveEndTime else inactiveStartTime
             val nextTime = Utils.parseTimeAndGetNextTimestamp(nextTimeString, inactiveWeekdays)
+            triggerInactiveTimeAlarm(context, nextTime)
+        } else if(inactiveAutoReenable) {
+            val nextTime = Utils.parseTimeAndGetNextTimestamp(inactiveEndTime, inactiveWeekdays)
             triggerInactiveTimeAlarm(context, nextTime)
         }
     }
@@ -568,9 +588,9 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
     }
 
     private fun triggerInactiveTimeAlarm(context: Context, nextTime: Long) {
-        Log.d(LOG_ID, "Trigger inactive time alarm at ${Utils.getUiTimeStamp(nextTime)} - enabled=$inactiveEnabled - tempInactive=$isTempInactive")
+        Log.d(LOG_ID, "Trigger inactive time alarm at ${Utils.getUiTimeStamp(nextTime)} - enabled=$inactiveEnabled - tempInactive=$isTempInactive - auto re-enable=$inactiveAutoReenable")
         stopInactiveTimeAlarm()
-        if(inactiveEnabled && nextTime > 0) {
+        if((inactiveEnabled || inactiveAutoReenable) && nextTime > 0) {
             alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             var hasExactAlarmPermission = true
             if (!Utils.canScheduleExactAlarms(context)) {
@@ -627,7 +647,7 @@ class AlarmInactiveTimeReceiver: BroadcastReceiver() {
             Log.d(LOG_ID, "onReceive called tempInactive:${AlarmHandler.isTempInactive}")
             if(!AlarmHandler.isSnoozeActive) {
                 Log.i(LOG_ID, "Inactive time trigger ${AlarmHandler.isTempInactive}")
-                AlarmHandler.updateInactiveTimeAlarm(context)
+                AlarmHandler.updateInactiveTimeAlarm(context, true)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onReceive exception: " + exc.toString())

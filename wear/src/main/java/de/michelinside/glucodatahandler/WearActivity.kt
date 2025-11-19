@@ -332,7 +332,14 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                         AlarmNotificationWear.stopCurrentNotification(this)
                     }
                     AlarmState.TEMP_DISABLED -> {
-                        AlarmHandler.disableInactiveTime()
+                        if(AlarmHandler.inactiveAutoReenable)
+                            AlarmHandler.disableInactiveTime()
+                        else {
+                            with(sharedPref.edit()) {
+                                putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
+                                apply()
+                            }
+                        }
                     }
                 }
             } else {

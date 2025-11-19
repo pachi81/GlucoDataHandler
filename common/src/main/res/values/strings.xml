@@ -1015,6 +1015,8 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="source_notification_iob_cob_irregular_summary">Enable this for notifications that update too frequently. This ensures all values are processed correctly. Please only enable this option if requested by the developer to analyze an issue.</string>
     <string name="alarm_ignore_snooze_for_obsolete">Always alert for obsolete values</string>
     <string name="alarm_ignore_snooze_for_obsolete_summary">This alarm will notify you even if snooze or the general quiet hours for all alarms are active, ensuring you are alerted, if there is no new glucose value.</string>
+    <string name="alarm_inactive_auto_reenable">Auto re-enable</string>
+    <string name="alarm_inactive_auto_reenable_summary">After disabling quiet hours, they will be re-enabled at the end time.</string>
 
     <plurals name="minutes_long">
         <item quantity="one">%d minute</item>

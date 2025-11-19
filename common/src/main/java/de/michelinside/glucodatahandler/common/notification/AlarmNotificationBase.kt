@@ -35,6 +35,7 @@ import de.michelinside.glucodatahandler.common.R as CR
 
 
 abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
+    protected val LOG_ID = "GDH.AlarmNotification"
     private val MIN_AUTO_CLOSE_DELAY = 30F
     private var enabled: Boolean = false
     private val VERY_LOW_NOTIFICATION_ID = 801
@@ -80,7 +81,6 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     private var lastSoundLevel = -1
 
     companion object {
-        protected val LOG_ID = "GDH.AlarmNotification"
         private var classInstance: AlarmNotificationBase? = null
         val instance: AlarmNotificationBase? get() = classInstance
         var currentAlarmState: AlarmState = AlarmState.DISABLED
@@ -102,7 +102,6 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         fun isAlarmTypeActive(alarmType: AlarmType): Boolean {
             if(currentAlarmState == AlarmState.TEMP_DISABLED || currentAlarmState == AlarmState.SNOOZE) {
                 if(!AlarmHandler.isInactive(alarmType)) {
-                    Log.i(LOG_ID, "Force $alarmType")
                     return true
                 }
             }
@@ -116,6 +115,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     }
 
     fun updateAlarmState(context: Context) {
+        Log.v(LOG_ID, "updateAlarmState called")
         var state = if(notificationActive) AlarmState.ALARM else AlarmState.currentState(context)
         if(state == AlarmState.DISABLED || !channelActive(context)) {
             state = AlarmState.DISABLED
@@ -132,6 +132,8 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             Log.i(LOG_ID, "Current alarm state: $state - last state: $currentAlarmState")
             currentAlarmState = state
             InternalNotifier.notify(GlucoDataService.context!!, NotifySource.ALARM_STATE_CHANGED, null)
+        } else {
+            Log.d(LOG_ID, "using current alarm state $currentAlarmState")
         }
     }
 
@@ -888,7 +890,8 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED,
         Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME,
         Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME,
-        Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS
+        Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS,
+        Constants.SHARED_PREF_ALARM_INACTIVE_AUTO_RE_ENABLE
     )
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
