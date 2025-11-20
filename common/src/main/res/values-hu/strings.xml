@@ -220,7 +220,6 @@ Ha még mindig nem működik, aktiválja a előtér módot, vagy nyissa meg egys
 Probléma, vagy kérdés esetén kérem, először vegye fel velem a kapcsolatot, mielőtt negatív értékelést adna!
 Ha szeretne értesülni a fontos frissítésekről és hibajavításokról, kérem csatlakozzon a Facebook, vagy a Google Csoportokhoz!</string>
     <string name="gdh_disclaimer_title">Fejlesztői megjegyzés</string>
-    <string name="glucodataauto_link">https://github.com/pachi81/GlucoDataAuto/blob/main/README_DE.md</string>
     <string name="high_alarm_notification_descr">Értesítés magas riasztásokhoz.</string>
     <string name="high_alarm_notification_name">Magas riasztás</string>
     <string name="http_error_429">Túl sok kérés!</string>
@@ -925,4 +924,116 @@ Mielőtt engedélyezné ezt a beállítást, először engedélyezze az \"Adás 
     <string name="aa_media_player_colored">Színes borító</string>
     <string name="aa_media_player_colored_summary_off">Fehér érték, trend és grafikon megjelenítése</string>
     <string name="aa_media_player_colored_summary_on">Színes érték, trend és grafikon megjelenítése</string>
+
+    <!-- v2.2 -->
+
+    <string name="alarm_general_settings_summary">Általános riasztási beállítások az összes riasztáshoz.</string>
+    <string name="alarm_cat_quiet_hours">Csendes órák</string>
+    <string name="source_delay_too_short">Az új érték régebbi, mint az intervallum. Ha ez gyakran előfordul, menjen a források - Felhőszolgáltatások menüpontba, és növelje a késleltetést!</string>
+
+    <string name="health_connect_permission_rationale_title">Health Connect integráció</string>
+    <string name="health_connect_permission_rationale_long">
+A cukorbetegség kezelésének megkönnyítése érdekében a GlucoDataHandler megoszthatja a vércukoradatait a Health Connect szolgáltatással.\n\n
+Ez lehetővé teszi, hogy: \n
+  - Biztonságosan tárolja a glükózértékeit egy központi helyen az eszközén.\n
+  - Megossza glükózadatait más, Ön által engedélyezett egészségügyi és fitneszalkalmazásokkal, így teljesebb képet kaphat az egészségi állapotáról.\n\n
+A GlucoDataHandler csak vércukoradatokat ír a Health Connectbe, és nem olvas más típusú egészségügyi adatokat, hacsak Ön erre külön engedélyt nem ad.\n\n
+Ezeket az engedélyeket bármikor kezelheti a Health Connect alkalmazás beállításaiban.
+</string>
+    <string name="pref_healthconnect">Health Connect</string>
+    <string name="pref_healthconnect_summary">Az adatok Health Connect szolgáltatással való megosztásához adjon engedélyt a GDH-nak.\nA Samsung Health alkalmazással való szinkronizáláshoz engedélyeznie kell a "leolvasás a Health Connectből" opciót is a Samsung Health alkalmazásban.</string>
+    <string name="health_connect_error">Hiba történt, kérjük, küldje el a naplókat a fejlesztőnek.</string>
+    <string name="health_connect_not_available">Nem elérhető!</string>
+    <string name="health_connect_no_permission">Hiányzó engedély!</string>
+    <string name="select_patient_title">Páciens kiválasztása</string>
+    <string name="invalid_glucose_value">Érvénytelen glükózérték: %1$s!</string>
+    <string name="missing_data">Hiányzó adatok!</string>
+    <string name="timeout">Időtúllépés!</string>
+    <string name="internal_error">Belső hiba!</string>
+    <string name="provide_logs">Kérjük, küldje el a naplókat a fejlesztőnek.</string>
+    <string name="invalid_user_id">Érvénytelen felhasználói azonosító érkezett!</string>
+    <string name="invalid_redirect">Érvénytelen átirányítás a válaszban!</string>
+    <string name="invalid_iob_value">Az IOB értelmezése nem sikerült!</string>
+    <string name="source_iob_notification">IOB értesítés</string>
+
+    <string name="pref_cat_logs">Naplók</string>
+    <string name="pref_cat_logs_summary">Naplózás konfigurálása és naplók fájlba mentése.</string>
+    <string name="pref_cat_log_to_db">Naplózás adatbázisba</string>
+    <string name="pref_log_to_db_summary">Figyelem: A naplók adatbázisba mentése befolyásolhatja a teljesítményt és az akkumulátor élettartamát.\nKérjük, csak akkor engedélyezze ezt a lehetőséget, ha a fejlesztő erre utasítja egy probléma elemzéséhez.</string>
+    <string name="pref_log_duration_size">Napló megőrzési időszak</string>
+    <string name="pref_log_duration_summary">A naplók adatbázisban tartásának órákban megadott száma.\nÁllítsa 0-ra az adatbázisba való naplózás letiltásához.</string>
+    <string name="pref_log_debug">Hibakeresési naplózás engedélyezése</string>
+    <string name="pref_log_debug_summary">Részletes hibakeresési üzenetek adatbázisba mentésének engedélyezése (max. az utolsó 30 perc).\nCsak akkor engedélyezze, ha a fejlesztő kéri.</string>
+
+    <string name="pref_switch_xdrip_server">Helyi webszerver</string>
+    <string name="pref_switch_xdrip_server_summary">Lehetővé teszi az xDrip+-hoz tervezett óraszámlapok számára, hogy glükózadatokat fogadjanak ettől az alkalmazástól. Emulálja az xDrip+ webszerver funkcióját a 17580-as porton.</string>
+    <string name="pref_switch_xdrip_server_reduce_data">Egyszerűsített adat mód</string>
+    <string name="pref_switch_xdrip_server_reduce_data_summary">Ez a minimumra csökkenti a szolgáltatott adatokat, hogy megelőzze a memóriaproblémákat néhány Garmin órán.\nKérjük, ellenőrizze a kompatibilitást az óraszámlapjával.</string>
+    <string name="error_port_in_use">A port használatban van!\nKérjük, állítsa le az ezen a porton futó többi webszervert, és indítsa újra a helyi webszervert.</string>
+    <string name="state_active">aktív</string>
+    <string name="pref_garmin_info_summary">Nincs külön alkalmazás a Garmin, Fitbit vagy Pebble számára, csak egy helyi webszerver, amelyet az xDrip+ támogatással rendelkező óraszámlapok használnak.\nKeressen ilyen óraszámlapokat a Connect IQ Store-ban, és állítsa be az xDrip+ forrást ezekhez.\nFONTOS: ha Ön is használja az xDrip+-t vagy a Juggluco-t, a helyi webszervert csak egy alkalmazásban engedélyezheti, mivel ugyanazt a portot (17580) használják!</string>
+    <string name="remaining">Fennmaradó</string>
+    <string name="pref_switch_xdrip_open_server">Webszerver megnyitása</string>
+    <string name="pref_switch_xdrip_open_server_summary">Tegye a webszervert nyitottá a hálózat többi eszköze számára.\nEz biztonsági problémákat okozhat, ezért csak akkor engedélyezze, ha valóban szüksége van a webszerver adatainak hálózati elérésére.\nA Garmin óraszámlapok közvetlenül a telefonon kérik le az adatokat, így nincs szükség nyitott szerverre!</string>
+    <string name="last_request">Utolsó kérés</string>
+    <string name="close_activitiy">Képernyő bezárása</string>
+    <string name="collapse_view">Nézet összecsukása</string>
+    <string name="expand_view">Nézet kibontása</string>
+    <string name="patient_name_summary">A felhasználó/páciens neve, amelyet az értesítésekben, widgetekben stb. kell megjeleníteni.</string>
+    <string name="pref_switch_xdrip_server_1_minute_interval">1 perces intervallum</string>
+    <string name="pref_switch_xdrip_server_1_minute_interval_summary">Az értékek listájának visszaadása 1 perces intervallumban 5 perces helyett.\nKérjük, csak akkor engedélyezze ezt a beállítást, ha tudja, hogy az óraszámlap vagy a widget képes kezelni!\nA normál óraszámlapok 5 perces intervallum kezelésére vannak tervezve.</string>
+    <string name="short_value_patient_name">Glükóz és név</string>
+    <string name="pref_cat_general_advanced_summary">Speciális alkalmazásbeállítások.</string>
+    <string name="important">Fontos</string>
+    <string name="api_36_notification_info">Az Android 16-tól kezdve a rendszer több állapotsori ikont csoportosít.\nÍgy már nem lehetséges a használatuk.</string>
+    <string name="pref_source_juggluco_summary">Android alkalmazás a Freestyle Libre 1, 2 és 3, Dexcom G7/ONE+, Sibionics GS1Sb és AccuChek SmartGuide szenzorokhoz.</string>
+    <string name="pref_source_xdrip_summary">Androidos cukorbetegség-kezelő alkalmazás, amely különböző szenzorokhoz tud csatlakozni és különböző forrásokból, például a Medtronictól, adatokat fogadni.</string>
+    <string name="pref_source_aaps_summary">Az Android APS egy nyílt forráskódú, automatizált inzulinadagoló rendszer (zárt hurkú).</string>
+    <string name="pref_source_eversense_summary">Helyi broadcast üzenet fogadása az ESEL-től az Eversense-hez vagy a Dexcom BYODA-tól a Dexcom G6 szenzorokhoz.</string>
+    <string name="pref_source_diabox_summary">Android alkalmazás a Freestyle Libre szenzorokhoz.</string>
+    <string name="pref_source_libre_patched_summary">Módosított Libre alkalmazás, amely helyi broadcastokat küld.\nValamint más alkalmazások, amelyek ezt a broadcast formátumot használják a glükózadatok továbbítására.</string>
+    <string name="pref_source_xdrip_broadcast_service_api_info">xDrip+ Broadcast Service API</string>
+    <string name="pref_source_xdrip_broadcast_service_api_info_summary">Használja az xDrip+ Broadcast Service API-t adatok (IOB is) fogadására az xDrip+-ból.</string>
+    <string name="src_libreview_summary">FreeStyle Libre alkalmazás távoli követése.</string>
+    <string name="src_dexcom_share_summary">Dexcom alkalmazás távoli követése.</string>
+    <string name="src_medtrum_summary">Medtrum alkalmazás távoli követése.</string>
+    <string name="src_ns_summary">Nightscout webszolgáltatás távoli követése.</string>
+    <string name="pref_cat_wear_os_summary">Wear OS órákhoz, pl. az összes Google Pixel Watch, Samsung Galaxy Watch 4 és újabb, és sok más.</string>
+    <string name="pref_cat_watchdrip_summary">A külső WatchDrip+ alkalmazás által támogatott órákhoz, mint például a legtöbb MiBand és Amazfit modell.</string>
+    <string name="pref_cat_garminpebble">Garmin, Fitbit és Pebble okosórák</string>
+    <string name="pref_cat_garminpebble_summary">Olyan eszközökhöz és alkalmazásokhoz, amelyek glükózadatokat tudnak fogadni az xDrip+ webszolgáltatásból, mint például a Garmin, Pebble és néhány Fitbit óra.</string>
+    <string name="pref_garmin_watchfaces_summary">Nyomja meg itt a Connect IQ áruház megnyitásához az xDrip+ óraszámlapokhoz.\nHa az óraszámlapok támogatják az xDrip+-t, akkor kompatibilisnek kell lenniük ezzel az alkalmazással is.</string>
+    <string name="pref_garmin_watchfaces">Garmin</string>
+    <string name="pref_fitbit_watchfaces">Fitbit</string>
+    <string name="pref_fitbit_watchfaces_summary">Nyomja meg itt a Glance weboldal megnyitásához, amely támogatja az xDrip+ webszolgáltatásokat.</string>
+    <string name="pref_pebble_watchfaces">Pebble</string>
+    <string name="pref_pebble_watchfaces_summary">Nyomja meg itt az xDrip+-hoz tervezett Pebble óraszámlapok megnyitásához, amelyeknek kompatibilisnek kell lenniük ezzel az alkalmazással is.</string>
+    <string name="gmi">GMI</string>
+    <string name="pref_lockscreen_x_pos">Vízszintes pozíció</string>
+    <string name="pref_lockscreen_x_pos_summary">A kép vízszintes pozíciója:\n0 a kijelző bal széle\n40 a kijelző jobb széle</string>
+    <string name="notification_cat_iob_cob">IOB/COB érték olvasása</string>
+    <string name="notification_cat_glucose_summary">Glükózérték olvasása egy külső alkalmazás értesítéséből, amely megjeleníti a glükózértéket az értesítésben.</string>
+    <string name="notification_cat_iob_cob_summary">IOB és/vagy COB érték olvasása egy külső alkalmazás értesítéséből, amely megjeleníti ezeket az értékeket az értesítésben.</string>
+    <string name="source_notification_iob_enabled_summary">Engedélyezze ezt, ha az értesítés IOB értéket tartalmaz.</string>
+    <string name="source_notification_cob_enabled_summary">Engedélyezze ezt, ha az értesítés COB értéket tartalmaz.</string>
+    <string name="source_notification_iob_cob_irregular">Különleges kezelés</string>
+    <string name="source_notification_iob_cob_irregular_summary">Engedélyezze ezt a túl gyakran frissülő értesítésekhez. Ez biztosítja az összes érték megfelelő feldolgozását. Kérjük, csak akkor engedélyezze ezt a lehetőséget, ha a fejlesztő kéri egy probléma elemzéséhez.</string>
+    <string name="alarm_ignore_snooze_for_obsolete">Mindig riasszon az elavult értékeknél</string>
+    <string name="alarm_ignore_snooze_for_obsolete_summary">Ez a riasztás akkor is értesíti Önt, ha a szundi vagy az általános csendes óra aktív, biztosítva, hogy figyelmeztetést kapjon, ha nincs új glükózérték.</string>
+    <string name="alarm_inactive_auto_reenable">Automatikus újraengedélyezés</string>
+    <string name="alarm_inactive_auto_reenable_summary">A csendes óra letiltása után az a befejezési időpontban újra engedélyezésre kerül.</string>
+
+    <plurals name="minutes_long">
+        <item quantity="one">%d perc</item>
+        <item quantity="other">%d perc</item>
+    </plurals>
+    <plurals name="days_long">
+        <item quantity="one">%d nap</item>
+        <item quantity="other">%d nap</item>
+    </plurals>
+    <plurals name="hours_long">
+        <item quantity="one">%d óra</item>
+        <item quantity="other">%d óra</item>
+    </plurals>
+
 </resources>

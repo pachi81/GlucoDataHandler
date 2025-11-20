@@ -16,6 +16,7 @@
     <string name="menu_facebook" translatable="false">Facebook</string>
     <string name="menu_google_groups" translatable="false">Google Groups</string>
 
+    <string name="glucodataauto_link" translatable="false">https://github.com/pachi81/GlucoDataAuto/blob/main/README.md</string>
     <string name="help_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/wiki/Sensors</string>
     <string name="update_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/releases</string>
     <string name="support_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/issues</string>
@@ -337,7 +338,6 @@
 
     <!-- GlucoDataAuto -->
 
-    <string name="glucodataauto_link">https://github.com/pachi81/GlucoDataAuto/blob/main/README.md</string>
     <string name="gda_no_data">For using this app in Android Auto, you have to activate developer settings in Android Auto by clicking several times on the version. Then you have to enable \"Unknown sources\" in the developer settings menu.</string>
     <string name="pref_information">Information</string>
     <string name="pref_gda_info_summary">If you are using GlucoDataHandler as source, these settings will be overwritten from GlucoDataHandler, so you do not have to change them here.</string>
@@ -924,7 +924,7 @@
     <!-- v2.2 -->
 
     <string name="alarm_general_settings_summary">General alarm settings for all alarms.</string>
-    <string name="alarm_cat_quiet_hours">Quiet hours</string>
+    <string name="alarm_cat_quiet_hours">Quiet hour</string>
     <string name="source_delay_too_short">New value is older than the interval. If this happens more often, go to sources - Cloud services and increase delay!</string>
 
     <string name="health_connect_permission_rationale_title">Health Connect Integration</string>
@@ -1014,9 +1014,9 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="source_notification_iob_cob_irregular">Special Handling</string>
     <string name="source_notification_iob_cob_irregular_summary">Enable this for notifications that update too frequently. This ensures all values are processed correctly. Please only enable this option if requested by the developer to analyze an issue.</string>
     <string name="alarm_ignore_snooze_for_obsolete">Always alert for obsolete values</string>
-    <string name="alarm_ignore_snooze_for_obsolete_summary">This alarm will notify you even if snooze or the general quiet hours for all alarms are active, ensuring you are alerted, if there is no new glucose value.</string>
+    <string name="alarm_ignore_snooze_for_obsolete_summary">This alarm will notify you even if snooze or the general quiet hour for all alarms is active, ensuring you are alerted, if there is no new glucose value.</string>
     <string name="alarm_inactive_auto_reenable">Auto re-enable</string>
-    <string name="alarm_inactive_auto_reenable_summary">After disabling quiet hours, they will be re-enabled at the end time.</string>
+    <string name="alarm_inactive_auto_reenable_summary">After disabling quiet hour, it will be re-enabled at the end time.</string>
 
     <plurals name="minutes_long">
         <item quantity="one">%d minute</item>

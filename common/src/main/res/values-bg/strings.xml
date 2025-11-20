@@ -276,7 +276,6 @@
 
     <!-- GlucoDataAuto -->
 
-    <string name="glucodataauto_link">https://github.com/pachi81/GlucoDataAuto/blob/main/README.md</string>
     <string name="gda_no_data">За да използвате това приложение в Android Auto, трябва да активирате настройките за разработчици в Android Auto, като щракнете няколко пъти върху версията. След това трябва да активирате \"Неизвестни източници\" в менюто с настройки за разработчици.</string>
     <string name="pref_information">Информация</string>
     <string name="pref_gda_info_summary">Ако използвате GlucoDataHandler като източник, тези настройки ще бъдат презаписани от GlucoDataHandler, така че не е нужно да ги променяте тук.</string>
@@ -861,4 +860,115 @@
     <string name="aa_media_player_colored">Цветна обложка</string>
     <string name="aa_media_player_colored_summary_off">Показване на бяла стойност, тенденция и графика</string>
     <string name="aa_media_player_colored_summary_on">Показване на цветна стойност, тенденция и графика</string>
+
+    <!-- v2.2 -->
+
+    <string name="alarm_general_settings_summary">Общи настройки за всички аларми.</string>
+    <string name="alarm_cat_quiet_hours">Тихи часове</string>
+    <string name="source_delay_too_short">Новата стойност е по-стара от интервала. Ако това се случва често, отидете на източници - Облачни услуги и увеличете забавянето!</string>
+
+    <string name="health_connect_permission_rationale_title">Интеграция с Health Connect</string>
+    <string name="health_connect_permission_rationale_long">
+За да ви помогне да управлявате диабета си, GlucoDataHandler може да споделя данните ви за кръвната захар с Health Connect.\n\n
+Това ви позволява да: \n
+  - Съхранявате сигурно измерванията на глюкозата си на едно централно място на вашето устройство.\n
+  - Споделяте данните си за глюкозата с други приложения за здраве и фитнес, които упълномощите, като по този начин получавате по-пълна картина на вашето здраве.\n\n
+GlucoDataHandler само записва данни за кръвната захар в Health Connect и няма да чете други видове здравни данни, освен ако изрично не предоставите отделни разрешения за тях.\n\n
+Можете да управлявате тези разрешения по всяко време в настройките на приложението Health Connect.
+</string>
+    <string name="pref_healthconnect">Health Connect</string>
+    <string name="pref_healthconnect_summary">За да споделяте данните си с Health Connect, дайте разрешение на GDH.\nЗа да синхронизирате със Samsung Health, трябва също да активирате "четене от Health Connect" в приложението Samsung Health.</string>
+    <string name="health_connect_error">Възникна грешка, моля, изпратете логовете на разработчика.</string>
+    <string name="health_connect_not_available">Не е налично!</string>
+    <string name="health_connect_no_permission">Липсва разрешение!</string>
+    <string name="select_patient_title">Избор на пациент</string>
+    <string name="invalid_glucose_value">Невалидна стойност на глюкозата %1$s!</string>
+    <string name="missing_data">Липсват данни!</string>
+    <string name="timeout">Времето изтече!</string>
+    <string name="internal_error">Вътрешна грешка!</string>
+    <string name="provide_logs">Моля, изпратете логовете на разработчика.</string>
+    <string name="invalid_user_id">Получен е невалиден потребителски ID!</string>
+    <string name="invalid_redirect">Невалидно пренасочване в отговора!</string>
+    <string name="invalid_iob_value">Неуспешно анализиране на IOB!</string>
+    <string name="source_iob_notification">IOB известие</string>
+
+    <string name="pref_cat_logs">Логове</string>
+    <string name="pref_cat_logs_summary">Конфигуриране на регистрирането и запазване на логове във файл.</string>
+    <string name="pref_cat_log_to_db">Записване в базата данни</string>
+    <string name="pref_log_to_db_summary">Внимание: Запазването на логове в базата данни може да повлияе на производителността и живота на батерията.\nМоля, активирайте тази опция само по указание на разработчика, за да помогнете за анализиране на проблем.</string>
+    <string name="pref_log_duration_size">Период на съхранение на логовете</string>
+    <string name="pref_log_duration_summary">Брой часове за съхранение на логове в базата данни.\nЗадайте 0, за да деактивирате записването в базата данни.</string>
+    <string name="pref_log_debug">Активиране на дебъг логове</string>
+    <string name="pref_log_debug_summary">Активиране на запазването на подробни дебъг съобщения в базата данни (макс. последните 30 минути).\nАктивирайте това само ако е поискано от разработчика.</string>
+
+    <string name="pref_switch_xdrip_server">Локален уеб сървър</string>
+    <string name="pref_switch_xdrip_server_summary">Позволява на циферблати за часовници, предназначени за xDrip+, да получават данни за глюкозата от това приложение. Емулира функцията на уеб сървъра на xDrip+ на порт 17580.</string>
+    <string name="pref_switch_xdrip_server_reduce_data">Режим на опростени данни</string>
+    <string name="pref_switch_xdrip_server_reduce_data_summary">Това ще намали предоставените данни до минимум, за да се предотвратят проблеми с паметта на някои часовници Garmin.\nМоля, проверете съвместимостта с вашия циферблат.</string>
+    <string name="error_port_in_use">Портът е в употреба!\nМоля, спрете другия уеб сървър, работещ на този порт, и рестартирайте локалния уеб сървър отново.</string>
+    <string name="state_active">активен</string>
+    <string name="pref_garmin_info_summary">Няма специално приложение за Garmin, Fitbit или Pebble, а само локален уеб сървър, който се използва от циферблати с поддръжка на xDrip+.\nПросто потърсете такива циферблати в Connect IQ Store и настройте източника на xDrip+ за тях.\nВАЖНО: ако използвате също xDrip+ или Juggluco, можете да активирате локалния уеб сървър само в едно приложение, тъй като те използват един и същ порт (17580)!</string>
+    <string name="remaining">Оставащи</string>
+    <string name="pref_switch_xdrip_open_server">Отворен уеб сървър</string>
+    <string name="pref_switch_xdrip_open_server_summary">Направете уеб сървъра отворен за други устройства в мрежата.\nТова може да причини проблеми със сигурността, така че го активирайте само ако наистина трябва да достъпвате данните на уеб сървъра от мрежата.\nЦиферблатите на Garmin изискват данни директно от телефона, така че не е необходим отворен сървър!</string>
+    <string name="last_request">Последна заявка</string>
+    <string name="close_activitiy">Затвори екрана</string>
+    <string name="collapse_view">Свиване на изгледа</string>
+    <string name="expand_view">Разширяване на изгледа</string>
+    <string name="patient_name_summary">Име на потребителя/пациента, което да се показва в известия, джаджи и т.н.</string>
+    <string name="pref_switch_xdrip_server_1_minute_interval">Интервал от 1 минута</string>
+    <string name="pref_switch_xdrip_server_1_minute_interval_summary">Връщане на списък със стойности на интервал от 1 минута вместо 5 минути.\nМоля, активирайте тази настройка само ако знаете, че циферблатът или джаджата могат да се справят с това!\nНормалните циферблати са създадени да работят с 5-минутен интервал.</string>
+    <string name="short_value_patient_name">Глюкоза и име</string>
+    <string name="pref_cat_general_advanced_summary">Разширени настройки на приложението.</string>
+    <string name="important">Важно</string>
+    <string name="api_36_notification_info">Започвайки с Android 16, множество икони в лентата на състоянието се групират от Android.\nТака че вече не е възможно да се използват.</string>
+    <string name="pref_source_juggluco_summary">Приложение за Android за сензори Freestyle Libre 1, 2 и 3, Dexcom G7/ONE+, Sibionics GS1Sb и AccuChek SmartGuide.</string>
+    <string name="pref_source_xdrip_summary">Приложение за управление на диабет за Android, което може да се свързва с различни сензори и да получава данни от различни източници, като Medtronic.</string>
+    <string name="pref_source_aaps_summary">Android APS е система за автоматизирано доставяне на инсулин с отворен код (затворен цикъл).</string>
+    <string name="pref_source_eversense_summary">Получаване на локално broadcast съобщение от ESEL за Eversense или Dexcom BYODA за сензори Dexcom G6.</string>
+    <string name="pref_source_diabox_summary">Приложение за Android за сензори Freestyle Libre.</string>
+    <string name="pref_source_libre_patched_summary">Пачнато приложение Libre, изпращащо локални broadcast-и.\nСъщо и други приложения, използващи този broadcast формат за препращане на данни за глюкозата.</string>
+    <string name="pref_source_xdrip_broadcast_service_api_info">xDrip+ Broadcast Service API</string>
+    <string name="pref_source_xdrip_broadcast_service_api_info_summary">Използвайте xDrip+ Broadcast Service API, за да получавате данни (също и IOB) от xDrip+.</string>
+    <string name="src_libreview_summary">Отдалечено следване на приложението FreeStyle Libre.</string>
+    <string name="src_dexcom_share_summary">Отдалечено следване на приложението Dexcom.</string>
+    <string name="src_medtrum_summary">Отдалечено следване на приложението Medtrum.</string>
+    <string name="src_ns_summary">Отдалечено следване на уеб услугата Nightscout.</string>
+    <string name="pref_cat_wear_os_summary">За часовници с Wear OS, например всички Google Pixel Watches, Samsung Galaxy Watch 4 и по-нови, и много други.</string>
+    <string name="pref_cat_watchdrip_summary">За часовници, поддържани от външното приложение WatchDrip+, като повечето модели MiBand и Amazfit.</string>
+    <string name="pref_cat_garminpebble">Часовници Garmin, Fitbit и Pebble</string>
+    <string name="pref_cat_garminpebble_summary">За устройства и приложения, които могат да получават данни за глюкозата от уеб услугата на xDrip+, като Garmin, Pebble и някои часовници Fitbit.</string>
+    <string name="pref_garmin_watchfaces_summary">Натиснете тук, за да отворите магазина Connect IQ за циферблати на xDrip+.\nАко циферблатите поддържат xDrip+, те трябва да са съвместими и с това приложение.</string>
+    <string name="pref_garmin_watchfaces">Garmin</string>
+    <string name="pref_fitbit_watchfaces">Fitbit</string>
+    <string name="pref_fitbit_watchfaces_summary">Натиснете тук, за да отворите уеб страницата на Glance, която поддържа уеб услугите на xDrip+.</string>
+    <string name="pref_pebble_watchfaces">Pebble</string>
+    <string name="pref_pebble_watchfaces_summary">Натиснете тук, за да отворите циферблати на Pebble, предназначени за xDrip+, които също трябва да са съвместими с това приложение.</string>
+    <string name="gmi">GMI</string>
+    <string name="pref_lockscreen_x_pos">Хоризонтална позиция</string>
+    <string name="pref_lockscreen_x_pos_summary">Хоризонтална позиция на изображението:\n0 е лявата част на дисплея\n40 е дясната част на дисплея</string>
+    <string name="notification_cat_iob_cob">Четене на стойност на IOB/COB</string>
+    <string name="notification_cat_glucose_summary">Четене на стойността на глюкозата от известие на външно приложение, което показва стойността на глюкозата в известието.</string>
+    <string name="notification_cat_iob_cob_summary">Четене на стойността на IOB и/или COB от известие на външно приложение, което показва тези стойности в известието.</string>
+    <string name="source_notification_iob_enabled_summary">Активирайте това, ако известието съдържа стойност на IOB.</string>
+    <string name="source_notification_cob_enabled_summary">Активирайте това, ако известието съдържа стойност на COB.</string>
+    <string name="source_notification_iob_cob_irregular">Специална обработка</string>
+    <string name="source_notification_iob_cob_irregular_summary">Активирайте това за известия, които се актуализират твърде често. Това гарантира, че всички стойности се обработват правилно. Моля, активирайте тази опция само ако е поискано от разработчика за анализ на проблем.</string>
+    <string name="alarm_ignore_snooze_for_obsolete">Винаги предупреждавай за остарели стойности</string>
+    <string name="alarm_ignore_snooze_for_obsolete_summary">Тази аларма ще ви уведоми, дори ако отлагането или общите тихи часове за всички аларми са активни, като гарантира, че сте предупредени, ако няма нова стойност на глюкозата.</string>
+    <string name="alarm_inactive_auto_reenable">Автоматично повторно активиране</string>
+    <string name="alarm_inactive_auto_reenable_summary">След деактивиране на тихите часове, те ще бъдат повторно активирани в крайния час.</string>
+
+    <plurals name="minutes_long">
+        <item quantity="one">%d минута</item>
+        <item quantity="other">%d минути</item>
+    </plurals>
+    <plurals name="days_long">
+        <item quantity="one">%d ден</item>
+        <item quantity="other">%d дни</item>
+    </plurals>
+    <plurals name="hours_long">
+        <item quantity="one">%d час</item>
+        <item quantity="other">%d часа</item>
+    </plurals>
 </resources>

@@ -275,7 +275,6 @@
 
     <!-- GlucoDataAuto -->
 
-    <string name="glucodataauto_link">https://github.com/pachi81/GlucoDataAuto/blob/main/README.md</string>
     <string name="gda_no_data">Para usar este aplicativo no Android Auto, você deve ativar as configurações do desenvolvedor no Android Auto clicando várias vezes na versão. Então você deve ativar \"Fontes desconhecidas\" no menu de configurações do desenvolvedor.</string>
     <string name="pref_information">Informação</string>
     <string name="pref_gda_info_summary">Se você estiver usando GlucoDataHandler como fonte, essas configurações serão sobrescritas no GlucoDataHandler, portanto você não precisa alterá-las aqui.</string>
@@ -853,4 +852,115 @@
     <string name="aa_media_player_colored">Capa colorida</string>
     <string name="aa_media_player_colored_summary_off">Mostrar valor, tendência e gráfico em branco</string>
     <string name="aa_media_player_colored_summary_on">Mostrar valor, tendência e gráfico coloridos</string>
+
+    <!-- v2.2 -->
+
+    <string name="alarm_general_settings_summary">Definições gerais de alarme para todos os alarmes.</string>
+    <string name="alarm_cat_quiet_hours">Horas de silêncio</string>
+    <string name="source_delay_too_short">O novo valor é mais antigo que o intervalo. Se isto acontecer com mais frequência, vá a fontes - Serviços na nuvem e aumente o atraso!</string>
+
+    <string name="health_connect_permission_rationale_title">Integração com o Health Connect</string>
+    <string name="health_connect_permission_rationale_long">
+Para o ajudar a gerir a sua diabetes, o GlucoDataHandler pode partilhar os seus dados de glicemia com o Health Connect.\n\n
+Isto permite-lhe: \n
+  - Armazenar de forma segura as suas leituras de glicose num local central no seu dispositivo.\n
+  - Partilhar os seus dados de glicose com outras aplicações de saúde e fitness que autorize, dando-lhe uma visão mais completa da sua saúde.\n\n
+O GlucoDataHandler apenas escreve dados de glicemia no Health Connect e não lerá outros tipos de dados de saúde, a menos que conceda explicitamente permissões separadas para tal.\n\n
+Pode gerir estas permissões a qualquer momento nas definições da aplicação Health Connect.
+</string>
+    <string name="pref_healthconnect">Health Connect</string>
+    <string name="pref_healthconnect_summary">Para partilhar os seus dados com o Health Connect, conceda permissão ao GDH.\nPara sincronizar com o Samsung Health, tem de ativar também a opção "ler do Health Connect" na aplicação Samsung Health.</string>
+    <string name="health_connect_error">Ocorreu um erro, por favor envie os registos para o programador.</string>
+    <string name="health_connect_not_available">Não disponível!</string>
+    <string name="health_connect_no_permission">Permissão em falta!</string>
+    <string name="select_patient_title">Selecionar paciente</string>
+    <string name="invalid_glucose_value">Valor de glicose inválido %1$s!</string>
+    <string name="missing_data">Dados em falta!</string>
+    <string name="timeout">Tempo esgotado!</string>
+    <string name="internal_error">Erro interno!</string>
+    <string name="provide_logs">Por favor, envie os registos para o programador.</string>
+    <string name="invalid_user_id">ID de utilizador recebido inválido!</string>
+    <string name="invalid_redirect">Redirecionamento inválido na resposta!</string>
+    <string name="invalid_iob_value">Não foi possível analisar o IOB!</string>
+    <string name="source_iob_notification">Notificação de IOB</string>
+
+    <string name="pref_cat_logs">Registos</string>
+    <string name="pref_cat_logs_summary">Configurar registos e guardar registos num ficheiro.</string>
+    <string name="pref_cat_log_to_db">Registar na base de dados</string>
+    <string name="pref_log_to_db_summary">Aviso: Guardar registos na base de dados pode afetar o desempenho e a autonomia da bateria.\nPor favor, ative esta opção apenas quando instruído pelo programador para ajudar a analisar um problema.</string>
+    <string name="pref_log_duration_size">Período de retenção de registos</string>
+    <string name="pref_log_duration_summary">Número de horas para manter os registos na base de dados.\nDefina como 0 para desativar o registo na base de dados.</string>
+    <string name="pref_log_debug">Ativar registo de depuração</string>
+    <string name="pref_log_debug_summary">Ativar o armazenamento de mensagens de depuração detalhadas na base de dados (máx. últimos 30 minutos).\nAtive apenas se solicitado pelo programador.</string>
+
+    <string name="pref_switch_xdrip_server">Servidor web local</string>
+    <string name="pref_switch_xdrip_server_summary">Permite que os mostradores de relógio concebidos para o xDrip+ recebam dados de glicose desta aplicação. Emula a funcionalidade do servidor web do xDrip+ na porta 17580.</string>
+    <string name="pref_switch_xdrip_server_reduce_data">Modo de Dados Simplificado</string>
+    <string name="pref_switch_xdrip_server_reduce_data_summary">Isto irá reduzir os dados fornecidos ao mínimo para evitar problemas de memória em alguns relógios Garmin.\nPor favor, verifique a compatibilidade com o seu mostrador.</string>
+    <string name="error_port_in_use">A porta está em uso!\nPor favor, pare outro servidor web em execução nesta porta e reinicie o servidor web local.</string>
+    <string name="state_active">ativo</string>
+    <string name="pref_garmin_info_summary">Não existe uma aplicação dedicada para Garmin, Fitbit ou Pebble, apenas um servidor web local, que é utilizado por mostradores de relógio com suporte para xDrip+.\nBasta procurar esses mostradores na Connect IQ Store e configurar a fonte xDrip+ para eles.\nIMPORTANTE: se também utilizar o xDrip+ ou o Juggluco, só pode ativar o servidor web local numa única aplicação, uma vez que utilizam a mesma porta (17580)!</string>
+    <string name="remaining">Restante</string>
+    <string name="pref_switch_xdrip_open_server">Abrir servidor web</string>
+    <string name="pref_switch_xdrip_open_server_summary">Tornar o servidor web aberto para outros dispositivos na rede.\nIsto pode causar problemas de segurança, por isso, ative-o apenas se precisar realmente de aceder aos dados do servidor web a partir da rede.\nOs mostradores de relógio Garmin solicitam os dados diretamente no telemóvel, pelo que não é necessário um servidor aberto!</string>
+    <string name="last_request">Último pedido</string>
+    <string name="close_activitiy">Fechar ecrã</string>
+    <string name="collapse_view">Recolher vista</string>
+    <string name="expand_view">Expandir vista</string>
+    <string name="patient_name_summary">Nome do utilizador/paciente, que deve ser mostrado na notificação, widgets, etc.</string>
+    <string name="pref_switch_xdrip_server_1_minute_interval">Intervalo de 1 Minuto</string>
+    <string name="pref_switch_xdrip_server_1_minute_interval_summary">Devolver lista de valores em intervalos de 1 minuto em vez de 5 minutos.\nPor favor, ative esta definição apenas se souber que o mostrador ou widget consegue lidar com isso!\nOs mostradores normais são criados para lidar com intervalos de 5 minutos.</string>
+    <string name="short_value_patient_name">Glicose e nome</string>
+    <string name="pref_cat_general_advanced_summary">Definições avançadas da aplicação.</string>
+    <string name="important">Importante</string>
+    <string name="api_36_notification_info">A partir do Android 16, vários ícones da barra de estado são agrupados pelo Android.\nPor isso, já não é possível utilizá-los.</string>
+    <string name="pref_source_juggluco_summary">Aplicação Android para os sensores Freestyle Libre 1, 2 e 3, Dexcom G7/ONE+, Sibionics GS1Sb e AccuChek SmartGuide.</string>
+    <string name="pref_source_xdrip_summary">Aplicação Android de gestão da diabetes, que se pode ligar a diferentes sensores e receber dados de diferentes fontes, como a Medtronic.</string>
+    <string name="pref_source_aaps_summary">O Android APS é um sistema de administração automática de insulina de código aberto (circuito fechado).</string>
+    <string name="pref_source_eversense_summary">Receber mensagens de transmissão local do ESEL para o Eversense ou do Dexcom BYODA para os sensores Dexcom G6.</string>
+    <string name="pref_source_diabox_summary">Aplicação Android para os sensores Freestyle Libre.</string>
+    <string name="pref_source_libre_patched_summary">Aplicação Libre modificada que envia transmissões locais.\nTambém outras aplicações utilizam este formato de transmissão para reencaminhar dados de glicose.</string>
+    <string name="pref_source_xdrip_broadcast_service_api_info">API do Serviço de Transmissão do xDrip+</string>
+    <string name="pref_source_xdrip_broadcast_service_api_info_summary">Utilize a API do Serviço de Transmissão do xDrip+ para receber dados (também IOB) do xDrip+.</string>
+    <string name="src_libreview_summary">Seguir remotamente a aplicação FreeStyle Libre.</string>
+    <string name="src_dexcom_share_summary">Seguir remotamente a aplicação Dexcom.</string>
+    <string name="src_medtrum_summary">Seguir remotamente a aplicação Medtrum.</string>
+    <string name="src_ns_summary">Seguir remotamente o serviço web Nightscout.</string>
+    <string name="pref_cat_wear_os_summary">Para relógios Wear OS, por exemplo, todos os Google Pixel Watches, Samsung Galaxy Watch 4 e mais recentes, e muitos outros.</string>
+    <string name="pref_cat_watchdrip_summary">Para relógios suportados pela aplicação externa WatchDrip+, como a maioria dos modelos MiBand e Amazfit.</string>
+    <string name="pref_cat_garminpebble">Relógios Garmin, Fitbit e Pebble</string>
+    <string name="pref_cat_garminpebble_summary">Para dispositivos e aplicações que podem receber dados de glicose do serviço web do xDrip+, como Garmin, Pebble e alguns relógios Fitbit.</string>
+    <string name="pref_garmin_watchfaces_summary">Prima aqui para abrir a loja Connect IQ para os mostradores de relógio do xDrip+.\nSe os mostradores suportarem o xDrip+, também deverão ser compatíveis com esta aplicação.</string>
+    <string name="pref_garmin_watchfaces">Garmin</string>
+    <string name="pref_fitbit_watchfaces">Fitbit</string>
+    <string name="pref_fitbit_watchfaces_summary">Prima aqui para abrir a página web da Glance, que suporta os serviços web do xDrip+.</string>
+    <string name="pref_pebble_watchfaces">Pebble</string>
+    <string name="pref_pebble_watchfaces_summary">Prima aqui para abrir os mostradores de relógio Pebble concebidos para o xDrip+, que também deverão ser compatíveis com esta aplicação.</string>
+    <string name="gmi">GMI</string>
+    <string name="pref_lockscreen_x_pos">Posição horizontal</string>
+    <string name="pref_lockscreen_x_pos_summary">Posição horizontal da imagem:\n0 é a esquerda do ecrã\n40 é a direita do ecrã</string>
+    <string name="notification_cat_iob_cob">Ler valor de IOB/COB</string>
+    <string name="notification_cat_glucose_summary">Ler o valor da glicose a partir de uma notificação de uma aplicação externa, que mostra o valor da glicose na notificação.</string>
+    <string name="notification_cat_iob_cob_summary">Ler o valor de IOB e/ou COB a partir de uma notificação de uma aplicação externa, que mostra estes valores na notificação.</string>
+    <string name="source_notification_iob_enabled_summary">Ative esta opção se a notificação contiver o valor de IOB.</string>
+    <string name="source_notification_cob_enabled_summary">Ative esta opção se a notificação contiver o valor de COB.</string>
+    <string name="source_notification_iob_cob_irregular">Manuseamento Especial</string>
+    <string name="source_notification_iob_cob_irregular_summary">Ative esta opção para notificações que se atualizam com demasiada frequência. Isto garante que todos os valores são processados corretamente. Ative esta opção apenas se solicitado pelo programador para analisar um problema.</string>
+    <string name="alarm_ignore_snooze_for_obsolete">Alertar sempre para valores obsoletos</string>
+    <string name="alarm_ignore_snooze_for_obsolete_summary">Este alarme irá notificá-lo mesmo que a opção de adiamento ou a hora de silêncio geral para todos os alarmes esteja ativa, garantindo que é alertado se não houver um novo valor de glicose.</string>
+    <string name="alarm_inactive_auto_reenable">Reativar automaticamente</string>
+    <string name="alarm_inactive_auto_reenable_summary">Depois de desativar a hora de silêncio, esta será reativada à hora de fim.</string>
+
+    <plurals name="minutes_long">
+        <item quantity="one">%d minuto</item>
+        <item quantity="other">%d minutos</item>
+    </plurals>
+    <plurals name="days_long">
+        <item quantity="one">%d dia</item>
+        <item quantity="other">%d dias</item>
+    </plurals>
+    <plurals name="hours_long">
+        <item quantity="one">%d hora</item>
+        <item quantity="other">%d horas</item>
+    </plurals>
 </resources>
