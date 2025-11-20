@@ -9,6 +9,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.Icon
+import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
 import de.michelinside.glucodatahandler.common.utils.Log
@@ -210,13 +211,17 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
 
     private fun createNotificationRemoteView(context: Context, withGraph: Boolean): RemoteViews {
         val remoteViews = RemoteViews(GlucoDataService.context!!.packageName, R.layout.notification_layout)
-        if(GlucoDataService.patientName.isNullOrEmpty()) {
+        if((Build.VERSION.SDK_INT < Build.VERSION_CODES.S && !withGraph) || GlucoDataService.patientName.isNullOrEmpty()) {
             remoteViews.setViewVisibility(R.id.patient_name, View.GONE)
-            remoteViews.setViewLayoutWidth(R.id.glucose, if(ReceiveData.getGlucoseAsString().length <= 2) 50F else 55F, TypedValue.COMPLEX_UNIT_DIP)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                remoteViews.setViewLayoutWidth(R.id.glucose, if(ReceiveData.getGlucoseAsString().length <= 2) 50F else 55F, TypedValue.COMPLEX_UNIT_DIP)
+            }
         } else {
             remoteViews.setViewVisibility(R.id.patient_name, View.VISIBLE)
             remoteViews.setTextViewText(R.id.patient_name, GlucoDataService.patientName)
-            remoteViews.setViewLayoutWidth(R.id.glucose, 40F, TypedValue.COMPLEX_UNIT_DIP)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                remoteViews.setViewLayoutWidth(R.id.glucose, 40F, TypedValue.COMPLEX_UNIT_DIP)
+            }
         }
         remoteViews.setTextViewText(R.id.glucose, ReceiveData.getGlucoseAsString())
         remoteViews.setTextColor(R.id.glucose, ReceiveData.getGlucoseColor())

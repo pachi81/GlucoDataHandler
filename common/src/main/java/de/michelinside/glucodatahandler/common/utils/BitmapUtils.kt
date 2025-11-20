@@ -13,7 +13,6 @@ import android.graphics.Rect
 import android.graphics.Typeface
 import android.graphics.drawable.Icon
 import android.hardware.display.DisplayManager
-import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.View
 import androidx.window.layout.WindowMetricsCalculator
 import de.michelinside.glucodatahandler.common.Constants
@@ -29,13 +28,13 @@ object BitmapUtils {
 
     fun getDisplayManager(context: Context): DisplayManager? {
         if(displayManager == null)
-            displayManager = context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager?
+            displayManager = context.applicationContext.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager?
         return displayManager
     }
 
     fun getScreenWidth(context: Context): Int {
         try {
-            val metrics = WindowMetricsCalculator.getOrCreate().computeCurrentWindowMetrics(context)
+            val metrics = WindowMetricsCalculator.getOrCreate().computeCurrentWindowMetrics(context.applicationContext)
             return metrics.bounds.width()
         } catch (e: Exception) {
             Log.e(LOG_ID, "Error in getScreenWidth", e)
@@ -45,7 +44,7 @@ object BitmapUtils {
 
     fun getScreenHeight(context: Context): Int {
         try {
-            val metrics = WindowMetricsCalculator.getOrCreate().computeCurrentWindowMetrics(context)
+            val metrics = WindowMetricsCalculator.getOrCreate().computeCurrentWindowMetrics(context.applicationContext)
             return metrics.bounds.height()
         } catch (e: Exception) {
             Log.e(LOG_ID, "Error in getScreenHeight", e)
@@ -353,7 +352,7 @@ object BitmapUtils {
             )
         val canvas = Canvas(bitmap)
         if(targetBitmap != null)  // clear target bitmap
-            canvas.drawColor(Color.TRANSPARENT, android.graphics.PorterDuff.Mode.CLEAR)
+            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
         view.layout(view.left, view.top, view.right, view.bottom)
         view.draw(canvas)
         return bitmap
