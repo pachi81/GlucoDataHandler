@@ -906,34 +906,34 @@ Tieto povolenia môžete kedykoľvek spravovať v nastaveniach aplikácie Health
     <string name="pref_garmin_info_summary">Pre Garmin alebo Pebble neexistuje žiadna špeciálna aplikácia, len lokálny webový server, ktorý sa používa pre ciferníky s podporou xDrip+.\nStačí vyhľadať takéto ciferníky v obchode Connect IQ Store a nastaviť zdroj xDrip+ pre tieto ciferníky.\nDÔLEŽITÉ: ak používate aj xDrip+ alebo Juggluco, lokálny webový server môžete aktivovať len v jednej aplikácii, pretože používajú rovnaký port (17580)!</string>
     <string name="remaining">Zostáva</string>
     <string name="pref_switch_xdrip_open_server">Otvoriť webový server</string>
-    <string name="pref_switch_xdrip_open_server_summary">Sprístupní webový server pre ostatné zariadenia v sieti.\nMôže to spôsobiť bezpečnostné problémy, preto túto možnosť povoľte, len ak naozaj potrebujete pristupovať k údajom webového servera zo siete.\nCiferníky Garmin si vyžadujú údaje priamo v telefóne, takže otvorený server nie je potrebný!</string>
+    <string name="pref_switch_xdrip_open_server_summary">Sprístupniť webový server pre ostatné zariadenia v sieti.\nMôže to spôsobiť bezpečnostné problémy, preto túto možnosť povoľte, len ak naozaj potrebujete pristupovať k údajom webového servera zo siete.\nCiferníky Garmin si vyžadujú údaje priamo v telefóne, takže otvorený server nie je potrebný!</string>
     <string name="last_request">Posledná požiadavka</string>
     <string name="close_activitiy">Zavrieť obrazovku</string>
     <string name="collapse_view">Zbaliť zobrazenie</string>
     <string name="expand_view">Rozbaliť zobrazenie</string>
-    <string name="patient_name_summary">Meno používateľa/pacienta, ktoré sa má zobraziť v upozorneniach, widgetoch atď.</string>
-    <string name="pref_switch_xdrip_server_1_minute_interval">1-minútový interval</string>
-    <string name="pref_switch_xdrip_server_1_minute_interval_summary">Vráti zoznam hodnôt v 1-minútovom intervale namiesto 5-minútového.\nTúto možnosť povoľte, len ak viete, že ciferník alebo widget to zvládne!\nBežné ciferníky sú vytvorené na spracovanie 5-minútového intervalu.</string>
+    <string name="patient_name_summary">Meno používateľa/pacienta, ktoré sa má zobraziť v upozorneniach, miniaplikáciách, atď.</string>
+    <string name="pref_switch_xdrip_server_1_minute_interval">Minútový interval</string>
+    <string name="pref_switch_xdrip_server_1_minute_interval_summary">Vráti zoznam hodnôt v minútovom intervale namiesto 5 minútového.\nTúto možnosť povoľte, len ak viete, že ciferník alebo miniaplikácia to zvládne!\nBežné ciferníky sú vytvorené tak, aby zvládali 5-minútové intervaly.</string>
     <string name="short_value_patient_name">Glukóza a meno</string>
     <string name="pref_cat_general_advanced_summary">Rozšírené nastavenia aplikácie.</string>
     <string name="important">Dôležité</string>
-    <string name="api_36_notification_info">Od Androidu 16 sú viaceré ikony v stavovom riadku zoskupené Androidom.\nPreto ich už nie je možné používať.</string>
+    <string name="api_36_notification_info">Počínajúc Androidom 16 sú viaceré ikony stavového riadku zoskupené systémom Android.\nPreto ich už nie je možné používať.</string>
     <string name="pref_source_juggluco_summary">Aplikácia pre Android pre senzory Freestyle Libre 1, 2 a 3, Dexcom G7/ONE+, Sibionics GS1Sb a AccuChek SmartGuide.</string>
-    <string name="pref_source_xdrip_summary">Aplikácia pre Android na správu cukrovky, ktorá sa dokáže pripojiť k rôznym senzorom a prijímať údaje z rôznych zdrojov, napríklad Medtronic.</string>
-    <string name="pref_source_aaps_summary">Android APS je open-source automatizovaný systém na podávanie inzulínu (uzavretá slučka).</string>
-    <string name="pref_source_eversense_summary">Prijímanie lokálnych broadcast správ z ESEL pre Eversense alebo z Dexcom BYODA pre senzory Dexcom G6.</string>
+    <string name="pref_source_xdrip_summary">Aplikácia pre Android na spravovanie cukrovky, ktorá sa dokáže pripojiť k rôznym senzorom a prijímať údaje z rôznych zdrojov, napríklad Medtronic.</string>
+    <string name="pref_source_aaps_summary">Android APS je automatizovaný systém podávania inzulínu s otvoreným zdrojovým kódom (uzavretý okruh).</string>
+    <string name="pref_source_eversense_summary">Prijímanie lokálne vysielaných správ z ESEL pre Eversense alebo z Dexcom BYODA pre senzory Dexcom G6.</string>
     <string name="pref_source_diabox_summary">Aplikácia pre Android pre senzory Freestyle Libre.</string>
-    <string name="pref_source_libre_patched_summary">Upravená aplikácia Libre, ktorá posiela lokálne broadcasty.\nAj iné aplikácie používajú tento formát na preposielanie údajov o glykémii.</string>
-    <string name="pref_source_xdrip_broadcast_service_api_info">xDrip+ Broadcast Service API</string>
-    <string name="pref_source_xdrip_broadcast_service_api_info_summary">Použite xDrip+ Broadcast Service API na príjem údajov (aj IOB) z xDrip+.</string>
+    <string name="pref_source_libre_patched_summary">Upravená aplikácia Libre, ktorá posiela lokálne vysielanie.\nAj iné aplikácie používajú tento formát na preposielanie údajov o glykémii.</string>
+    <string name="pref_source_xdrip_broadcast_service_api_info">Služba xDrip+ Broadcast Service API</string>
+    <string name="pref_source_xdrip_broadcast_service_api_info_summary">Použite službu xDrip+ Broadcast Service API na príjem údajov (aj IOB) z xDrip+.</string>
     <string name="src_libreview_summary">Vzdialene sledovať aplikáciu FreeStyle Libre.</string>
     <string name="src_dexcom_share_summary">Vzdialene sledovať aplikáciu Dexcom.</string>
     <string name="src_medtrum_summary">Vzdialene sledovať aplikáciu Medtrum.</string>
     <string name="src_ns_summary">Vzdialene sledovať webovú službu Nightscout.</string>
-    <string name="pref_cat_wear_os_summary">Pre hodinky s Wear OS, napr. všetky Google Pixel Watches, Samsung Galaxy Watch 4 a novšie a mnohé ďalšie.</string>
+    <string name="pref_cat_wear_os_summary">Pre hodinky s Wear OS, napr. všetky hodinky Google Pixel, hodinky Samsung Galaxy Watch 4 a novšie a mnohé ďalšie.</string>
     <string name="pref_cat_watchdrip_summary">Pre hodinky podporované externou aplikáciou WatchDrip+, ako napríklad väčšina modelov MiBand a Amazfit.</string>
     <string name="pref_cat_garminpebble">Hodinky Garmin, Fitbit a Pebble</string>
-    <string name="pref_cat_garminpebble_summary">Pre zariadenia a aplikácie, ktoré môžu prijímať údaje o glykémii z webovej služby xDrip+, ako sú hodinky Garmin, Pebble a niektoré Fitbit.</string>
+    <string name="pref_cat_garminpebble_summary">Pre zariadenia a aplikácie, ktoré môžu prijímať údaje o glykémii z webovej služby xDrip+, ako sú hodinky Garmin, Pebble a niektoré hodinky Fitbit.</string>
     <string name="pref_garmin_watchfaces_summary">Stlačte tu pre otvorenie obchodu Connect IQ pre ciferníky xDrip+.\nAk ciferníky podporujú xDrip+, mali by byť kompatibilné aj s touto aplikáciou.</string>
     <string name="pref_garmin_watchfaces">Garmin</string>
     <string name="pref_fitbit_watchfaces">Fitbit</string>
@@ -949,11 +949,11 @@ Tieto povolenia môžete kedykoľvek spravovať v nastaveniach aplikácie Health
     <string name="source_notification_iob_enabled_summary">Povoľte túto možnosť, ak upozornenie obsahuje hodnotu IOB.</string>
     <string name="source_notification_cob_enabled_summary">Povoľte túto možnosť, ak upozornenie obsahuje hodnotu COB.</string>
     <string name="source_notification_iob_cob_irregular">Špeciálne spracovanie</string>
-    <string name="source_notification_iob_cob_irregular_summary">Povoľte túto možnosť pre upozornenia, ktoré sa aktualizujú príliš často. Tým sa zabezpečí správne spracovanie všetkých hodnôt. Túto možnosť povoľte, len ak vás o to požiada vývojár na analýzu problému.</string>
-    <string name="alarm_ignore_snooze_for_obsolete">Vždy upozorniť na zastarané hodnoty</string>
+    <string name="source_notification_iob_cob_irregular_summary">Povoľte túto možnosť pre upozornenia, ktoré sa aktualizujú príliš často. Tým sa zabezpečí správne spracovanie všetkých hodnôt. Túto možnosť prosím povoľte, len ak vás o to požiada vývojár na analýzu problému.</string>
+    <string name="alarm_ignore_snooze_for_obsolete">Vždy upozorniť na neplatné hodnoty</string>
     <string name="alarm_ignore_snooze_for_obsolete_summary">Tento alarm vás upozorní aj vtedy, ak je aktívne odloženie alebo všeobecný tichý režim pre všetky alarmy, čím sa zabezpečí, že budete upozornení, ak nie je k dispozícii žiadna nová hodnota glykémie.</string>
     <string name="alarm_inactive_auto_reenable">Automaticky znovu povoliť</string>
-    <string name="alarm_inactive_auto_reenable_summary">Po vypnutí tichého režimu sa na konci času opäť povolí.</string>
+    <string name="alarm_inactive_auto_reenable_summary">Po deaktivácii tichej doby sa táto funkcia opäť aktivuje po čase ukončenia.</string>
 
     <plurals name="minutes_long">
         <item quantity="one">%d minúta</item>
@@ -974,3 +974,4 @@ Tieto povolenia môžete kedykoľvek spravovať v nastaveniach aplikácie Health
         <item quantity="other">%d hodín</item>
     </plurals>
 </resources>
+
