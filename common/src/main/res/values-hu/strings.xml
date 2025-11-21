@@ -1036,4 +1036,5 @@ Ezeket az engedélyeket bármikor kezelheti a Health Connect alkalmazás beáll�
         <item quantity="other">%d óra</item>
     </plurals>
 
+    <string name="dexcom_server_down_error">Úgy tűnik, a Dexcom szerver leállt!\nNyomja meg itt a szerver állapotának ellenőrzéséhez.\nHa a Dexcom alkalmazás ugyanazon a telefonon van, használhatja helyette az Értesítésolvasót (Notification Reader).</string>
 </resources>

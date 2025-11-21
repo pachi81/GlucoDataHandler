@@ -971,4 +971,8 @@ GlucoDataHandler само записва данни за кръвната зах
         <item quantity="one">%d час</item>
         <item quantity="other">%d часа</item>
     </plurals>
+
+    <string name="dexcom_server_down_error">Сървърът на Dexcom изглежда не работи!\nНатиснете тук, за да проверите състоянието на сървъра.\nАко приложението Dexcom е на същия телефон, можете да използвате Четеца на известия (Notification Reader).</string>
+
+
 </resources>

@@ -969,4 +969,5 @@ Vous pouvez gérer ces autorisations à tout moment dans les paramètres de l\'a
         <item quantity="other">%d heures</item>
     </plurals>
 
+    <string name="dexcom_server_down_error">Le serveur Dexcom semble être en panne !\nAppuyez ici pour vérifier l\'état du serveur.\nSi l\'application Dexcom est sur le même téléphone, vous pouvez utiliser le Lecteur de notifications à la place.</string>
 </resources>

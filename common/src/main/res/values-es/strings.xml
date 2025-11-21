@@ -969,4 +969,5 @@ Puedes gestionar estos permisos en cualquier momento en la configuración de la 
         <item quantity="other">%d horas</item>
     </plurals>
 
+    <string name="dexcom_server_down_error">¡Parece que el servidor de Dexcom no funciona!\nPulse aquí para comprobar el estado del servidor.\nSi la aplicación Dexcom está en el mismo teléfono, puede usar el Lector de Notificaciones en su lugar.</string>
 </resources>

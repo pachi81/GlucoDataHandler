@@ -26,6 +26,7 @@
     <string name="dexcom_account_non_us_url" translatable="false">https://myaccount.dexcom.eu</string>
     <string name="dexcom_account_us_url" translatable="false">https://myaccount.dexcom.com</string>
     <string name="dexcom_account_jp_url" translatable="false">https://myaccount.dexcom.jp</string>
+    <string name="dexcom_server_status_url" translatable="false">https://status.dexcom.com</string>
     <string name="facebook_gdh_group_url" translatable="false">https://www.facebook.com/groups/823964236542396</string>
     <string name="google_gdh_group_url" translatable="false">https://groups.google.com/g/glucodatahandler</string>
     <string name="playstore_gdc_watchfaces" translatable="false">https://play.google.com/store/apps/dev?id=7197840107055554214</string>
@@ -1017,7 +1018,7 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="alarm_ignore_snooze_for_obsolete_summary">This alarm will notify you even if snooze or the general quiet hour for all alarms is active, ensuring you are alerted, if there is no new glucose value.</string>
     <string name="alarm_inactive_auto_reenable">Auto re-enable</string>
     <string name="alarm_inactive_auto_reenable_summary">After disabling quiet hour, it will be re-enabled at the end time.</string>
-
+    <string name="dexcom_server_down_error">Dexcom server seems to be down!\nPress here to check server status.\nIf the Dexcom app is on the same phone, you can use the Notification Reader instead.</string>
     <plurals name="minutes_long">
         <item quantity="one">%d minute</item>
         <item quantity="other">%d minutes</item>
@@ -1031,6 +1032,11 @@ You can manage these permissions at any time in the Health Connect app settings.
         <item quantity="other">%d hours</item>
     </plurals>
 
+
+    <!-- <string name="dexcom_server_down_error">Dexcom server seems to be down!\nPress here to check
+        server status.\nIf the Dexcom app is on the same phone, you can use the Notification Reader
+        instead.
+    </string> -->
 </resources>
 
 

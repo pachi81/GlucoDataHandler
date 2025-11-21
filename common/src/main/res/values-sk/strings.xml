@@ -973,5 +973,7 @@ Tieto povolenia môžete kedykoľvek spravovať v nastaveniach aplikácie Health
         <item quantity="many">%d hodín</item>
         <item quantity="other">%d hodín</item>
     </plurals>
+
+    <string name="dexcom_server_down_error">Zdá sa, že server Dexcom nefunguje!\nKliknutím sem skontrolujete stav servera.\nAk je aplikácia Dexcom na rovnakom telefóne, môžete namiesto toho použiť Čítačku upozornení (Notification Reader).</string>
 </resources>
 

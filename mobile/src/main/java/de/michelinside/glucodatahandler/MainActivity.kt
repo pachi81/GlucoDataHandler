@@ -822,27 +822,34 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     onClickListener
                 )
             )
-            if(SourceStateData.lastState == SourceState.ERROR) {
-                if(SourceStateData.lastSource == DataSource.DEXCOM_SHARE && msg.contains("500:")) {
+            if(SourceStateData.lastState == SourceState.ERROR && SourceStateData.lastSource == DataSource.DEXCOM_SHARE && msg.startsWith("50")) {
+                val resId: Int
+                val resUrlId: Int
+                if(msg.startsWith("500:")) {
                     val server = sharedPref.getString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "eu") ?: "eu"
-                    val browserIntent = Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse(resources.getString(DexcomShareSourceTask.getClarityUrlRes(server)))
-                    )
-                    val onClickListener = OnClickListener {
-                        try {
-                            startActivity(browserIntent)
-                        } catch (exc: Exception) {
-                            Log.e(LOG_ID, "Dexcom browse exception: " + exc.message.toString() )
-                        }
-                    }
-                    tableConnections.addView(
-                        createRow(
-                            resources.getString(DexcomShareSourceTask.getClarityUrlSummaryRes(server)),
-                            onClickListener
-                        )
-                    )
+                    resId = DexcomShareSourceTask.getClarityUrlSummaryRes(server)
+                    resUrlId = DexcomShareSourceTask.getClarityUrlRes(server)
+                } else {
+                    resId = CR.string.dexcom_server_down_error
+                    resUrlId = CR.string.dexcom_server_status_url
                 }
+                val browserIntent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(resources.getString(resUrlId))
+                )
+                val onClickListener = OnClickListener {
+                    try {
+                        startActivity(browserIntent)
+                    } catch (exc: Exception) {
+                        Log.e(LOG_ID, "Dexcom browse exception: " + exc.message.toString() )
+                    }
+                }
+                tableConnections.addView(
+                    createRow(
+                        resources.getString(resId),
+                        onClickListener
+                    )
+                )
             }
             if(SourceStateData.lastErrorInfo.isNotEmpty()) {
                 // add error specific information in an own row

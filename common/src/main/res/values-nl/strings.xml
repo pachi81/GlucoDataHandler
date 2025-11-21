@@ -972,4 +972,5 @@ U kunt deze toestemmingen op elk moment beheren in de instellingen van de Health
         <item quantity="other">%d uur</item>
     </plurals>
 
+    <string name="dexcom_server_down_error">De Dexcom-server lijkt offline te zijn!\nDruk hier om de serverstatus te controleren.\nAls de Dexcom-app op dezelfde telefoon staat, kun je in plaats daarvan de Notification Reader gebruiken.</string>
 </resources>

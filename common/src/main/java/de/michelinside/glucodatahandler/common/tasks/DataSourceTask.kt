@@ -364,8 +364,8 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     }
 
     open fun checkErrorResponse(code: Int, message: String?, errorResponse: String? = null) {
-        Log.d(LOG_ID, "checkErrorResponse: $code - $message - $errorResponse")
-        if (code in 400..499) {
+        Log.e(LOG_ID, "checkErrorResponse: $code - $message - $errorResponse")
+        if (code >= 400) {  // reset for client and server errors -> better re-connect
             reset() // reset token for client error -> trigger reconnect
             if(firstGetValue) {
                 retry = true
@@ -373,7 +373,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             }
         }
         var errorMessage = getErrorMessage(code, message)
-        if(errorResponse != null) {
+        if(errorResponse != null && !errorResponse.startsWith("<")) {  // not for HTML responses!
             errorMessage += "\n" + errorResponse
         }
         setLastError(errorMessage, code, getErrorInfo(code))

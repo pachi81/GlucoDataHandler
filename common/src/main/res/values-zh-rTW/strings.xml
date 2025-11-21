@@ -964,4 +964,5 @@ GlucoDataHandler 只會將血糖數據寫入健康連結，除非您明確授予
         <item quantity="other">%d 小時</item>
     </plurals>
 
+    <string name="dexcom_server_down_error">Dexcom 伺服器似乎已關閉！\n按此處檢查伺服器狀態。\n如果 Dexcom 應用程式在同一支手機上，您可以改用通知讀取器 (Notification Reader)。</string>
 </resources>

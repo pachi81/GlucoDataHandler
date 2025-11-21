@@ -960,4 +960,5 @@ Puoi gestire queste autorizzazioni in qualsiasi momento nelle impostazioni dell\
         <item quantity="other">%d ore</item>
     </plurals>
 
+    <string name="dexcom_server_down_error">Il server Dexcom sembra non essere disponibile!\nPremi qui per controllare lo stato del server.\nSe l\'app Dexcom è sullo stesso telefono, puoi utilizzare il Lettore Notifiche (Notification Reader).</string>
 </resources>

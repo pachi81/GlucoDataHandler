@@ -963,4 +963,5 @@ Sie können diese Berechtigungen jederzeit in den Health Connect App-Einstellung
         <item quantity="other">%d Stunden</item>
     </plurals>
 
+    <string name="dexcom_server_down_error">Der Dexcom-Server scheint offline zu sein!\nHier drücken, um den Serverstatus zu prüfen.\nWenn die Dexcom-App auf demselben Gerät installiert ist, kannst du stattdessen den Notification Reader verwenden.</string>
 </resources>

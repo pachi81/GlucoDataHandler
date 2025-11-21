@@ -963,4 +963,6 @@ Pode gerir estas permissões a qualquer momento nas definições da aplicação 
         <item quantity="one">%d hora</item>
         <item quantity="other">%d horas</item>
     </plurals>
+
+    <string name="dexcom_server_down_error">O servidor Dexcom parece estar fora do ar!\nToque aqui para verificar o status do servidor.\nSe o aplicativo Dexcom estiver no mesmo telefone, você pode usar o Leitor de Notificações.</string>
 </resources>

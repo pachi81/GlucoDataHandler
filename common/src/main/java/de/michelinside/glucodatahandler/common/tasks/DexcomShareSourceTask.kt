@@ -141,22 +141,16 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
 
     override fun checkErrorResponse(code: Int, message: String?, errorResponse: String?) {
         Log.e(LOG_ID, "Error $code received: $message - $errorResponse")
-        if (code == HttpURLConnection.HTTP_INTERNAL_ERROR && errorResponse != null) {
-            val obj = JSONObject(errorResponse)
-            val errCode: String = obj.optString("Code")
-            when(errCode) {
-                "SessionNotValid",
-                "SessionIdNotFound" -> {
-                    reset()
-                    if(firstGetValue) {
-                        retry = true
-                        return
-                    }
-                }
+        try {
+            if (code == HttpURLConnection.HTTP_INTERNAL_ERROR && errorResponse != null) {
+                val obj = JSONObject(errorResponse)
+                val errMessage: String = obj.optString("Message")
+                super.checkErrorResponse(code, errMessage, null)
+            } else {
+                super.checkErrorResponse(code, message, errorResponse)
             }
-            val errMessage: String = obj.optString("Message")
-            setLastError("${errCode}: $errMessage", code)
-        } else {
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Exception while parsing error response: " + exc.message + " - " + errorResponse)
             super.checkErrorResponse(code, message, errorResponse)
         }
     }
