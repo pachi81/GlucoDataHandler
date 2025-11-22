@@ -42,6 +42,7 @@ object dbAccess {
     private val migration_1_2 = object : androidx.room.migration.Migration(1, 2) {
         override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
             try {
+                Log.i(LOG_ID, "migration from 1 to 2")
                 db.execSQL("UPDATE glucose_values SET TIMESTAMP = ((TIMESTAMP / 1000) * 1000)")
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "migration exception: $exc")
@@ -50,10 +51,28 @@ object dbAccess {
         }
     }
 
-    private val migration_2_3 = object : androidx.room.migration.Migration(2, 3) {
+    private val migration_2_3 = object : androidx.room.migration.Migration(2, 4) {
         override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
-            // Correct CREATE TABLE statement matching the LogEntry entity exactly
-            db.execSQL("CREATE TABLE `log` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `priority` INTEGER NOT NULL, `tag` TEXT NOT NULL, `msg` TEXT NOT NULL, `forUser` INTEGER NOT NULL, `timestamp` INTEGER NOT NULL, `pid` INTEGER NOT NULL, `tid` INTEGER NOT NULL)")
+            try {
+                Log.i(LOG_ID, "migration from 2 to 4")
+                // Correct CREATE TABLE statement matching the LogEntry entity exactly
+                db.execSQL("CREATE TABLE `log` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `priority` INTEGER NOT NULL, `tag` TEXT NOT NULL, `msg` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `pid` INTEGER NOT NULL, `tid` INTEGER NOT NULL)")
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "migration exception: $exc")
+            }
+        }
+    }
+
+    private val migration_3_4 = object : androidx.room.migration.Migration(3, 4) {
+        override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+            try {
+                Log.i(LOG_ID, "migration from 3 to 4")
+                // Re-create table with new structure
+                db.execSQL("DROP TABLE IF EXISTS `log`")
+                db.execSQL("CREATE TABLE `log` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `priority` INTEGER NOT NULL, `tag` TEXT NOT NULL, `msg` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `pid` INTEGER NOT NULL, `tid` INTEGER NOT NULL)")
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "migration exception: $exc")
+            }
         }
     }
 
@@ -76,7 +95,7 @@ object dbAccess {
                 Database::class.java,
                 DATABASE_NAME
             )
-                .addMigrations(migration_1_2, migration_2_3)
+                .addMigrations(migration_1_2, migration_2_3, migration_3_4)
                 .build()
 
         } catch (exc: Exception) {

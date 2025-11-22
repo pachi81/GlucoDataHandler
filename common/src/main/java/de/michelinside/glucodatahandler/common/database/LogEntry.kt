@@ -8,7 +8,6 @@ class LogEntry (
     val priority: Int,
     val tag: String,
     val msg: String,
-    val forUser: Boolean = false,
     val timestamp: Long = System.currentTimeMillis(),
     val pid: Int = android.os.Process.myPid(),
     val tid: Int = android.os.Process.myTid(),
