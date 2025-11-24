@@ -361,7 +361,7 @@ A riasztások ettől függetlenül mindig megjelennek.</string>
     <string name="pref_cat_visualisation">Megjelenítés</string>
     <string name="pref_cat_watch">Órák</string>
     <string name="pref_cat_watch_summary">Beállítások a csatlakoztatott okosórákon történő megjelenítéshez.</string>
-    <string name="pref_cat_watchdrip">MiBand és Amazfit órák</string>
+    <string name="pref_cat_watchdrip">Mi Band, Smart Band és Amazfit órák</string>
     <string name="pref_cat_wear_os">Wear OS órák</string>
     <string name="pref_cat_widgets">Widgetek</string>
     <string name="pref_cat_widgets_summary">Beállítások a widgetekhez és a lebegő widgethez.</string>
@@ -562,7 +562,7 @@ FONTOS: Engedélyezze az \"Enable service\" lehetőséget a WatchDrip+-ban csak 
     <string name="pref_very_high_value_summary">Határérték a nagyon magas vércukorértékekhez.</string>
     <string name="pref_very_low_value">Nagyon alacsony vércukorérték</string>
     <string name="pref_very_low_value_summary">Határérték a nagyon alacsony vércukorértékekhez.</string>
-    <string name="pref_watchdrip_info_summary">A WatchDrip+ különböző MiBand és Amazfit modelleket támogat.
+    <string name="pref_watchdrip_info_summary">A WatchDrip+ különböző Mi Band, Xiaomi Smart Band és Amazfit modelleket támogat.
 Az összes támogatott óra listájához és a beállítási információkért kattintson ide.</string>
     <string name="pref_watchfaces_cat">Harmadik féltől származó számlapok</string>
     <string name="pref_watchfaces_default">Alapértelmezett</string>
@@ -999,7 +999,7 @@ Ezeket az engedélyeket bármikor kezelheti a Health Connect alkalmazás beáll�
     <string name="src_medtrum_summary">Medtrum alkalmazás távoli követése.</string>
     <string name="src_ns_summary">Nightscout webszolgáltatás távoli követése.</string>
     <string name="pref_cat_wear_os_summary">Wear OS órákhoz, pl. az összes Google Pixel Watch, Samsung Galaxy Watch 4 és újabb, és sok más.</string>
-    <string name="pref_cat_watchdrip_summary">A külső WatchDrip+ alkalmazás által támogatott órákhoz, mint például a legtöbb MiBand és Amazfit modell.</string>
+    <string name="pref_cat_watchdrip_summary">A külső WatchDrip+ alkalmazás által támogatott órákhoz, mint például a legtöbb Mi Band, Xiaomi Smart Band és Amazfit modell.</string>
     <string name="pref_cat_garminpebble">Garmin, Fitbit és Pebble okosórák</string>
     <string name="pref_cat_garminpebble_summary">Olyan eszközökhöz és alkalmazásokhoz, amelyek glükózadatokat tudnak fogadni az xDrip+ webszolgáltatásból, mint például a Garmin, Pebble és néhány Fitbit óra.</string>
     <string name="pref_garmin_watchfaces_summary">Nyomja meg itt a Connect IQ áruház megnyitásához az xDrip+ óraszámlapokhoz.\nHa az óraszámlapok támogatják az xDrip+-t, akkor kompatibilisnek kell lenniük ezzel az alkalmazással is.</string>

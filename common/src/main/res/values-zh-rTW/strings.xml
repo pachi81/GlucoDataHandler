@@ -454,7 +454,7 @@
     <string name="pref_cat_notification_summary">通知設定</string>
     <string name="pref_cat_locksreen_wallpaper_summary">取代鎖定螢幕桌布設定</string>
     <string name="pref_cat_android_auto_summary">用於 Android Auto 的 GlucoDataAuto 設定</string>
-    <string name="pref_cat_watchdrip">小米手環和 Amazfit 手錶</string>
+    <string name="pref_cat_watchdrip">小米手環和 Amazfit</string>
     <string name="pref_cat_wear_os">Wear OS 手錶</string>
     <string name="pref_cat_watch">手錶</string>
     <string name="pref_cat_watch_summary">智慧手錶連線設定</string>
@@ -465,7 +465,7 @@
     <string name="pref_wearos_info_summary">若要在 Wear OS 手錶使用 GlucoDataHandler，請從手錶的 Google Play 商店安裝</string>
     <string name="pref_wear_os_check_connection">檢查連線</string>
     <string name="pref_wear_os_check_connection_summary">按這裡重新檢查 Wear OS 連線\n在主畫面按一下連線資訊也可以檢查連線 (Wear OS 程式也適用)</string>!
-    <string name="pref_watchdrip_info_summary">WatchDrip+ 支援多款小米手環和 Amazfit 裝置\n若要取得完整的支援裝置清單及更多關於設定 WatchDrip+ 的資訊，請按這裡</string>
+    <string name="pref_watchdrip_info_summary">WatchDrip+ 支援多款小米手環 (Xiaomi Smart Band) 和 Amazfit 裝置\n若要取得完整的支援裝置清單及更多關於設定 WatchDrip+ 的資訊，請按這裡</string>
     <string name="alarm_vibrate_only_wear_info">只震動而不顯示通知的功能並非在所有裝置都能正確運作！</string>
     <string name="alarm_use_alarm_sound">使用鬧鐘音量</string>
     <string name="alarm_use_alarm_sound_summary">使用鬧鐘的音量大小而不是鈴聲的音量大小\n此選項不受震動模式的影響</string>
@@ -930,7 +930,7 @@ GlucoDataHandler 只會將血糖數據寫入健康連結，除非您明確授予
     <string name="src_medtrum_summary">遠端追蹤 Medtrum 應用程式。</string>
     <string name="src_ns_summary">遠端追蹤 Nightscout 網頁服務。</string>
     <string name="pref_cat_wear_os_summary">適用於 Wear OS 手錶，例如所有 Google Pixel Watch、Samsung Galaxy Watch 4 及更新版本，以及許多其他手錶。</string>
-    <string name="pref_cat_watchdrip_summary">適用於外部 WatchDrip+ 應用程式支援的手錶，例如大多數小米手環和 Amazfit 型號。</string>
+    <string name="pref_cat_watchdrip_summary">適用於外部 WatchDrip+ 應用程式支援的手錶，例如大多數小米手環 (Xiaomi Smart Band) 和 Amazfit 型號。</string>
     <string name="pref_cat_garminpebble">Garmin、Fitbit 和 Pebble 手錶</string>
     <string name="pref_cat_garminpebble_summary">適用於可從 xDrip+ 網頁服務接收血糖數據的裝置和應用程式，例如 Garmin、Pebble 和一些 Fitbit 手錶。</string>
     <string name="pref_garmin_watchfaces_summary">按此處打開 Connect IQ 商店以尋找 xDrip+ 錶盤。\n如果錶盤支援 xDrip+，它們也應該與此應用程式相容。</string>

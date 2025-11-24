@@ -454,7 +454,7 @@
     <string name="pref_cat_notification_summary">Настройки уведомлений.</string>
     <string name="pref_cat_locksreen_wallpaper_summary">Настройки для замены обоев экрана блокировки.</string>
     <string name="pref_cat_android_auto_summary">Настройки GlucoDataAuto для использования в Android Auto.</string>
-    <string name="pref_cat_watchdrip">Часы MiBand и Amazfit</string>
+    <string name="pref_cat_watchdrip">Часы Mi Band, Smart Band и Amazfit</string>
     <string name="pref_cat_wear_os">Часы Wear OS</string>
     <string name="pref_cat_watch">Часы</string>
     <string name="pref_cat_watch_summary">Настройки для подключенных умных часов.</string>
@@ -465,7 +465,7 @@
     <string name="pref_wearos_info_summary">Чтобы использовать GlucoDataHandler на часах Wear OS, установите его из Google Play Store на часы.</string>
     <string name="pref_wear_os_check_connection">Проверить соединение</string>
     <string name="pref_wear_os_check_connection_summary">Нажмите здесь, чтобы повторно проверить соединение с Wear OS.\nВы также можете запустить эту проверку, нажав на информацию о соединении на главном экране (даже в приложении Wear OS).</string>
-    <string name="pref_watchdrip_info_summary">WatchDrip+ поддерживает некоторые модели устройств MiBand и Amazfit.\nЧтобы получить полный список поддерживаемых устройств и дополнительную информацию о настройке WatchDrip+, нажмите здесь.</string>
+    <string name="pref_watchdrip_info_summary">WatchDrip+ поддерживает некоторые модели устройств Mi Band, Xiaomi Smart Band и Amazfit.\nЧтобы получить полный список поддерживаемых устройств и дополнительную информацию о настройке WatchDrip+, нажмите здесь.</string>
     <string name="alarm_vibrate_only_wear_info">Только вибрация без уведомления работает не на всех устройствах!</string>
     <string name="alarm_use_alarm_sound">Использовать звук будильника</string>
     <string name="alarm_use_alarm_sound_summary">Использовать громкость звука будильника вместо звука мелодии звонка.\nЭто может быть независимо от режима вибрации.</string>
@@ -932,7 +932,7 @@ GlucoDataHandler только записывает данные об уровн�
     <string name="src_medtrum_summary">Удаленное отслеживание приложения Medtrum.</string>
     <string name="src_ns_summary">Удаленное отслеживание веб-сервиса Nightscout.</string>
     <string name="pref_cat_wear_os_summary">Для часов на Wear OS, например, всех Google Pixel Watch, Samsung Galaxy Watch 4 и новее, и многих других.</string>
-    <string name="pref_cat_watchdrip_summary">Для часов, поддерживаемых внешним приложением WatchDrip+, таких как большинство моделей MiBand и Amazfit.</string>
+    <string name="pref_cat_watchdrip_summary">Для часов, поддерживаемых внешним приложением WatchDrip+, таких как большинство моделей Mi Band, Xiaomi Smart Band и Amazfit.</string>
     <string name="pref_cat_garminpebble">Часы Garmin, Fitbit и Pebble</string>
     <string name="pref_cat_garminpebble_summary">Для устройств и приложений, которые могут получать данные о глюкозе от веб-сервиса xDrip+, таких как Garmin, Pebble и некоторые часы Fitbit.</string>
     <string name="pref_garmin_watchfaces_summary">Нажмите здесь, чтобы открыть магазин Connect IQ для циферблатов xDrip+.\nЕсли циферблаты поддерживают xDrip+, они также должны быть совместимы с этим приложением.</string>

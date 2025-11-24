@@ -445,7 +445,7 @@
     <string name="pref_cat_notification_summary">Benachrichtigungseinstellung, wie das Icon und der Inhalt.</string>
     <string name="pref_cat_locksreen_wallpaper_summary">Einstellungen, um den Hintergrund auf dem Sperrbildschirm zu ändern.</string>
     <string name="pref_cat_android_auto_summary">Einstellungen für die Benutzung von GlucoDataAuto für die Anzeige in Android Auto.</string>
-    <string name="pref_cat_watchdrip">MiBand und Amazfit Uhren</string>
+    <string name="pref_cat_watchdrip">Mi Band, Smart Band und Amazfit Uhren</string>
     <string name="pref_cat_wear_os">Wear OS Uhren</string>
     <string name="pref_cat_watch">Uhren</string>
     <string name="pref_cat_watch_summary">Einstellungen für die Anzeige auf den verbundenen Uhren.</string>
@@ -456,7 +456,7 @@
     <string name="pref_wearos_info_summary" tools:ignore="Typos">Um GlucoDataHandler auf einer Wear OS Uhr zu verwenden, muss es aus dem Google Play Store auf der Uhr installiert werden.</string>
     <string name="pref_wear_os_check_connection">Verbindung prüfen</string>
     <string name="pref_wear_os_check_connection_summary">Hier drücken, um im Hintergrund die Verbindung zur Uhr zu Überprüfen.\nDas kann auch durch einen Klick auf die Verbindungsinformation auf der Startseite auf der Uhr und dem Telefon gestartet werden.</string>
-    <string name="pref_watchdrip_info_summary">WatchDrip+ unterstützt verschiedene MiBand und Amazfit Modelle.\nFür eine Liste aller unterstützten Uhren und Informationen über die Einrichtigung zu bekommen, bitte hier klicken.</string>
+    <string name="pref_watchdrip_info_summary">WatchDrip+ unterstützt verschiedene Mi Band, Xiaomi Smart Band und Amazfit Modelle.\nFür eine Liste aller unterstützten Uhren und Informationen über die Einrichtigung zu bekommen, bitte hier klicken.</string>
     <string name="alarm_vibrate_only_wear_info">Vibrieren ohne Benachrichtigung funktioniert nicht auf jeder Uhr!</string>
     <string name="alarm_use_alarm_sound">Wecker Lautstärke verwenden</string>
     <string name="alarm_use_alarm_sound_summary">Lautstärke vom Wecker anstatt vom Klingelton verwenden.\nJe nach Modell ist das unabhängig vom Vibrationsmodus!</string>
@@ -926,7 +926,7 @@ Sie können diese Berechtigungen jederzeit in den Health Connect App-Einstellung
     <string name="src_medtrum_summary">Medtrum App aus der Ferne folgen.</string>
     <string name="src_ns_summary">Nightscout Webdienst aus der Ferne folgen.</string>
     <string name="pref_cat_wear_os_summary">Für Wear OS-Uhren, z. B. alle Google Pixel Watches, Samsung Galaxy Watch 4 und neuere sowie viele andere.</string>
-    <string name="pref_cat_watchdrip_summary">Für Uhren, die von der externen WatchDrip+-App unterstützt werden, wie die meisten MiBand- und Amazfit-Modelle.</string>
+    <string name="pref_cat_watchdrip_summary">Für Uhren, die von der externen WatchDrip+-App unterstützt werden, wie die meisten Mi Band, Xiaomi Smart Band- und Amazfit-Modelle.</string>
     <string name="pref_cat_garminpebble">Garmin-, Fitbit- und Pebble-Uhren</string>
     <string name="pref_cat_garminpebble_summary">Für Geräte und Apps, die Glukosedaten vom xDrip+-Webdienst empfangen können, wie Garmin-, Pebble- und einige Fitbit-Uhren.</string>
     <string name="pref_garmin_watchfaces_summary">Hier drücken, um den Connect IQ Store für xDrip+-Zifferblätter zu öffnen.\nWenn die Zifferblätter xDrip+ unterstützen, sollten sie auch mit dieser App kompatibel sein.</string>

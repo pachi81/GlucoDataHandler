@@ -452,7 +452,7 @@
     <string name="pref_cat_notification_summary">Configurações de notificação.</string>
     <string name="pref_cat_locksreen_wallpaper_summary">Configurações para substituir o papel de parede da tela de bloqueio.</string>
     <string name="pref_cat_android_auto_summary">Configuração GlucoDataAuto para usar no Android Auto.</string>
-    <string name="pref_cat_watchdrip">Relógios MiBand e Amazfit</string>
+    <string name="pref_cat_watchdrip">Relógios Mi Band, Smart Band e Amazfit</string>
     <string name="pref_cat_wear_os">Relógios com Wear OS</string>
     <string name="pref_cat_watch">Relógio</string>
     <string name="pref_cat_watch_summary">Configurações para smartwatches conectados.</string>
@@ -463,7 +463,7 @@
     <string name="pref_wearos_info_summary">Para usar GlucoDataHandler em relógios Wear OS, instale-o via Google Play Store.</string>
     <string name="pref_wear_os_check_connection">Verifique a conexão</string>
     <string name="pref_wear_os_check_connection_summary">Pressione aqui para verificar novamente a conexão com o Wear OS.\nVocê também pode acionar essa verificação pressionando as informações de conexão na tela inicial (mesmo no app Wear OS).</string>
-    <string name="pref_watchdrip_info_summary">WatchDrip+ suporta vários dispositivos MiBand e Amazfit.\nPara obter uma lista completa de dispositivos suportados e mais informações sobre como configurar o WatchDrip+, clique aqui.</string>
+    <string name="pref_watchdrip_info_summary">WatchDrip+ suporta vários dispositivos Mi Band, Xiaomi Smart Band e Amazfit.\nPara obter uma lista completa de dispositivos suportados e mais informações sobre como configurar o WatchDrip+, clique aqui.</string>
     <string name="alarm_vibrate_only_wear_info">Vibrar apenas sem notificação não funciona em todos os dispositivos!</string>
     <string name="alarm_use_alarm_sound">Usar som de alarme</string>
     <string name="alarm_use_alarm_sound_summary">Use o volume do som do alarme em vez do som do toque.\nIsso pode ser independente do modo de vibração.</string>
@@ -927,7 +927,7 @@ Pode gerir estas permissões a qualquer momento nas definições da aplicação 
     <string name="src_medtrum_summary">Seguir remotamente a aplicação Medtrum.</string>
     <string name="src_ns_summary">Seguir remotamente o serviço web Nightscout.</string>
     <string name="pref_cat_wear_os_summary">Para relógios Wear OS, por exemplo, todos os Google Pixel Watches, Samsung Galaxy Watch 4 e mais recentes, e muitos outros.</string>
-    <string name="pref_cat_watchdrip_summary">Para relógios suportados pela aplicação externa WatchDrip+, como a maioria dos modelos MiBand e Amazfit.</string>
+    <string name="pref_cat_watchdrip_summary">Para relógios suportados pela aplicação externa WatchDrip+, como a maioria dos modelos Mi Band, Xiaomi Smart Band e Amazfit.</string>
     <string name="pref_cat_garminpebble">Relógios Garmin, Fitbit e Pebble</string>
     <string name="pref_cat_garminpebble_summary">Para dispositivos e aplicações que podem receber dados de glicose do serviço web do xDrip+, como Garmin, Pebble e alguns relógios Fitbit.</string>
     <string name="pref_garmin_watchfaces_summary">Prima aqui para abrir a loja Connect IQ para os mostradores de relógio do xDrip+.\nSe os mostradores suportarem o xDrip+, também deverão ser compatíveis com esta aplicação.</string>

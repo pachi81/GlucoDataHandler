@@ -453,7 +453,7 @@
     <string name="pref_cat_notification_summary">Nastavenia upozornení.</string>
     <string name="pref_cat_locksreen_wallpaper_summary">Nastavenia na nahradenie tapety uzamknutej obrazovky.</string>
     <string name="pref_cat_android_auto_summary">Nastavenie aplikácie GlucoDataAuto na použitie v systéme Android Auto.</string>
-    <string name="pref_cat_watchdrip">Hodinky MiBand a Amazfit</string>
+    <string name="pref_cat_watchdrip">Hodinky Mi Band, Smart Band a Amazfit</string>
     <string name="pref_cat_wear_os">Hodinky Wear OS</string>
     <string name="pref_cat_watch">Hodinky</string>
     <string name="pref_cat_watch_summary">Nastavenia pre pripojené inteligentné hodinky.</string>
@@ -464,7 +464,7 @@
     <string name="pref_wearos_info_summary">Ak chcete používať GlucoDataHandler na hodinkách Wear OS, prosím, nainštalujte si ho z obchodu Google Play Store na hodinkách.</string>
     <string name="pref_wear_os_check_connection">Skontrolovať pripojenie</string>
     <string name="pref_wear_os_check_connection_summary">Stlačte tu, aby ste znovu skontrolovali pripojenie k Wear OS.\nTúto kontrolu môžete spustiť aj stlačením informácií o pripojení na domovskej obrazovke (aj v aplikácii Wear OS).</string>
-    <string name="pref_watchdrip_info_summary">WatchDrip+ podporuje viacero zariadení MiBand a Amazfit.\nAk chcete získať kompletný zoznam podporovaných zariadení a ďalšie informácie o konfigurácii WatchDrip+, prosím, stlačte tu.</string>
+    <string name="pref_watchdrip_info_summary">WatchDrip+ podporuje viacero zariadení Mi Band, Xiaomi Smart Band a Amazfit.\nAk chcete získať kompletný zoznam podporovaných zariadení a ďalšie informácie o konfigurácii WatchDrip+, prosím, stlačte tu.</string>
     <string name="alarm_vibrate_only_wear_info">Vibrovať iba bez upozornenia nefunguje na každom zariadení!</string>
     <string name="alarm_use_alarm_sound">Použiť zvuk alarmu</string>
     <string name="alarm_use_alarm_sound_summary">Použiť hlasitosť zvuku alarmu namiesto zvuku zvonenia.\nToto môže byť nezávislé od režimu vibrácií.</string>
@@ -931,7 +931,7 @@ Tieto povolenia môžete kedykoľvek spravovať v nastaveniach aplikácie Health
     <string name="src_medtrum_summary">Vzdialene sledovať aplikáciu Medtrum.</string>
     <string name="src_ns_summary">Vzdialene sledovať webovú službu Nightscout.</string>
     <string name="pref_cat_wear_os_summary">Pre hodinky s Wear OS, napr. všetky hodinky Google Pixel, hodinky Samsung Galaxy Watch 4 a novšie a mnohé ďalšie.</string>
-    <string name="pref_cat_watchdrip_summary">Pre hodinky podporované externou aplikáciou WatchDrip+, ako napríklad väčšina modelov MiBand a Amazfit.</string>
+    <string name="pref_cat_watchdrip_summary">Pre hodinky podporované externou aplikáciou WatchDrip+, ako napríklad väčšina modelov Mi Band, Xiaomi Smart Band a Amazfit.</string>
     <string name="pref_cat_garminpebble">Hodinky Garmin, Fitbit a Pebble</string>
     <string name="pref_cat_garminpebble_summary">Pre zariadenia a aplikácie, ktoré môžu prijímať údaje o glykémii z webovej služby xDrip+, ako sú hodinky Garmin, Pebble a niektoré hodinky Fitbit.</string>
     <string name="pref_garmin_watchfaces_summary">Stlačte tu pre otvorenie obchodu Connect IQ pre ciferníky xDrip+.\nAk ciferníky podporujú xDrip+, mali by byť kompatibilné aj s touto aplikáciou.</string>

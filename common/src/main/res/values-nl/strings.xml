@@ -455,7 +455,7 @@
     <string name="pref_cat_notification_summary">Meldingsinstellingen.</string>
     <string name="pref_cat_locksreen_wallpaper_summary">Instellingen om de vergrendelschermachtergrond te vervangen.</string>
     <string name="pref_cat_android_auto_summary">Instelling voor GlucoDataAuto voor gebruik met Android Auto.</string>
-    <string name="pref_cat_watchdrip">MiBand en Amazfit horloges</string>
+    <string name="pref_cat_watchdrip">Mi Band, Smart Band en Amazfit horloges</string>
     <string name="pref_cat_wear_os">Wear OS horloges</string>
     <string name="pref_cat_watch">Horloge</string>
     <string name="pref_cat_watch_summary">Instellingen voor verbonden smartwatches.</string>
@@ -466,7 +466,7 @@
     <string name="pref_wearos_info_summary">Om GlucoDataHandler op Wear OS horloges te gebruiken, installeert u deze vanuit de Google Play Store op het horloge.</string>
     <string name="pref_wear_os_check_connection">Verbinding controleren</string>
     <string name="pref_wear_os_check_connection_summary">Druk hier om de verbinding met Wear OS opnieuw te controleren.\nU kunt deze controle ook activeren door op de verbindingsinfo op het startscherm te drukken (zelfs in de Wear OS app).</string>
-    <string name="pref_watchdrip_info_summary">WatchDrip+ ondersteunt verschillende MiBand en Amazfit apparaten.\nOm een volledige lijst met ondersteunde apparaten en meer informatie over het configureren van WatchDrip+ te krijgen, drukt u hier.</string>
+    <string name="pref_watchdrip_info_summary">WatchDrip+ ondersteunt verschillende Mi Band, Xiaomi Smart Band en Amazfit apparaten.\nOm een volledige lijst met ondersteunde apparaten en meer informatie over het configureren van WatchDrip+ te krijgen, drukt u hier.</string>
     <string name="alarm_vibrate_only_wear_info">Alleen trillen zonder melding werkt niet op elk apparaat!</string>
     <string name="alarm_use_alarm_sound">Gebruik alarmgeluid</string>
     <string name="alarm_use_alarm_sound_summary">Gebruik het volume van het alarmgeluid in plaats van het beltoon geluid.\nDit kan onafhankelijk zijn van de trilmodus.</string>
@@ -935,7 +935,7 @@ U kunt deze toestemmingen op elk moment beheren in de instellingen van de Health
     <string name="src_medtrum_summary">Volg de Medtrum-app op afstand.</string>
     <string name="src_ns_summary">Volg de Nightscout-webservice op afstand.</string>
     <string name="pref_cat_wear_os_summary">Voor Wear OS-horloges, bijv. alle Google Pixel Watches, Samsung Galaxy Watch 4 en nieuwer, en vele anderen.</string>
-    <string name="pref_cat_watchdrip_summary">Voor horloges die worden ondersteund door de externe WatchDrip+-app, zoals de meeste MiBand- en Amazfit-modellen.</string>
+    <string name="pref_cat_watchdrip_summary">Voor horloges die worden ondersteund door de externe WatchDrip+-app, zoals de meeste Mi Band, Xiaomi Smart Band- en Amazfit-modellen.</string>
     <string name="pref_cat_garminpebble">Zegarki Garmin, Fitbit i Pebble</string>
     <string name="pref_cat_garminpebble_summary">Voor apparaten en apps die glucosegegevens kunnen ontvangen van de xDrip+-webservice, zoals Garmin, Pebble en sommige Fitbit-horloges.</string>
     <string name="pref_garmin_watchfaces_summary">Druk hier om de Connect IQ-store te openen voor xDrip+-watchfaces.\nAls de watchfaces xDrip+ ondersteunen, moeten ze ook compatibel zijn met deze app.</string>
