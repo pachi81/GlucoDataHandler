@@ -936,7 +936,7 @@
     <string name="pref_fitbit_watchfaces_summary">Naciśnij tutaj, aby otworzyć stronę Glance, która obsługuje usługi sieciowe xDrip+.</string>
     <string name="pref_pebble_watchfaces">Pebble</string>
     <string name="pref_pebble_watchfaces_summary">Naciśnij tutaj, aby otworzyć tarcze zegarka Pebble zaprojektowane dla xDrip+, które powinny być również kompatybilne z tą aplikacją.</string>
-    <string name="gmi">Wskaźnik zarządzania poziomem glukozy (GMI)</string>
+    <string name="gmi">Wskaźnik GMI</string>
     <string name="pref_lockscreen_x_pos">Pozycja pozioma</string>
     <string name="pref_lockscreen_x_pos_summary">Pozioma pozycja obrazu: \n0 oznacza lewą stronę wyświetlacza \n40 oznacza prawą stronę wyświetlacza</string>
     <string name="notification_cat_iob_cob">Odczytuj wartość IOB/COB</string>
