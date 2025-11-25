@@ -565,7 +565,7 @@
     <string name="settings_read_succeeded">Ustawienia wczytane pomyślnie</string>
     <string name="settings_read_failed">Nie udało się wczytać ustawień!</string>
     <string name="pref_cat_export_import">Eksport / Import</string>
-    <string name="pref_cat_export_import_summary">Eksportuj lub importuj ustawienia i zapisuj logi.</string>
+    <string name="pref_cat_export_import_summary">Eksportuj lub importuj ustawienia.</string>
     <string name="pref_export_settings">Eksport</string>
     <string name="pref_export_settings_summary">Naciśnij tutaj, aby wyeksportować wszystkie ustawienia do pliku. \nUWAGA: spowoduje to wyeksportowanie tylko zmienionych ustawień! Ustawienia z wartościami domyślnymi nie będą częścią eksportu.</string>
     <string name="pref_import_settings">Import</string>

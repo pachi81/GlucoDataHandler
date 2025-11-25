@@ -563,7 +563,7 @@
     <string name="settings_read_succeeded">Nastavenia boli úspešne načítané</string>
     <string name="settings_read_failed">Zlyhalo načítanie nastavení!</string>
     <string name="pref_cat_export_import">Exportovanie / Importovanie</string>
-    <string name="pref_cat_export_import_summary">Exportovať alebo importovať nastavenia a ukladať záznamy.</string>
+    <string name="pref_cat_export_import_summary">Exportovať alebo importovať nastavenia.</string>
     <string name="pref_export_settings">Exportovať</string>
     <string name="pref_export_settings_summary">Stlačte tu, aby ste exportovali všetky nastavenia do súboru. \nDÔLEŽITÉ: exportujú sa len zmenené nastavenia! Nastavenia s predvolenými hodnotami nebudú súčasťou exportu.</string>
     <string name="pref_import_settings">Importovať</string>

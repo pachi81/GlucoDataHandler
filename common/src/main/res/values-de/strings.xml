@@ -558,7 +558,7 @@
     <string name="settings_read_succeeded">Einstellungen erfolgreich importiert!</string>
     <string name="settings_read_failed">Fehler beim Import!</string>
     <string name="pref_cat_export_import">Export / Import</string>
-    <string name="pref_cat_export_import_summary">Einstellungen ex- und importieren und Logs speichern.</string>
+    <string name="pref_cat_export_import_summary">Einstellungen ex- und importieren.</string>
     <string name="pref_export_settings">Export</string>
     <string name="pref_export_settings_summary">Hier drücken, um die Einstellungen in eine Datei zu exportieren.\nWICHTIG: es werden keine Standardeinstellungen exportiert, nur geänderte Einstellungen.</string>
     <string name="pref_import_settings">Import</string>

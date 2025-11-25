@@ -344,7 +344,7 @@ A riasztások ettől függetlenül mindig megjelennek.</string>
     <string name="pref_cat_banglejs">BangleJS órák</string>
     <string name="pref_cat_colors">Színek</string>
     <string name="pref_cat_export_import">Export / Import</string>
-    <string name="pref_cat_export_import_summary">Beállítások exportálása és importálása, valamint a naplók mentése.</string>
+    <string name="pref_cat_export_import_summary">Beállítások exportálása és importálása.</string>
     <string name="pref_cat_follower">Felhőszolgáltatások</string>
     <string name="pref_cat_follower_summary">Felhőszolgáltatások, amelyek az interneten keresztül biztosítják az adatokat, mint például a LibreLinkUp, a Dexcom Share és a Nightscout.</string>
     <string name="pref_cat_forward_broadcast">Vércukorértékek továbbítása</string>

@@ -567,7 +567,7 @@
     <string name="settings_read_succeeded">Configuración leída correctamente</string>
     <string name="settings_read_failed">Error al leer la configuración!</string>
     <string name="pref_cat_export_import">Exportar / Importar</string>
-    <string name="pref_cat_export_import_summary">Exportar o importar la configuración y guardar los registros.</string>
+    <string name="pref_cat_export_import_summary">Exportar o importar la configuración.</string>
     <string name="pref_export_settings">Exportar</string>
     <string name="pref_export_settings_summary">Pulse aquí para exportar toda la configuración a un archivo. \nIMPORTANTE: esto solo exportará la configuración modificada! La configuración con valores predeterminados no formará parte de la exportación.</string>
     <string name="pref_import_settings">Importar</string>

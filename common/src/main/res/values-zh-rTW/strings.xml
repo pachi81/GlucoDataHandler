@@ -564,7 +564,7 @@
     <string name="settings_read_succeeded">讀取設定成功</string>
     <string name="settings_read_failed">讀取設定失敗！</string>
     <string name="pref_cat_export_import">匯出 / 匯入</string>
-    <string name="pref_cat_export_import_summary">匯出或匯入設定並儲存記錄</string>
+    <string name="pref_cat_export_import_summary">匯出或匯入設定</string>
     <string name="pref_export_settings">匯出</string>
     <string name="pref_export_settings_summary">按這裡會將所有設定匯出為檔案\n重要: 只有修改過的設定才會儲存！與預設值相同的設定不會匯出</string>
     <string name="pref_import_settings">匯入</string>

@@ -567,7 +567,7 @@
     <string name="settings_read_succeeded">Paramètres lus avec succès</string>
     <string name="settings_read_failed">Échec de la lecture des paramètres !</string>
     <string name="pref_cat_export_import">Exporter / Importer</string>
-    <string name="pref_cat_export_import_summary">Exporter ou importer les paramètres et enregistrer les journaux.</string>
+    <string name="pref_cat_export_import_summary">Exporter ou importer les paramètres.</string>
     <string name="pref_export_settings">Exporter</string>
     <string name="pref_export_settings_summary">Appuyez ici pour exporter tous les paramètres vers un fichier. \nIMPORTANT : cela exportera uniquement les paramètres modifiés ! Les paramètres avec des valeurs par défaut ne feront pas partie de l\'exportation.</string>
     <string name="pref_import_settings">Importer</string>

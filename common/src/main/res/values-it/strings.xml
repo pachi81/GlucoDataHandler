@@ -560,7 +560,7 @@
     <string name="settings_read_succeeded">Impostazioni lette correttamente</string>
     <string name="settings_read_failed">Errore durante la lettura delle impostazioni!</string>
     <string name="pref_cat_export_import">Esporta / Importa</string>
-    <string name="pref_cat_export_import_summary">Esporta o importa impostazioni e salva i registri.</string>
+    <string name="pref_cat_export_import_summary">Esporta o importa impostazioni.</string>
     <string name="pref_export_settings">Esporta</string>
     <string name="pref_export_settings_summary">Premi qui per esportare tutte le impostazioni in un file. \nIMPORTANTE: questo esporterà solo le impostazioni modificate! Le impostazioni con valori predefiniti non faranno parte dell\'esportazione.</string>
     <string name="pref_import_settings">Importa</string>

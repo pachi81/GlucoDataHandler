@@ -565,7 +565,7 @@
     <string name="settings_read_succeeded">Instellingen succesvol gelezen</string>
     <string name="settings_read_failed">Instellingen lezen mislukt!</string>
     <string name="pref_cat_export_import">Exporteren / Importeren</string>
-    <string name="pref_cat_export_import_summary">Instellingen exporteren of importeren en logboeken opslaan.</string>
+    <string name="pref_cat_export_import_summary">Instellingen exporteren of importeren.</string>
     <string name="pref_export_settings">Exporteren</string>
     <string name="pref_export_settings_summary">Druk hier om alle instellingen naar een bestand te exporteren. \nBELANGRIJK: hiermee worden alleen gewijzigde instellingen geëxporteerd! Instellingen met standaardwaarden maken geen deel uit van de export.</string>
     <string name="pref_import_settings">Importeren</string>

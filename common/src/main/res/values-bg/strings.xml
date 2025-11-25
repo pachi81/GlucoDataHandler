@@ -563,7 +563,7 @@
     <string name="settings_read_succeeded">Настройките са прочетени успешно</string>
     <string name="settings_read_failed">Неуспешно четене на настройките!</string>
     <string name="pref_cat_export_import">Експортиране / Импортиране</string>
-    <string name="pref_cat_export_import_summary">Експортиране или импортиране на настройки и запазване на логове.</string>
+    <string name="pref_cat_export_import_summary">Експортиране или импортиране на настройки.</string>
     <string name="pref_export_settings">Експортиране</string>
     <string name="pref_export_settings_summary">Натиснете тук, за да експортирате всички настройки във файл. \nВАЖНО: това ще експортира само променените настройки! Настройките със стойности по подразбиране няма да бъдат част от експорта.</string>
     <string name="pref_import_settings">Импортиране</string>

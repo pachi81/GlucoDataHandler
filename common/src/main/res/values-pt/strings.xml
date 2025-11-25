@@ -563,7 +563,7 @@
     <string name="settings_read_succeeded">Configurações lidas com sucesso</string>
     <string name="settings_read_failed">Falha ao ler as configurações!</string>
     <string name="pref_cat_export_import">Exportar / Importar</string>
-    <string name="pref_cat_export_import_summary">Exportar ou importar configurações e salvar logs.</string>
+    <string name="pref_cat_export_import_summary">Exportar ou importar configurações.</string>
     <string name="pref_export_settings">Exportar</string>
     <string name="pref_export_settings_summary">Pressione aqui para exportar todas as configurações para um arquivo. \nIMPORTANTE: isso só exportará as configurações modificadas! As configurações com valores padrão não farão parte da exportação.</string>
     <string name="pref_import_settings">Importar</string>
