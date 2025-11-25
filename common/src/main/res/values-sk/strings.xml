@@ -137,9 +137,9 @@
     <string name="pref_high_value">Vysoká hladina glukózy</string>
     <string name="pref_high_value_summary">Hranica pre vysoké hodnoty glukózy.</string>
     <string name="pref_target_max_value">Cieľová horná hladina glukózy</string>
-    <string name="pref_target_max_value_summary">Maximálna hodnota pre cieľový rozsah.</string>
+    <string name="pref_target_max_value_summary">Maximálna hodnota pre cieľový rozsah glukózy.</string>
     <string name="pref_target_min_value">Cieľová spodná hladina glukózy</string>
-    <string name="pref_target_min_value_summary">Spodná hodnota cieľového rozsahu.</string>
+    <string name="pref_target_min_value_summary">Spodná hodnota cieľového rozsahu glukózy.</string>
     <string name="pref_very_low_value">Veľmi nízka hladina glukózy</string>
     <string name="pref_very_low_value_summary">Hranica pre veľmi nízke hodnoty glukózy.</string>
     <string name="pref_low_value">Nízka hladina glukózy</string>
@@ -345,7 +345,7 @@
 
     <string name="src_libre_setup_librelink">Chýbajú údaje! Najprv prijmite pozvánku v aplikácii LibreLinkUp!</string>
     <string name="prefstatus_bar_notification_colored_icon">Farebná ikona v stavovom riadku</string>
-    <string name="pref_status_bar_notification_colored_icon_summary">Ak vaše zariadenie podporuje farebné ikony v stavovom riadku, môžete ju tiež deaktivovať a použiť biele ikony.</string>
+    <string name="pref_status_bar_notification_colored_icon_summary">Ak vaše zariadenie podporuje farebné ikony v stavovom riadku. Môžete ju tiež deaktivovať a použiť biele ikony.</string>
 
     <string name="menu_alarms">Alarmy</string>
     <string name="alarm_interval">Interval</string>
@@ -362,13 +362,13 @@
     <string name="alarm_save_sound">Uložiť zvuk</string>
     <string name="alarm_save_sound_summary">Ťuknite sem, ak chcete uložiť predvolený zvuk alarmu do súboru vo vašom telefóne..</string>
     <string name="alarm_saved">Alarm uložený!</string>
-    <string name="snooze">Odložiť</string>
+    <string name="snooze">Odložiť na</string>
     <string name="alarm_cat_all">Všetky alarmy</string>
     <string name="alarm_notifications_enabled">Upozornenia alarmov</string>
     <string name="wear_alarm_notifications_enabled">Hodinky: Upozornenia alarmov</string>
     <string name="alarm_notifications_enabled_summary_on">Upozornenia alarmu sú aktívne na telefóne.\nPoznámka: alarmy používajú hlasitosť alarmu telefónu.</string>
     <string name="alarm_notifications_enabled_summary_off">Upozornenia alarmu nie sú v telefóne aktívne.</string>
-    <string name="stop_snooze">Zastaviť</string>
+    <string name="stop_snooze">Zrušiť odloženie</string>
     <string name="very_low_alarm_text">Veľmi nízka!</string>
     <string name="very_low_text">Nízka!</string>
     <string name="very_high_text">Vysoká!</string>
@@ -385,7 +385,7 @@
     <string name="test_alarm">Vyskúšať Alarm!</string>
     <string name="alarm_cat_categories">Kategórie alarmov</string>
     <string name="alarm_fullscreen_notification_enabled">Upozornenie na celej obrazovke</string>
-    <string name="alarm_fullscreen_notification_enabled_summary">Umožňuje zobrazenie upozornení na celej obrazovke na uzamknutej obrazovke.\nToto môže vyžadovať dodatočné povolenie.</string>
+    <string name="alarm_fullscreen_notification_enabled_summary">Umožňuje zobrazenie upozornení na celú obrazovku na uzamknutej obrazovke.\nToto môže vyžadovať dodatočné povolenie.</string>
     <string name="alarm_fullscreen_dismiss_keyguard">Zrušiť zámok klávesnice</string>
     <string name="alarm_fullscreen_dismiss_keyguard_summary">Prosím, povoľte toto nastavenie, ak máte problémy s upozornením na celej obrazovke.\nNa niektorých zariadeniach to spôsobí odomknutie obrazovky, keď sa spustí upozornenie na celej obrazovke.\nAk nemáte žiadne problémy, nepovoľte ho.</string>
     <string name="alarm_force_sound">Vynútiť zvuk alarmu</string>
@@ -421,8 +421,8 @@
     <string name="alarm_sound">Vybrať vlastný zvuk</string>
     <string name="alarm_sound_summary">Tiché - žiadny zvuk</string>
     <string name="alarm_use_custom_sound">Použiť vlastný zvuk</string>
-    <string name="alarm_use_custom_sound_summary_on">Použiť vlastný vybraný zvuk.</string>
-    <string name="alarm_use_custom_sound_summary_off">Použiť zvuk poskytovaný aplikáciou.</string>
+    <string name="alarm_use_custom_sound_summary_on">Používa sa vlastný vybraný zvuk.</string>
+    <string name="alarm_use_custom_sound_summary_off">Používa sa zvuk poskytovaný aplikáciou.</string>
     <string name="alarm_sound_delay">Oneskorenie zvuku</string>
     <string name="alarm_sound_delay_summary">Čas v sekundách pred prehratím zvuku.\nCelý čas bude vibrovať, aj keď nie je vybraný žiadny zvuk.</string>
     <string name="pref_cat_alarm_vibration_sound">Zvuk a vibrácie</string>
@@ -714,7 +714,7 @@
     <string name="snooze_90">90 minút</string>
     <string name="snooze_120">120 minút</string>
     <string name="alarm_snooze_on_notification_enabled">Odloženie upozornenia</string>
-    <string name="alarm_snooze_on_notification_summary">Vyberte až 3 dĺžky odloženia, ktoré sa zobrazia ako tlačidlá na upozornení alarmu.</string>
+    <string name="alarm_snooze_on_notification_summary">Vyberte až 4 dĺžky odloženia, ktoré sa zobrazia ako tlačidlá na upozornení alarmu.</string>
     <string name="pref_show_iob_cob">Zobraziť hodnoty IOB/COB</string>
     <string name="pref_show_iob_cob_summary">Zobraziť hodnoty IOB a COB, ak sú dostupné.</string>
 
