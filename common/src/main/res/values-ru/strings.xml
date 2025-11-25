@@ -75,7 +75,7 @@
     <string name="source_state_not_active">Не активен</string>
     <string name="source_state_in_progress">В процессе</string>
     <string name="source_state_ok">ОК</string>
-    <string name="source_state_no_new_value">Не приходят данные</string>
+    <string name="source_state_no_new_value">Нет данных!</string>
     <string name="source_state_no_connection">Нет интернет-соединения</string>
     <string name="source_state_error">Ошибка</string>
 
@@ -369,10 +369,10 @@
     <string name="alarm_notifications_enabled_summary_on">Уведомления о тревоге активированы.\nПримечание: сигналы тревоги используют громкость будильника телефона.</string>
     <string name="alarm_notifications_enabled_summary_off">Уведомления о тревоге отключены.</string>
     <string name="stop_snooze">Остановить</string>
-    <string name="very_low_alarm_text">Очень низкий!</string>
+    <string name="very_low_alarm_text">Оч. низкий!</string>
     <string name="very_low_text">Низкий!</string>
     <string name="very_high_text">Высокий!</string>
-    <string name="very_high_alarm_text">Очень высокий!</string>
+    <string name="very_high_alarm_text">Оч. высокий!</string>
     <string name="very_low_alarm_notification_name">Тревога: очень низкий уровень</string>
     <string name="very_low_alarm_notification_descr">Уведомление об очень низком уровне.</string>
     <string name="low_alarm_notification_name">Тревога: низкий уровень</string>
@@ -576,12 +576,12 @@
     <string name="alarm_rising_fast">быстрый рост</string>
     <string name="rising_fast_alarm_notification_name">Тревога: быстрый рост</string>
     <string name="alarm_rising_fast_summary">Сигнал тревоги, если значение глюкозы выше или равно %1$s, а дельта увеличивается как минимум на +%2$s для %3$d последовательных показаний.</string>
-    <string name="rising_fast_alarm_text">Быстрый рост!</string>
+    <string name="rising_fast_alarm_text">Растёт!</string>
 
     <string name="alarm_falling_fast">быстрое падение</string>
     <string name="falling_fast_alarm_notification_name">Тревога: быстрое падение</string>
     <string name="alarm_falling_fast_summary">Сигнал тревоги, если значение глюкозы ниже или равно %1$s, а дельта падает как минимум на -%2$s для %3$d последовательных показаний.</string>
-    <string name="falling_fast_alarm_text">Быстрое падение!</string>
+    <string name="falling_fast_alarm_text">Падает!</string>
     <string name="alarm_vibrate_amplitude">Интенсивность вибрации</string>
     <string name="alarm_vibrate_amplitude_summary">Интенсивность вибрации</string>
     <string name="pref_cat_alarm_settings">Настройки сигналов тревоги</string>
@@ -941,7 +941,7 @@ GlucoDataHandler только записывает данные об уровн�
     <string name="pref_fitbit_watchfaces_summary">Нажмите здесь, чтобы открыть веб-страницу Glance, которая поддерживает веб-сервисы xDrip+.</string>
     <string name="pref_pebble_watchfaces">Pebble</string>
     <string name="pref_pebble_watchfaces_summary">Нажмите здесь, чтобы открыть циферблаты Pebble, разработанные для xDrip+, которые также должны быть совместимы с этим приложением.</string>
-    <string name="gmi">GMI</string>
+    <string name="gmi">глик. гем-н</string>
     <string name="pref_lockscreen_x_pos">Горизонтальное положение</string>
     <string name="pref_lockscreen_x_pos_summary">Горизонтальное положение изображения:\n0 - левый край экрана\n40 - правый край экрана</string>
     <string name="notification_cat_iob_cob">Читать значение IOB/COB</string>
