@@ -714,7 +714,7 @@
     <string name="snooze_90">90 minút</string>
     <string name="snooze_120">120 minút</string>
     <string name="alarm_snooze_on_notification_enabled">Odloženie upozornenia</string>
-    <string name="alarm_snooze_on_notification_summary">Vyberte až 4 dĺžky odloženia, ktoré sa zobrazia ako tlačidlá na upozornení alarmu.</string>
+    <string name="alarm_snooze_on_notification_summary">Vyberte až 3 dĺžky odloženia, ktoré sa zobrazia ako tlačidlá na upozornení alarmu.</string>
     <string name="pref_show_iob_cob">Zobraziť hodnoty IOB/COB</string>
     <string name="pref_show_iob_cob_summary">Zobraziť hodnoty IOB a COB, ak sú dostupné.</string>
 
