@@ -261,9 +261,10 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
         fun resetDB() {
             try {
                 Log.w(LOG_ID, "reset database called!")
-                ReceiveData.reset(context!!)
                 dbAccess.deleteAllValues()
+                SourceStateData.reset()
                 GlucoseStatistics.reset()
+                ReceiveData.reset(context!!)
                 sendCommand(Command.CLEAN_UP_DB)
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "resetDB exception: " + exc.message.toString())

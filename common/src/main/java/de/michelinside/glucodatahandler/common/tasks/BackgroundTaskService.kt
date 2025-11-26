@@ -352,7 +352,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
             Log.d(LOG_ID, "OnNotifyData for source " + dataSource.toString())
             if (!isRunning()) {  // check only if for not already in execution
                 if(mutableSetOf(NotifySource.BROADCAST, NotifySource.MESSAGECLIENT).contains(dataSource))
-                    executeTasks()    // check for additional IOB - COB content or restart time
+                    executeTasks(ReceiveData.time == 0L)    // check for additional IOB - COB content or restart time
                 else
                     startTimer()  // check for restart
             }

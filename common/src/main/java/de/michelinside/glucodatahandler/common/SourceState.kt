@@ -62,6 +62,14 @@ object SourceStateData {
         }
         return context.getString(lastState.resId)
     }
+
+    fun reset() {
+        lastSource = DataSource.NONE
+        lastState = SourceState.NONE
+        lastError = ""
+        lastErrorInfo = ""
+        lastStateTime = 0
+    }
     /*
     fun getState(context: Context): String {
         if (lastState == SourceState.NONE)
