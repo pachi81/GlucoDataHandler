@@ -754,8 +754,6 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             sharedPref!!.registerOnSharedPreferenceChangeListener(this)
 
             patientName = sharedPref!!.getString(Constants.PATIENT_NAME, "")
-            if(BuildConfig.DEBUG && patientName.isNullOrEmpty())
-                patientName = "Wusel Dusel"
 
             TextToSpeechUtils.initTextToSpeech(this)
             created = true

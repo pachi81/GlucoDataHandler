@@ -90,10 +90,11 @@
                 android:layout_height="0dp"
                 android:layout_weight="4"
                 android:text="ALARM!"
+                android:gravity="center_vertical"
                 android:autoSizeMinTextSize="5sp"
                 android:autoSizeStepGranularity="1sp"
                 android:autoSizeTextType="uniform"
-                android:maxLines="1"
+                android:maxLines="2"
                 android:textColor="@color/text_color"
                 tools:ignore="HardcodedText,SpUsage" />
         </LinearLayout>
