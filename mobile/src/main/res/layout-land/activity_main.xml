@@ -42,6 +42,7 @@
                         android:gravity="center|start"
                         android:orientation="horizontal"
                         android:screenReaderFocusable="true"
+                        android:accessibilityLiveRegion="polite"
                         android:paddingHorizontal="10dp"
                         tools:ignore="UselessParent">
                         <TextView
