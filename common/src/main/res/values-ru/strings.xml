@@ -412,7 +412,7 @@
     <string name="obsolete_alarm_notification_name">Тревога: устаревшие данные</string>
     <string name="alarm_obsolete_summary">Сигнал тревоги, если новые значения глюкозы не приходят дольше %1$s минут.</string>
     <string name="obsolete_alarm_notification_descr">Это уведомление появится, если нет нового значения в течение интервала.</string>
-    <string name="obsolete_alarm_text">Не приходят данные!</string>
+    <string name="obsolete_alarm_text">Нет данных!</string>
 
     <string name="permission_notification_title">Отображение уведомлений отключено!!!</string>
     <string name="permission_notification_message">GlucoDataHandler нуждается в уведомлениях для выполнения задач в фоновом режиме и для отображения тревоги.</string>
