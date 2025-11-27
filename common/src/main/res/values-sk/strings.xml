@@ -759,7 +759,7 @@
 
     <string name="source_notification">Upozornenia</string>
     <string name="pref_source_notification">Čítačka upozornení (Beta)</string>
-    <string name="pref_source_notification_summary">Na prijímanie hodnôt glukózy a IOB z upozornení iných aplikácií, ako sú Dexcom, CamAPS FX a Omnipod 5.</string>
+    <string name="pref_source_notification_summary">Na prijímanie hodnôt glukózy a IOB/COB z upozornení iných aplikácií, ako sú Dexcom, CamAPS FX a Omnipod 5.</string>
     <string name="notification_reader_app">Aplikácia</string>
     <string name="notification_reader_app_summary">Vyberte aplikáciu, z ktorej sa má upozornenie prečítať.</string>
     <string name="notification_reader_enabled_summary_on">Čítačka upozornení je aktivovaná na spracovanie hodnôt z upozornení pre konkrétne aplikácie.</string>
@@ -772,7 +772,7 @@
     <string name="notification_reader_app_regex_summary">Regex na spracovanie hodnoty z textu v upozornení.\nZmeňte len v prípade, ak viete, čo robíte, alebo ak máte odporúčanie od vývojára.</string>
     <string name="notification_reader_five_minute_interval">5 minútový interval</string>
     <string name="notification_reader_five_minute_interval_summary">Niektoré aplikácie, ako napríklad Dexcom, aktualizujú svoje upozornenia pomerne často. Ak chcete ignorovať tieto aktualizácie s rovnakou hodnotou, povoľte 5-minútový interval.\nAk je táto funkcia povolená, nová hodnota sa zobrazí len každých 5 minút alebo v prípade, že sa hodnota v upozornení zmenila.</string>
-    <string name="pref_source_notification_info_summary">Na prijímanie hodnôt z upozornení iných aplikácií je potrebné povolenie na prístup k upozorneniam!\nUpozornenie musí obsahovať buď hodnotu glukózy, alebo IOB ako reťazec.\nKeďže každé upozornenie má iné rozloženie, nemusí fungovať s každou aplikáciou. V prípade problémov prosím ma kontaktujte so snímkou obrazovky s upozornenia a záznamami.</string>
+    <string name="pref_source_notification_info_summary">Na prijímanie hodnôt z upozornení iných aplikácií je potrebné povolenie na prístup k upozorneniam!\nUpozornenie musí obsahovať buď hodnotu glukózy, alebo IOB/COB ako reťazec.\nKeďže každé upozornenie má iné rozloženie, nemusí fungovať s každou aplikáciou. V prípade problémov prosím ma kontaktujte so snímkou obrazovky s upozornenia a záznamami.</string>
     <string name="sensor_age_label">Životnosť senzora</string>
     <string name="sensor_age_value">%1$dd %2$dh</string>
     <string name="vibrate_pattern_shorty">Shorty</string>

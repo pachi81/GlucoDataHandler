@@ -755,7 +755,7 @@
 
     <string name="source_notification">通知</string>
     <string name="pref_source_notification">通知讀取器 (Beta)</string>
-    <string name="pref_source_notification_summary">從其他應用程式（例如 Dexcom、CamAPS FX 和 Omnipod 5）的通知接收血糖值和 IOB。</string>
+    <string name="pref_source_notification_summary">從其他應用程式（例如 Dexcom、CamAPS FX 和 Omnipod 5）的通知接收血糖值、IOB 和 COB。</string>
     <string name="notification_reader_app">應用程式</string>
     <string name="notification_reader_app_summary">選擇要從哪個應用程式讀取通知。</string>
     <string name="notification_reader_enabled_summary_on">已啟用通知讀取器，以分析特定應用程式通知中的數值。</string>
@@ -768,7 +768,7 @@
     <string name="notification_reader_app_regex_summary">用於分析通知中文字數值的 Regex。\n請僅在您知道自己在做什麼或收到開發人員的建議時才進行變更。</string>
     <string name="notification_reader_five_minute_interval">5 分鐘間隔</string>
     <string name="notification_reader_five_minute_interval_summary">某些應用程式（例如 Dexcom）會相當頻繁地更新其通知。若要忽略具有相同數值的更新，請啟用 5 分鐘間隔。\n如果已啟用，則只會每 5 分鐘出現一個新數值，或當通知中的數值已變更時。</string>
-    <string name="pref_source_notification_info_summary">若要從其他應用程式的通知接收數值，需要有存取通知的權限！\n通知必須包含字串形式的血糖值或 IOB。\n由於每個通知都有不同的版面配置，因此可能無法與所有應用程式搭配使用。如果發生問題，請透過通知的螢幕截圖和記錄與我聯絡。</string>
+    <string name="pref_source_notification_info_summary">若要從其他應用程式的通知接收數值，需要有存取通知的權限！\n通知必須包含字串形式的血糖值、IOB 或 COB。\n由於每個通知都有不同的版面配置，因此可能無法與所有應用程式搭配使用。如果發生問題，請透過通知的螢幕截圖和記錄與我聯絡。</string>
     <string name="sensor_age_label">感測器使用時間</string>
     <string name="sensor_age_value">%1$d 天 %2$d 小時</string>
     <string name="vibrate_pattern_shorty">短</string>

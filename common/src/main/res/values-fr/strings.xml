@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="locale">fr</string>
     <string name="info_label_sensor_id">Capteur</string>
     <string name="info_label_value">Valeur</string>
@@ -757,7 +757,7 @@
 
     <string name="source_notification">Notification</string>
     <string name="pref_source_notification">Lecteur de notifications (Bêta)</string>
-    <string name="pref_source_notification_summary">Pour recevoir la valeur de glucose et l\'IOB à partir des notifications d\'autres applications, telles que Dexcom, CamAPS FX et Omnipod 5.</string>
+    <string name="pref_source_notification_summary">Pour recevoir la valeur de glucose et l\'IOB/COB à partir des notifications d\'autres applications, telles que Dexcom, CamAPS FX et Omnipod 5.</string>
     <string name="notification_reader_app">Application</string>
     <string name="notification_reader_app_summary">Sélectionnez une application à partir de laquelle la notification doit être lue.</string>
     <string name="notification_reader_enabled_summary_on">Le lecteur de notifications est activé pour analyser les valeurs des notifications pour des applications spécifiques.</string>
@@ -770,7 +770,7 @@
     <string name="notification_reader_app_regex_summary">Regex pour analyser la valeur du texte dans la notification.\nVeuillez modifier uniquement si vous savez ce que vous faites ou si vous obtenez un conseil du développeur.</string>
     <string name="notification_reader_five_minute_interval">Intervalle de 5 minutes</string>
     <string name="notification_reader_five_minute_interval_summary">Certaines applications, comme Dexcom, mettent à jour leurs notifications assez souvent. Pour ignorer ces mises à jour avec la même valeur, activez l\'intervalle de 5 minutes.\nSi activé, il n\'y aura une nouvelle valeur que toutes les 5 minutes ou si la valeur dans la notification a changé.</string>
-    <string name="pref_source_notification_info_summary">Pour recevoir des valeurs des notifications d\'autres applications, une autorisation d\'accès aux notifications est nécessaire !\nLa notification doit inclure la valeur de glucose ou l\'IOB sous forme de chaîne.\nComme chaque notification a une mise en page différente, elle peut ne pas fonctionner avec toutes les applications. En cas de problème, veuillez me contacter avec une capture d\'écran de la notification et les journaux.</string>
+    <string name="pref_source_notification_info_summary">Pour recevoir des valeurs des notifications d\'autres applications, une autorisation d\'accès aux notifications est nécessaire !\nLa notification doit inclure la valeur de glucose ou l\'IOB/COB sous forme de chaîne.\nComme chaque notification a une mise en page différente, elle peut ne pas fonctionner avec toutes les applications. En cas de problème, veuillez me contacter avec une capture d\'écran de la notification et les journaux.</string>
     <string name="sensor_age_label">Âge du capteur</string>
     <string name="sensor_age_value">%1$dj %2$dh</string>
     <string name="vibrate_pattern_shorty">Court</string>
@@ -956,15 +956,15 @@ Vous pouvez gérer ces autorisations à tout moment dans les paramètres de l\'a
     <string name="alarm_inactive_auto_reenable">Réactivation automatique</string>
     <string name="alarm_inactive_auto_reenable_summary">Après avoir désactivé les heures calmes, elles seront réactivées à l\'heure de fin.</string>
 
-    <plurals name="minutes_long">
+    <plurals name="minutes_long" tools:ignore="MissingQuantity">
         <item quantity="one">%d minute</item>
         <item quantity="other">%d minutes</item>
     </plurals>
-    <plurals name="days_long">
+    <plurals name="days_long" tools:ignore="MissingQuantity">
         <item quantity="one">%d jour</item>
         <item quantity="other">%d jours</item>
     </plurals>
-    <plurals name="hours_long">
+    <plurals name="hours_long" tools:ignore="MissingQuantity">
         <item quantity="one">%d heure</item>
         <item quantity="other">%d heures</item>
     </plurals>

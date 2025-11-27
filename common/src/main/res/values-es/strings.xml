@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="locale">es</string>
     <string name="info_label_sensor_id">Sensor</string>
     <string name="info_label_value">Valor</string>
@@ -756,7 +756,7 @@
 
     <string name="source_notification">Notificación</string>
     <string name="pref_source_notification">Lector de notificaciones (Beta)</string>
-    <string name="pref_source_notification_summary">Para recibir el valor de glucosa e IOB de notificaciones de otras aplicaciones, como Dexcom, CamAPS FX y Omnipod 5.</string>
+    <string name="pref_source_notification_summary">Para recibir el valor de glucosa e IOB/COB de notificaciones de otras aplicaciones, como Dexcom, CamAPS FX y Omnipod 5.</string>
     <string name="notification_reader_app">Aplicación</string>
     <string name="notification_reader_app_summary">Selecciona una aplicación, desde la cual se debe leer la notificación.</string>
     <string name="notification_reader_enabled_summary_on">El lector de notificaciones está habilitado para analizar valores de notificaciones para aplicaciones específicas.</string>
@@ -769,7 +769,7 @@
     <string name="notification_reader_app_regex_summary">Regex para analizar el valor del texto en la notificación.\nPor favor, solo cambia esto si sabes lo que estás haciendo o si recibes un consejo del desarrollador.</string>
     <string name="notification_reader_five_minute_interval">Intervalo de 5 minutos</string>
     <string name="notification_reader_five_minute_interval_summary">Algunas aplicaciones, como Dexcom, actualizan sus notificaciones con bastante frecuencia. Para ignorar estas actualizaciones con el mismo valor, habilita el intervalo de 5 minutos.\nSi está habilitado, solo habrá un nuevo valor cada 5 minutos o si el valor en la notificación ha cambiado.</string>
-    <string name="pref_source_notification_info_summary">Para recibir valores de notificaciones de otras aplicaciones, ¡se necesita un permiso para acceder a las notificaciones!\nLa notificación debe incluir el valor de glucosa o IOB como cadena.\nComo cada notificación tiene un diseño diferente, es posible que no funcione con todas las aplicaciones. En caso de problemas, por favor contáctame con una captura de pantalla de la notificación y los registros.</string>
+    <string name="pref_source_notification_info_summary">Para recibir valores de notificaciones de otras aplicaciones, ¡se necesita un permiso para acceder a las notificaciones!\nLa notificación debe incluir el valor de glucosa o IOB/COB como cadena.\nComo cada notificación tiene un diseño diferente, es posible que no funcione con todas las aplicaciones. En caso de problemas, por favor contáctame con una captura de pantalla de la notificación y los registros.</string>
     <string name="sensor_age_label">Antigüedad del sensor</string>
     <string name="sensor_age_value">%1$dd %2$dh</string>
     <string name="vibrate_pattern_shorty">Corto</string>
@@ -956,15 +956,15 @@ Puedes gestionar estos permisos en cualquier momento en la configuración de la 
     <string name="alarm_inactive_auto_reenable">Reactivación automática</string>
     <string name="alarm_inactive_auto_reenable_summary">Después de desactivar las horas de silencio, se reactivarán a la hora de finalización.</string>
 
-    <plurals name="minutes_long">
+    <plurals name="minutes_long" tools:ignore="MissingQuantity">
         <item quantity="one">%d minuto</item>
         <item quantity="other">%d minutos</item>
     </plurals>
-    <plurals name="days_long">
+    <plurals name="days_long" tools:ignore="MissingQuantity">
         <item quantity="one">%d día</item>
         <item quantity="other">%d días</item>
     </plurals>
-    <plurals name="hours_long">
+    <plurals name="hours_long" tools:ignore="MissingQuantity">
         <item quantity="one">%d hora</item>
         <item quantity="other">%d horas</item>
     </plurals>

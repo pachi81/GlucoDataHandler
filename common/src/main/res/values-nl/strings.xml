@@ -760,7 +760,7 @@
 
     <string name="source_notification">Melding</string>
     <string name="pref_source_notification">Meldingslezer (Bèta)</string>
-    <string name="pref_source_notification_summary">Om de glucosewaarde en IOB te ontvangen van meldingen van andere apps, zoals Dexcom, CamAPS FX en Omnipod 5.</string>
+    <string name="pref_source_notification_summary">Om de glucosewaarde en IOB/COB te ontvangen van meldingen van andere apps, zoals Dexcom, CamAPS FX en Omnipod 5.</string>
     <string name="notification_reader_app">Applicatie</string>
     <string name="notification_reader_app_summary">Selecteer een applicatie waarvan de melding moet worden gelezen.</string>
     <string name="notification_reader_enabled_summary_on">Meldingslezer is ingeschakeld om waarden te analyseren van meldingen voor specifieke applicaties.</string>
@@ -773,7 +773,7 @@
     <string name="notification_reader_app_regex_summary">Regex om de waarde uit de tekst in de melding te analyseren.\nWijzig dit alleen als je weet wat je doet of als je advies krijgt van de ontwikkelaar.</string>
     <string name="notification_reader_five_minute_interval">5 minuten interval</string>
     <string name="notification_reader_five_minute_interval_summary">Sommige apps, zoals Dexcom, werken hun meldingen vrij vaak bij. Om deze updates met dezelfde waarde te negeren, schakel je het interval van 5 minuten in.\nIndien ingeschakeld, is er slechts om de 5 minuten een nieuwe waarde of als de waarde in de melding is gewijzigd.</string>
-    <string name="pref_source_notification_info_summary">Om waarden te ontvangen van meldingen van andere apps, is een toestemming nodig om toegang te krijgen tot de meldingen!\nDe melding moet de glucosewaarde of IOB als string bevatten.\nAangezien elke melding een andere lay-out heeft, werkt het mogelijk niet met elke app. Neem in geval van problemen contact met mij op met een screenshot van de melding en de logs.</string>
+    <string name="pref_source_notification_info_summary">Om waarden te ontvangen van meldingen van andere apps, is een toestemming nodig om toegang te krijgen tot de meldingen!\nDe melding moet de glucosewaarde of IOB/COB als string bevatten.\nAangezien elke melding een andere lay-out heeft, werkt het mogelijk niet met elke app. Neem in geval van problemen contact met mij op met een screenshot van de melding en de logs.</string>
     <string name="sensor_age_label">Sensorleeftijd</string>
     <string name="sensor_age_value">%1$dd %2$dh</string>
     <string name="vibrate_pattern_shorty">Kort</string>

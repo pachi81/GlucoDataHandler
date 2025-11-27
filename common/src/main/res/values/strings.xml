@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="locale">en</string>
     <string name="name" translatable="false">GlucoDataHandler</string>
     <string name="source_gdh" translatable="false">GlucoDataHandler</string>
@@ -819,7 +819,7 @@
 
     <string name="source_notification">Notification</string>
     <string name="pref_source_notification">Notification Reader (Beta)</string>
-    <string name="pref_source_notification_summary">To receive the glucose value and IOB from notifications other apps, like Dexcom, CamAPS FX and Omnipod 5.</string>
+    <string name="pref_source_notification_summary">To receive the glucose value and IOB/COB from notifications other apps, like Dexcom, CamAPS FX and Omnipod 5.</string>
     <string name="notification_reader_app">Application</string>
     <string name="notification_reader_app_summary">Select an application, from which the notification should be read.</string>
     <string name="notification_reader_enabled_summary_on">Notification reader is enabled to parse values from notifications for specific applications.</string>
@@ -832,7 +832,7 @@
     <string name="notification_reader_app_regex_summary">Regex to parse the value from text in notification.\nPlease only change, if you know, what you are doing or if you get an advice from the developer.</string>
     <string name="notification_reader_five_minute_interval">5 minute interval</string>
     <string name="notification_reader_five_minute_interval_summary">Some apps, like Dexcom updates their notifications quite often. To ignore these updates with the same value, enable the 5 minute interval.\nIf enabled, there will be only a new value every 5 minutes or if the value in the notification has changed.</string>
-    <string name="pref_source_notification_info_summary">To receive values from notifications of other apps, a permission to access the notifications is needed!\nThe notifcation must include either the glucose value or IOB as string.\nAs each notification has a different layout, it may not work with every app. In case of problems, please contact me with a screenshot of the notification and the logs.</string>
+    <string name="pref_source_notification_info_summary">To receive values from notifications of other apps, a permission to access the notifications is needed!\nThe notifcation must include either the glucose value or IOB/COB as string.\nAs each notification has a different layout, it may not work with every app. In case of problems, please contact me with a screenshot of the notification and the logs.</string>
     <string name="sensor_age_label">Sensor age</string>
     <string name="sensor_age_value">%1$dd %2$dh</string>
     <string name="vibrate_pattern_shorty">Shorty</string>
@@ -983,7 +983,7 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="pref_cat_general_advanced_summary">Advanced app settings.</string>
     <string name="important">Important</string>
     <string name="api_36_notification_info">Starting with Android 16, multiple status bar icons are grouped by Android.\nSo it is not possible anymore to use them.</string>
-    <string name="pref_source_juggluco_summary">Android app for Freestyle Libre 1,2 and 3, Dexcom G7/ONE+, Sibionics GS1Sb and AccuChek SmartGuide sensors.</string>
+    <string name="pref_source_juggluco_summary" tools:ignore="Typos">Android app for Freestyle Libre 1,2 and 3, Dexcom G7/ONE+, Sibionics GS1Sb and AccuChek SmartGuide sensors.</string>
     <string name="pref_source_xdrip_summary">Android diabetes management app, which can connect to different sensors and receive data for different source, like Medtronic.</string>
     <string name="pref_source_aaps_summary">Android APS is an opensource automated insulin delivery system (closed loop).</string>
     <string name="pref_source_eversense_summary">Receiving local broadcast message from ESEL for Eversense or Dexcom BYODA for Dexcom G6 sensors.</string>

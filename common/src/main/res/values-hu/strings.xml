@@ -812,7 +812,7 @@ Mielőtt engedélyezné ezt a beállítást, először engedélyezze az \"Adás 
 
     <string name="source_notification">Értesítés</string>
     <string name="pref_source_notification">Értesítés olvasó (Béta)</string>
-    <string name="pref_source_notification_summary">A vércukorérték és az IOB fogadásához más alkalmazások értesítéseiből, mint például a Dexcom, CamAPS FX és Omnipod 5.</string>
+    <string name="pref_source_notification_summary">A vércukorérték és az IOB/COB fogadásához más alkalmazások értesítéseiből, mint például a Dexcom, CamAPS FX és Omnipod 5.</string>
     <string name="notification_reader_app">Alkalmazás</string>
     <string name="notification_reader_app_summary">Válasszon ki egy alkalmazást, amelyből az értesítést ki kell olvasni.</string>
     <string name="notification_reader_enabled_summary_on">Az értesítés olvasó engedélyezve van, hogy értékeket elemezzen a meghatározott alkalmazások értesítéseiből.</string>
@@ -825,7 +825,7 @@ Mielőtt engedélyezné ezt a beállítást, először engedélyezze az \"Adás 
     <string name="notification_reader_app_regex_summary">Regex az érték elemzéséhez az értesítés szövegéből.\nKérjük, csak akkor módosítsa, ha tudja, mit csinál, vagy ha erre javaslatot kap a fejlesztőtől.</string>
     <string name="notification_reader_five_minute_interval">5 perces intervallum</string>
     <string name="notification_reader_five_minute_interval_summary">Néhány alkalmazás, mint például a Dexcom, elég gyakran frissíti az értesítéseit. Az azonos értékű frissítések figyelmen kívül hagyásához engedélyezze az 5 perces intervallumot.\nHa engedélyezve van, csak 5 percenként lesz új érték, vagy ha az értesítésben lévő érték megváltozott.</string>
-    <string name="pref_source_notification_info_summary">Más alkalmazások értesítéseiből származó értékek fogadásához engedély szükséges az értesítések eléréséhez!\nAz értesítésnek tartalmaznia kell a vércukorértéket vagy az IOB-t karakterláncként.\nMivel minden értesítésnek más az elrendezése, előfordulhat, hogy nem működik minden alkalmazással. Probléma esetén kérem, vegye fel velem a kapcsolatot az értesítés képernyőképével és a naplófájlokkal.</string>
+    <string name="pref_source_notification_info_summary">Más alkalmazások értesítéseiből származó értékek fogadásához engedély szükséges az értesítések eléréséhez!\nAz értesítésnek tartalmaznia kell a vércukorértéket vagy az IOB/COB-t karakterláncként.\nMivel minden értesítésnek más az elrendezése, előfordulhat, hogy nem működik minden alkalmazással. Probléma esetén kérem, vegye fel velem a kapcsolatot az értesítés képernyőképével és a naplófájlokkal.</string>
     <string name="sensor_age_label">Szenzor kora</string>
     <string name="sensor_age_value">%1$d nap %2$d óra</string>
     <string name="vibrate_pattern_shorty">Rövid</string>

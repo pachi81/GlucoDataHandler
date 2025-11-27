@@ -760,7 +760,7 @@
 
     <string name="source_notification">Powiadomienie</string>
     <string name="pref_source_notification">Czytnik powiadomień (Beta)</string>
-    <string name="pref_source_notification_summary">Odbieranie wartości glukozy i IOB z powiadomień innych aplikacji, takich jak Dexcom, CamAPS FX i Omnipod 5.</string>.
+    <string name="pref_source_notification_summary">Odbieranie wartości glukozy i IOB/COB z powiadomień innych aplikacji, takich jak Dexcom, CamAPS FX i Omnipod 5.</string>.
     <string name="notification_reader_app">Aplikacja</string>
     <string name="notification_reader_app_summary">Wybierz aplikację, z której ma być odczytywane powiadomienie.</string>
     <string name="notification_reader_enabled_summary_on">Czytnik powiadomień jest włączony, aby analizować wartości z powiadomień dla określonych aplikacji.</string>
@@ -773,7 +773,7 @@
     <string name="notification_reader_app_regex_summary">Regex do analizowania wartości z tekstu w powiadomieniu.\nZmień tylko, jeśli wiesz, co robisz lub jeśli otrzymasz poradę od programisty.</string>
     <string name="notification_reader_five_minute_interval">5-minutowy interwał</string>
     <string name="notification_reader_five_minute_interval_summary">Niektóre aplikacje, takie jak Dexcom, aktualizują swoje powiadomienia dość często. Aby zignorować te aktualizacje z tą samą wartością, włącz 5-minutowy interwał.\nJeśli opcja ta jest włączona, nowa wartość będzie pojawiać się co 5 minut lub jeśli wartość w powiadomieniu uległa zmianie.</string>.
-    <string name="pref_source_notification_info_summary">Aby otrzymywać wartości z powiadomień innych aplikacji, potrzebne jest uprawnienie dostępu do powiadomień! Powiadomienie musi zawierać wartość glukozy lub IOB jako ciąg znaków.\nPonieważ każde powiadomienie ma inny układ, może nie działać z każdą aplikacją. W przypadku problemów, proszę o kontakt ze zrzutem ekranu powiadomienia i logami.</string>
+    <string name="pref_source_notification_info_summary">Aby otrzymywać wartości z powiadomień innych aplikacji, potrzebne jest uprawnienie dostępu do powiadomień! Powiadomienie musi zawierać wartość glukozy lub IOB/COB jako ciąg znaków.\nPonieważ każde powiadomienie ma inny układ, może nie działać z każdą aplikacją. W przypadku problemów, proszę o kontakt ze zrzutem ekranu powiadomienia i logami.</string>
     <string name="sensor_age_label">Czas działania sensora</string>
     <string name="sensor_age_value">%1$dd %2$dh</string>
     <string name="vibrate_pattern_shorty">Krótko</string>

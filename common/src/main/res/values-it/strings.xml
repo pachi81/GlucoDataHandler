@@ -747,7 +747,7 @@
 
     <string name="source_notification">Notifica</string>
     <string name="pref_source_notification">Lettore di notifiche (Beta)</string>
-    <string name="pref_source_notification_summary">Per ricevere il valore del glucosio e l\'IOB dalle notifiche di altre app, come Dexcom, CamAPS FX e Omnipod 5.</string>
+    <string name="pref_source_notification_summary">Per ricevere il valore del glucosio e l\'IOB/COB dalle notifiche di altre app, come Dexcom, CamAPS FX e Omnipod 5.</string>
     <string name="notification_reader_app">Applicazione</string>
     <string name="notification_reader_app_summary">Seleziona un\'applicazione da cui leggere la notifica.</string>
     <string name="notification_reader_enabled_summary_on">Il lettore di notifiche è abilitato per analizzare i valori dalle notifiche per applicazioni specifiche.</string>
@@ -760,7 +760,7 @@
     <string name="notification_reader_app_regex_summary">Regex per analizzare il valore dal testo nella notifica.\nModifica solo se sai cosa stai facendo o se ricevi un consiglio dallo sviluppatore.</string>
     <string name="notification_reader_five_minute_interval">Intervallo di 5 minuti</string>
     <string name="notification_reader_five_minute_interval_summary">Alcune app, come Dexcom, aggiornano le loro notifiche abbastanza spesso. Per ignorare questi aggiornamenti con lo stesso valore, abilita l\'intervallo di 5 minuti.\nSe abilitato, ci sarà un nuovo valore solo ogni 5 minuti o se il valore nella notifica è cambiato.</string>
-    <string name="pref_source_notification_info_summary">Per ricevere valori dalle notifiche di altre app, è necessaria l\'autorizzazione per accedere alle notifiche!\nLa notifica deve includere il valore del glucosio o l\'IOB come stringa.\nPoiché ogni notifica ha un layout diverso, potrebbe non funzionare con tutte le app. In caso di problemi, contattami con uno screenshot della notifica e i log.</string>
+    <string name="pref_source_notification_info_summary">Per ricevere valori dalle notifiche di altre app, è necessaria l\'autorizzazione per accedere alle notifiche!\nLa notifica deve includere il valore del glucosio o l\'IOB/COB come stringa.\nPoiché ogni notifica ha un layout diverso, potrebbe non funzionare con tutte le app. In caso di problemi, contattami con uno screenshot della notifica e i log.</string>
     <string name="sensor_age_label">Età del sensore</string>
     <string name="sensor_age_value">%1$dd %2$dh</string>
     <string name="vibrate_pattern_shorty">Breve</string>
@@ -910,7 +910,7 @@ Puoi gestire queste autorizzazioni in qualsiasi momento nelle impostazioni dell\
     <string name="pref_cat_general_advanced_summary">Impostazioni avanzate dell\'app.</string>
     <string name="important">Importante</string>
     <string name="api_36_notification_info">A partire da Android 16, le icone multiple della barra di stato vengono raggruppate da Android.\nNon è quindi più possibile utilizzarle.</string>
-    <string name="pref_source_juggluco_summary">App Android per sensori Freestyle Libre 1, 2 e 3, Dexcom G7/ONE+, Sibionics GS1Sb e AccuChek SmartGuide.</string>
+    <string name="pref_source_juggluco_summary" tools:ignore="Typos">App Android per sensori Freestyle Libre 1, 2 e 3, Dexcom G7/ONE+, Sibionics GS1Sb e AccuChek SmartGuide.</string>
     <string name="pref_source_xdrip_summary">App Android per la gestione del diabete, che può connettersi a diversi sensori e ricevere dati da varie fonti, come Medtronic.</string>
     <string name="pref_source_aaps_summary">Android APS è un sistema open source di somministrazione automatica di insulina (closed loop).</string>
     <string name="pref_source_eversense_summary">Ricezione di broadcast locali da ESEL per Eversense o da Dexcom BYODA per sensori Dexcom G6.</string>
