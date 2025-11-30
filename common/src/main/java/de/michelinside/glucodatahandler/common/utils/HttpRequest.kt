@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.BuildConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -131,7 +130,7 @@ class HttpRequest {
                     httpURLConnection!!.doOutput = true
                     val dataOutputStream = DataOutputStream(httpURLConnection!!.outputStream)
                     val bytes: ByteArray = postData.toByteArray()
-                    Log.d(LOG_ID, "Send data: $postData with size ${bytes.size}")
+                    Log.v(LOG_ID, "Send data: $postData with size ${bytes.size}")
                     dataOutputStream.write(bytes, 0, bytes.size)
                 } else {
                     httpURLConnection!!.doOutput = false

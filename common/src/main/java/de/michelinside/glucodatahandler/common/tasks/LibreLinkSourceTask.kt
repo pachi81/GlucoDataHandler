@@ -542,21 +542,27 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
     }
 
     private fun getPatientData(dataArray: JSONArray): MutableMap<String, String> {
-        if(dataArray.length() > patientData.size) {
-            // create patientData map
-            patientData.clear()
-            for (i in 0 until dataArray.length()) {
-                val data = dataArray.getJSONObject(i)
-                if(data.has("patientId") && data.has("firstName") && data.has("lastName")) {
-                    val id = data.getString("patientId")
-                    val name = data.getString("firstName") + " " +  data.getString("lastName")
-                    Log.v(LOG_ID, "New patient found: $name")
-                    patientData[id] = name
+        Log.i(LOG_ID, "Parse ${dataArray.length()} patient data")
+        // create patientData map
+        patientData.clear()
+        for (i in 0 until dataArray.length()) {
+            val data = dataArray.getJSONObject(i)
+            if(data.has("patientId")) {
+                val id = data.getString("patientId")
+                val name: String
+                if(data.has("firstName") || data.has("lastName"))
+                    name = data.optString("firstName", "") + " " +  data.optString("lastName", "")
+                else {
+                    Log.w(LOG_ID, "no name found for patient!")
+                    name = id
                 }
+                Log.v(LOG_ID, "New patient found: $name")
+                patientData[id] = name
+            } else {
+                Log.e(LOG_ID, "No patientId found in data: $data")
             }
-            return patientData
         }
-        return mutableMapOf()  // no patient found
+        return patientData
     }
 
     override fun interrupt() {

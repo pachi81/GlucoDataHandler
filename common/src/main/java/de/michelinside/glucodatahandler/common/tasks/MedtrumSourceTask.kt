@@ -212,7 +212,7 @@ class MedtrumSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_MEDTRUM
             setLastError(GlucoDataService.context!!.getString(R.string.source_no_patient))
             return mutableMapOf()
         }
-        Log.d(LOG_ID, "Handle login data result with ${dataArray.length()} patients")
+        Log.i(LOG_ID, "Handle login data result with ${dataArray.length()} patients")
         // re-create patientData map
         patientData.clear()
         for (i in 0 until dataArray.length()) {
