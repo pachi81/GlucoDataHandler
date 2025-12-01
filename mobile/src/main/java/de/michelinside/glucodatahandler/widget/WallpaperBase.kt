@@ -181,11 +181,15 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
     }
 
     fun receycleOldWallpaper() {
-        if(oldWallpaper != null) {
-            Log.i(LOG_ID, "Receycle old wallpaper")
-            if(oldWallpaper?.isRecycled == false)
-                oldWallpaper?.recycle()
-            oldWallpaper = null
+        try {
+            if(oldWallpaper != null) {
+                Log.i(LOG_ID, "Receycle old wallpaper")
+                if(oldWallpaper?.isRecycled == false)
+                    oldWallpaper?.recycle()
+                oldWallpaper = null
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "receycleOldWallpaper exception: " + exc.message.toString() )
         }
     }
 
