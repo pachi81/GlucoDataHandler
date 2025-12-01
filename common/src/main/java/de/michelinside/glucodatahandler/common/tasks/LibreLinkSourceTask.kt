@@ -31,6 +31,7 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
     override val LOG_ID = "GDH.Task.Source.LibreLinkTask"
     override val patientIdKey = Constants.SHARED_PREF_LIBRE_PATIENT_ID
     companion object {
+        private var instance: LibreLinkSourceTask? = null
         private var user = ""
         private var password = ""
         private var reconnect = false
@@ -41,7 +42,11 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
         private var topLevelDomain = "io"
         private var dataReceived = false   // mark this endpoint as already received data
         private var autoAcceptTOU = true
-        val patientData = mutableMapOf<String, String>()
+        val patientData: MutableMap<String, String> get() {
+            if(instance == null)
+                return mutableMapOf<String, String>()
+            return instance!!.getPatientData()
+        }
         const val server = "https://api.libreview.%s"
         const val region_server = "https://api-%s.libreview.%s"
         const val LOGIN_ENDPOINT = "/llu/auth/login"
@@ -50,6 +55,11 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
         const val ACCEPT_ENDPOINT = "/auth/continue/"
         const val ACCEPT_TERMS_TYPE = "tou"
         const val ACCEPT_TOKEN_TYPE = "pp"
+    }
+
+    init {
+        Log.i(LOG_ID, "init called")
+        instance = this
     }
 
     private fun getUrl(endpoint: String): String {
@@ -82,7 +92,6 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
         region = ""
         userId = ""
         dataReceived = false
-        patientData.clear()
         try {
             Log.d(LOG_ID, "Save reset")
             GlucoDataService.sharedPref!!.edit {
@@ -544,7 +553,7 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
     private fun getPatientData(dataArray: JSONArray): MutableMap<String, String> {
         Log.i(LOG_ID, "Parse ${dataArray.length()} patient data")
         // create patientData map
-        patientData.clear()
+        val newPatientData = mutableMapOf<String, String>()
         for (i in 0 until dataArray.length()) {
             val data = dataArray.getJSONObject(i)
             if(data.has("patientId")) {
@@ -557,12 +566,12 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
                     name = id
                 }
                 Log.v(LOG_ID, "New patient found: $name")
-                patientData[id] = name
+                newPatientData[id] = name.trim()
             } else {
                 Log.e(LOG_ID, "No patientId found in data: $data")
             }
         }
-        return patientData
+        return newPatientData
     }
 
     override fun interrupt() {

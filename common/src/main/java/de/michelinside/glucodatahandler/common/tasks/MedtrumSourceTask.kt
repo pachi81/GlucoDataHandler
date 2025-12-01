@@ -30,19 +30,29 @@ class MedtrumSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_MEDTRUM
     override var minInterval = 2L
     override val patientIdKey = Constants.SHARED_PREF_MEDTRUM_PATIENT_ID
     companion object {
+        private var instance: MedtrumSourceTask? = null
         private var user = ""
         private var password = ""
         private var reconnect = false
         private var cookie = ""
         private var topLevelDomain = "eu"
         private var dataReceived = false   // mark this endpoint as already received data
-        val patientData = mutableMapOf<String, String>()
+        val patientData: MutableMap<String, String> get() {
+            if(instance == null)
+                return mutableMapOf<String, String>()
+            return instance!!.getPatientData()
+        }
         const val server = "https://easyview.medtrum.%s"
         const val LOGIN_ENDPOINT = "/mobile/ajax/login"
         const val LOGINDATA_ENDPOINT = "/mobile/ajax/logindata"
         const val MONITORLIST_ENDPOINT = "/mobile/ajax/monitor?flag=monitor_list"
         const val DOWNLOAD_ENDPOINT = "/mobile/ajax/download"
         const val GRAPHDATA_SUFFIX = "?flag=sg&st=%s&et=%s&user_name=%s"
+    }
+
+    init {
+        Log.i(LOG_ID, "init called")
+        instance = this
     }
 
     private fun getUrl(endpoint: String): String {
@@ -69,7 +79,6 @@ class MedtrumSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_MEDTRUM
         super.reset()
         cookie = ""
         dataReceived = false
-        patientData.clear()
         try {
             Log.d(LOG_ID, "Save reset")
             GlucoDataService.sharedPref!!.edit {
@@ -213,18 +222,17 @@ class MedtrumSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_MEDTRUM
             return mutableMapOf()
         }
         Log.i(LOG_ID, "Handle login data result with ${dataArray.length()} patients")
-        // re-create patientData map
-        patientData.clear()
+        val newPatientData = mutableMapOf<String, String>()
         for (i in 0 until dataArray.length()) {
             val data = dataArray.getJSONObject(i)
-            if(data.has("username") && data.has("real_name")) {
+            if(data.has("username")) {
                 val id = data.getString("username")
-                val name = data.getString("real_name")
+                val name = if(data.has("real_name")) data.optString("real_name", id) else id
                 Log.v(LOG_ID, "New patient found: $name")
-                patientData[id] = name
+                newPatientData[id] = name.trim()
             }
         }
-        return patientData
+        return newPatientData
     }
 
     private fun handleMonitorListResponse(patientId: String, body: String?): Boolean {

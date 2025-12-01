@@ -11,6 +11,7 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import androidx.core.content.edit
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.R
 
 abstract class MultiPatientSourceTask(enabledKey: String, source: DataSource) : DataSourceTask(enabledKey, source) {
     protected abstract val LOG_ID: String
@@ -33,7 +34,7 @@ abstract class MultiPatientSourceTask(enabledKey: String, source: DataSource) : 
 
     override fun getValue(): Boolean {
         if(needPatientData()) {
-            Log.d(LOG_ID, "Need patient data")
+            Log.i(LOG_ID, "Need patient data (current size: ${patientData.size}) - id set: ${patientId.isNotEmpty()} - data contains id: ${patientData.containsKey(patientId)}")
             handlePatientData(getPatientData())
         }
         if(patientId.isEmpty()) {
@@ -51,6 +52,12 @@ abstract class MultiPatientSourceTask(enabledKey: String, source: DataSource) : 
 
     private fun handlePatientData(newPatientData: MutableMap<String, String>) {
         Log.d(LOG_ID, "Handle patient data: $newPatientData")
+        if(newPatientData.isEmpty()) {
+            Log.e(LOG_ID, "No patient data found!")
+            setLastError(GlucoDataService.context!!.resources.getString(R.string.source_no_patient))
+            reset()
+            return
+        }
         val triggerChange = patientData.size != newPatientData.size
         newPatientData.toMap(patientData)
         if (patientId.isNotEmpty() && !patientData.keys.contains(patientId)) {
