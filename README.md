@@ -40,7 +40,9 @@ This innovative app receives data from various sources and visualizes it clearly
     * Receive alarms directly on your watch.
     * **IMPORTANT NOTE:** GDH is not a standalone Wear OS app. The phone app is required for setup.
 
-* **WatchDrip+ Support:** Use GDH with specific Miband and Amazfit devices.
+* **WatchDrip+ Support:** Use GDH with specific Mi Band, Xiaomi Smart Band and Amazfit devices.
+* **Garmin, Fitbit and Pebble** support (providing web service in xDrip+ format)
+* **Health Connect** support
 
 * **Accessibility:** Full TalkBack support (Thanks to Alex for testing!).
 
