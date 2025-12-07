@@ -35,7 +35,7 @@ open class BatteryLevelComplicationBase(val type: BatteryLevelType): SuspendingC
 
     override suspend fun onComplicationRequest(request: ComplicationRequest): ComplicationData? {
         try {
-            Log.d(
+            Log.i(
                 LOG_ID,
                 "onComplicationRequest called for ID " + request.complicationInstanceId.toString() + " with type " + request.complicationType.toString()
             )
@@ -67,7 +67,9 @@ open class BatteryLevelComplicationBase(val type: BatteryLevelType): SuspendingC
     }
 
     protected fun getUnit(): String {
-        val sharedPref = applicationContext.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+        val sharedPref = applicationContext.getSharedPreferences(Constants.SHARED_PREF_TAG,
+            MODE_PRIVATE
+        )
         if(sharedPref.getBoolean(Constants.SHARED_PREF_SHOW_BATTERY_PERCENT, true))
             return "%"
         return ""

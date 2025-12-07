@@ -115,24 +115,23 @@
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal">
                 <TextView
-                    android:id="@+id/txtStartDelayTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/alarm_start_delay"
-                    android:textColor="#FFFFFF"
-                    android:textSize="18sp" />
-
-                <TextView
                     android:id="@+id/txtStartDelayLevel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_toEndOf="@+id/txtStartDelayTitle"
                     android:text="0s"
                     android:textAlignment="textEnd"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
                     tools:ignore="HardcodedText" />
+                <TextView
+                    android:id="@+id/txtStartDelayTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/alarm_start_delay"
+                    android:textColor="#FFFFFF"
+                    android:layout_toStartOf="@+id/txtStartDelayLevel"
+                    android:textSize="18sp" />
             </RelativeLayout>
 
 
