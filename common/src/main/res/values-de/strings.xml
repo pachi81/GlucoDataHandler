@@ -884,12 +884,12 @@ Sie können diese Berechtigungen jederzeit in den Health Connect App-Einstellung
     <string name="source_iob_notification">IOB-Benachrichtigung</string>
 
     <string name="pref_cat_logs">Logs</string>
-    <string name="pref_cat_logs_summary">Protokollierung konfigurieren und Protokolle in einer Datei speichern.</string>
-    <string name="pref_cat_log_to_db">In Datenbank protokollieren</string>
-    <string name="pref_log_to_db_summary">Warnung: Das Speichern von Protokollen in der Datenbank kann die Leistung und die Akkulaufzeit beeinträchtigen.\nBitte aktivieren Sie diese Option nur auf Anweisung des Entwicklers, um bei der Analyse eines Problems zu helfen.</string>
-    <string name="pref_log_duration_size">Aufbewahrungsfrist für Protokolle</string>
-    <string name="pref_log_duration_summary">Anzahl der Stunden, die Protokolle in der Datenbank aufbewahrt werden sollen.\nSetzen Sie den Wert auf 0, um die Protokollierung in der Datenbank zu deaktivieren.</string>
-    <string name="pref_log_debug">Debug-Protokollierung aktivieren</string>
+    <string name="pref_cat_logs_summary">Logging konfigurieren und Logs speichern.</string>
+    <string name="pref_cat_log_to_db">In Datenbank loggen</string>
+    <string name="pref_log_to_db_summary">Warnung: Das Speichern von Logs in der Datenbank kann die Leistung und die Akkulaufzeit beeinträchtigen.\nBitte aktivieren Sie diese Option nur auf Anweisung des Entwicklers, um bei der Analyse eines Problems zu helfen.</string>
+    <string name="pref_log_duration_size">Log-Speicherdauer</string>
+    <string name="pref_log_duration_summary">Anzahl der Stunden, die Logs in der Datenbank aufbewahrt werden sollen.\nSetzen Sie den Wert auf 0, um das Datenbank-Logging zu deaktivieren.</string>
+    <string name="pref_log_debug">Debug-Logging aktivieren</string>
     <string name="pref_log_debug_summary">Speichern von detaillierten Debug-Meldungen in der Datenbank aktivieren (max. die letzten 30 Minuten).\nNur aktivieren, wenn vom Entwickler angefordert.</string>
 
     <string name="pref_switch_xdrip_server">Lokaler Webserver</string>

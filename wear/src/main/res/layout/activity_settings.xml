@@ -158,24 +158,23 @@
                 android:screenReaderFocusable="true"
                 android:orientation="horizontal">
                 <TextView
-                    android:id="@+id/txtLogDurationTitle"
-                    android:focusable="false"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/pref_log_duration_size"
-                    android:textColor="#FFFFFF" />
-
-                <TextView
                     android:id="@+id/txtLogDurationLevel"
                     android:focusable="false"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_toEndOf="@+id/txtLogDurationTitle"
                     android:text="0h"
                     android:textAlignment="textEnd"
                     android:textColor="#FFFFFF"
                     tools:ignore="HardcodedText" />
+                <TextView
+                    android:id="@+id/txtLogDurationTitle"
+                    android:focusable="false"
+                    android:layout_toStartOf="@id/txtLogDurationLevel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pref_log_duration_size"
+                    android:textColor="#FFFFFF" />
             </RelativeLayout>
 
             <androidx.appcompat.widget.AppCompatSeekBar
