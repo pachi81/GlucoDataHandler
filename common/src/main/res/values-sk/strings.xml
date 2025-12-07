@@ -152,10 +152,10 @@
     <string name="pref_switch_car_notification_alarm_only_summary">Spustí iba upozornenia na alarmy v ich špecifickom intervale.\nPri veľmi nízkych hodnotách sa vždy zobrazí upozornenie.</string>
     <string name="pref_switch_car_media">Falošný prehrávač médií</string>
     <string name="pref_switch_car_media_summary">Zobraziť hodnotu glukózy ako aktuálnu skladbu pre Android Auto.</string>
-    <string name="pref_switch_send_to_aod">Odoslať vysielanie glukodát</string>
-    <string name="pref_switch_send_to_aod_summary">Odoslať vysielanie glukodát pre nové hodnoty prijaté z akéhokoľvek zdroja.</string>
-    <string name="pref_button_select_target">Identifikovať príjemcov glukodát</string>
-    <string name="pref_button_select_target_summary">Vyberte prijímateľov, ktorým sa bude vysielať glukodáta. Globálne vysielanie sa bude posielať do každej aplikácie, ktorá sa dynamicky zaregistruje do vysielania.</string>
+    <string name="pref_switch_send_to_aod">Odoslať vysielanie údajov o glykémii</string>
+    <string name="pref_switch_send_to_aod_summary">Odoslať vysielanie údajov o glykémii pre nové hodnoty prijaté z akéhokoľvek zdroja.</string>
+    <string name="pref_button_select_target">Identifikovať príjemcov údajov o glykémii</string>
+    <string name="pref_button_select_target_summary">Vyberte prijímateľov, ktorým sa budú vysielať údaje o glykémii. Globálne vysielanie sa bude posielať do každej aplikácie, ktorá sa dynamicky zaregistruje do vysielania.</string>
     <string name="pref_switch_send_to_xdrip">Odoslať upravené libre vysielanie</string>
     <string name="pref_switch_send_to_xdrip_summary">Preposlať hodnoty glukózy do xDrip+. V xDrip+ vyberte ako zdroj \„Libre (patched app)\”.</string>
     <string name="pref_button_select_xdrip_target">Identifikovať upravené libre prijímače</string>
@@ -278,7 +278,7 @@
 
     <!-- GlucoDataAuto -->
 
-   <string name="gda_no_data">Ak chcete túto aplikáciu používať v Android Auto, musíte v Android Auto aktivovať nastavenia pre vývojárov niekoľkonásobným kliknutím na verziu. Potom musíte v ponuke nastavení pre vývojárov povoliť položku „Neznáme zdroje“.</string>
+   <string name="gda_no_data">Ak chcete túto aplikáciu používať v Android Auto, musíte v Android Auto aktivovať nastavenia pre vývojárov niekoľkonásobným ťuknutím na verziu. Potom musíte v ponuke nastavení pre vývojárov povoliť položku „Neznáme zdroje“.</string>
     <string name="pref_information">Informácie</string>
     <string name="pref_gda_info_summary">Ak používate GlucoDataHandler ako zdroj, tieto nastavenia budú prepísané z GlucoDataHandler, takže ich tu nemusíte meniť.</string>
     <string name="pref_no_gda_info">Chýba GlucoDataAuto</string>
@@ -550,7 +550,7 @@
     <string name="alarm_inactive_start_time">Čas začiatku</string>
     <string name="alarm_inactive_start_time_summary">Vyberte čas, kedy chcete, aby sa začala vaša tichá doba.</string>
     <string name="alarm_inactive_end_time">Čas konca</string>
-    <string name="alarm_inactive_end_time_summary">Vyberte čas, kedy chcete, aby skončinla vaša tichá doba</string>
+    <string name="alarm_inactive_end_time_summary">Vyberte čas, kedy chcete, aby skončila vaša tichá doba</string>
     <string name="alarm_inactive_weekdays">Dni pre tichú dobu</string>
     <string name="alarm_inactive_weekdays_summary">Určite dni v týždni, v ktorých by sa mala tichá doba začať vo vybranom čase začiatku.</string>
 
@@ -707,7 +707,7 @@
     <string name="patient_name_gda_summary">Meno používateľa/pacienta, ktoré sa má zobraziť v upozorneniach a počas vyslovovania.\nToto by sa malo používať, ak používate viacero verzií GlucoDataAuto, inak môže pole zostať prázdne.</string>
 
     <string name="video_tutorial">Video návod</string>
-    <string name="video_tutorial_summary">Kliknite sem, aby ste sa dostali na YouTube video, ktoré ilustruje nastavenie tohto zdroja. Veľká vďaka Diabetic Masked Man za vytvorenie videí.</string>
+    <string name="video_tutorial_summary">Ťuknite sem, aby ste sa dostali na YouTube video, ktoré ilustruje nastavenie tohto zdroja. Veľká vďaka Diabetic Masked Man za vytvorenie videí.</string>
 
     <string name="snooze_30">30 minút</string>
     <string name="snooze_60">60 minút</string>
@@ -813,7 +813,7 @@
     <string name="source_dexcom_server_us">Spojené štáty</string>
     <string name="source_dexcom_server_jp">Japonsko</string>
     <string name="source_dexcom_server_summary">Vyberte server podľa krajiny, s ktorou je váš Dexcom Clarity spojený.</string>
-    <string name="dexcom_share_check_jp_account">Kliknite sem a skontrolujte údaje svojho účtu Dexcom Share pre váš japonský účet.</string>
+    <string name="dexcom_share_check_jp_account">Ťuknite sem a skontrolujte údaje svojho účtu Dexcom Share pre váš japonský účet.</string>
     <string name="src_cat_medtrum">Medtrum</string>
     <string name="src_medtrum_enabled_summary">Povoľte pripojenie Medtrum po nastavení používateľského mena a hesla.</string>
     <string name="src_medtrum_user">Používateľ</string>
@@ -873,7 +873,7 @@ GlucoDataHandler zapisuje do aplikácie Health Connect iba údaje o hladine gluk
 Tieto povolenia môžete kedykoľvek spravovať v nastaveniach aplikácie Health Connect.
 </string>
     <string name="pref_healthconnect">Health Connect</string>
-    <string name="pref_healthconnect_summary">Ak chcete zdieľať svoje údaje so službou Health Connect, udelte povolenie GDH.</string>
+    <string name="pref_healthconnect_summary">Ak chcete zdieľať svoje údaje so službou Health Connect, udeľte povolenie aplikácii GDH.</string>
     <string name="pref_samsunghealth_summary">Ak chcete synchronizovať so službou Samsung Health, musíte v aplikácii Samsung Health povoliť aj možnosť „čítať z Health Connect“.\nUpozorňujeme, že napríklad aplikácia Samsung Health nečíta tieto hodnoty pravidelne!</string>
     <string name="health_connect_error">Vyskytla sa chyba, prosím pošlite záznamy vývojárovi.</string>
     <string name="health_connect_not_available">Nie je dostupné!</string>
@@ -975,6 +975,6 @@ Tieto povolenia môžete kedykoľvek spravovať v nastaveniach aplikácie Health
         <item quantity="other">%d hodín</item>
     </plurals>
 
-    <string name="dexcom_server_down_error">Zdá sa, že server Dexcom nefunguje!\nKliknutím sem skontrolujete stav servera.\nAk je aplikácia Dexcom na rovnakom telefóne, môžete namiesto toho použiť Čítačku upozornení (Notification Reader).</string>
+    <string name="dexcom_server_down_error">Zdá sa, že server Dexcom nefunguje!\nŤuknutím sem skontrolujete stav servera.\nAk je aplikácia Dexcom na rovnakom telefóne, môžete namiesto toho použiť Čítačku upozornení (Notification Reader).</string>
 </resources>
 
