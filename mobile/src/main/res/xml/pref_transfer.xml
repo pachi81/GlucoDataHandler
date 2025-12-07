@@ -10,6 +10,10 @@
             android:summary="@string/pref_healthconnect_summary"
             android:title="@string/pref_healthconnect"
             app:iconSpaceReserved="false" />
+        <Preference
+            android:key="samsung_health_info"
+            android:summary="@string/pref_samsunghealth_summary"
+            app:iconSpaceReserved="false"/>
     </PreferenceCategory>
     <PreferenceCategory
         app:iconSpaceReserved="false">

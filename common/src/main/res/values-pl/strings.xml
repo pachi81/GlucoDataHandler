@@ -667,7 +667,7 @@
     <string name="pref_send_battery_level_to_watch_summary">Prześlij informację o poziomie naładowania baterii do zegarka, aby wyświetlić ją w komplikacjach i na ekranie głównym.</string>
     <string name="pref_battery_level">Pokaż poziom baterii</string>
     <string name="forward_to_watch_interval_summary">Ustaw minimalny czas (w minutach) między pomiarami poziomu glukozy przed wysłaniem nowej aktualizacji do zegarka. Alarmy i wartości bardzo niskie będą zawsze wysyłane.</string>
-    <string name="forward_to_values_summary">Ustaw minimalny czas (w minutach) między pomiarami poziomu glukozy przed wysłaniem nowej aktualizacji do odbiorców.</string>
+    <string name="forward_to_values_summary">Ustaw minimalny czas (w minutach) między pomiarami poziomu glukozy przed wysłaniem nowej aktualizacji do odbiorców (nie dla Health Connect).</string>
     <string name="alarm_repeat_summary">Alarm będzie emitował dźwięk i wibracje do momentu odrzucenia powiadomienia lub osiągnięcia ustawionego maksymalnego czasu trwania alarmu.</string>
     <string name="alarm_repeat_time">Maksymalny czas trwania alarmu</string>
     <string name="alarm_repeat_time_summary">Określ maksymalny czas (w minutach), przez jaki alarm będzie emitował dźwięk i wibracje. Wartość 0 oznacza, że alarm będzie powtarzany w nieskończoność.</string>
@@ -870,7 +870,8 @@
     <string name="health_connect_permission_rationale_title">Integracja z Health Connect</string>
     <string name="health_connect_permission_rationale_long">Aby pomóc w samokontroli w cukrzycy, GlucoDataHandler może udostępniać dane dotyczące poziomu glukozy we krwi w aplikacji Health Connect. \n\n Dzięki temu można: \n - Bezpiecznie przechowywać odczyty poziomu glukozy w jednym centralnym miejscu na swoim telefonie.\n - Udostępniać dane dotyczące poziomu glukozy innym uprawnionym przez Ciebie aplikacjom zdrowotnym i fitness, co daje pełniejszy obraz stanu zdrowia. \n\n GlucoDataHandler zapisuje tylko dane dotyczące poziomu glukozy we krwi w Health Connect i nie odczytuje innych typów danych zdrowotnych, chyba że wyraźnie przyznasz w tym zakresie oddzielne uprawnienia. \n\n Możesz zarządzać tymi uprawnieniami w dowolnym momencie w ustawieniach aplikacji Health Connect.</string>
     <string name="pref_healthconnect">Health Connect</string>
-    <string name="pref_healthconnect_summary">Aby udostępnić swoje dane aplikacji Health Connect, należy udzielić pozwolenia GDH.\nAby dokonać synchronizacji z aplikacją Samsung Health, należy również włączyć opcję &quot;odczyt z Health Connect&quot; w aplikacji Samsung Health.</string>
+    <string name="pref_healthconnect_summary">Aby udostępnić swoje dane aplikacji Health Connect, należy udzielić pozwolenia GDH.</string>
+    <string name="pref_samsunghealth_summary">Aby dokonać synchronizacji z aplikacją Samsung Health, należy również włączyć opcję &quot;odczyt z Health Connect&quot; w aplikacji Samsung Health.\nNależy pamiętać, że na przykład aplikacja Samsung Health nie odczytuje tych wartości okresowo!</string>
     <string name="health_connect_error">Wystąpił błąd, wyślij logi do dewelopera.</string>
     <string name="health_connect_not_available">Niedostępne!</string>
     <string name="health_connect_no_permission">Brak uprawnienia!</string>

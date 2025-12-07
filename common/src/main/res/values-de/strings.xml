@@ -657,7 +657,7 @@
     <string name="pref_send_battery_level_to_watch_summary">Sende den Akkustand an die Uhr, um ihn in der Komplikation und auf dem Hauptbildschirm anzuzeigen.</string>
     <string name="pref_battery_level">Akkustand anzeigen</string>
     <string name="forward_to_watch_interval_summary">Lege die minimale Zeit (in Minuten) zwischen Glukosemessungen fest, bevor ein neues Update an die Uhr gesendet wird.\nAlarme und sehr tiefe Werte werden immer gesendet.</string>
-    <string name="forward_to_values_summary">Lege die minimale Zeit (in Minuten) zwischen Glukosemessungen fest, bevor ein neues Update an die Empfänger gesendet wird.</string>
+    <string name="forward_to_values_summary">Lege die minimale Zeit (in Minuten) zwischen Glukosemessungen fest, bevor ein neues Update an die Empfänger gesendet wird (nicht für Health Connect).</string>
     <string name="alarm_repeat_summary">Der Alarm ertönt und vibriert wiederholt, bis die Benachrichtigung geschlossen oder die eingestellte maximale Alarmdauer erreicht ist.</string>
     <string name="alarm_repeat_time">Maximale Alarmdauer</string>
     <string name="alarm_repeat_time_summary">Gib die maximale Zeit (in Minuten) an, die der Alarm ertönt und vibriert. Ein Wert von 0 bedeutet, dass der Alarm unbegrenzt wiederholt wird.</string>
@@ -868,7 +868,8 @@ GlucoDataHandler schreibt nur Blutzuckerdaten in Health Connect und liest keine 
 Sie können diese Berechtigungen jederzeit in den Health Connect App-Einstellungen verwalten.
 </string>
     <string name="pref_healthconnect">Health Connect</string>
-    <string name="pref_healthconnect_summary">Um Ihre Daten mit Health Connect zu teilen, erteilen Sie GDH die Erlaubnis.\nUm mit Samsung Health zu synchronisieren, müssen Sie auch "Lesen aus Health Connect" in der Samsung Health App aktivieren.</string>
+    <string name="pref_healthconnect_summary">Um Daten mit Health Connect zu teilen, erteile GDH die Berechtigung.</string>
+    <string name="pref_samsunghealth_summary">Um mit Samsung Health zu synchronisieren, musst du zusätzlich in der Samsung Health App "Lesen von Health Connect" aktivieren.\nBeachte, dass Apps wie z. B. Samsung Health diese Werte nicht periodisch auslesen!</string>
     <string name="health_connect_error">Fehler aufgetreten, bitte Logs an den Entwickler senden.</string>
     <string name="health_connect_not_available">Nicht verfügbar!</string>
     <string name="health_connect_no_permission">Fehlende Berechtigung!</string>

@@ -667,7 +667,7 @@
     <string name="pref_send_battery_level_to_watch_summary">Odoslať úroveň nabitia batérie do hodiniek, aby sa zobrazila v komplikácii a na hlavnej obrazovke.</string>
     <string name="pref_battery_level">Zobraziť úroveň batérie</string>
     <string name="forward_to_watch_interval_summary">Nastavte minimálny čas (v minútach) medzi meraniami glukózy pred odoslaním novej aktualizácie do hodiniek.\nAlarmy a veľmi nízke hodnoty merania sa odosielajú vždy.</string>
-    <string name="forward_to_values_summary">Nastavte minimálny čas (v minútach) medzi meraniami glukózy pred odoslaním novej aktualizácie do prijímačov.</string>
+    <string name="forward_to_values_summary">Nastavte minimálny čas (v minútach) medzi meraniami glukózy pred odoslaním novej aktualizácie do prijímačov (nie pre Health Connect).</string>
     <string name="alarm_repeat_summary">Alarm bude opakovane zvoniť a vibrovať, kým nezrušíte upozornenie alebo nedosiahne nastavenú maximálnu dĺžku trvania alarmu.</string>
     <string name="alarm_repeat_time">Maximálna dĺžka alarmu</string>
     <string name="alarm_repeat_time_summary">Určite maximálny čas (v minútach), počas ktorého bude alarm zvoniť a vibrovať. Hodnota 0 znamená, že alarm sa bude opakovať donekonečna.</string>
@@ -873,7 +873,8 @@ GlucoDataHandler zapisuje do aplikácie Health Connect iba údaje o hladine gluk
 Tieto povolenia môžete kedykoľvek spravovať v nastaveniach aplikácie Health Connect.
 </string>
     <string name="pref_healthconnect">Health Connect</string>
-    <string name="pref_healthconnect_summary">Ak chcete zdieľať svoje údaje s aplikáciou Health Connect, udelte povolenie aplikácii GDH.\nAk chcete synchronizovať s aplikáciou Samsung Health, musíte v aplikácii Samsung Health povoliť aj funkciu „čítať z aplikácie Health Connect“.</string>
+    <string name="pref_healthconnect_summary">Ak chcete zdieľať svoje údaje so službou Health Connect, udelte povolenie GDH.</string>
+    <string name="pref_samsunghealth_summary">Ak chcete synchronizovať so službou Samsung Health, musíte v aplikácii Samsung Health povoliť aj možnosť „čítať z Health Connect“.\nUpozorňujeme, že napríklad aplikácia Samsung Health nečíta tieto hodnoty pravidelne!</string>
     <string name="health_connect_error">Vyskytla sa chyba, prosím pošlite záznamy vývojárovi.</string>
     <string name="health_connect_not_available">Nie je dostupné!</string>
     <string name="health_connect_no_permission">Chýbajúce povolenie!</string>

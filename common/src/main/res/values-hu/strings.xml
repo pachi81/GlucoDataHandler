@@ -170,7 +170,7 @@ Ha az \"Újraindítás\" aktív, az értesítés csak akkor záródik be, ha a r
     <string name="falling_fast_alarm_notification_name">Gyorsan eső riasztás</string>
     <string name="falling_fast_alarm_text">Gyorsan esik!</string>
     <string name="forground_notification_descr">Adatfeldolgozás a komplikációkhoz</string>
-    <string name="forward_to_values_summary">Állítsa be a minimális időt (percben) a vércukormérések között, mielőtt új frissítést küld a címzetteknek.</string>
+    <string name="forward_to_values_summary">Állítsa be a minimális időt (percben) a vércukormérések között, mielőtt új frissítést küld a címzetteknek (nem a Health Connecthez).</string>
     <string name="forward_to_watch_interval_summary">Állítsa be a minimális időt (percben) a vércukormérések között, mielőtt új frissítést küld az okosórára.
 A riasztások és a nagyon alacsony értékek mindig elküldésre kerülnek.</string>
     <string name="gda_battery_optimization_disabled">Az akkumulátor optimalizálás aktív!
@@ -941,7 +941,8 @@ A GlucoDataHandler csak vércukoradatokat ír a Health Connectbe, és nem olvas 
 Ezeket az engedélyeket bármikor kezelheti a Health Connect alkalmazás beállításaiban.
 </string>
     <string name="pref_healthconnect">Health Connect</string>
-    <string name="pref_healthconnect_summary">Az adatok Health Connect szolgáltatással való megosztásához adjon engedélyt a GDH-nak.\nA Samsung Health alkalmazással való szinkronizáláshoz engedélyeznie kell a "leolvasás a Health Connectből" opciót is a Samsung Health alkalmazásban.</string>
+    <string name="pref_healthconnect_summary">Az adatok Health Connect szolgáltatással való megosztásához adjon engedélyt a GDH-nak.</string>
+    <string name="pref_samsunghealth_summary">A Samsung Health szolgáltatással való szinkronizáláshoz engedélyeznie kell az „olvasás a Health Connectből” lehetőséget a Samsung Health alkalmazásban is.\nVegye figyelembe, hogy például a Samsung Health nem olvassa rendszeresen ezeket az értékeket!</string>
     <string name="health_connect_error">Hiba történt, kérjük, küldje el a naplókat a fejlesztőnek.</string>
     <string name="health_connect_not_available">Nem elérhető!</string>
     <string name="health_connect_no_permission">Hiányzó engedély!</string>

@@ -662,7 +662,7 @@
     <string name="pref_send_battery_level_to_watch_summary">將電池電量傳送到手錶以便在小工具和主畫面上顯示</string>
     <string name="pref_battery_level">顯示電池電量</string>
     <string name="forward_to_watch_interval_summary">設定血糖測量最小間隔多久 (分鐘) 會傳送更新到手錶\n警報和非常低的血糖值會立即傳送</string>
-    <string name="forward_to_values_summary">設定血糖測量最小間隔多久 (分鐘) 會傳送更新到接收程式</string>
+    <string name="forward_to_values_summary">設定血糖測量最小間隔多久 (分鐘) 會傳送更新到接收程式 (不適用於 Health Connect)</string>
     <string name="alarm_repeat_summary">警報會重複發出聲音和震動，直到您關閉通知或達到所設定的最大警報持續時間為止</string>
     <string name="alarm_repeat_time">最大警報持續時間</string>
     <string name="alarm_repeat_time_summary">設定警報發出聲音和震動的最大持續時間 (分鐘)。設為 0 表示警報會一直重複</string>
@@ -872,7 +872,8 @@ GlucoDataHandler 只會將血糖數據寫入健康連結，除非您明確授予
 您隨時可以在健康連結應用程式設定中管理這些權限。
 </string>
     <string name="pref_healthconnect">健康連結</string>
-    <string name="pref_healthconnect_summary">要與健康連結分享您的數據，請授予 GDH 權限。\n要與三星健康同步，您還必須在三星健康應用程式中啟用「從健康連結讀取」。</string>
+    <string name="pref_healthconnect_summary">若要與 Health Connect 分享您的資料，請授權給 GDH。</string>
+    <string name="pref_samsunghealth_summary">若要與 Samsung Health 同步，您也必須在 Samsung Health 應用程式中啟用「從 Health Connect 讀取」。\n請注意，Samsung Health 等應用程式不會定期讀取這些數值！</string>
     <string name="health_connect_error">發生錯誤，請將日誌傳送給開發人員。</string>
     <string name="health_connect_not_available">不可用！</string>
     <string name="health_connect_no_permission">缺少權限！</string>

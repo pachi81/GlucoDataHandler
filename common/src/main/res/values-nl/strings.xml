@@ -667,7 +667,7 @@
     <string name="pref_send_battery_level_to_watch_summary">Verzend batterijniveau naar horloge om weer te geven in complicatie en op hoofdscherm.</string>
     <string name="pref_battery_level">Batterijniveau weergeven</string>
     <string name="forward_to_watch_interval_summary">Stel de minimale tijd (in minuten) in tussen glucosemetingen voordat een nieuwe update naar het horloge wordt verzonden.\nAlarmen en zeer lage metingen worden altijd verzonden.</string>
-    <string name="forward_to_values_summary">Stel de minimale tijd (in minuten) in tussen glucosemetingen voordat een nieuwe update naar de ontvangers wordt verzonden.</string>
+    <string name="forward_to_values_summary">Stel de minimale tijd (in minuten) in tussen glucosemetingen voordat een nieuwe update naar de ontvangers wordt verzonden (niet voor Health Connect).</string>
     <string name="alarm_repeat_summary">Het alarm zal herhaaldelijk klinken en trillen totdat u de melding sluit of de ingestelde maximale alarmduur is bereikt.</string>
     <string name="alarm_repeat_time">Maximale alarmduur</string>
     <string name="alarm_repeat_time_summary">Geef de maximale tijd (in minuten) op dat het alarm zal klinken en trillen. Een waarde van 0 betekent dat het alarm oneindig zal herhalen.</string>
@@ -877,7 +877,8 @@ GlucoDataHandler schrijft alleen bloedglucosegegevens naar Health Connect en lee
 U kunt deze toestemmingen op elk moment beheren in de instellingen van de Health Connect-app.
 </string>
     <string name="pref_healthconnect">Health Connect</string>
-    <string name="pref_healthconnect_summary">Om uw gegevens met Health Connect te delen, geeft u toestemming aan GDH.\nOm te synchroniseren met Samsung Health, moet u ook "lezen uit Health Connect" inschakelen in de Samsung Health-app.</string>
+    <string name="pref_healthconnect_summary">Om uw gegevens te delen met Health Connect, verleent u toestemming aan GDH.</string>
+    <string name="pref_samsunghealth_summary">Om te synchroniseren met Samsung Health, moet u ook "lezen van Health Connect" inschakelen in de Samsung Health-app.\nHoud er rekening mee dat bijvoorbeeld Samsung Health deze waarden niet periodiek leest!</string>
     <string name="health_connect_error">Er is een fout opgetreden, stuur de logboeken naar de ontwikkelaar.</string>
     <string name="health_connect_not_available">Niet beschikbaar!</string>
     <string name="health_connect_no_permission">Toestemming ontbreekt!</string>

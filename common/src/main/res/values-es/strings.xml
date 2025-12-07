@@ -662,7 +662,7 @@
     <string name="pref_send_battery_level_to_watch_summary">Enviar el nivel de batería al reloj para mostrarlo en la complicación y en la pantalla principal.</string>
     <string name="pref_battery_level">Mostrar nivel de batería</string>
     <string name="forward_to_watch_interval_summary">Establece el tiempo mínimo (en minutos) entre las mediciones de glucosa antes de enviar una nueva actualización al reloj.\nLas alarmas y las mediciones muy bajas siempre se enviarán.</string>
-    <string name="forward_to_values_summary">Establece el tiempo mínimo (en minutos) entre las mediciones de glucosa antes de enviar una nueva actualización a los receptores.</string>
+    <string name="forward_to_values_summary">Establece el tiempo mínimo (en minutos) entre las mediciones de glucosa antes de enviar una nueva actualización a los receptores (no para Health Connect).</string>
     <string name="alarm_repeat_summary">La alarma sonará y vibrará repetidamente hasta que descartes la notificación o se alcance la duración máxima de la alarma establecida.</string>
     <string name="alarm_repeat_time">Duración máxima de la alarma</string>
     <string name="alarm_repeat_time_summary">Especifica el tiempo máximo (en minutos) que la alarma sonará y vibrará. Un valor de 0 significa que la alarma se repetirá indefinidamente.</string>
@@ -874,7 +874,8 @@ GlucoDataHandler solo escribe datos de glucosa en sangre en Health Connect y no 
 Puedes gestionar estos permisos en cualquier momento en la configuración de la aplicación Health Connect.
 </string>
     <string name="pref_healthconnect">Health Connect</string>
-    <string name="pref_healthconnect_summary">Para compartir tus datos con Health Connect, concede permiso a GDH.\nPara sincronizar con Samsung Health, también debes habilitar "leer de Health Connect" en la aplicación Samsung Health.</string>
+    <string name="pref_healthconnect_summary">Para compartir sus datos con Health Connect, conceda permiso a GDH.</string>
+    <string name="pref_samsunghealth_summary">Para sincronizar con Samsung Health, también debe habilitar "leer desde Health Connect" en la aplicación Samsung Health.\n¡Tenga en cuenta que, por ejemplo, Samsung Health no lee estos valores periódicamente!</string>
     <string name="health_connect_error">Ocurrió un error, por favor envía los registros al desarrollador.</string>
     <string name="health_connect_not_available">¡No disponible!</string>
     <string name="health_connect_no_permission">¡Falta permiso!</string>

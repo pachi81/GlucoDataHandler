@@ -727,7 +727,7 @@
     <string name="pref_send_battery_level_to_watch_summary">Send battery level to watch to show in complication and on main screen.</string>
     <string name="pref_battery_level">Show battery level</string>
     <string name="forward_to_watch_interval_summary">Set the minimum time (in minutes) between glucose measurements before sending a new update to the watch.\nAlarms and very low measurements will always be sent.</string>
-    <string name="forward_to_values_summary">Set the minimum time (in minutes) between glucose measurements before sending a new update to the receivers.</string>
+    <string name="forward_to_values_summary">Set the minimum time (in minutes) between glucose measurements before sending a new update to the receivers (not for Health Connect).</string>
     <string name="alarm_repeat_summary">The alarm will sound and vibrate repeatedly until you dismiss the notification or the set max alarm duration is reached.</string>
     <string name="alarm_repeat_time">Max alarm duration</string>
     <string name="alarm_repeat_time_summary">Specify the maximum time (in minutes) the alarm will sound and vibrate. A value of 0 means the alarm will repeat indefinitely.</string>
@@ -938,7 +938,8 @@ GlucoDataHandler only writes blood glucose data to Health Connect and will not r
 You can manage these permissions at any time in the Health Connect app settings.
 </string>
     <string name="pref_healthconnect">Health Connect</string>
-    <string name="pref_healthconnect_summary">To share your data with Health Connect, grant permission to GDH.\nTo sync with Samsung Health, you must also enable "read from Health Connect" in the Samsung Health app.</string>
+    <string name="pref_healthconnect_summary">To share your data with Health Connect, grant permission to GDH.</string>
+    <string name="pref_samsunghealth_summary">To sync with Samsung Health, you must also enable "read from Health Connect" in the Samsung Health app.\nBe aware that, for example, Samsung Health does not periodically read these values!</string>
     <string name="health_connect_error">Error occurred, please send logs to developer.</string>
     <string name="health_connect_not_available">Not available!</string>
     <string name="health_connect_no_permission">Missing permission!</string>

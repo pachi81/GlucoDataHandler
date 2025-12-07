@@ -665,7 +665,7 @@
     <string name="pref_send_battery_level_to_watch_summary">Изпращане на ниво на батерията до часовника, за да се показва в усложнението и на главния екран.</string>
     <string name="pref_battery_level">Показване на ниво на батерията</string>
     <string name="forward_to_watch_interval_summary">Задайте минималното време (в минути) между измерванията на глюкозата, преди да изпратите нова актуализация до часовника.\nАлармите и много ниските измервания винаги ще бъдат изпращани.</string>
-    <string name="forward_to_values_summary">Задайте минималното време (в минути) между измерванията на глюкозата, преди да изпратите нова актуализация до приемниците.</string>
+    <string name="forward_to_values_summary">Задайте минималното време (в минути) между измерванията на глюкозата, преди да изпратите нова актуализация до приемниците (не за Health Connect).</string>
     <string name="alarm_repeat_summary">Алармата ще звучи и ще вибрира многократно, докато не отхвърлите известието или не се достигне зададената максимална продължителност на алармата.</string>
     <string name="alarm_repeat_time">Максимална продължителност на алармата</string>
     <string name="alarm_repeat_time_summary">Посочете максималното време (в минути), през което алармата ще звучи и ще вибрира. Стойност 0 означава, че алармата ще се повтаря безкрайно.</string>
@@ -877,7 +877,8 @@ GlucoDataHandler само записва данни за кръвната зах
 Можете да управлявате тези разрешения по всяко време в настройките на приложението Health Connect.
 </string>
     <string name="pref_healthconnect">Health Connect</string>
-    <string name="pref_healthconnect_summary">За да споделяте данните си с Health Connect, дайте разрешение на GDH.\nЗа да синхронизирате със Samsung Health, трябва също да активирате "четене от Health Connect" в приложението Samsung Health.</string>
+    <string name="pref_healthconnect_summary">За да споделите данните си с Health Connect, дайте разрешение на GDH.</string>
+    <string name="pref_samsunghealth_summary">За да синхронизирате със Samsung Health, трябва също да активирате „четене от Health Connect“ в приложението Samsung Health.\nИмайте предвид, че например Samsung Health не чете тези стойности периодично!</string>
     <string name="health_connect_error">Възникна грешка, моля, изпратете логовете на разработчика.</string>
     <string name="health_connect_not_available">Не е налично!</string>
     <string name="health_connect_no_permission">Липсва разрешение!</string>
