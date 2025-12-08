@@ -889,7 +889,7 @@ Sie können diese Berechtigungen jederzeit in den Health Connect App-Einstellung
     <string name="pref_cat_log_to_db">In Datenbank loggen</string>
     <string name="pref_log_to_db_summary">Warnung: Das Speichern von Logs in der Datenbank kann die Leistung und die Akkulaufzeit beeinträchtigen.\nBitte diese Option nur auf Anweisung des Entwicklers aktivieren, um bei der Analyse eines Problems zu helfen.</string>
     <string name="pref_log_duration_size">Log-Speicherdauer</string>
-    <string name="pref_log_duration_summary">Anzahl der Stunden, die Logs in der Datenbank aufbewahrt werden sollen.\nDer Wert 0 deaktiviert das Datenbank-Logging zu deaktivieren.</string>
+    <string name="pref_log_duration_summary">Anzahl der Stunden, die Logs in der Datenbank aufbewahrt werden sollen.\nDer Wert 0 deaktiviert das Datenbank-Logging.</string>
     <string name="pref_log_debug">Debug-Logging aktivieren</string>
     <string name="pref_log_debug_summary">Speichern von detaillierten Debug-Meldungen in der Datenbank aktivieren (max. die letzten 30 Minuten).\nNur aktivieren, wenn vom Entwickler angefordert.</string>
 
