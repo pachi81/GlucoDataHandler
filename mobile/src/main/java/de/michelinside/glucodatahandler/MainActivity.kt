@@ -12,7 +12,7 @@ import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
 import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
@@ -52,6 +52,7 @@ import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.chart.ChartCreator
 import de.michelinside.glucodatahandler.common.chart.GlucoseChart
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
+import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
 import de.michelinside.glucodatahandler.common.notification.AlarmState
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notification.ChannelType
@@ -62,16 +63,19 @@ import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.tasks.DexcomShareSourceTask
 import de.michelinside.glucodatahandler.common.ui.Dialogs
+import de.michelinside.glucodatahandler.common.ui.SelectPatientPopup
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.GlucoseStatistics
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
+import de.michelinside.glucodatahandler.healthconnect.HealthConnectManager
 import de.michelinside.glucodatahandler.notification.AlarmNotification
-import de.michelinside.glucodatahandler.preferences.AlarmFragment
+import de.michelinside.glucodatahandler.preferences.AlarmGeneralFragment
 import de.michelinside.glucodatahandler.preferences.LockscreenSettingsFragment
 import de.michelinside.glucodatahandler.watch.WatchDrip
 import de.michelinside.glucodatahandler.widget.BatteryLevelWidget
+import de.michelinside.glucodatahandler.xdripserver.XDripServer
 import java.text.DateFormat
 import java.text.DecimalFormat
 import java.time.Duration
@@ -99,6 +103,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var tableNotes: TableLayout
     private lateinit var btnSources: Button
     private lateinit var btnHelp: Button
+    private lateinit var btnPatient: Button
     private lateinit var noDataLayout: LinearLayout
     private lateinit var sharedPref: SharedPreferences
     private lateinit var optionsMenu: Menu
@@ -118,6 +123,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private var doNotUpdate = false
     private lateinit var chartCreator: ChartCreator
     private var systemBars: Insets? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
@@ -139,6 +145,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             txtLastValue = findViewById(R.id.txtLastValue)
             btnSources = findViewById(R.id.btnSources)
             btnHelp = findViewById(R.id.btnHelp)
+            btnPatient = findViewById(R.id.btnPatient)
             noDataLayout = findViewById(R.id.layout_no_data)
             tableConnections = findViewById(R.id.tableConnections)
             tableAlarms = findViewById(R.id.tableAlarms)
@@ -167,7 +174,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             }
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
-            sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
 
             ReceiveData.initData(this.applicationContext)
 
@@ -267,7 +274,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.CAR_CONNECTION,
                 NotifySource.TIME_VALUE,
                 NotifySource.ALARM_STATE_CHANGED,
-                NotifySource.SOURCE_STATE_CHANGE))
+                NotifySource.SOURCE_STATE_CHANGE,
+                NotifySource.UPDATE_MAIN))
             checkUncaughtException()
             checkMissingPermissions()
             checkNewSettings()
@@ -350,7 +358,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     resources.getString(CR.string.permission_missing_title),
                     resources.getString(CR.string.setting_permission_missing_message, resources.getString(CR.string.alarm_fullscreen_notification_enabled)),
                     { _, _ ->
-                        AlarmFragment.requestFullScreenPermission(this)
+                        AlarmGeneralFragment.requestFullScreenPermission(this)
                     },
                     { _, _ ->
                         with(sharedPref.edit()) {
@@ -569,7 +577,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private fun toggleAlarm() {
         try {
             doNotUpdate = true
-            val state = AlarmNotification.getAlarmState(this)
+            val state = AlarmNotificationBase.currentAlarmState
             if(AlarmNotification.channelActive(this)) {
                 Log.v(LOG_ID, "toggleAlarm called for state $state")
                 when (state) {
@@ -587,8 +595,18 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                             apply()
                         }
                     }
+                    AlarmState.ALARM -> {
+                        AlarmNotification.stopCurrentNotification(this)
+                    }
                     AlarmState.TEMP_DISABLED -> {
-                        AlarmHandler.disableInactiveTime()
+                        if(AlarmHandler.inactiveAutoReenable)
+                            AlarmHandler.disableInactiveTime()
+                        else {
+                            with(sharedPref.edit()) {
+                                putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
+                                apply()
+                            }
+                        }
                     }
                 }
             } else {
@@ -618,7 +636,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     apply()
                 }
             }
-            val state = AlarmNotification.getAlarmState(this)
+            val state = AlarmNotificationBase.currentAlarmState
             Log.v(LOG_ID, "updateAlarmIcon called for state $state")
             if(alarmIcon != null) {
                 alarmIcon!!.isEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_ENABLE_ALARM_ICON_TOGGLE, true)
@@ -631,7 +649,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     })
             }
             if(snoozeMenu != null) {
-                snoozeMenu!!.isVisible = (state == AlarmState.ACTIVE || state == AlarmState.SNOOZE)
+                snoozeMenu!!.isVisible = (AlarmState.isActive(state) || state == AlarmState.SNOOZE)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateAlarmIcon exception: " + exc.message.toString() )
@@ -670,6 +688,13 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             iobCobLayout.visibility = iobText.visibility
 
             noDataLayout.visibility = if(ReceiveData.time>0) View.GONE else View.VISIBLE
+
+            if(GlucoDataService.patientName.isNullOrEmpty()) {
+                if(title != resources.getString(R.string.app_name))
+                    setTitle(R.string.app_name)
+            } else {
+                setTitle(GlucoDataService.patientName)
+            }
 
             //chartHandler.update()
             updateNotesTable()
@@ -769,34 +794,62 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private fun updateConnectionsTable() {
         tableConnections.removeViews(1, maxOf(0, tableConnections.childCount - 1))
         if (SourceStateData.lastState != SourceState.NONE) {
+            var onClickListener: OnClickListener? = null
+            if(SourceStateData.lastState == SourceState.MULTI_PATIENT) {
+                btnPatient.visibility = View.VISIBLE
+                btnPatient.setOnClickListener{
+                    try {
+                        SelectPatientPopup.show(this, SourceStateData.lastSource)
+                    } catch (exc: Exception) {
+                        Log.e(LOG_ID, "Dexcom browse exception: " + exc.message.toString() )
+                    }
+                }
+                onClickListener = OnClickListener {
+                    try {
+                        SelectPatientPopup.show(this, SourceStateData.lastSource)
+                    } catch (exc: Exception) {
+                        Log.e(LOG_ID, "Dexcom browse exception: " + exc.message.toString() )
+                    }
+                }
+            } else {
+                btnPatient.visibility = View.GONE
+            }
             val msg = SourceStateData.getStateMessage(this)
             tableConnections.addView(
                 createRow(
                     SourceStateData.lastSource.resId,
-                    msg
+                    msg,
+                    onClickListener
                 )
             )
-            if(SourceStateData.lastState == SourceState.ERROR) {
-                if(SourceStateData.lastSource == DataSource.DEXCOM_SHARE && msg.contains("500:")) {
+            if(SourceStateData.lastState == SourceState.ERROR && SourceStateData.lastSource == DataSource.DEXCOM_SHARE && msg.startsWith("50")) {
+                val resId: Int
+                val resUrlId: Int
+                if(msg.startsWith("500:")) {
                     val server = sharedPref.getString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "eu") ?: "eu"
-                    val browserIntent = Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse(resources.getString(DexcomShareSourceTask.getClarityUrlRes(server)))
-                    )
-                    val onClickListener = OnClickListener {
-                        try {
-                            startActivity(browserIntent)
-                        } catch (exc: Exception) {
-                            Log.e(LOG_ID, "Dexcom browse exception: " + exc.message.toString() )
-                        }
-                    }
-                    tableConnections.addView(
-                        createRow(
-                            resources.getString(DexcomShareSourceTask.getClarityUrlSummaryRes(server)),
-                            onClickListener
-                        )
-                    )
+                    resId = DexcomShareSourceTask.getClarityUrlSummaryRes(server)
+                    resUrlId = DexcomShareSourceTask.getClarityUrlRes(server)
+                } else {
+                    resId = CR.string.dexcom_server_down_error
+                    resUrlId = CR.string.dexcom_server_status_url
                 }
+                val browserIntent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(resources.getString(resUrlId))
+                )
+                val onClickListener = OnClickListener {
+                    try {
+                        startActivity(browserIntent)
+                    } catch (exc: Exception) {
+                        Log.e(LOG_ID, "Dexcom browse exception: " + exc.message.toString() )
+                    }
+                }
+                tableConnections.addView(
+                    createRow(
+                        resources.getString(resId),
+                        onClickListener
+                    )
+                )
             }
             if(SourceStateData.lastErrorInfo.isNotEmpty()) {
                 // add error specific information in an own row
@@ -828,9 +881,24 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         if (WatchDrip.connected) {
             tableConnections.addView(createRow(CR.string.pref_switch_watchdrip_enabled, resources.getString(CR.string.connected_label)))
         }
-
+        if(HealthConnectManager.enabled && HealthConnectManager.state.resId != 0) {
+            tableConnections.addView(createRow(CR.string.pref_healthconnect, resources.getString(HealthConnectManager.state.resId)))
+        }
         if (CarModeReceiver.AA_connected) {
             tableConnections.addView(createRow(CR.string.pref_cat_android_auto, resources.getString(CR.string.connected_label)))
+        }
+        if(XDripServer.enabled) {
+            if (XDripServer.isServerRunning()) {
+                tableConnections.addView(createRow(CR.string.pref_switch_xdrip_server, resources.getString(CR.string.state_active)))
+                if(XDripServer.lastRequest > 0L) {
+                    tableConnections.addView(createRow(CR.string.last_request, Utils.getUiTimeStamp(XDripServer.lastRequest)))
+                }
+            } else if(!XDripServer.lastError.isNullOrEmpty()) {
+                tableConnections.addView(createRow(CR.string.pref_switch_xdrip_server, XDripServer.lastError!!))
+            } else {
+                tableConnections.addView(createRow(CR.string.pref_switch_xdrip_server, resources.getString(CR.string.health_connect_error)))
+            }
+
         }
         checkTableVisibility(tableConnections)
     }
@@ -917,12 +985,16 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         checkTableVisibility(tableDetails)
     }
 
-    private fun getSensorAgeAsString(duration: Duration): String {
+    private fun getSensorAgeAsString(duration: Duration, longFormat: Boolean = false): String {
         if(duration.isNegative || duration.toMinutes() < 60) {
+            if(longFormat)
+                return resources.getQuantityString(CR.plurals.minutes_long, duration.toMinutes().toInt(), duration.toMinutes().toInt())
             return resources.getString(CR.string.elapsed_time).format(duration.toMinutes())
         }
         val days = duration.toDays()
         val hours = duration.minusDays(days).toHours()
+        if(longFormat)
+            return (if(days > 0) resources.getQuantityString(CR.plurals.days_long, days.toInt(), days.toInt()) + ", " else "") + resources.getQuantityString(CR.plurals.hours_long, hours.toInt(), hours.toInt())
         return resources.getString(CR.string.sensor_age_value).format(days, hours)
     }
 
@@ -939,24 +1011,29 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             }
         }
         val showRemaining = sharedPref.getBoolean(Constants.SHARED_PREF_SHOW_SENSOR_AGE_REMAIN_TIME, false)
-        return if(showRemaining) {
+        if(showRemaining) {
             val runtimeDuration = Duration.ofMinutes(runtimeMinutes.toLong())
             val diffDuration = runtimeDuration.minus(duration)
-            createColumn(getSensorAgeAsString(diffDuration) + " >", true, onClickListener)
+            val col = createColumn(getSensorAgeAsString(diffDuration) + " >", true, onClickListener)
+            col.contentDescription = resources.getString(CR.string.remaining) + ": " + getSensorAgeAsString(diffDuration, true)
+            return col
         } else {
-            createColumn("< " + getSensorAgeAsString(duration), true, onClickListener)
+            val col = createColumn("< " + getSensorAgeAsString(duration), true, onClickListener)
+            col.contentDescription = getSensorAgeAsString(duration, true)
+            return col
         }
     }
 
     private fun updateStatisticsTable() {
         tableStatistics.removeViews(1, maxOf(0, tableStatistics.childCount - 1))
-        val standardStats = sharedPref.getBoolean(Constants.SHARED_PREF_STANDARD_STATISTICS, false)
+        val standardStats = sharedPref.getBoolean(Constants.SHARED_PREF_STANDARD_STATISTICS, true)
         GlucoseStatistics.update(standardStats)
         if(GlucoseStatistics.hasStatistics) {
             val statData = if(btnStat1d.isChecked) GlucoseStatistics.statData1d else GlucoseStatistics.statData7d
             Log.d(LOG_ID, "Create statistics for ${statData.days}d with ${statData.count} data points - hasData: ${statData.hasData}")
             val name = if(btnStat1d.isChecked) resources.getString(CR.string.info_label_average) else resources.getString(CR.string.info_label_average) + " ⌀"
             tableStatistics.addView(createRow(name, GlucoDataUtils.getDisplayGlucoseAsString(statData.averageGlucose, true)))
+            tableStatistics.addView(createRow(CR.string.gmi, "${DecimalFormat("#.#").format(statData.gmiValue)}%"))
             if(statData.hasData) {
                 tableStatistics.addView(createProgressBarRow(GlucoseStatistics.getStatisticsTitle(this, AlarmType.VERY_HIGH, standardStats), statData.percentVeryHigh, ReceiveData.getAlarmTypeColor(AlarmType.VERY_HIGH)))
                 tableStatistics.addView(createProgressBarRow(GlucoseStatistics.getStatisticsTitle(this, AlarmType.HIGH, standardStats), statData.percentHigh, ReceiveData.getAlarmTypeColor(AlarmType.HIGH)))
@@ -976,6 +1053,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         val textView = TextView(this)
         textView.layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, initWeight)
         textView.text = text
+        textView.isFocusable = false
         textView.textSize = 18F
         if (end)
             textView.gravity = Gravity.CENTER_VERTICAL or Gravity.END
@@ -992,6 +1070,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     private fun createRow(key: String, value: String, onClickListener: OnClickListener? = null) : TableRow {
         val row = TableRow(this)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+            row.isScreenReaderFocusable = true
         row.weightSum = 2f
         //row.setBackgroundColor(resources.getColor(R.color.table_row))
         row.setPadding(Utils.dpToPx(5F, this))
@@ -1007,6 +1087,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         progressBar.max = max
         progressBar.scaleY = 3F
         progressBar.contentDescription = description
+        progressBar.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
         progressBar.setProgressTintList(ColorStateList.valueOf(color))
         return progressBar
     }
@@ -1018,6 +1099,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         val row = TableRow(this)
         row.weightSum = 11f
         row.gravity = Gravity.CENTER_VERTICAL
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+            row.isScreenReaderFocusable = true
         row.setPadding(Utils.dpToPx(5F, this))
         row.addView(createColumn(key, false, null, 4F))
         row.addView(createProgressBar(percentage.toInt(), 100, color, key))
@@ -1039,6 +1122,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private fun createRow(value: String, onClickListener: OnClickListener? = null) : TableRow {
         val row = TableRow(this)
         row.weightSum = 1f
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+            row.isScreenReaderFocusable = true
         //row.setBackgroundColor(resources.getColor(R.color.table_row))
         row.setPadding(Utils.dpToPx(5F, this))
         row.addView(createColumn(value, false, onClickListener))
@@ -1085,6 +1170,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     borderLeft?.visibility = View.GONE
                     borderRight?.visibility = View.GONE
                     expandCollapseView!!.setImageDrawable(ContextCompat.getDrawable(this, CR.drawable.icon_collapse))
+                    expandCollapseView!!.contentDescription = resources.getString(CR.string.collapse_view)
                     if(Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM && systemBars!=null)
                         view?.setPadding(systemBars!!.left, systemBars!!.top/2, systemBars!!.right, systemBars!!.bottom)
                 } else {
@@ -1095,6 +1181,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     borderLeft?.visibility = View.VISIBLE
                     borderRight?.visibility = View.VISIBLE
                     expandCollapseView!!.setImageDrawable(ContextCompat.getDrawable(this, CR.drawable.icon_expand))
+                    expandCollapseView!!.contentDescription = resources.getString(CR.string.expand_view)
                     if(Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM && systemBars!=null)
                         view?.setPadding(systemBars!!.left, systemBars!!.top, systemBars!!.right, systemBars!!.bottom)
                 }

@@ -9,7 +9,7 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import com.eveningoutpost.dexdrip.services.broadcastservice.models.GraphLine
 import com.eveningoutpost.dexdrip.services.broadcastservice.models.Settings
 import de.michelinside.glucodatahandler.common.BuildConfig
@@ -294,7 +294,8 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
         }
     }
     private fun sendBroadcastToReceiver(context: Context, receiver: String?, bundle: Bundle) {
-        Log.d(LOG_ID, "Sending broadcast to " + receiver + ":\n" + Utils.dumpBundle(bundle))
+        if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
+            Log.d(LOG_ID, "Sending broadcast to " + receiver + ":\n" + Utils.dumpBundle(bundle))
         val intent = Intent(BroadcastServiceAPI.BROADCAST_SENDER_ACTION)
         if(receiver != null)
             intent.setPackage(receiver)

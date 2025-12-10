@@ -7,7 +7,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.core.graphics.drawable.toDrawable
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -20,6 +20,7 @@ import kotlin.math.max
 
 class LockScreenWallpaper(context: Context): WallpaperBase(context, "GDH.LockScreenWallpaper") {
     private var yPos = 75
+    private var xPos = 20
     override val enabledPref = Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED
     override val stylePref = Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE
     override val sizePref = Constants.SHARED_PREF_LOCKSCREEN_WP_SIZE
@@ -51,9 +52,9 @@ class LockScreenWallpaper(context: Context): WallpaperBase(context, "GDH.LockScr
                 val canvas = Canvas(wallpaper)
                 val drawable = bitmap.toDrawable(context.resources)
                 drawable.setBounds(0, 0, screenWidth, screenHeigth)
-                val xOffset = ((screenWidth-bitmap.width)/2F) //*1.2F-(screenDPI*0.3F)
+                val xOffset = (screenWidth-bitmap.width) * xPos/40F
                 val yOffset = max(0F, ((screenHeigth-bitmap.height)*yPos/100F)) //-(screenDPI*0.3F))
-                Log.d(LOG_ID, "Create wallpaper at x=$xOffset/$screenWidth and y=$yOffset/$screenHeigth DPI=$screenDPI")
+                Log.d(LOG_ID, "Create wallpaper (x*y:${bitmap.width}*${bitmap.height}) at x=$xOffset/$screenWidth and y=$yOffset/$screenHeigth DPI=$screenDPI")
                 canvas.drawBitmap(bitmap, xOffset, yOffset, Paint(Paint.ANTI_ALIAS_FLAG))
             }
             return wallpaper
@@ -78,7 +79,7 @@ class LockScreenWallpaper(context: Context): WallpaperBase(context, "GDH.LockScr
         setWallpaper(null, context)
     }
 
-    override fun update() {
+    override open fun update() {
         try {
             Log.v(LOG_ID, "updateLockScreen called - active=$active")
             if (active) {
@@ -91,6 +92,7 @@ class LockScreenWallpaper(context: Context): WallpaperBase(context, "GDH.LockScr
 
     override fun initSettings(sharedPreferences: SharedPreferences) {
         yPos = sharedPreferences.getInt(Constants.SHARED_PREF_LOCKSCREEN_WP_Y_POS, 75)
+        xPos = sharedPreferences.getInt(Constants.SHARED_PREF_LOCKSCREEN_WP_X_POS, 20)
         super.initSettings(sharedPreferences)
     }
 
@@ -100,6 +102,10 @@ class LockScreenWallpaper(context: Context): WallpaperBase(context, "GDH.LockScr
             if (key == Constants.SHARED_PREF_LOCKSCREEN_WP_Y_POS && yPos != sharedPreferences.getInt(Constants.SHARED_PREF_LOCKSCREEN_WP_Y_POS, 75)) {
                 yPos = sharedPreferences.getInt(Constants.SHARED_PREF_LOCKSCREEN_WP_Y_POS, 75)
                 Log.d(LOG_ID, "New Y pos: $yPos")
+                update()
+            } else if (key == Constants.SHARED_PREF_LOCKSCREEN_WP_X_POS && xPos != sharedPreferences.getInt(Constants.SHARED_PREF_LOCKSCREEN_WP_X_POS, 20)) {
+                xPos = sharedPreferences.getInt(Constants.SHARED_PREF_LOCKSCREEN_WP_X_POS, 20)
+                Log.d(LOG_ID, "New X pos: $xPos")
                 update()
             } else {
                 super.onSharedPreferenceChanged(sharedPreferences, key)

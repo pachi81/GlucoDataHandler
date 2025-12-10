@@ -2,7 +2,7 @@ package de.michelinside.glucodatahandler.common
 
 import android.content.Context
 import android.os.Handler
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -12,6 +12,7 @@ enum class SourceState(val resId: Int) {
     CONNECTED(R.string.connected_label),
     NO_NEW_VALUE(R.string.source_state_no_new_value),
     NO_CONNECTION(R.string.source_state_no_connection),
+    MULTI_PATIENT(R.string.source_select_patient),
     ERROR(R.string.source_state_error);
 }
 object SourceStateData {
@@ -60,6 +61,14 @@ object SourceStateData {
             return lastError
         }
         return context.getString(lastState.resId)
+    }
+
+    fun reset() {
+        lastSource = DataSource.NONE
+        lastState = SourceState.NONE
+        lastError = ""
+        lastErrorInfo = ""
+        lastStateTime = 0
     }
     /*
     fun getState(context: Context): String {

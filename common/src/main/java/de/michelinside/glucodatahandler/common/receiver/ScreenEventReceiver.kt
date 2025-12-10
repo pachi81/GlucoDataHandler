@@ -3,7 +3,7 @@ package de.michelinside.glucodatahandler.common.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.Display
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource

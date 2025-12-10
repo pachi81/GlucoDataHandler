@@ -14,7 +14,6 @@ import android.os.Handler
 import android.os.Parcel
 import android.provider.Settings
 import android.text.format.DateUtils
-import android.util.Log
 import android.util.TypedValue
 import android.view.accessibility.AccessibilityManager
 import android.widget.Toast
@@ -30,9 +29,11 @@ import java.io.OutputStream
 import java.math.RoundingMode
 import java.security.MessageDigest
 import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.Calendar
@@ -42,7 +43,7 @@ import kotlin.math.max
 
 
 object Utils {
-    private val LOG_ID = "GDH.Utils"
+    private val LOG_ID = "GDH.Utils.Utils"
     fun round(value: Float, scale: Int, roundingMode: RoundingMode = RoundingMode.HALF_UP): Float {
         if (value.isNaN())
             return value
@@ -342,7 +343,14 @@ object Utils {
         try {
             outputStream.write(getDeviceInformations().toByteArray())
             outputStream.flush()
-            val cmd = "logcat -t 4000"
+            val cmd: String
+            if(Log.dbLoggingEnabled) {
+                outputStream.write(Log.getLogs().toByteArray())
+                outputStream.flush()
+                cmd = "logcat *:W -t 4000"
+            } else {
+                cmd = "logcat -t 4000"
+            }
             Log.i(LOG_ID, "Getting logcat with command: $cmd")
             val process = Runtime.getRuntime().exec(cmd)
             val thread = Thread {
@@ -504,6 +512,8 @@ object Utils {
     }
 
     private val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+    private val simpleTimeFormatter = SimpleDateFormat("HH:mm")
+
 
     fun isValidTime(time: String?): Boolean {
         if (time.isNullOrEmpty())
@@ -543,6 +553,72 @@ object Utils {
         }
         return false
     }
+
+    /**
+     * Parses a time string in "HH:mm" format and returns the next future timestamp (in epoch milliseconds)
+     * that matches the given time and the optional weekDayFilter.
+     *
+     * @param time The time string in "HH:mm" format.
+     * @param weekDayFilter A set of strings representing the days of the week (1=Monday, 7=Sunday).
+     *                      If null or size 7, it's considered to apply to all days.
+     *                      If empty, no day matches.
+     * @return The next future timestamp in epoch milliseconds, or 0 if parsing fails or no match is found within a reasonable future.
+     */
+    fun parseTimeAndGetNextTimestamp(time: String, weekDayFilter: MutableSet<String>? = null): Long {
+        try {
+            Log.d(LOG_ID, "parseTimeAndGetNextTimestamp for time $time and filter $weekDayFilter")
+            if (!isValidTime(time)) {
+                Log.w(LOG_ID, "Invalid time format: $time")
+                return 0
+            }
+            if(weekDayFilter != null && weekDayFilter.isEmpty())
+                return 0
+
+            val targetLocalTime = LocalTime.parse(time, timeFormatter)
+
+            var nextDateTime = LocalDateTime.now()
+            val maxSearchDays = 7 // Begrenzen Sie die Suche auf 7 Tage, um Endlosschleifen zu vermeiden
+
+            for (i in 0 until maxSearchDays) {
+                // Prüfe, ob die aktuelle Zeit passt, falls wir gerade die Zielzeit erreichen/überschritten haben
+                // (nur relevant, wenn wir heute noch nicht über die Zeit hinaus sind)
+                if (i > 0) { // Wenn wir uns in der Zukunft befinden, setzen wir die Zeit auf den nächsten Tag
+                    nextDateTime = nextDateTime.plusDays(1)
+                }
+
+                val currentTargetDateTime = nextDateTime.with(targetLocalTime)
+
+                Log.v(LOG_ID, "Checking currentTargetDateTime: $currentTargetDateTime - localTime: ${LocalDateTime.now()}")
+                // Prüfe, ob die gefundene Zeit in der Zukunft liegt (oder exakt jetzt ist, falls das auch zählt)
+                // Wenn die Zeit bereits in der Vergangenheit liegt für den heutigen Tag, müssen wir den nächsten Tag nehmen
+                if (currentTargetDateTime.isBefore(LocalDateTime.now()) && i == 0) {
+                    continue // Versuche es mit dem nächsten Tag
+                }
+
+                // Prüfe den Wochentagsfilter
+                if (weekDayFilter == null || weekDayFilter.size == 7) {
+                    // Wenn kein Filter oder alle Tage drin, dann passt es immer
+                    Log.v(LOG_ID, "Use currentTargetDateTime: $currentTargetDateTime")
+                    return currentTargetDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                } else {
+                    // Wochentag ist 1 (Montag) bis 7 (Sonntag)
+                    val currentDayOfWeekValue = currentTargetDateTime.dayOfWeek.value.toString()
+                    if (weekDayFilter.contains(currentDayOfWeekValue)) {
+                        Log.v(LOG_ID, "Use currentTargetDateTime for day $currentDayOfWeekValue: $currentTargetDateTime")
+                        return currentTargetDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                    }
+                }
+            }
+
+            Log.w(LOG_ID, "Could not find a matching timestamp within the next $maxSearchDays days for time $time and filter $weekDayFilter")
+            return 0 // Keine passende Zeit innerhalb der nächsten Tage gefunden
+
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "parseTimeAndGetNextTimestamp exception for time '$time' and filter $weekDayFilter: " + exc.message.toString() )
+            return 0
+        }
+    }
+
 
     fun getElapsedTimeMinute(time: Long, roundingMode: RoundingMode = RoundingMode.DOWN): Long {
         return round((System.currentTimeMillis()-time).toFloat()/60000, 0, roundingMode).toLong()

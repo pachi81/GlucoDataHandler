@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.database.GlucoseValue
 import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
@@ -58,8 +58,10 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     var sourceRate = Float.NaN
     var calculatedRate = Float.NaN
     val rate: Float get() {
-        if((useRateCalculation && !calculatedRate.isNaN()) || sourceRate.isNaN())
-            return calculatedRate
+        if(!calculatedRate.isInfinite()) {
+            if((useRateCalculation && !calculatedRate.isNaN()) || sourceRate.isNaN())
+                return calculatedRate
+        }
         return sourceRate
     }
     private var useRateCalculation = false
@@ -404,7 +406,11 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         if(count > 0) {
             calculatedRate = (sum*10/count)/Constants.GLUCOSE_CONVERSION_FACTOR
             Log.d(LOG_ID, "Calculated rate for $count values - sum $sum: $calculatedRate")
-        } else if(!sourceRate.isNaN()) {
+            if(calculatedRate.isInfinite()) {
+                calculatedRate = sourceRate
+                Log.e(LOG_ID, "Calculated rate for $count values - sum $sum is infinite!")
+            }
+        } else {
             calculatedRate = sourceRate
         }
     }
@@ -610,7 +616,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
 
                 if (!GlucoDataUtils.isGlucoseValid(extras.getInt(MGDL))) {
                     Log.w(LOG_ID, "Invalid glucose values received! " + extras.toString())
-                    SourceStateData.setError(dataSource,"Invalid glucose value: ${extras.getInt(MGDL)}")
+                    SourceStateData.setError(dataSource, context.resources.getString(R.string.invalid_glucose_value, extras.getInt(MGDL).toString()))
                     return false
                 }
 
@@ -730,12 +736,17 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             if(!isIobCob() || (newTime > iobCobTime && (newTime-iobCobTime) > 30000)) {
                 return true
             }
+            if(iob != extras.getFloat(IOB, Float.NaN) || cob != extras.getFloat(COB, Float.NaN)) {
+                // IOB or COB has changed
+                return true
+            }
         }
         return false
     }
 
     fun handleIobCob(context: Context, dataSource: DataSource, extras: Bundle, interApp: Boolean = false) {
-        Log.v(LOG_ID, "handleIobCob for source " + dataSource + ": " + Utils.dumpBundle(extras))
+        if(Log.isLoggable(LOG_ID, android.util.Log.VERBOSE))
+            Log.v(LOG_ID, "handleIobCob for source " + dataSource + ": " + Utils.dumpBundle(extras))
         if (hasNewIobCob(extras)) {
             var iobCobChange = false
             iobCobTime = if(extras.containsKey(IOBCOB_TIME))
@@ -1051,6 +1062,34 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             val serial = GlucoDataUtils.checkSerial(serialId)!!
             Log.i(LOG_ID, "setSensorStartTime for " + serial + ": " + Utils.getUiTimeStamp(startTime))
             startTimePair = Pair(serial, startTime)
+        }
+    }
+
+    fun reset(context: Context) {
+        try {
+            Log.w(LOG_ID, "reset called!")
+            time = 0L
+            rawValue = 0
+            glucose = 0.0F
+            sourceRate = Float.NaN
+            calculatedRate = Float.NaN
+            receiveTime = 0L
+            alarm = 0
+            deltaValue1Min = Float.NaN
+            deltaValue5Min = Float.NaN
+            deltaValue15Min = Float.NaN
+            sensorID = ""
+            startTimePair = Pair("", 0L)
+            iobCobTime = 0L
+            iob = Float.NaN
+            cob = Float.NaN
+            deltaFallingCount = 0
+            deltaRisingCount = 0
+            source = DataSource.NONE
+            saveExtras(context)
+            InternalNotifier.notify(context, NotifySource.MESSAGECLIENT, createExtras())
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "reset exception: " + exc.toString() + "\n" + exc.stackTraceToString())
         }
     }
 }

@@ -2,7 +2,7 @@ package de.michelinside.glucodatahandler
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.chart.GlucoseChart
 
 class WearGlucoseChart : GlucoseChart {

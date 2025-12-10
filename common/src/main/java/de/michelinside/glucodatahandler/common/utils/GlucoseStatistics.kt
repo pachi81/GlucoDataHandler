@@ -1,7 +1,7 @@
 package de.michelinside.glucodatahandler.common.utils
 
 import android.content.Context
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.database.dbAccess
@@ -60,6 +60,9 @@ class StatisticsData(val days: Int) {
     }
     val percentVeryHigh: Float get() {
         return (veryHigh.toFloat() / count.toFloat()) * 100f
+    }
+    val gmiValue: Float get() {
+        return 3.31F + (0.02392F*averageGlucose)
     }
 
     fun update(standardStats: Boolean) {

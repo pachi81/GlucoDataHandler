@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.Icon
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.wear.watchface.complications.data.*
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import androidx.wear.watchface.complications.datasource.SuspendingComplicationDataSourceService
@@ -216,10 +216,15 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
         return textOut
     }
 
-    fun getDescriptionForContent(glucose: Boolean = false, delta: Boolean = false, trend: Boolean = false, time: Boolean = false, iob: Boolean = false, cob: Boolean = false): String {
+    fun getDescriptionForContent(glucose: Boolean = false, delta: Boolean = false, trend: Boolean = false, time: Boolean = false, iob: Boolean = false, cob: Boolean = false, patientName: Boolean = false): String {
         var text = ""
+        if((patientName || glucose) && !GlucoDataService.patientName.isNullOrEmpty()) {
+            text = appendText(text,GlucoDataService.patientName!!)
+            if(glucose)
+                text = appendText(text, " ")
+        }
         if(glucose)
-            text = ReceiveData.getGlucoseAsString()
+            text = appendText(text,ReceiveData.getGlucoseAsString())
         if(delta)
             text = appendText(text, this.getString(CR.string.info_label_delta) + " " + ReceiveData.getDeltaAsString())
         if(trend)

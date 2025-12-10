@@ -8,7 +8,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Process
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUpdateRequester
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
@@ -34,12 +34,18 @@ object ActiveComplicationHandler: NotifierInterface {
     }
 
     fun addComplication(id: Int, component: ComponentName) {
-        complicationClasses[id] = component
+        if(!complicationClasses.containsKey(id)) {
+            Log.i(LOG_ID, "Add complication for id $id: ${component.shortClassName}")
+            complicationClasses[id] = component
+        }
     }
 
     fun remComplication(id: Int) {
-        complicationClasses.remove(id)
-        noComplication = complicationClasses.isEmpty()
+        if(complicationClasses.containsKey(id)) {
+            Log.i(LOG_ID, "Remove complication for id $id")
+            complicationClasses.remove(id)
+            noComplication = complicationClasses.isEmpty()
+        }
     }
 
     @SuppressLint("QueryPermissionsNeeded")
@@ -149,7 +155,7 @@ object ActiveComplicationHandler: NotifierInterface {
                         Process.setThreadPriority(Process.THREAD_PRIORITY_URGENT_DISPLAY)
                     }
                     if (complicationClasses.isNotEmpty()) {
-                        Log.d(LOG_ID, "Update " + complicationClasses.size + " complication(s).")
+                        Log.i(LOG_ID, "Update " + complicationClasses.size + " complication(s) ${complicationClasses.values.map { it.shortClassName }}.")
                         // upgrade all at once can cause a disappear of icon and images in ambient mode,
                         // so use some delay!
                         complicationClasses.forEach {

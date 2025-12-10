@@ -2,7 +2,11 @@ package de.michelinside.glucodatahandler.common.notifier
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Collections
 
 object InternalNotifier {
@@ -59,6 +63,18 @@ object InternalNotifier {
                 }
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() )
+            }
+        }
+    }
+
+    fun notifyAsync(context: Context, notifySource: NotifySource, extras: Bundle?)
+    {
+        Log.d(LOG_ID, "Sending asynchronous new data from $notifySource")
+        CoroutineScope(Dispatchers.Default).launch {
+            if(getNotifierCount(notifySource) >= 0) {
+                withContext(Dispatchers.Main) {
+                    notify(context, notifySource, extras)
+                }
             }
         }
     }

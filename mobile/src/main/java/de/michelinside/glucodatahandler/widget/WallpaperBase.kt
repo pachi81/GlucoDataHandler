@@ -12,7 +12,7 @@ import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.text.style.ImageSpan
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -31,6 +31,7 @@ import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import android.text.Spanned
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.chart.ChartBitmapHandler
 
 abstract class WallpaperBase(protected val context: Context, protected val LOG_ID: String): NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -103,7 +104,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
 
     protected abstract fun enable()
     protected abstract fun disable()
-    protected abstract fun update()
+    abstract fun update()
 
     protected open fun initSettings(sharedPreferences: SharedPreferences) {
         style = sharedPreferences.getString(stylePref, style)?: style
@@ -160,7 +161,8 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
-            Log.d(LOG_ID, "OnNotifyData called for source $dataSource with extras ${Utils.dumpBundle(extras)} - active: $active - graph-id: ${if(hasBitmap()) ChartBitmapHandler.chartId else -1} - elapsed: ${ReceiveData.getElapsedTimeMinute()}")
+            if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
+                Log.d(LOG_ID, "OnNotifyData called for source $dataSource with extras ${Utils.dumpBundle(extras)} - active: $active - graph-id: ${if(hasBitmap()) ChartBitmapHandler.chartId else -1} - elapsed: ${ReceiveData.getElapsedTimeMinute()}")
             if(!active)
                 return
             if (dataSource == NotifySource.GRAPH_CHANGED && ChartBitmapHandler.active && extras?.getInt(Constants.GRAPH_ID) != ChartBitmapHandler.chartId) {
@@ -179,11 +181,15 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
     }
 
     fun receycleOldWallpaper() {
-        if(oldWallpaper != null) {
-            Log.i(LOG_ID, "Receycle old wallpaper")
-            if(oldWallpaper?.isRecycled == false)
-                oldWallpaper?.recycle()
-            oldWallpaper = null
+        try {
+            if(oldWallpaper != null) {
+                Log.i(LOG_ID, "Receycle old wallpaper")
+                if(oldWallpaper?.isRecycled == false)
+                    oldWallpaper?.recycle()
+                oldWallpaper = null
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "receycleOldWallpaper exception: " + exc.message.toString() )
         }
     }
 
@@ -279,6 +285,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
             else
                 R.layout.floating_widget
             val lockscreenView = LayoutInflater.from(context).inflate(layout, null)
+            val txtPatientName: TextView = lockscreenView.findViewById(R.id.patient_name)
             val txtBgValue: TextView = lockscreenView.findViewById(R.id.glucose)
             val viewIcon: ImageView = lockscreenView.findViewById(R.id.trendImage)
             val txtDelta: TextView = lockscreenView.findViewById(R.id.deltaText)
@@ -330,6 +337,19 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
                 }
             }
 
+            val resizeFix: Float
+            if(GlucoDataService.patientName.isNullOrEmpty()) {
+                txtPatientName.visibility = GONE
+                txtPatientName.text = ""
+                resizeFix = 0f
+            } else {
+                txtPatientName.text = GlucoDataService.patientName
+                txtPatientName.visibility = VISIBLE
+                val layoutHeight = minOf(maxOf(10f, 3f*size), 30f)
+                txtPatientName.layoutParams.height = Utils.dpToPx(layoutHeight, context)
+                resizeFix = 1f
+            }
+
             txtBgValue.text = ReceiveData.getGlucoseAsString()
             txtBgValue.setTextColor(ReceiveData.getGlucoseColor())
             if (ReceiveData.isObsoleteShort() && !ReceiveData.isObsoleteLong()) {
@@ -369,7 +389,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
             val usedSize = if(graphImage != null && (txtIob.visibility == VISIBLE || txtCob.visibility == VISIBLE)) size/2 else size
             val textUsedSize = if(graphImage != null && (txtIob.visibility == VISIBLE || txtCob.visibility == VISIBLE)) size*3/4 else size
 
-            txtBgValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize+MIN_VALUE_SIZE+textUsedSize*VALUE_RESIZE_FACTOR)
+            txtBgValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize+MIN_VALUE_SIZE+textUsedSize*(VALUE_RESIZE_FACTOR-resizeFix))
             viewIcon.minimumWidth = Utils.dpToPx((MIN_SIZE+textUsedSize)*4f, context)
             txtDelta.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(MIN_SIZE+usedSize*2f, MAX_SIZE))
             txtTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(MIN_SIZE+usedSize*2f, MAX_SIZE))

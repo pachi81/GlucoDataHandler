@@ -9,8 +9,10 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.Icon
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.util.TypedValue
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.View
 import android.widget.RemoteViews
 import de.michelinside.glucodatahandler.common.Constants
@@ -73,7 +75,8 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
-            Log.d(LOG_ID, "OnNotifyData called for source $dataSource with extras ${Utils.dumpBundle(extras)} - graph-id ${chartBitmap?.chartId}")
+            if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
+                Log.d(LOG_ID, "OnNotifyData called for source $dataSource with extras ${Utils.dumpBundle(extras)} - graph-id ${chartBitmap?.chartId}")
             if (dataSource == NotifySource.GRAPH_CHANGED && chartBitmap != null && extras?.getInt(Constants.GRAPH_ID) != chartBitmap!!.chartId) {
                 Log.v(LOG_ID, "Ignore graph changed as it is not for this chart")
                 return  // ignore as it is not for this graph
@@ -147,10 +150,21 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         Channels.getNotificationManager().cancel(THIRD_NOTIFICATION_ID)
     }
 
+
+
+    private fun getDefaultIcon(iconKey: String): StatusBarIcon {
+        return when(iconKey) {
+            Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON -> StatusBarIcon.GLUCOSE
+            Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON -> StatusBarIcon.TREND
+            Constants.SHARED_PREF_THIRD_PERMANENT_NOTIFICATION_ICON -> StatusBarIcon.DELTA
+            else -> StatusBarIcon.APP
+        }
+    }
+
     private fun getStatusBarIcon(iconKey: String): Icon {
         val bigIcon = sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON, false)
         val coloredIcon = sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_COLORED_ICON, true)
-        return when(sharedPref.getString(iconKey, StatusBarIcon.APP.pref)) {
+        return when(sharedPref.getString(iconKey, getDefaultIcon(iconKey).pref)) {
             StatusBarIcon.GLUCOSE.pref -> BitmapUtils.getGlucoseAsIcon(
                 iconKey,
                 roundTarget=!bigIcon,
@@ -197,6 +211,18 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
 
     private fun createNotificationRemoteView(context: Context, withGraph: Boolean): RemoteViews {
         val remoteViews = RemoteViews(GlucoDataService.context!!.packageName, R.layout.notification_layout)
+        if((Build.VERSION.SDK_INT < Build.VERSION_CODES.S && !withGraph) || GlucoDataService.patientName.isNullOrEmpty()) {
+            remoteViews.setViewVisibility(R.id.patient_name, View.GONE)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                remoteViews.setViewLayoutWidth(R.id.glucose, if(ReceiveData.getGlucoseAsString().length <= 2) 50F else 55F, TypedValue.COMPLEX_UNIT_DIP)
+            }
+        } else {
+            remoteViews.setViewVisibility(R.id.patient_name, View.VISIBLE)
+            remoteViews.setTextViewText(R.id.patient_name, GlucoDataService.patientName)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                remoteViews.setViewLayoutWidth(R.id.glucose, 40F, TypedValue.COMPLEX_UNIT_DIP)
+            }
+        }
         remoteViews.setTextViewText(R.id.glucose, ReceiveData.getGlucoseAsString())
         remoteViews.setTextColor(R.id.glucose, ReceiveData.getGlucoseColor())
         remoteViews.setImageViewIcon(R.id.trendImage, BitmapUtils.getRateAsIcon("notification_trend_$withGraph", withShadow = true))
@@ -208,16 +234,20 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             remoteViews.setTextColor(R.id.deltaText, ReceiveData.getAlarmTypeColor(AlarmType.OBSOLETE) )
         }
         if(ReceiveData.isIobCobObsolete()) {
+            remoteViews.setTextViewText(R.id.iobText, "")
+            remoteViews.setTextViewText(R.id.cobText, "")
             remoteViews.setViewVisibility(R.id.iobText, View.GONE)
             remoteViews.setViewVisibility(R.id.cobText, View.GONE)
         } else {
             remoteViews.setTextViewText(R.id.iobText, "💉 ${ReceiveData.getIobAsString()}")
-            remoteViews.setTextViewText(R.id.cobText, "🍔 ${ReceiveData.getCobAsString()}")
             remoteViews.setViewVisibility(R.id.iobText, View.VISIBLE)
-            if (ReceiveData.cob.isNaN())
+            if (ReceiveData.cob.isNaN()) {
+                remoteViews.setTextViewText(R.id.cobText, "")
                 remoteViews.setViewVisibility(R.id.cobText, View.GONE)
-            else
+            } else {
+                remoteViews.setTextViewText(R.id.cobText, "🍔 ${ReceiveData.getCobAsString()}")
                 remoteViews.setViewVisibility(R.id.cobText, View.VISIBLE)
+            }
         }
 
         if(withGraph) {

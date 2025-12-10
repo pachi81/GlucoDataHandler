@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <androidx.preference.SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="source_eversense_enabled"
+        android:title="@string/src_enabled"
+        android:summaryOn="@string/src_offline_enabled_summary_on"
+        android:summaryOff="@string/src_offline_enabled_summary_off"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="source_eversense_info"
+        android:summary="@string/pref_source_eversense_info_summary"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="source_eversense_byoda_info"
+        android:summary="@string/pref_source_eversense_byoda_info_summary"
+        app:iconSpaceReserved="false" />
+</PreferenceScreen>

@@ -1,82 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
-        <PreferenceCategory
+    <PreferenceCategory>
+        <Preference
+            android:key="watch_wearos"
             android:title="@string/pref_cat_wear_os"
-            app:iconSpaceReserved="false">
-                <Preference
-                    android:key="wearos_info"
-                    android:title="@string/setup"
-                    android:summary="@string/pref_wearos_info_summary"
-                    app:iconSpaceReserved="false" />
-                <Preference
-                    android:key="wearos_watchfaces"
-                    android:title="@string/wearos_watchfaces"
-                    android:summary="@string/wearos_watchfaces_summary"
-                    app:fragment="de.michelinside.glucodatahandler.preferences.WatchFaceFragment"
-                    app:iconSpaceReserved="false">
-                </Preference>
-                <androidx.preference.SwitchPreferenceCompat
-                    android:defaultValue="true"
-                    android:key="battery_receiver_enabled"
-                    android:summary="@string/pref_send_battery_level_to_watch_summary"
-                    android:title="@string/pref_send_battery_level_to_watch"
-                    app:iconSpaceReserved="false" />
-                <androidx.preference.SwitchPreferenceCompat
-                    android:defaultValue="true"
-                    android:key="phone_wear_screen_off_update"
-                    android:title="@string/pref_phone_wear_screen_off_update"
-                    android:summary="@string/pref_phone_wear_screen_off_update_summary"
-                    app:iconSpaceReserved="false" />
-                <Preference
-                    android:key="wear_os_check_connection"
-                    android:title="@string/pref_wear_os_check_connection"
-                    android:summary="@string/pref_wear_os_check_connection_summary"
-                    app:iconSpaceReserved="false" />
-                <Preference
-                    android:key="wear_os_reset_connection"
-                    android:title="@string/pref_wear_os_reset_connection"
-                    android:summary="@string/pref_wear_os_reset_connection_summary"
-                    app:iconSpaceReserved="false" />
-        </PreferenceCategory>
-        <PreferenceCategory
+            android:summary="@string/pref_cat_wear_os_summary"
+            app:fragment="de.michelinside.glucodatahandler.preferences.WatchWearOsFragment"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="watch_watchdrip"
             android:title="@string/pref_cat_watchdrip"
-            app:iconSpaceReserved="false">
-                <Preference
-                    android:key="open_watchdrip_link"
-                    android:title="@string/pref_information"
-                    android:summary="@string/pref_watchdrip_info_summary"
-                    app:iconSpaceReserved="false" />
-                <androidx.preference.SwitchPreferenceCompat
-                    android:defaultValue="false"
-                    android:key="watchdrip_enabled"
-                    android:summary="@string/pref_switch_watchdrip_enabled_summary"
-                    android:title="@string/pref_switch_watchdrip_enabled"
-                    app:iconSpaceReserved="false" />
-        </PreferenceCategory>
-        <PreferenceCategory
-            android:title="@string/advanced_settings"
-            app:iconSpaceReserved="false">
-                <androidx.preference.SeekBarPreference
-                    app:showSeekBarValue="true"
-                    app:seekBarIncrement="1"
-                    app:min="1"
-                    android:max="15"
-                    android:defaultValue="1"
-                    android:key="send_to_watch_interval"
-                    android:title="@string/alarm_interval"
-                    android:summary="@string/forward_to_watch_interval_summary"
-                    app:iconSpaceReserved="false" />
-        </PreferenceCategory>
-        <PreferenceCategory
-            android:title="@string/pref_cat_banglejs"
-            app:isPreferenceVisible="false"
-            app:iconSpaceReserved="false">
-                <androidx.preference.SwitchPreferenceCompat
-                    android:defaultValue="false"
-                    android:key="send_to_banglejs"
-                    android:summary="@string/pref_send_to_bangleJS_summary"
-                    android:title="@string/pref_send_to_bangleJS"
-                    app:iconSpaceReserved="false" />
-        </PreferenceCategory>
+            android:summary="@string/pref_cat_watchdrip_summary"
+            app:fragment="de.michelinside.glucodatahandler.preferences.WatchDripFragement"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="watch_webservice"
+            android:title="@string/pref_cat_garminpebble"
+            android:summary="@string/pref_cat_garminpebble_summary"
+            app:fragment="de.michelinside.glucodatahandler.preferences.WatchWebserviceFragment"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/advanced_settings"
+        app:iconSpaceReserved="false">
+            <androidx.preference.SeekBarPreference
+                app:showSeekBarValue="true"
+                app:seekBarIncrement="1"
+                app:min="1"
+                android:max="15"
+                android:defaultValue="1"
+                android:key="send_to_watch_interval"
+                android:title="@string/alarm_interval"
+                android:summary="@string/forward_to_watch_interval_summary"
+                app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/pref_cat_banglejs"
+        app:isPreferenceVisible="false"
+        app:iconSpaceReserved="false">
+            <androidx.preference.SwitchPreferenceCompat
+                android:defaultValue="false"
+                android:key="send_to_banglejs"
+                android:summary="@string/pref_send_to_bangleJS_summary"
+                android:title="@string/pref_send_to_bangleJS"
+                app:iconSpaceReserved="false" />
+    </PreferenceCategory>
 </PreferenceScreen>

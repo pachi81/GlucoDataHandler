@@ -5,7 +5,7 @@ import android.content.Context
 import android.graphics.Paint
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsController
@@ -22,6 +22,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.ncorti.slidetoact.SlideToActView
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.chart.ChartBitmapHandlerView
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
@@ -79,7 +80,8 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
-            Log.d(LOG_ID, "onCreate called with params ${Utils.dumpBundle(this.intent.extras)}")
+            if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
+                Log.d(LOG_ID, "onCreate called with params ${Utils.dumpBundle(this.intent.extras)}")
             activity = this
             showWhenLockedAndTurnScreenOn()
             super.onCreate(savedInstanceState)
@@ -122,6 +124,10 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             graphImage = findViewById(R.id.graphImage)
 
             val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            if(!GlucoDataService.patientName.isNullOrEmpty()) {
+                setTitle(GlucoDataService.patientName)
+            }
+
             val snoozeValues = AlarmNotification.getSnoozeValues()
             if (snoozeValues.isEmpty())
                 layoutSnooze.visibility = View.GONE

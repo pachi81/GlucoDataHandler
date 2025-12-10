@@ -84,6 +84,21 @@ object GlucoDataUtils {
         return '⇊'
     }
 
+    fun getRateFromSymbol(trendLabel: String?): Float {
+        if(trendLabel==null)
+            return Float.NaN
+        return when(trendLabel) {
+            "⇊" -> -4F
+            "↓" -> -2F
+            "'↘" -> -1F
+            "→" -> 0F
+            "↗" -> 1F
+            "↑" -> 2F
+            "⇈" -> 4f
+            else -> Float.NaN
+        }
+    }
+
     fun getDexcomLabel(rate: Float): String {
         if (rate >= 3.0f) return "DoubleUp"
         if (rate >= 2.0f) return "SingleUp"
@@ -107,6 +122,17 @@ object GlucoDataUtils {
             "DoubleUp" -> 4f
             else -> Float.NaN
         }
+    }
+
+    fun getTrendFromRate(rate: Float): Int = when {
+        rate >= 3.0f -> 1  // DoubleUp
+        rate >= 2.0f -> 2  // SingleUp
+        rate >= 1.0f -> 3  // FortyFiveUp
+        rate > -1.0f -> 4  // Flat
+        rate > -2.0f -> 5  // FortyFiveDown
+        rate > -3.0f -> 6  // SingleDown
+        rate <= -3.0f -> 7 // DoubleDown
+        else -> 4          // Default to Flat
     }
 
     fun getRateLabel(context: Context, rate: Float): String {

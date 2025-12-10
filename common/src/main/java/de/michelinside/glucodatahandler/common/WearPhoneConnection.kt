@@ -3,10 +3,9 @@ package de.michelinside.glucodatahandler.common
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.*
-import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.database.dbSync
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
@@ -42,6 +41,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
     private val LOG_ID = "GDH.WearPhoneConnection"
     private lateinit var context: Context
     private var lastSendValuesTime = 0L
+    private var cleanUpDbOnWatchConnected = false
 
     private val capabilityName: String get() {
         if(GlucoDataService.appSource == AppSource.PHONE_APP)  // phone sends to wear
@@ -470,6 +470,9 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 sendMessage(NotifySource.SETTINGS, GlucoDataService.getSettings(), filterReceiverId = nodeId)
                 sendMessage(NotifySource.SOURCE_SETTINGS, DataSourceTask.getSettingsBundle(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)), filterReceiverId = nodeId)
                 sendMessage(NotifySource.ALARM_SETTINGS, AlarmHandler.getSettings(), filterReceiverId = nodeId)
+                if(cleanUpDbOnWatchConnected) {
+                    sendCommand(Command.CLEAN_UP_DB, null)
+                }
                 dbSync.requestDbSync(context)   // update data on phone first, before sending data to wear
             }
             val bundle = Bundle()
@@ -484,23 +487,29 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
 
     fun sendCommand(command: Command, extras: Bundle?) {
         // Send command to all nodes in parallel
-        Log.d(LOG_ID, "sendCommand called for $command with extras: ${Utils.dumpBundle(extras)}")
-        val commandBundle = Bundle()
-        commandBundle.putString(Constants.COMMAND_EXTRA, command.toString())
-        if(extras != null) {
-            commandBundle.putBundle(Constants.COMMAND_BUNDLE, extras)
-            if(BatteryReceiver.batteryPercentage >= 0) {
-                commandBundle.putInt(BatteryReceiver.LEVEL, BatteryReceiver.batteryPercentage)
-            }
-        }
-        connectedNodes.forEach { node ->
-            Thread {
-                try {
-                    sendMessage(node.value, getPath(NotifySource.COMMAND, nodeHasJson(node.value.id)), Utils.bundleToBytes(commandBundle, nodeHasJson(node.value.id)), NotifySource.COMMAND)
-                } catch (exc: Exception) {
-                    Log.e(LOG_ID, "sendCommand to " + node.value.toString() + " exception: " + exc.toString())
+        if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
+            Log.d(LOG_ID, "sendCommand called for $command with extras: ${Utils.dumpBundle(extras)} - nodesConnected: $nodesConnected")
+        if(nodesConnected) {
+            val commandBundle = Bundle()
+            commandBundle.putString(Constants.COMMAND_EXTRA, command.toString())
+            if(extras != null) {
+                commandBundle.putBundle(Constants.COMMAND_BUNDLE, extras)
+                if(BatteryReceiver.batteryPercentage >= 0) {
+                    commandBundle.putInt(BatteryReceiver.LEVEL, BatteryReceiver.batteryPercentage)
                 }
-            }.start()
+            }
+            connectedNodes.forEach { node ->
+                Thread {
+                    try {
+                        sendMessage(node.value, getPath(NotifySource.COMMAND, nodeHasJson(node.value.id)), Utils.bundleToBytes(commandBundle, nodeHasJson(node.value.id)), NotifySource.COMMAND)
+                    } catch (exc: Exception) {
+                        Log.e(LOG_ID, "sendCommand to " + node.value.toString() + " exception: " + exc.toString())
+                    }
+                }.start()
+            }
+        } else if(command == Command.CLEAN_UP_DB) {
+            Log.i(LOG_ID, "Queue command clean up db for next connected watch")
+            cleanUpDbOnWatchConnected = true
         }
     }
 
@@ -531,11 +540,12 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 checkNodeConnect(p0.sourceNodeId)
             }
             if(extras!= null) {
-                if(Log.isLoggable(LOG_ID, Log.VERBOSE))
+                if(Log.isLoggable(LOG_ID, android.util.Log.VERBOSE))
                     Log.v(LOG_ID, "Received extras: ${Utils.dumpBundle(extras)}")
                 if (extras.containsKey(Constants.SETTINGS_BUNDLE)) {
                     val bundle = extras.getBundle(Constants.SETTINGS_BUNDLE)
-                    Log.d(LOG_ID, "Glucose settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(bundle))
+                    if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
+                        Log.d(LOG_ID, "Glucose settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(bundle))
                     GlucoDataService.setSettings(context, bundle!!)
                     InternalNotifier.notify(context, NotifySource.SETTINGS, bundle)
                     extras.remove(Constants.SETTINGS_BUNDLE)
@@ -544,7 +554,8 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 if (extras.containsKey(Constants.SOURCE_SETTINGS_BUNDLE)) {
                     val bundle = extras.getBundle(Constants.SOURCE_SETTINGS_BUNDLE)
                     if (bundle != null) {
-                        Log.d(LOG_ID, "Glucose source settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(bundle))
+                        if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
+                            Log.d(LOG_ID, "Glucose source settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(bundle))
                         DataSourceTask.updateSettings(context, bundle)
                     }
                     extras.remove(Constants.SOURCE_SETTINGS_BUNDLE)
@@ -553,7 +564,8 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 if (extras.containsKey(Constants.ALARM_SETTINGS_BUNDLE)) {
                     val bundle = extras.getBundle(Constants.ALARM_SETTINGS_BUNDLE)
                     if (bundle != null) {
-                        Log.d(LOG_ID, "Glucose alarm settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(bundle))
+                        if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
+                            Log.d(LOG_ID, "Glucose alarm settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(bundle))
                         AlarmHandler.setSettings(context, bundle)
                     }
                     extras.remove(Constants.ALARM_SETTINGS_BUNDLE)
@@ -562,7 +574,8 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 if (extras.containsKey(Constants.ALARM_EXTRA_BUNDLE)) {
                     val bundle = extras.getBundle(Constants.ALARM_EXTRA_BUNDLE)
                     if (bundle != null) {
-                        Log.d(LOG_ID, "Glucose alarm extras received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(bundle))
+                        if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
+                            Log.d(LOG_ID, "Glucose alarm extras received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(bundle))
                         AlarmHandler.setExtras(context, bundle)
                     }
                     extras.remove(Constants.ALARM_EXTRA_BUNDLE)
@@ -606,7 +619,8 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
 
                 if (p0.path.contains(Constants.GENERAL_SETTINGS_INTENT_MESSAGE_PATH)) {
                     if (!extras.isEmpty) {
-                        Log.d(LOG_ID, "Glucose settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(extras))
+                        if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
+                            Log.d(LOG_ID, "Glucose settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(extras))
                         GlucoDataService.setSettings(context, extras)
                         InternalNotifier.notify(context, NotifySource.SETTINGS, extras)
                     }
@@ -614,14 +628,16 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
 
                 if (p0.path.contains(Constants.SOURCE_SETTINGS_INTENT_MESSAGE_PATH)) {
                     if (!extras.isEmpty) {
-                        Log.d(LOG_ID, "Glucose source settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(extras))
+                        if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
+                            Log.d(LOG_ID, "Glucose source settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(extras))
                         DataSourceTask.updateSettings(context, extras)
                     }
                 }
 
                 if (p0.path.contains(Constants.ALARM_SETTINGS_INTENT_MESSAGE_PATH)) {
                     if (!extras.isEmpty) {
-                        Log.d(LOG_ID, "Glucose alarm settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(extras))
+                        if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
+                            Log.d(LOG_ID, "Glucose alarm settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(extras))
                         AlarmHandler.setSettings(context, extras)
                     }
                 }
@@ -682,7 +698,8 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
 
     private fun handleCommand(extras: Bundle, nodeId: String) {
         try {
-            Log.d(LOG_ID, "Command received from node $nodeId: ${Utils.dumpBundle(extras)}")
+            if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
+                Log.d(LOG_ID, "Command received from node $nodeId: ${Utils.dumpBundle(extras)}")
             val command = Command.valueOf(extras.getString(Constants.COMMAND_EXTRA, ""))
             val bundle = extras.getBundle(Constants.COMMAND_BUNDLE)
             when(command) {
@@ -708,7 +725,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     }
                 }
                 Command.DB_SYNC -> dbSync.sendData(context, nodeId)
-                Command.CLEAN_UP_DB -> dbAccess.deleteAllValues()
+                Command.CLEAN_UP_DB -> GlucoDataService.resetDB()
                 Command.REQUEST_DB_SYNC -> dbSync.requestDbSync(context)
             }
 

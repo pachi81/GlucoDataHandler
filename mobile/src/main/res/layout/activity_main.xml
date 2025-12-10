@@ -27,10 +27,13 @@
             android:layout_marginTop="20dp"
             android:gravity="center|top"
             android:orientation="horizontal"
+            android:screenReaderFocusable="true"
+            android:accessibilityLiveRegion="polite"
             tools:ignore="UselessParent">
 
             <TextView
                 android:id="@+id/txtBgValue"
+                android:focusable="false"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="4"
@@ -47,6 +50,7 @@
 
             <ImageView
                 android:id="@+id/viewIcon"
+                android:focusable="false"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
@@ -58,6 +62,7 @@
 
         <LinearLayout
             android:id="@+id/layout_delta_time"
+            android:screenReaderFocusable="true"
             android:layout_width="250dp"
             android:layout_height="30dp"
             android:gravity="center|top"
@@ -67,6 +72,7 @@
 
             <TextView
                 android:id="@+id/timeText"
+                android:focusable="false"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="4"
@@ -80,6 +86,7 @@
 
             <TextView
                 android:id="@+id/deltaText"
+                android:focusable="false"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
@@ -98,10 +105,12 @@
             android:layout_marginBottom="5dp"
             android:gravity="center|top"
             android:orientation="horizontal"
+            android:screenReaderFocusable="true"
             tools:ignore="UselessParent">
 
             <TextView
                 android:id="@+id/iobText"
+                android:focusable="false"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="4"
@@ -115,6 +124,7 @@
 
             <TextView
                 android:id="@+id/cobText"
+                android:focusable="false"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
@@ -125,6 +135,16 @@
                 android:text="🍔 31.2g"
                 tools:ignore="HardcodedText" />
         </LinearLayout>
+
+
+    <Button
+        android:id="@+id/btnPatient"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#005CCC"
+        android:visibility="gone"
+        android:layout_marginVertical="10dp"
+        android:text="@string/select_patient_title" />
 
     <LinearLayout
         android:id="@+id/layout_no_data"
@@ -170,6 +190,7 @@
         android:layout_marginVertical="5dp"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:importantForAccessibility="no"
         android:contentDescription="@string/graph"
         />
 
@@ -190,6 +211,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
+                android:accessibilityHeading="true"
                 android:text="@string/info_label_notes"/>
         </TableRow>
     </TableLayout>
@@ -211,6 +233,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
+                android:accessibilityHeading="true"
                 android:text="@string/alarm_header"/>
         </TableRow>
     </TableLayout>
@@ -232,6 +255,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
+                android:accessibilityHeading="true"
                 android:text="@string/info_label_delta"/>
         </TableRow>
     </TableLayout>
@@ -254,6 +278,7 @@
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:gravity="center_vertical"
+                    android:accessibilityHeading="true"
                     android:text="@string/table_header_statistics"/>
                 <RadioGroup
                     android:id="@+id/statGroup"
@@ -302,6 +327,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
+                android:accessibilityHeading="true"
                 android:text="@string/table_header_details"/>
         </TableRow>
     </TableLayout>
@@ -323,6 +349,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
+                android:accessibilityHeading="true"
                 android:text="@string/table_header_connections"/>
         </TableRow>
     </TableLayout>

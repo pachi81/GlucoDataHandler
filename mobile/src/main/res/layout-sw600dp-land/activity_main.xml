@@ -40,10 +40,13 @@
                 android:layout_marginTop="20dp"
                 android:gravity="center|top"
                 android:orientation="horizontal"
+                android:screenReaderFocusable="true"
+                android:accessibilityLiveRegion="polite"
                 tools:ignore="UselessParent">
 
                 <TextView
                     android:id="@+id/txtBgValue"
+                    android:focusable="false"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="4"
@@ -60,6 +63,7 @@
 
                 <ImageView
                     android:id="@+id/viewIcon"
+                    android:focusable="false"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
@@ -74,22 +78,26 @@
                 android:layout_height="30dp"
                 android:gravity="center|top"
                 android:orientation="horizontal"
+                android:screenReaderFocusable="true"
                 tools:ignore="UselessParent">
 
                 <TextView
                     android:id="@+id/timeText"
-                    android:text="🕒 0 min"
+                    android:focusable="false"
                     android:layout_width="0dp"
-                    android:layout_weight="4"
                     android:layout_height="match_parent"
-                    android:gravity="center_vertical|end"
-                    android:maxLines="1"
+                    android:layout_weight="4"
                     android:autoSizeStepGranularity="1sp"
                     android:autoSizeTextType="uniform"
+                    android:gravity="center_vertical|end"
+                    android:maxLines="1"
                     android:paddingEnd="10dp"
+                    android:text="🕒 0 min"
                     tools:ignore="HardcodedText,NestedWeights,RtlSymmetry" />
+
                 <TextView
                     android:id="@+id/deltaText"
+                    android:focusable="false"
                     android:text="Δ +0.06"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -106,9 +114,11 @@
                 android:layout_height="30dp"
                 android:gravity="center|top"
                 android:orientation="horizontal"
+                android:screenReaderFocusable="true"
                 tools:ignore="UselessParent">
                 <TextView
                     android:id="@+id/iobText"
+                    android:focusable="false"
                     android:text="💉 1.30U"
                     android:layout_width="0dp"
                     android:layout_weight="4"
@@ -122,6 +132,7 @@
 
                 <TextView
                     android:id="@+id/cobText"
+                    android:focusable="false"
                     android:text="🍔 31.2g"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -132,6 +143,14 @@
                     android:autoSizeTextType="uniform"
                     tools:ignore="HardcodedText" />
             </LinearLayout>
+            <Button
+                android:id="@+id/btnPatient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#005CCC"
+                android:visibility="gone"
+                android:layout_marginTop="10dp"
+                android:text="@string/select_patient_title" />
         </LinearLayout>
     </ScrollView>
 
@@ -213,6 +232,7 @@
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:layout_weight="1"
+                        android:accessibilityHeading="true"
                         android:text="@string/info_label_notes"/>
                 </TableRow>
             </TableLayout>
@@ -233,6 +253,7 @@
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:layout_weight="1"
+                        android:accessibilityHeading="true"
                         android:text="@string/alarm_header"/>
                 </TableRow>
             </TableLayout>
@@ -254,6 +275,7 @@
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:layout_weight="1"
+                        android:accessibilityHeading="true"
                         android:text="@string/info_label_delta"/>
                 </TableRow>
             </TableLayout>
@@ -275,6 +297,7 @@
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:layout_weight="1"
+                        android:accessibilityHeading="true"
                         android:text="@string/table_header_statistics"/>
                     <RadioGroup
                         android:id="@+id/statGroup"
@@ -321,6 +344,7 @@
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:layout_weight="1"
+                        android:accessibilityHeading="true"
                         android:text="@string/table_header_details"/>
                 </TableRow>
             </TableLayout>
@@ -342,6 +366,7 @@
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:layout_weight="1"
+                        android:accessibilityHeading="true"
                         android:text="@string/table_header_connections"/>
                 </TableRow>
             </TableLayout>
@@ -382,6 +407,7 @@
         android:layout_height="0dp"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
+        android:importantForAccessibility="no"
         android:contentDescription="@string/graph"
         />
 </LinearLayout>

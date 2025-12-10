@@ -6,7 +6,7 @@ import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.View
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis
@@ -294,7 +294,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
                 averageLine = null
             }
             if(showAverage) {
-                GlucoseStatistics.update(sharedPref.getBoolean(Constants.SHARED_PREF_STANDARD_STATISTICS, false))
+                GlucoseStatistics.update(sharedPref.getBoolean(Constants.SHARED_PREF_STANDARD_STATISTICS, true))
                 if(!GlucoseStatistics.statData7d.averageGlucose.isNaN()) {
                     averageLine = createLimitLine(GlucoseStatistics.statData7d.averageGlucose, true, "⌀")
                     chart.axisRight.addLimitLine(averageLine)

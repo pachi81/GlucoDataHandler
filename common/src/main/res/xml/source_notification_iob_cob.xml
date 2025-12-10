@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <de.michelinside.glucodatahandler.common.ui.SelectReceiverPreference
+        android:key="notification_reader_iob_app"
+        android:title="@string/notification_reader_app"
+        android:summary="@string/notification_reader_app_summary"
+        app:description="@string/notification_reader_app_summary"
+        app:iconSpaceReserved="false" />
+    <PreferenceCategory
+        android:title="@string/info_label_iob"
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="1">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="source_notification_iob_enabled"
+            android:title="@string/src_enabled"
+            android:summary="@string/source_notification_iob_enabled_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.EditTextPreference
+            android:key="notification_reader_iob_app_regex"
+            android:title="@string/notification_reader_app_regex"
+            android:summary="@string/notification_reader_app_regex_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/info_label_cob"
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="1">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="source_notification_cob_enabled"
+            android:title="@string/src_enabled"
+            android:summary="@string/source_notification_cob_enabled_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.EditTextPreference
+            android:key="notification_reader_cob_app_regex"
+            android:title="@string/notification_reader_app_regex"
+            android:summary="@string/notification_reader_app_regex_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/advanced_settings"
+        app:iconSpaceReserved="false">
+    <androidx.preference.SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="source_notification_iob_cob_irregular"
+        android:title="@string/source_notification_iob_cob_irregular"
+        android:summary="@string/source_notification_iob_cob_irregular_summary"
+        app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+</PreferenceScreen>

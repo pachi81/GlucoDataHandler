@@ -24,6 +24,9 @@
     <!-- BYODA integration -->
     <uses-permission android:name="com.dexcom.cgm.EXTERNAL_PERMISSION" />
 
+    <!-- Health Connect Permissions -->
+    <uses-permission android:name="android.permission.health.WRITE_BLOOD_GLUCOSE"/>
+
     <queries>
         <package android:name="com.eveningoutpost.dexdrip" />
         <package android:name="info.nightscout.androidaps" />
@@ -56,6 +59,8 @@
         <package android:name="com.dexcom.follow.region6.mgdl" />
         <package android:name="com.dexcom.follow.region7.mgdl" />
         <package android:name="tk.glucodata" />
+        <!-- Health Connect App -->
+        <package android:name="com.google.android.apps.healthdata" />
         <intent>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
@@ -76,6 +81,37 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GlucoDataHandler"
         android:usesCleartextTraffic="true">
+
+        <!-- Health Connect Permission Rationale and Request Activity -->
+        <!-- This activity handles ACTION_REQUEST_PERMISSIONS (for all supported versions) -->
+        <!-- and ACTION_SHOW_PERMISSIONS_RATIONALE (for Android 13 and below, or if HC falls back to it) -->
+        <activity
+            android:name=".healthconnect.HealthConnectPermissionActivity"
+            android:exported="true"
+            tools:ignore="DiscouragedApi">
+            <intent-filter>
+                <action android:name="androidx.health.connect.client.ACTION_REQUEST_PERMISSIONS" />
+                <category android:name="android.intent.category.DEFAULT" /> 
+            </intent-filter>
+            <intent-filter>
+                <action android:name="androidx.health.connect.client.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+                <category android:name="android.intent.category.DEFAULT" /> 
+            </intent-filter>
+        </activity>
+
+        <!-- For versions starting Android 14, create an activity alias to show the rationale 
+             (data usage explanation) once users click the privacy policy link from Health Connect settings. -->
+        <activity-alias
+            android:name="ViewPermissionUsageActivity" 
+            android:exported="true"
+            android:targetActivity=".healthconnect.HealthConnectPermissionActivity"
+            android:permission="android.permission.START_VIEW_PERMISSION_USAGE">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW_PERMISSION_USAGE" />
+                <category android:name="android.intent.category.HEALTH_PERMISSIONS" />
+            </intent-filter>
+        </activity-alias>
+
         <receiver
             android:name=".widget.GlucoseWidget"
             android:label="@string/widget_glucose"
@@ -368,6 +404,7 @@
         <receiver android:name=".common.notification.AlarmIntentReceiver" />
         <receiver android:name=".common.receiver.InternalActionReceiver" />
         <receiver android:name=".common.notification.AlarmSnoozeEndReceiver" />
+        <receiver android:name=".common.notification.AlarmInactiveTimeReceiver" />
         <receiver android:name=".StartServiceReceiver" />
         <receiver
             android:name=".common.utils.LocaleChangeNotifier"

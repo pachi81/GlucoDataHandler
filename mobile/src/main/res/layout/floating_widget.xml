@@ -1,95 +1,113 @@
-
-<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/widget"
+    android:background="@color/transparent_widget_background"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/transparent_widget_background"
-    android:padding="1sp">
-    <TableLayout
-        android:id="@+id/column1"
+    android:padding="1sp"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/patient_name"
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:gravity="center"
+        android:text="Patient Name"
+        android:autoSizeMinTextSize="5sp"
+        android:autoSizeMaxTextSize="30sp"
+        android:autoSizeStepGranularity="1sp"
+        android:autoSizeTextType="uniform"
+        android:maxLines="1"
+        android:textColor="@color/transparent_widget_textcolor" />
+
+    <TableRow
+        android:id="@+id/widget"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-        <TableRow>
-            <TextView
-                android:id="@+id/glucose"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="---"
-                android:textSize="60sp"
-                android:maxLines="1"
-                tools:ignore="HardcodedText,NestedWeights" />
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:id="@+id/timeText"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textSize="18sp"
-                android:gravity="center"
-                android:maxLines="1"
-                android:text="--"
-                android:textColor="@color/transparent_widget_textcolor"
-                tools:ignore="HardcodedText,NestedWeights,SmallSp"/>
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:id="@+id/iobText"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textSize="18sp"
-                android:gravity="center"
-                android:maxLines="1"
-                android:text="--"
-                android:textColor="@color/transparent_widget_textcolor"
-                tools:ignore="HardcodedText,NestedWeights,SmallSp"/>
-        </TableRow>
-    </TableLayout>
+        <TableLayout
+            android:id="@+id/column1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TableRow>
+                <TextView
+                    android:id="@+id/glucose"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="---"
+                    android:textSize="60sp"
+                    android:maxLines="1"
+                    tools:ignore="HardcodedText,NestedWeights" />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/timeText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textSize="18sp"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="--"
+                    android:textColor="@color/transparent_widget_textcolor"
+                    tools:ignore="HardcodedText,NestedWeights,SmallSp"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/iobText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textSize="18sp"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="--"
+                    android:textColor="@color/transparent_widget_textcolor"
+                    tools:ignore="HardcodedText,NestedWeights,SmallSp"/>
+            </TableRow>
+        </TableLayout>
 
-    <TableLayout
-        android:id="@+id/column2"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginStart="1sp"
-        >
-        <TableRow
-            android:layout_height="0dp"
-            android:layout_weight="1">
-        <ImageView
-            android:id="@+id/trendImage"
-            android:layout_width="match_parent"
+        <TableLayout
+            android:id="@+id/column2"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:contentDescription="@string/trend"
-            android:minWidth="65dp"
-            android:gravity="center"
-            android:src="@drawable/icon_question" />
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:id="@+id/deltaText"
+            android:layout_marginStart="1sp"
+            >
+            <TableRow
+                android:layout_height="0dp"
+                android:layout_weight="1">
+            <ImageView
+                android:id="@+id/trendImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textSize="18sp"
+                android:contentDescription="@string/trend"
+                android:minWidth="65dp"
                 android:gravity="center"
-                android:layout_marginStart="3dp"
-                android:text="--"
-                android:maxLines="1"
-                android:textColor="@color/transparent_widget_textcolor"
-                tools:ignore="HardcodedText,SmallSp" />
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:id="@+id/cobText"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textSize="18sp"
-                android:gravity="center"
-                android:layout_marginStart="3dp"
-                android:text="--"
-                android:maxLines="1"
-                android:textColor="@color/transparent_widget_textcolor"
-                tools:ignore="HardcodedText,SmallSp" />
-        </TableRow>
-    </TableLayout>
-</TableRow>
+                android:src="@drawable/icon_question" />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/deltaText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textSize="18sp"
+                    android:gravity="center"
+                    android:layout_marginStart="3dp"
+                    android:text="--"
+                    android:maxLines="1"
+                    android:textColor="@color/transparent_widget_textcolor"
+                    tools:ignore="HardcodedText,SmallSp" />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/cobText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textSize="18sp"
+                    android:gravity="center"
+                    android:layout_marginStart="3dp"
+                    android:text="--"
+                    android:maxLines="1"
+                    android:textColor="@color/transparent_widget_textcolor"
+                    tools:ignore="HardcodedText,SmallSp" />
+            </TableRow>
+        </TableLayout>
+    </TableRow>
+</LinearLayout>

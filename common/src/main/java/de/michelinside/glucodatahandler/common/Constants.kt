@@ -53,6 +53,9 @@ object Constants {
     const val EXTRA_GRAPH_DATA = "gdh.graph_data"
     const val EXTRA_NODE_ID = "gdh.node_id"
 
+    const val EXTRA_START_TIME = "gdh.start_time"
+    const val EXTRA_END_TIME = "gdh.end_time"
+
     const val XDRIP_ACTION_GLUCOSE_READING = "com.librelink.app.ThirdPartyIntegration.GLUCOSE_READING"
     const val XDRIP_ACTION_SENSOR_ACTIVATE = "com.librelink.app.ThirdPartyIntegration.SENSOR_ACTIVATE"
 
@@ -78,6 +81,12 @@ object Constants {
     const val SHARED_PREF_SEND_XDRIP_BROADCAST = "send_xdrip_broadcast"
     const val SHARED_PREF_XDRIP_BROADCAST_RECEIVERS = "xdrip_broadcast_receivers"
     const val SHARED_PREF_XDRIP_BROADCAST_SERVICE_API = "xdrip_broadcast_service_api"
+    const val SHARED_PREF_XDRIP_SERVER = "xdrip_server"
+    const val SHARED_PREF_XDRIP_OPEN_SERVER = "xdrip_open_server"
+    const val SHARED_PREF_XDRIP_SERVER_REDUCE_DATA = "xdrip_server_reduce_data"
+    const val SHARED_PREF_XDRIP_SERVER_1_MINUTE_INTERVAL = "xdrip_server_1_minute_interval"
+    const val SHARED_PREF_SEND_TO_HEALTH_CONNECT = "send_to_health_connect"
+    const val SHARED_PREF_HEALTH_CONNECT_LAST_VALUE_TIME = "health_connect_last_value_time"
     const val SHARED_PREF_TARGET_MIN = "target_min_value"
     const val SHARED_PREF_TARGET_MAX = "target_max_value"
     const val SHARED_PREF_USE_MMOL = "use_mmol"
@@ -104,6 +113,7 @@ object Constants {
     const val SHARED_PREF_THIRD_PERMANENT_NOTIFICATION_ICON = "third_status_bar_notification_icon"
     const val SHARED_PREF_THIRD_PERMANENT_NOTIFICATION_TAP_ACTION = "third_permanent_notification_tap_action"
     const val SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON = "status_bar_notification_big_icon"
+    const val SHARED_PREF_API_36_NOTIFICATION_INFO = "api_36_notification_info"
     const val SHARED_PREF_LARGE_ARROW_ICON = "large_arrow_icon"
     const val SHARED_PREF_FLOATING_WIDGET = "floating_widget"
     const val SHARED_PREF_FLOATING_WIDGET_STYLE = "floating_widget_style"
@@ -131,6 +141,8 @@ object Constants {
     const val SHARED_PREF_IMPORT_SETTINGS = "import_settings"
     const val SHARED_PREF_SAVE_MOBILE_LOGS = "save_mobile_logs"
     const val SHARED_PREF_SAVE_WEAR_LOGS = "save_wear_logs"
+    const val SHARED_PREF_LOG_DURATION = "log_duration"
+    const val SHARED_PREF_LOG_DEBUG = "log_debug"
 
 
     const val SHARED_PREF_WATCHFACES_PUJIE = "pref_watchfaces_pujie"
@@ -178,7 +190,10 @@ object Constants {
     const val SHARED_PREF_SOURCE_NOTIFICATION_READER_5_MINUTE_INTERVAl="notification_reader_five_minute_interval"
     const val SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX="notification_reader_app_regex"
     const val SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP="notification_reader_iob_app"
+    const val SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_ENABLED="source_notification_iob_enabled"
     const val SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX="notification_reader_iob_app_regex"
+    const val SHARED_PREF_SOURCE_NOTIFICATION_READER_COB_ENABLED="source_notification_cob_enabled"
+    const val SHARED_PREF_SOURCE_NOTIFICATION_READER_COB_APP_REGEX="notification_reader_cob_app_regex"
 
     // online sources
     const val SHARED_PREF_LIBRE_ENABLED="source_libre_enabled"
@@ -218,6 +233,7 @@ object Constants {
     const val SHARED_PREF_DUMMY_VALUES = "dummy_values"
 
     const val SHARED_PREF_LOCKSCREEN_WP_ENABLED = "lockscreen_enabled"
+    const val SHARED_PREF_LOCKSCREEN_WP_X_POS = "lockscreen_x_pos"
     const val SHARED_PREF_LOCKSCREEN_WP_Y_POS = "lockscreen_y_pos"
     const val SHARED_PREF_LOCKSCREEN_WP_STYLE = "lockscreen_style"
     const val SHARED_PREF_LOCKSCREEN_WP_SIZE = "lockscreen_size"
@@ -232,6 +248,7 @@ object Constants {
     // aod
     const val SHARED_PREF_AOD_WP_ENABLED = "aod_enabled"
     const val SHARED_PREF_AOD_WP_Y_POS = "aod_y_pos"
+    const val SHARED_PREF_AOD_WP_X_POS = "aod_x_pos"
     const val SHARED_PREF_AOD_WP_STYLE = "aod_style"
     const val SHARED_PREF_AOD_WP_SIZE = "aod_size"
     const val SHARED_PREF_AOD_WP_COLOURED = "aod_coloured"
@@ -253,6 +270,7 @@ object Constants {
     const val SHARED_PREF_ALARM_START_DELAY_STRING = "alarm_start_delay_string"
     const val SHARED_PREF_NOTIFICATION_AUTO_CLOSE = "auto_close_notification"
     const val SHARED_PREF_ALARM_FORCE_VERY_LOW = "alarm_force_very_low"
+    const val SHARED_PREF_ALARM_FORCE_OBSOLETE = "alarm_force_obsolete"
 
     const val SHARED_PREF_ALARM_NOTIFICATION_ENABLED = "alarm_notifications_enabled"
     const val SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED = "alarm_fullscreen_notification_enabled"
@@ -264,7 +282,8 @@ object Constants {
     const val SHARED_PREF_ALARM_INACTIVE_ENABLED = "alarm_inactive_enabled"
     const val SHARED_PREF_ALARM_INACTIVE_START_TIME = "alarm_inactive_start_time"
     const val SHARED_PREF_ALARM_INACTIVE_END_TIME = "alarm_inactive_end_time"
-    const val SHARED_PREF_ALARM_INACTIVE_WEEKDAYS = "alarm_inactive_weekdays"    
+    const val SHARED_PREF_ALARM_INACTIVE_WEEKDAYS = "alarm_inactive_weekdays"
+    const val SHARED_PREF_ALARM_INACTIVE_AUTO_RE_ENABLE = "alarm_inactive_auto_reenable"
     const val SHARED_PREF_ENABLE_ALARM_ICON_TOGGLE = "enable_alarm_icon_toggle"
 
     const val SHARED_PREF_NO_ALARM_NOTIFICATION_WEAR_CONNECTED = "alarm_no_notification_wear_connected"
@@ -363,6 +382,8 @@ object Constants {
     const val SHARED_PREF_GRAPH_BITMAP_CIRCLE_RADIUS = "graph_bitmap_circle_radius"
 
 
+    // special version handling:
+    const val SHARED_PREF_API_36_DISABLE_NOTIFICATION = "API_36_disable_notification"  // in API 36 notifications are grouped, so 2. and 3. should be disabled once
 
     // deprecated:
     const val DEPRECATED_SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION = "graph_duration_phone_notification"

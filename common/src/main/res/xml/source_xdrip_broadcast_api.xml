@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <androidx.preference.SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="xdrip_broadcast_service_api"
+        android:title="@string/src_enabled"
+        android:summary="@string/xdrip_broadcast_service_api_enabled_summary"
+        app:iconSpaceReserved="false" />
+</PreferenceScreen>

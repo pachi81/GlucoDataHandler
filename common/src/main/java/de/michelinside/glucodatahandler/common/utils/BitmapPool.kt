@@ -1,7 +1,7 @@
 package de.michelinside.glucodatahandler.common.utils
 
 import android.graphics.Bitmap
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import java.util.concurrent.ConcurrentHashMap
 
 object BitmapPool {

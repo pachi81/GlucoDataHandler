@@ -2,7 +2,7 @@ package de.michelinside.glucodataauto.preferences
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.core.content.ContextCompat
 import androidx.preference.Preference
 import de.michelinside.glucodataauto.R

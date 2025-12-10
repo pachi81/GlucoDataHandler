@@ -30,6 +30,7 @@
 
             <TextView
                 android:id="@+id/txtAlarmTitle"
+                android:accessibilityHeading="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/very_low_alarm_notification_name"
@@ -41,26 +42,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:screenReaderFocusable="true"
                 android:orientation="horizontal">
                 <TextView
-                    android:id="@+id/txtSoundLevelTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/alarm_sound_level"
-                    android:textColor="#FFFFFF"
-                    android:textSize="18sp" />
-
-                <TextView
                     android:id="@+id/txtSoundLevel"
+                    android:focusable="false"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_toEndOf="@+id/txtSoundLevelTitle"
                     android:text="15"
                     android:textAlignment="textEnd"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
                     tools:ignore="HardcodedText" />
+                <TextView
+                    android:id="@+id/txtSoundLevelTitle"
+                    android:focusable="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@id/txtSoundLevel"
+                    android:text="@string/alarm_sound_level"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp" />
+
             </RelativeLayout>
 
 
@@ -98,6 +102,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@android:color/darker_gray"
+                android:importantForAccessibility="no"
                 android:layout_marginVertical="5dp"/>
 
             <Button
@@ -118,26 +123,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:screenReaderFocusable="true"
                 android:orientation="horizontal">
                 <TextView
-                    android:id="@+id/txtVibrationAmplitudeLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/alarm_vibrate_amplitude"
-                    android:textColor="#FFFFFF"
-                    android:textSize="18sp" />
-
-                <TextView
                     android:id="@+id/txtVibrationAmplitude"
+                    android:focusable="false"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_toEndOf="@+id/txtVibrationAmplitudeLabel"
                     android:text="15"
                     android:textAlignment="textEnd"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
                     tools:ignore="HardcodedText" />
+                <TextView
+                    android:id="@+id/txtVibrationAmplitudeLabel"
+                    android:focusable="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/alarm_vibrate_amplitude"
+                    android:textColor="#FFFFFF"
+                    android:layout_toStartOf="@+id/txtVibrationAmplitude"
+                    android:textSize="18sp" />
+
             </RelativeLayout>
 
 
@@ -155,6 +163,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@android:color/darker_gray"
+                android:importantForAccessibility="no"
                 android:layout_marginVertical="5dp"/>
             <Button
                 android:id="@+id/btnTestAlarm"

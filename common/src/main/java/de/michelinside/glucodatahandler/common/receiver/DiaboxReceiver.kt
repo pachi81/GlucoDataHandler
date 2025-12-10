@@ -3,7 +3,8 @@ package de.michelinside.glucodatahandler.common.receiver
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
+import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
@@ -63,15 +64,15 @@ open class DiaboxReceiver: NamedBroadcastReceiver() {
                             SourceStateData.setState(DataSource.DIABOX, SourceState.NONE)
                         } else {
                             Log.w(LOG_ID, "No glucose value: " + Utils.dumpBundle(intent.extras))
-                            SourceStateData.setError(DataSource.DIABOX, "Missing glucose value!")
+                            SourceStateData.setError(DataSource.DIABOX, context.resources.getString(R.string.source_no_valid_value))
                         }
                     } else {
                         Log.w(LOG_ID, "No realTimeGlucose: " + Utils.dumpBundle(intent.extras))
-                        SourceStateData.setError(DataSource.DIABOX, "Missing data!")
+                        SourceStateData.setError(DataSource.DIABOX, context.resources.getString(R.string.missing_data))
                     }
                 } else {
                     Log.w(LOG_ID, "No data: " + Utils.dumpBundle(intent.extras))
-                    SourceStateData.setError(DataSource.DIABOX, "Missing data!")
+                    SourceStateData.setError(DataSource.DIABOX, context.resources.getString(R.string.missing_data))
                 }
             }
         } catch (exc: Exception) {

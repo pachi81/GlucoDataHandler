@@ -276,7 +276,6 @@
 
     <!-- GlucoDataAuto -->
 
-    <string name="glucodataauto_link">https://github.com/pachi81/GlucoDataAuto/blob/main/README.md</string>
     <string name="gda_no_data">若要在 Android Auto 中使用，您必須多次點選「版本」以啟用 Android Auto 的開發人員選項，並於開發人員選項中啟用「未知來源」</string>
     <string name="pref_information">資訊</string>
     <string name="pref_gda_info_summary">若您使用 GlucoDataHandler 作為資料來源，下列設定會被 GlucoDataHandler 的設定覆蓋，所以不需要再次變更設定</string>
@@ -455,7 +454,7 @@
     <string name="pref_cat_notification_summary">通知設定</string>
     <string name="pref_cat_locksreen_wallpaper_summary">取代鎖定螢幕桌布設定</string>
     <string name="pref_cat_android_auto_summary">用於 Android Auto 的 GlucoDataAuto 設定</string>
-    <string name="pref_cat_watchdrip">小米手環和 Amazfit 手錶</string>
+    <string name="pref_cat_watchdrip">小米手環和 Amazfit</string>
     <string name="pref_cat_wear_os">Wear OS 手錶</string>
     <string name="pref_cat_watch">手錶</string>
     <string name="pref_cat_watch_summary">智慧手錶連線設定</string>
@@ -466,7 +465,7 @@
     <string name="pref_wearos_info_summary">若要在 Wear OS 手錶使用 GlucoDataHandler，請從手錶的 Google Play 商店安裝</string>
     <string name="pref_wear_os_check_connection">檢查連線</string>
     <string name="pref_wear_os_check_connection_summary">按這裡重新檢查 Wear OS 連線\n在主畫面按一下連線資訊也可以檢查連線 (Wear OS 程式也適用)</string>!
-    <string name="pref_watchdrip_info_summary">WatchDrip+ 支援多款小米手環和 Amazfit 裝置\n若要取得完整的支援裝置清單及更多關於設定 WatchDrip+ 的資訊，請按這裡</string>
+    <string name="pref_watchdrip_info_summary">WatchDrip+ 支援多款小米手環 (Xiaomi Smart Band) 和 Amazfit 裝置\n若要取得完整的支援裝置清單及更多關於設定 WatchDrip+ 的資訊，請按這裡</string>
     <string name="alarm_vibrate_only_wear_info">只震動而不顯示通知的功能並非在所有裝置都能正確運作！</string>
     <string name="alarm_use_alarm_sound">使用鬧鐘音量</string>
     <string name="alarm_use_alarm_sound_summary">使用鬧鐘的音量大小而不是鈴聲的音量大小\n此選項不受震動模式的影響</string>
@@ -528,7 +527,7 @@
     <string name="pref_source_offline">本機程式</string>
     <string name="pref_source_offline_summary">在同裝置中以內部廣播訊息提供血糖值的程式，如 Juggluco、xDrip+、AAPS 等</string>
     <string name="pref_cat_follower_summary">透過網路的雲端服務提供血糖值，如 LibreLinkUp、Dexcom Share 和 Nightscout</string>
-    <string name="pref_source_xdrip_broadcast">替代來源: 本機廣播</string>
+    <string name="pref_source_xdrip_broadcast">xDrip+ 本機廣播</string>
     <string name="pref_source_dexcom_byoda_info_summary">若要從 Dexcom BYODA 接收血糖值，您必須在建置程式時啟用對 AAPS 的廣播功能</string>
     <string name="pref_source_eversense_info_summary">若要從 Eversense 接收數值，您必須使用 ESEL，無論是在夥伴模式（讀取通知）還是連線到修補的 Eversense 應用程式。\n若要取得更多關於 ESEL 的資訊，請按這裡。</string>
     <string name="pref_source_eversense_byoda_info_summary">若要從 Dexcom BYODA 接收數值，您必須在建置應用程式時啟用對 xDrip+ 的廣播。</string>
@@ -565,7 +564,7 @@
     <string name="settings_read_succeeded">讀取設定成功</string>
     <string name="settings_read_failed">讀取設定失敗！</string>
     <string name="pref_cat_export_import">匯出 / 匯入</string>
-    <string name="pref_cat_export_import_summary">匯出或匯入設定並儲存記錄</string>
+    <string name="pref_cat_export_import_summary">匯出或匯入設定</string>
     <string name="pref_export_settings">匯出</string>
     <string name="pref_export_settings_summary">按這裡會將所有設定匯出為檔案\n重要: 只有修改過的設定才會儲存！與預設值相同的設定不會匯出</string>
     <string name="pref_import_settings">匯入</string>
@@ -663,7 +662,7 @@
     <string name="pref_send_battery_level_to_watch_summary">將電池電量傳送到手錶以便在小工具和主畫面上顯示</string>
     <string name="pref_battery_level">顯示電池電量</string>
     <string name="forward_to_watch_interval_summary">設定血糖測量最小間隔多久 (分鐘) 會傳送更新到手錶\n警報和非常低的血糖值會立即傳送</string>
-    <string name="forward_to_values_summary">設定血糖測量最小間隔多久 (分鐘) 會傳送更新到接收程式</string>
+    <string name="forward_to_values_summary">設定血糖測量最小間隔多久 (分鐘) 會傳送更新到接收程式 (不適用於 Health Connect)</string>
     <string name="alarm_repeat_summary">警報會重複發出聲音和震動，直到您關閉通知或達到所設定的最大警報持續時間為止</string>
     <string name="alarm_repeat_time">最大警報持續時間</string>
     <string name="alarm_repeat_time_summary">設定警報發出聲音和震動的最大持續時間 (分鐘)。設為 0 表示警報會一直重複</string>
@@ -700,7 +699,7 @@
     <string name="source_libre_server_russian">俄羅斯 (.ru)</string>
 
     <string name="patient_name">名稱</string>
-    <string name="patient_name_summary">使用者/病患名稱會顯示在通知和語音播報中\n如果您同時使用多個 GlucoDataAuto 程式則須使用此選項，否則請留空</string>
+    <string name="patient_name_gda_summary">使用者/病患名稱會顯示在通知和語音播報中\n如果您同時使用多個 GlucoDataAuto 程式則須使用此選項，否則請留空</string>
 
     <string name="video_tutorial">影片教學</string>
     <string name="video_tutorial_summary">按這裡可以連到 YouTube 影片說明如何設定資料來源。非常感謝 Diabetic Masked Man 製作影片</string>
@@ -756,7 +755,7 @@
 
     <string name="source_notification">通知</string>
     <string name="pref_source_notification">通知讀取器 (Beta)</string>
-    <string name="pref_source_notification_summary">從其他應用程式（例如 Dexcom、CamAPS FX 和 Omnipod 5）的通知接收血糖值和 IOB。</string>
+    <string name="pref_source_notification_summary">從其他應用程式（例如 Dexcom、CamAPS FX 和 Omnipod 5）的通知接收血糖值、IOB 和 COB。</string>
     <string name="notification_reader_app">應用程式</string>
     <string name="notification_reader_app_summary">選擇要從哪個應用程式讀取通知。</string>
     <string name="notification_reader_enabled_summary_on">已啟用通知讀取器，以分析特定應用程式通知中的數值。</string>
@@ -769,7 +768,7 @@
     <string name="notification_reader_app_regex_summary">用於分析通知中文字數值的 Regex。\n請僅在您知道自己在做什麼或收到開發人員的建議時才進行變更。</string>
     <string name="notification_reader_five_minute_interval">5 分鐘間隔</string>
     <string name="notification_reader_five_minute_interval_summary">某些應用程式（例如 Dexcom）會相當頻繁地更新其通知。若要忽略具有相同數值的更新，請啟用 5 分鐘間隔。\n如果已啟用，則只會每 5 分鐘出現一個新數值，或當通知中的數值已變更時。</string>
-    <string name="pref_source_notification_info_summary">若要從其他應用程式的通知接收數值，需要有存取通知的權限！\n通知必須包含字串形式的血糖值或 IOB。\n由於每個通知都有不同的版面配置，因此可能無法與所有應用程式搭配使用。如果發生問題，請透過通知的螢幕截圖和記錄與我聯絡。</string>
+    <string name="pref_source_notification_info_summary">若要從其他應用程式的通知接收數值，需要有存取通知的權限！\n通知必須包含字串形式的血糖值、IOB 或 COB。\n由於每個通知都有不同的版面配置，因此可能無法與所有應用程式搭配使用。如果發生問題，請透過通知的螢幕截圖和記錄與我聯絡。</string>
     <string name="sensor_age_label">感測器使用時間</string>
     <string name="sensor_age_value">%1$d 天 %2$d 小時</string>
     <string name="vibrate_pattern_shorty">短</string>
@@ -856,4 +855,115 @@
     <string name="aa_media_player_colored">彩色封面</string>
     <string name="aa_media_player_colored_summary_off">顯示白色數值、趨勢和圖表</string>
     <string name="aa_media_player_colored_summary_on">顯示彩色數值、趨勢和圖表</string>
+
+    <!-- v2.2 -->
+
+    <string name="alarm_general_settings_summary">所有警報的一般警報設定。</string>
+    <string name="alarm_cat_quiet_hours">安靜時段</string>
+    <string name="source_delay_too_short">新數值比間隔時間舊。如果這種情況經常發生，請前往來源 - 雲端服務並增加延遲！</string>
+
+    <string name="health_connect_permission_rationale_title">健康連結整合</string>
+    <string name="health_connect_permission_rationale_long">
+為了協助您管理糖尿病，GlucoDataHandler 可以與健康連結分享您的血糖數據。\n\n
+這能讓您：\n
+  - 將您的血糖讀數安全地儲存在裝置上的一個中央位置。\n
+  - 與您授權的其他健康與健身應用程式分享您的血糖數據，讓您更全面地了解自己的健康狀況。\n\n
+GlucoDataHandler 只會將血糖數據寫入健康連結，除非您明確授予個別權限，否則不會讀取其他類型的健康數據。\n\n
+您隨時可以在健康連結應用程式設定中管理這些權限。
+</string>
+    <string name="pref_healthconnect">健康連結</string>
+    <string name="pref_healthconnect_summary">若要與 Health Connect 分享您的資料，請授權給 GDH。</string>
+    <string name="pref_samsunghealth_summary">若要與 Samsung Health 同步，您也必須在 Samsung Health 應用程式中啟用「從 Health Connect 讀取」。\n請注意，Samsung Health 等應用程式不會定期讀取這些數值！</string>
+    <string name="health_connect_error">發生錯誤，請將日誌傳送給開發人員。</string>
+    <string name="health_connect_not_available">不可用！</string>
+    <string name="health_connect_no_permission">缺少權限！</string>
+    <string name="select_patient_title">選取病患</string>
+    <string name="invalid_glucose_value">無效的血糖值 %1$s！</string>
+    <string name="missing_data">缺少數據！</string>
+    <string name="timeout">逾時！</string>
+    <string name="internal_error">內部錯誤！</string>
+    <string name="provide_logs">請將日誌傳送給開發人員。</string>
+    <string name="invalid_user_id">收到了無效的使用者 ID！</string>
+    <string name="invalid_redirect">回應中存在無效的重新導向！</string>
+    <string name="invalid_iob_value">無法解析 IOB！</string>
+    <string name="source_iob_notification">IOB 通知</string>
+
+    <string name="pref_cat_logs">日誌</string>
+    <string name="pref_cat_logs_summary">設定日誌記錄並將日誌儲存到檔案。</string>
+    <string name="pref_cat_log_to_db">記錄到資料庫</string>
+    <string name="pref_log_to_db_summary">警告：將日誌儲存到資料庫可能會影響效能和電池壽命。\n請僅在開發人員指示下啟用此選項以協助分析問題。</string>
+    <string name="pref_log_duration_size">日誌保留期間</string>
+    <string name="pref_log_duration_summary">在資料庫中保留日誌的小時數。\n設為 0 以停用記錄到資料庫。</string>
+    <string name="pref_log_debug">啟用偵錯日誌記錄</string>
+    <string name="pref_log_debug_summary">啟用將詳細的偵錯訊息儲存到資料庫（最多保留最近 30 分鐘）。\n僅在開發人員要求時啟用此功能。</string>
+
+    <string name="pref_switch_xdrip_server">本機網頁伺服器</string>
+    <string name="pref_switch_xdrip_server_summary">允許專為 xDrip+ 設計的錶盤從此應用程式接收血糖數據。它會在連接埠 17580 上模擬 xDrip+ 網頁伺服器功能。</string>
+    <string name="pref_switch_xdrip_server_reduce_data">簡化數據模式</string>
+    <string name="pref_switch_xdrip_server_reduce_data_summary">這會將提供的數據減至最少，以防止某些 Garmin 手錶上出現記憶體問題。\n請檢查與您的錶盤的相容性。</string>
+    <string name="error_port_in_use">連接埠正在使用中！\n請停止在此連接埠上運行的其他網頁伺服器，然後重新啟動本機網頁伺服器。</string>
+    <string name="state_active">啟用中</string>
+    <string name="pref_garmin_info_summary">Garmin、Fitbit 或 Pebble 沒有專用應用程式，只有一個本機網頁伺服器，供支援 xDrip+ 的錶盤使用。\n只需在 Connect IQ 商店中搜尋此類錶盤，並為其設定 xDrip+ 來源即可。\n重要提示：如果您也使用 xDrip+ 或 Juggluco，您只能在一個應用程式中啟用本機網頁伺服器，因為它們使用相同的連接埠 (17580)！</string>
+    <string name="remaining">剩餘</string>
+    <string name="pref_switch_xdrip_open_server">開放網頁伺服器</string>
+    <string name="pref_switch_xdrip_open_server_summary">讓網頁伺服器對網路中的其他裝置開放。\n這可能會導致安全問題，因此只有在您確實需要從網路存取網頁伺服器數據時才啟用它。\nGarmin 錶盤直接從手機請求數據，因此不需要開放伺服器！</string>
+    <string name="last_request">上次請求</string>
+    <string name="close_activitiy">關閉畫面</string>
+    <string name="collapse_view">收合檢視</string>
+    <string name="expand_view">展開檢視</string>
+    <string name="patient_name_summary">要在通知、小工具等中顯示的使用者/病患名稱。</string>
+    <string name="pref_switch_xdrip_server_1_minute_interval">1 分鐘間隔</string>
+    <string name="pref_switch_xdrip_server_1_minute_interval_summary">以 1 分鐘間隔而非 5 分鐘間隔返回數值清單。\n請僅在您確定錶盤或小工具可以處理此設定時才啟用！\n一般錶盤設計為處理 5 分鐘間隔。</string>
+    <string name="short_value_patient_name">血糖與名稱</string>
+    <string name="pref_cat_general_advanced_summary">進階應用程式設定。</string>
+    <string name="important">重要</string>
+    <string name="api_36_notification_info">從 Android 16 開始，多個狀態列圖示會由 Android 進行分組。\n因此無法再使用它們。</string>
+    <string name="pref_source_juggluco_summary">適用於 Freestyle Libre 1、2 和 3、Dexcom G7/ONE+、Sibionics GS1Sb 和 AccuChek SmartGuide 感應器的 Android 應用程式。</string>
+    <string name="pref_source_xdrip_summary">Android 糖尿病管理應用程式，可連接不同的感應器並從不同來源（如 Medtronic）接收數據。</string>
+    <string name="pref_source_aaps_summary">Android APS 是一個開源的自動化胰島素輸送系統（閉環）。</string>
+    <string name="pref_source_eversense_summary">從 ESEL 接收 Eversense 的本機廣播訊息，或從 Dexcom BYODA 接收 Dexcom G6 感應器的廣播訊息。</string>
+    <string name="pref_source_diabox_summary">適用於 Freestyle Libre 感應器的 Android 應用程式。</string>
+    <string name="pref_source_libre_patched_summary">發送本機廣播的 Libre 修補版應用程式。\n其他應用程式也使用此廣播格式轉發血糖數據。</string>
+    <string name="pref_source_xdrip_broadcast_service_api_info">xDrip+ 廣播服務 API</string>
+    <string name="pref_source_xdrip_broadcast_service_api_info_summary">使用 xDrip+ 廣播服務 API 從 xDrip+ 接收數據（也包含 IOB）。</string>
+    <string name="src_libreview_summary">遠端追蹤 FreeStyle Libre 應用程式。</string>
+    <string name="src_dexcom_share_summary">遠端追蹤 Dexcom 應用程式。</string>
+    <string name="src_medtrum_summary">遠端追蹤 Medtrum 應用程式。</string>
+    <string name="src_ns_summary">遠端追蹤 Nightscout 網頁服務。</string>
+    <string name="pref_cat_wear_os_summary">適用於 Wear OS 手錶，例如所有 Google Pixel Watch、Samsung Galaxy Watch 4 及更新版本，以及許多其他手錶。</string>
+    <string name="pref_cat_watchdrip_summary">適用於外部 WatchDrip+ 應用程式支援的手錶，例如大多數小米手環 (Xiaomi Smart Band) 和 Amazfit 型號。</string>
+    <string name="pref_cat_garminpebble">Garmin、Fitbit 和 Pebble 手錶</string>
+    <string name="pref_cat_garminpebble_summary">適用於可從 xDrip+ 網頁服務接收血糖數據的裝置和應用程式，例如 Garmin、Pebble 和一些 Fitbit 手錶。</string>
+    <string name="pref_garmin_watchfaces_summary">按此處打開 Connect IQ 商店以尋找 xDrip+ 錶盤。\n如果錶盤支援 xDrip+，它們也應該與此應用程式相容。</string>
+    <string name="pref_garmin_watchfaces">Garmin</string>
+    <string name="pref_fitbit_watchfaces">Fitbit</string>
+    <string name="pref_fitbit_watchfaces_summary">按此處打開支援 xDrip+ 網頁服務的 Glance 網頁。</string>
+    <string name="pref_pebble_watchfaces">Pebble</string>
+    <string name="pref_pebble_watchfaces_summary">按此處打開專為 xDrip+ 設計的 Pebble 錶盤，它們也應該與此應用程式相容。</string>
+    <string name="gmi">GMI</string>
+    <string name="pref_lockscreen_x_pos">水平位置</string>
+    <string name="pref_lockscreen_x_pos_summary">影像的水平位置：\n0 是顯示器的左側\n40 是顯示器的右側</string>
+    <string name="notification_cat_iob_cob">讀取 IOB/COB 數值</string>
+    <string name="notification_cat_glucose_summary">從外部應用程式的通知中讀取血糖值，該通知會顯示血糖值。</string>
+    <string name="notification_cat_iob_cob_summary">從外部應用程式的通知中讀取 IOB 和/或 COB 數值，該通知會顯示這些數值。</string>
+    <string name="source_notification_iob_enabled_summary">如果通知包含 IOB 數值，請啟用此項。</string>
+    <string name="source_notification_cob_enabled_summary">如果通知包含 COB 數值，請啟用此項。</string>
+    <string name="source_notification_iob_cob_irregular">特殊處理</string>
+    <string name="source_notification_iob_cob_irregular_summary">為更新過於頻繁的通知啟用此選項。這可確保所有數值都被正確處理。請僅在開發人員要求分析問題時才啟用此選項。</string>
+    <string name="alarm_ignore_snooze_for_obsolete">總是對過期數值發出警報</string>
+    <string name="alarm_ignore_snooze_for_obsolete_summary">即使所有警報的貪睡模式或一般安靜時段處於啟用狀態，此警報仍會通知您，確保在沒有新血糖值時您會收到警示。</string>
+    <string name="alarm_inactive_auto_reenable">自動重新啟用</string>
+    <string name="alarm_inactive_auto_reenable_summary">停用安靜時段後，它將在結束時間重新啟用。</string>
+
+    <plurals name="minutes_long">
+        <item quantity="other">%d 分鐘</item>
+    </plurals>
+    <plurals name="days_long">
+        <item quantity="other">%d 天</item>
+    </plurals>
+    <plurals name="hours_long">
+        <item quantity="other">%d 小時</item>
+    </plurals>
+
+    <string name="dexcom_server_down_error">Dexcom 伺服器似乎已關閉！\n按此處檢查伺服器狀態。\n如果 Dexcom 應用程式在同一支手機上，您可以改用通知讀取器 (Notification Reader)。</string>
 </resources>

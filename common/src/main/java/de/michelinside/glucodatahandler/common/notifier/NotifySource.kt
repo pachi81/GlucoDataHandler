@@ -33,5 +33,6 @@ enum class NotifySource {
     DB_DATA_CHANGED,
     SERVICE_STARTED,
     NODE_CONNECTED,
-    TASKER_SETTINGS;
+    TASKER_SETTINGS,
+    UPDATE_MAIN;
 }

@@ -4,8 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
@@ -21,28 +20,39 @@ import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import androidx.core.content.edit
 
 
 // python example: https://gist.github.com/bruderjakob12/b492e5c0b32e421d6fc9ee6f86d5f2dd
 
-class MedtrumSourceTask : DataSourceTask(Constants.SHARED_PREF_MEDTRUM_ENABLED, DataSource.MEDTRUM) {
-    private val LOG_ID = "GDH.Task.Source.Medtrum"
+class MedtrumSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_MEDTRUM_ENABLED, DataSource.MEDTRUM) {
+    override val LOG_ID = "GDH.Task.Source.Medtrum"
     override var minInterval = 2L
+    override val patientIdKey = Constants.SHARED_PREF_MEDTRUM_PATIENT_ID
     companion object {
+        private var instance: MedtrumSourceTask? = null
         private var user = ""
         private var password = ""
         private var reconnect = false
         private var cookie = ""
         private var topLevelDomain = "eu"
-        private var patientId = ""
         private var dataReceived = false   // mark this endpoint as already received data
-        val patientData = mutableMapOf<String, String>()
+        val patientData: MutableMap<String, String> get() {
+            if(instance == null)
+                return mutableMapOf<String, String>()
+            return instance!!.getPatientData()
+        }
         const val server = "https://easyview.medtrum.%s"
         const val LOGIN_ENDPOINT = "/mobile/ajax/login"
         const val LOGINDATA_ENDPOINT = "/mobile/ajax/logindata"
         const val MONITORLIST_ENDPOINT = "/mobile/ajax/monitor?flag=monitor_list"
         const val DOWNLOAD_ENDPOINT = "/mobile/ajax/download"
         const val GRAPHDATA_SUFFIX = "?flag=sg&st=%s&et=%s&user_name=%s"
+    }
+
+    init {
+        Log.i(LOG_ID, "init called")
+        instance = this
     }
 
     private fun getUrl(endpoint: String): String {
@@ -66,15 +76,13 @@ class MedtrumSourceTask : DataSourceTask(Constants.SHARED_PREF_MEDTRUM_ENABLED, 
 
     override fun reset() {
         Log.i(LOG_ID, "reset called")
+        super.reset()
         cookie = ""
         dataReceived = false
-        patientData.clear()
-        patientId = GlucoDataService.sharedPref!!.getString(Constants.SHARED_PREF_MEDTRUM_PATIENT_ID, "")!!
         try {
             Log.d(LOG_ID, "Save reset")
-            with (GlucoDataService.sharedPref!!.edit()) {
+            GlucoDataService.sharedPref!!.edit {
                 putString(Constants.SHARED_PREF_MEDTRUM_COOKIE, cookie)
-                apply()
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "save reset exception: " + exc.toString() )
@@ -87,9 +95,8 @@ class MedtrumSourceTask : DataSourceTask(Constants.SHARED_PREF_MEDTRUM_ENABLED, 
             reset()
             if (reconnect) {
                 reconnect = false
-                with(GlucoDataService.sharedPref!!.edit()) {
+                GlucoDataService.sharedPref!!.edit {
                     putBoolean(Constants.SHARED_PREF_MEDTRUM_RECONNECT, false)
-                    apply()
                 }
             }
         }
@@ -107,34 +114,26 @@ class MedtrumSourceTask : DataSourceTask(Constants.SHARED_PREF_MEDTRUM_ENABLED, 
             if(!handleLoginResponse(httpPost(getUrl(LOGIN_ENDPOINT), getHeader(), data)))
                 return false
         }
-        if(patientData.isEmpty() || !patientData.contains(patientId)) {
-            return handleLoginDataResult(httpGet(getUrl(LOGINDATA_ENDPOINT), getHeader()))
-        }
         return true
     }
 
-    override fun getValue(): Boolean {
-        Log.d(LOG_ID, "Get value for patient $patientId")
-        if(patientId.isEmpty()) {
-            if(patientData.isEmpty())
-                return false
-            if(patientData.size > 1) {
-                setLastError(GlucoDataService.context!!.getString(R.string.source_select_patient))
-                return false
-            }
-            setPatientId(patientData.keys.first())
-        }
+    override fun getPatientData(): MutableMap<String, String> {
+        return handleLoginDataResult(httpGet(getUrl(LOGINDATA_ENDPOINT), getHeader()))
+    }
+
+    override fun getPatientValue(patientId: String): Boolean {
+        Log.d(LOG_ID, "Get value for patient ${getPatient(patientId)}")
 
         // if patient user is set and not graph data is needed, only get login data with current value
         // else get login data for patient data and addtional get graph data
         val firstNeededValue = getFirstNeedGraphValueTime()
         val minutes = if(firstNeededValue > 0) Utils.getElapsedTimeMinute(firstNeededValue) else 0
         Log.d(LOG_ID, "Get data for last $minutes minutes")
-        handleMonitorListResponse(httpGet(getUrl(MONITORLIST_ENDPOINT), getHeader()))
+        handleMonitorListResponse(patientId, httpGet(getUrl(MONITORLIST_ENDPOINT), getHeader()))
         if(minutes <= 2L)
             return true
         // else get graph data for current patient
-        handleGraphDataResponse(httpGet(getGraphUrl(firstNeededValue), getHeader()), firstNeededValue)
+        handleGraphDataResponse(httpGet(getGraphUrl(patientId, firstNeededValue), getHeader()), firstNeededValue)
         return true
     }
 
@@ -206,9 +205,8 @@ class MedtrumSourceTask : DataSourceTask(Constants.SHARED_PREF_MEDTRUM_ENABLED, 
             if(!setCookie.isNullOrEmpty()) {
                 Log.d(LOG_ID, "Set cookie: $setCookie")
                 cookie = setCookie
-                with(GlucoDataService.sharedPref!!.edit()) {
+                GlucoDataService.sharedPref!!.edit {
                     putString(Constants.SHARED_PREF_MEDTRUM_COOKIE, cookie)
-                    apply()
                 }
                 return true
             }
@@ -216,59 +214,28 @@ class MedtrumSourceTask : DataSourceTask(Constants.SHARED_PREF_MEDTRUM_ENABLED, 
         return false
     }
 
-    private fun handleLoginDataResult(body: String?): Boolean {
-        val jsonObject = checkResponse(body) ?: return false
+    private fun handleLoginDataResult(body: String?): MutableMap<String, String> {
+        val jsonObject = checkResponse(body) ?: return mutableMapOf()
         val dataArray = jsonObject.optJSONArray("monitorlist")
         if(dataArray == null || dataArray.length() == 0) {
             setLastError(GlucoDataService.context!!.getString(R.string.source_no_patient))
-            return false
+            return mutableMapOf()
         }
-        Log.d(LOG_ID, "Handle login data result with ${dataArray.length()} patients")
-        // re-create patientData map
-        val oldSize = patientData.size
-        patientData.clear()
+        Log.i(LOG_ID, "Handle login data result with ${dataArray.length()} patients")
+        val newPatientData = mutableMapOf<String, String>()
         for (i in 0 until dataArray.length()) {
             val data = dataArray.getJSONObject(i)
-            if(data.has("username") && data.has("real_name")) {
+            if(data.has("username")) {
                 val id = data.getString("username")
-                val name = data.getString("real_name")
+                val name = if(data.has("real_name")) data.optString("real_name", id) else id
                 Log.v(LOG_ID, "New patient found: $name")
-                patientData[id] = name
+                newPatientData[id] = name.trim()
             }
         }
-        var triggerChange = oldSize != patientData.size
-        if (!patientData.keys.contains(patientId)) {
-            Log.i(LOG_ID, "Reset patient ID as it is not in the list")
-            patientId = ""
-            with (GlucoDataService.sharedPref!!.edit()) {
-                putString(Constants.SHARED_PREF_MEDTRUM_PATIENT_ID, "")
-                apply()
-            }
-            triggerChange = true
-        }
-        if(patientId.isEmpty() && patientData.size == 1) {
-            setPatientId(patientData.keys.first())
-        } else if(triggerChange) {
-                Handler(GlucoDataService.context!!.mainLooper).post {
-                    InternalNotifier.notify(GlucoDataService.context!!, NotifySource.PATIENT_DATA_CHANGED, null)
-                }
-            }
-        return true
+        return newPatientData
     }
 
-    private fun setPatientId(id: String) {
-        patientId = id
-        Log.d(LOG_ID, "Using patient ID $patientId")
-        with (GlucoDataService.sharedPref!!.edit()) {
-            putString(Constants.SHARED_PREF_MEDTRUM_PATIENT_ID, id)
-            apply()
-        }
-        Handler(GlucoDataService.context!!.mainLooper).post {
-            InternalNotifier.notify(GlucoDataService.context!!, NotifySource.PATIENT_DATA_CHANGED, null)
-        }
-    }
-
-    private fun handleMonitorListResponse(body: String?): Boolean {
+    private fun handleMonitorListResponse(patientId: String, body: String?): Boolean {
         /*
             {
                 "monitorlist": [{
@@ -319,7 +286,11 @@ class MedtrumSourceTask : DataSourceTask(Constants.SHARED_PREF_MEDTRUM_ENABLED, 
         Log.d(LOG_ID, "Handle monitorlist result with ${dataArray.length()} patients - cur patient: $patientId")
         for (i in 0 until dataArray.length()) {
             val data = dataArray.getJSONObject(i)
-            if(data.has("sensor_status") && data.has("username") && data.getString("username") == patientId) {
+            if(data.has("username") && data.getString("username") == patientId) {
+                if(!data.has("sensor_status")) {
+                    setLastError(GlucoDataService.context!!.getString(R.string.no_data_in_server_response))
+                    return false
+                }
                 val sensorData = data.getJSONObject("sensor_status")
                 if(sensorData.has("glucose") && sensorData.has("updateTime")) {
                     val glucose = sensorData.getDouble("glucose").toFloat()
@@ -453,7 +424,7 @@ class MedtrumSourceTask : DataSourceTask(Constants.SHARED_PREF_MEDTRUM_ENABLED, 
     }
 
     private val format = SimpleDateFormat("yyyy-MM-dd%20HH:mm:ss", Locale.ENGLISH)
-    private fun getGraphUrl(startTime: Long): String {
+    private fun getGraphUrl(patientId: String, startTime: Long): String {
         val start = format.format(Date(startTime))
         val end = format.format(Date(System.currentTimeMillis()))
         val url = getUrl(DOWNLOAD_ENDPOINT) + GRAPHDATA_SUFFIX.format(start, end, patientId)
@@ -477,7 +448,6 @@ class MedtrumSourceTask : DataSourceTask(Constants.SHARED_PREF_MEDTRUM_ENABLED, 
             if(cookie.isNotEmpty()) {
                 dataReceived = true
             }
-            patientId = sharedPreferences.getString(Constants.SHARED_PREF_MEDTRUM_PATIENT_ID, "")!!
             topLevelDomain = sharedPreferences.getString(Constants.SHARED_PREF_MEDTRUM_SERVER, "eu")?: "eu"
             InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
             trigger = true
@@ -503,13 +473,6 @@ class MedtrumSourceTask : DataSourceTask(Constants.SHARED_PREF_MEDTRUM_ENABLED, 
                     if (reconnect != sharedPreferences.getBoolean(Constants.SHARED_PREF_MEDTRUM_RECONNECT, false)) {
                         reconnect = sharedPreferences.getBoolean(Constants.SHARED_PREF_MEDTRUM_RECONNECT, false)
                         Log.d(LOG_ID, "Reconnect triggered")
-                        trigger = true
-                    }
-                }
-                Constants.SHARED_PREF_MEDTRUM_PATIENT_ID -> {
-                    if (patientId != sharedPreferences.getString(Constants.SHARED_PREF_MEDTRUM_PATIENT_ID, "")) {
-                        patientId = sharedPreferences.getString(Constants.SHARED_PREF_MEDTRUM_PATIENT_ID, "")!!
-                        Log.d(LOG_ID, "PatientID changed to $patientId")
                         trigger = true
                     }
                 }

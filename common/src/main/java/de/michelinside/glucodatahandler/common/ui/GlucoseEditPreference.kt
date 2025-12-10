@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.res.TypedArray
 import android.text.InputType
 import android.util.AttributeSet
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.widget.EditText
 import androidx.preference.EditTextPreference
 import androidx.preference.EditTextPreference.OnBindEditTextListener

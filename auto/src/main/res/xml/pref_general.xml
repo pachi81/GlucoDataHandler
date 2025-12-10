@@ -36,7 +36,7 @@
                     android:defaultValue=""
                     android:key="patient_name"
                     android:title="@string/patient_name"
-                    android:summary="@string/patient_name_summary"
+                    android:summary="@string/patient_name_gda_summary"
                     app:iconSpaceReserved="false"/>
         </PreferenceCategory>
 </PreferenceScreen>

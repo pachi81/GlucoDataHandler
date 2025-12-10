@@ -7,7 +7,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.PixelFormat
 import android.provider.Settings
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.*
 import android.view.View.*
 import android.widget.ImageView
@@ -86,7 +86,7 @@ class FloatingWidget(context: Context): WallpaperBase(context, "GDH.FloatingWidg
         receycleOldWallpaper()
     }
 
-    override fun update() {
+    override open fun update() {
         Log.d(LOG_ID, "update called - enabled: $enabled")
         try {
             if (enabled) {

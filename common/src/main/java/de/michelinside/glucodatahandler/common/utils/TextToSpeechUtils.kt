@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.Worker
@@ -44,7 +44,7 @@ object TextToSpeechUtils {
                         Log.d(LOG_ID, "initTextToSpeech status=$status")
                         if (status == TextToSpeech.SUCCESS) {
                             if(textToSpeech!!.voices != null && textToSpeech!!.voices.isNotEmpty()) {
-                                Log.i(LOG_ID, "language: ${textToSpeech!!.language} - default: ${textToSpeech!!.defaultVoice?.name} - voices: ${textToSpeech!!.voices}")
+                                Log.i(LOG_ID, "language: ${textToSpeech!!.language} - default: ${textToSpeech!!.defaultVoice?.name} - voices: ${textToSpeech!!.voices.size}")
                                 val curLanguage = textToSpeech!!.voice?.locale
                                 curLocal = context.resources.getString(R.string.locale)
                                 textToSpeech!!.language = Locale(curLocal)
@@ -189,7 +189,8 @@ class LocaleChangeNotifier: BroadcastReceiver() {
     private val LOG_ID = "GDH.LocaleChangeNotifier"
     override fun onReceive(context: Context, intent: Intent) {
         try {
-            Log.d(LOG_ID, "Action received: ${intent.action} - bundle: ${Utils.dumpBundle(intent.extras)}")
+            if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
+                Log.d(LOG_ID, "Action received: ${intent.action} - bundle: ${Utils.dumpBundle(intent.extras)}")
             if (TextToSpeechUtils.localChanged(context)) {
                 val workRequest =
                     OneTimeWorkRequestBuilder<TextToSpeechWorker>().build()

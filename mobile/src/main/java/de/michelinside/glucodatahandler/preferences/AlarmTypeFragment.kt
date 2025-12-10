@@ -9,7 +9,7 @@ import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -104,7 +104,8 @@ class AlarmTypeFragment : SettingsFragmentCompatBase(), SharedPreferences.OnShar
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         try {
-            Log.v(LOG_ID, "onCreatePreferences called for key: ${Utils.dumpBundle(this.arguments)}" )
+            if(Log.isLoggable(LOG_ID, android.util.Log.VERBOSE))
+                Log.v(LOG_ID, "onCreatePreferences called for key: ${Utils.dumpBundle(this.arguments)}" )
             preferenceManager.sharedPreferencesName = Constants.SHARED_PREF_TAG
             setPreferencesFromResource(R.xml.alarm_type, rootKey)
             if (requireArguments().containsKey("type")) {

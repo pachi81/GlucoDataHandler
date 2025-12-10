@@ -3,8 +3,8 @@ package de.michelinside.glucodatahandler.common.database
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import androidx.room.Room
 import com.google.gson.Gson
 import de.michelinside.glucodatahandler.common.Command
@@ -16,10 +16,12 @@ import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.receiver.InternalActionReceiver
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.GlucoseStatistics
+import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job // Added import
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
@@ -40,10 +42,36 @@ object dbAccess {
     private val migration_1_2 = object : androidx.room.migration.Migration(1, 2) {
         override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
             try {
+                Log.i(LOG_ID, "migration from 1 to 2")
                 db.execSQL("UPDATE glucose_values SET TIMESTAMP = ((TIMESTAMP / 1000) * 1000)")
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "migration exception: $exc")
                 db.execSQL("DELETE FROM glucose_values")
+            }
+        }
+    }
+
+    private val migration_2_3 = object : androidx.room.migration.Migration(2, 4) {
+        override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+            try {
+                Log.i(LOG_ID, "migration from 2 to 4")
+                // Correct CREATE TABLE statement matching the LogEntry entity exactly
+                db.execSQL("CREATE TABLE `log` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `priority` INTEGER NOT NULL, `tag` TEXT NOT NULL, `msg` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `pid` INTEGER NOT NULL, `tid` INTEGER NOT NULL)")
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "migration exception: $exc")
+            }
+        }
+    }
+
+    private val migration_3_4 = object : androidx.room.migration.Migration(3, 4) {
+        override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+            try {
+                Log.i(LOG_ID, "migration from 3 to 4")
+                // Re-create table with new structure
+                db.execSQL("DROP TABLE IF EXISTS `log`")
+                db.execSQL("CREATE TABLE `log` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `priority` INTEGER NOT NULL, `tag` TEXT NOT NULL, `msg` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `pid` INTEGER NOT NULL, `tid` INTEGER NOT NULL)")
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "migration exception: $exc")
             }
         }
     }
@@ -67,7 +95,7 @@ object dbAccess {
                 Database::class.java,
                 DATABASE_NAME
             )
-                .addMigrations(migration_1_2)
+                .addMigrations(migration_1_2, migration_2_3, migration_3_4)
                 .build()
 
         } catch (exc: Exception) {
@@ -143,6 +171,23 @@ object dbAccess {
         }
     }
 
+
+    fun getLastTopNGlucoseValues(count: Int): List<GlucoseValue> = runBlocking {
+        if(active) {
+            scope.async {
+                try {
+                    Log.d(LOG_ID, "getTopNGlucoseValues - count: $count")
+                    database!!.glucoseValuesDao().getLastTopNValues(count)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "getGlucoseValues exception: $exc")
+                    emptyList()
+                }
+            }.await()
+        } else {
+            emptyList()
+        }
+    }
+
     fun getGlucoseValuesInRange(minTime: Long, maxTime: Long): List<GlucoseValue> = runBlocking {
         if(active) {
             scope.async {
@@ -182,8 +227,7 @@ object dbAccess {
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "hasGlucoseValues exception: $exc")
                     false
-                }
-            }.await()
+                }            }.await()
         } else {
             false
         }
@@ -192,7 +236,7 @@ object dbAccess {
     private fun updateTimestamps(values: List<GlucoseValue>): List<GlucoseValue> {
         val updated = mutableListOf<GlucoseValue>()
         val minTime = System.currentTimeMillis()-Constants.DB_MAX_DATA_TIME_MS
-        values.forEach {
+        values.forEach { 
             if(it.timestamp > minTime && GlucoDataUtils.isGlucoseValid(it.value)) {
                 updated.add(GlucoseValue(GlucoDataUtils.getGlucoseTime(it.timestamp), it.value))
             } else {
@@ -229,7 +273,10 @@ object dbAccess {
                             GlucoseStatistics.reset()  // trigger re-calculation!
                         }
                         // trigger update of db data
-                        InternalNotifier.notify(GlucoDataService.context!!, NotifySource.DB_DATA_CHANGED, null)
+                        val extras = Bundle()
+                        extras.putLong(Constants.EXTRA_START_TIME, values.first().timestamp)
+                        extras.putLong(Constants.EXTRA_END_TIME, values.last().timestamp)
+                        InternalNotifier.notify(GlucoDataService.context!!, NotifySource.DB_DATA_CHANGED, extras)
                         if(!internal) {
                             // trigger dbsync with watch
                             GlucoDataService.sendCommand(Command.REQUEST_DB_SYNC)
@@ -378,4 +425,75 @@ object dbAccess {
         Log.i(LOG_ID, "${data.size} values received")
         addGlucoseValues(data, true)
     }
+
+
+    /**********************************************************************************************/
+    /**********************************************************************************************/
+    /**********************************************************************************************/
+    /**********************************************************************************************/
+    /**********************************************************************************************/
+
+
+    fun addLogs(logs: List<LogEntry>): Job? { // Changed to return Job?
+        if(active) {
+            return scope.launch { // return the Job
+                try {
+                    database!!.logDao().insertLogs(logs)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "addLogs exception: $exc")
+                }
+            }
+        }
+        return null
+    }
+
+    fun getLogs(): List<LogEntry> {
+        return if(active) {
+            runBlocking {
+                database!!.logDao().getLogs()
+            }
+        } else {
+            emptyList()
+        }
+    }
+
+    fun deleteOldLogs(minTime: Long) {
+        if(active) {
+            scope.launch {
+                try {
+                    Log.i(LOG_ID, "deleteOldLogs - minTime: ${Utils.getUiTimeStamp(minTime)}")
+                    database!!.logDao().deleteOldLogs(minTime)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "deleteOldLogs exception: $exc")
+                }
+            }
+        }
+    }
+
+    fun deleteOldDebugLogs(minTime: Long) {
+        if(active) {
+            scope.launch {
+                try {
+                    Log.i(LOG_ID, "deleteOldDebugLogs - minTime: ${Utils.getUiTimeStamp(minTime)}")
+                    database!!.logDao().deleteOldDebugLogs(minTime)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "deleteOldDebugLogs exception: $exc")
+                }
+            }
+        }
+    }
+
+    fun deleteAllLogs() {
+        if(active) {
+            scope.launch {
+                try {
+                    Log.i(LOG_ID, "deleteAllLogs")
+                    database!!.logDao().clearAndReset()
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "deleteAllLogs exception: $exc")
+                }
+            }
+        }
+    }
+
 }

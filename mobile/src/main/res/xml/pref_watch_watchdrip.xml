@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:key="open_watchdrip_link"
+        android:title="@string/pref_information"
+        android:summary="@string/pref_watchdrip_info_summary"
+        app:iconSpaceReserved="false" />
+    <androidx.preference.SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="watchdrip_enabled"
+        android:summary="@string/pref_switch_watchdrip_enabled_summary"
+        android:title="@string/pref_switch_watchdrip_enabled"
+        app:iconSpaceReserved="false" />
+</PreferenceScreen>

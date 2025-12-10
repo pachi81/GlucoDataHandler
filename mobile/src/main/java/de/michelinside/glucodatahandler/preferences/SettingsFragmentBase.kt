@@ -10,9 +10,10 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.text.InputType
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.lifecycleScope
 import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
 import androidx.preference.MultiSelectListPreference
@@ -20,6 +21,7 @@ import androidx.preference.Preference
 import androidx.preference.SeekBarPreference
 import androidx.preference.SwitchPreferenceCompat
 import de.michelinside.glucodatahandler.AODAccessibilityService
+import de.michelinside.glucodatahandler.healthconnect.HealthConnectManager
 import de.michelinside.glucodatahandler.common.ui.Dialogs
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
@@ -34,6 +36,7 @@ import de.michelinside.glucodatahandler.common.receiver.GlucoseDataReceiver
 import de.michelinside.glucodatahandler.common.ui.SelectReceiverPreference
 import de.michelinside.glucodatahandler.common.utils.GlucoseStatistics
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
+import kotlinx.coroutines.launch
 import kotlin.collections.HashMap
 import kotlin.collections.List
 import kotlin.collections.mutableSetOf
@@ -41,7 +44,6 @@ import kotlin.collections.plus
 import kotlin.collections.set
 import kotlin.collections.toTypedArray
 import de.michelinside.glucodatahandler.common.R as CR
-
 
 abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragmentCompatBase(), SharedPreferences.OnSharedPreferenceChangeListener {
     protected val LOG_ID = "GDH.SettingsFragmentBase"
@@ -206,10 +208,12 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
             setEnableState<SelectReceiverPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_TAP_ACTION, Constants.SHARED_PREF_FLOATING_WIDGET)
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_SEND_PREF_TO_GLUCODATAAUTO, Constants.SHARED_PREF_SEND_TO_GLUCODATAAUTO, defValue = true)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_LOCKSCREEN_WP_Y_POS, Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED)
+            setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_LOCKSCREEN_WP_X_POS, Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE, Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_LOCKSCREEN_WP_SIZE, Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED)
 
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_AOD_WP_Y_POS, Constants.SHARED_PREF_AOD_WP_ENABLED)
+            setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_AOD_WP_X_POS, Constants.SHARED_PREF_AOD_WP_ENABLED)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_AOD_WP_STYLE, Constants.SHARED_PREF_AOD_WP_ENABLED)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_AOD_WP_SIZE, Constants.SHARED_PREF_AOD_WP_ENABLED)
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_AOD_WP_COLOURED, Constants.SHARED_PREF_AOD_WP_ENABLED)
@@ -255,6 +259,14 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
             selectTargets.entryValues = arrayOf<CharSequence>("") + receivers.values.toTypedArray()
         }
     }
+
+
+
+    protected fun setSeekBarMaxValue(prefKey: String, maxValue: Int) {
+        val pref = findPreference<SeekBarPreference>(prefKey)
+        if(pref != null)
+            pref.max = maxValue
+    }
 }
 
 class GeneralSettingsFragment: SettingsFragmentBase(R.xml.pref_general) {
@@ -269,32 +281,45 @@ class GeneralSettingsFragment: SettingsFragmentBase(R.xml.pref_general) {
                 it.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
             }
         }
-        updateSummary()
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         try {
             super.onSharedPreferenceChanged(sharedPreferences, key)
             when (key) {
-                Constants.SHARED_PREF_USE_MMOL -> updateSummary()
                 Constants.SHARED_PREF_SENSOR_RUNTIME -> {
                     InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SETTINGS, null)
-                }
-                Constants.SHARED_PREF_STANDARD_STATISTICS -> {
-                    GlucoseStatistics.reset()
                 }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
         }
     }
+}
 
-    private fun updateSummary() {
-        val useMmol = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_USE_MMOL)
+class GeneralAdvancedSettingsFragment: SettingsFragmentBase(R.xml.pref_general_advanced) {
+
+    override fun initPreferences() {
+        Log.v(LOG_ID, "initPreferences called")
+        super.initPreferences()
+        val useMmol = preferenceManager.sharedPreferences!!.getBoolean(Constants.SHARED_PREF_USE_MMOL, false)
         val otherUnitPref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_SHOW_OTHER_UNIT)
         if(otherUnitPref != null && useMmol != null) {
-            val otherUnit = if(useMmol.isChecked) "mg/dl" else "mmol/l"
+            val otherUnit = if(useMmol) "mg/dl" else "mmol/l"
             otherUnitPref.summary = requireContext().resources.getString(CR.string.pref_show_other_unit_summary).format(otherUnit)
+        }
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        try {
+            super.onSharedPreferenceChanged(sharedPreferences, key)
+            when (key) {
+                Constants.SHARED_PREF_STANDARD_STATISTICS -> {
+                    GlucoseStatistics.reset()
+                }
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
         }
     }
 }
@@ -308,6 +333,10 @@ class WidgetSettingsFragment: SettingsFragmentBase(R.xml.pref_widgets) {
         Log.v(LOG_ID, "initPreferences called")
         super.initPreferences()
         updateStyleSummary()
+
+        if(resources.getBoolean(R.bool.isTablet)) {
+            setSeekBarMaxValue(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, 100)
+        }
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
@@ -342,6 +371,11 @@ class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen)  {
         super.initPreferences()
         updateStyleSummary()
         updateEnabledInitial()
+
+        if(resources.getBoolean(R.bool.isTablet)) {
+            setSeekBarMaxValue(Constants.SHARED_PREF_LOCKSCREEN_WP_SIZE, 100)
+            setSeekBarMaxValue(Constants.SHARED_PREF_AOD_WP_SIZE, 100)
+        }
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
@@ -408,7 +442,17 @@ class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen)  {
     }
 }
 
-class NotificaitonSettingsFragment: SettingsFragmentBase(R.xml.pref_notification) {}
+class NotificaitonSettingsFragment: SettingsFragmentBase(R.xml.pref_notification) {
+    override fun initPreferences() {
+        Log.v(LOG_ID, "initPreferences called")
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
+            val prefApi36Info = findPreference<Preference>(Constants.SHARED_PREF_API_36_NOTIFICATION_INFO)
+            prefApi36Info?.isVisible = true
+        }
+
+        PreferenceHelper.setLinkOnClick(findPreference(Constants.SHARED_PREF_OPEN_WATCH_DRIP_LINK), CR.string.watchdrip_link, requireContext())
+    }
+}
 
 class WatchSettingsFragment: SettingsFragmentBase(R.xml.pref_watch) {
     override fun initPreferences() {
@@ -429,6 +473,40 @@ class WatchSettingsFragment: SettingsFragmentBase(R.xml.pref_watch) {
     }
 }
 
+class WatchWearOsFragment: SettingsFragmentBase(R.xml.pref_watch_wearos) {
+    override fun initPreferences() {
+        Log.v(LOG_ID, "initPreferences called")
+        val prefCheckWearOS = findPreference<Preference>(Constants.SHARED_PREF_CHECK_WEAR_OS_CONNECTION)
+        prefCheckWearOS!!.setOnPreferenceClickListener {
+            GlucoDataService.checkForConnectedNodes()
+            true
+        }
+
+        val prefResetWearOS = findPreference<Preference>(Constants.SHARED_PREF_RESET_WEAR_OS_CONNECTION)
+        prefResetWearOS!!.setOnPreferenceClickListener {
+            GlucoDataService.resetWearPhoneConnection()
+            true
+        }
+    }
+}
+
+class WatchDripFragement: SettingsFragmentBase(R.xml.pref_watch_watchdrip) {
+    override fun initPreferences() {
+        Log.v(LOG_ID, "initPreferences called")
+        PreferenceHelper.setLinkOnClick(findPreference(Constants.SHARED_PREF_OPEN_WATCH_DRIP_LINK), CR.string.watchdrip_link, requireContext())
+    }
+}
+
+class WatchWebserviceFragment: SettingsFragmentBase(R.xml.pref_watch_webservice) {
+    override fun initPreferences() {
+        Log.v(LOG_ID, "initPreferences called")
+        PreferenceHelper.setLinkOnClick(findPreference("open_garmin_link"), CR.string.garmin_watchfaces, requireContext())
+        PreferenceHelper.setLinkOnClick(findPreference("open_fitbit_link"), CR.string.glance_watchfaces, requireContext())
+        PreferenceHelper.setLinkOnClick(findPreference("open_pebble_link"), CR.string.pebble_watchfaces, requireContext())
+    }
+}
+
+
 class WatchFaceFragment: SettingsFragmentBase(R.xml.pref_watchfaces) {
     override fun initPreferences() {
         Log.v(LOG_ID, "initPreferences called")
@@ -441,15 +519,69 @@ class WatchFaceFragment: SettingsFragmentBase(R.xml.pref_watchfaces) {
 }
 
 class TransferSettingsFragment: SettingsFragmentBase(R.xml.pref_transfer) {
+    private lateinit var requestPermissionLauncher: ActivityResultLauncher<Set<String>>
     override fun initPreferences() {
         Log.v(LOG_ID, "initPreferences called")
         super.initPreferences()
         setupReceivers(Constants.GLUCODATA_BROADCAST_ACTION, Constants.SHARED_PREF_GLUCODATA_RECEIVERS)
         setupReceivers(Constants.XDRIP_ACTION_GLUCOSE_READING, Constants.SHARED_PREF_XDRIP_RECEIVERS)
         setupReceivers(Intents.XDRIP_BROADCAST_ACTION, Constants.SHARED_PREF_XDRIP_BROADCAST_RECEIVERS)
+        setupHealthConnect()
     }
 
+    private fun setupHealthConnect() {
+        val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_SEND_TO_HEALTH_CONNECT)
+        if (Build.VERSION.SDK_INT < 28 && !HealthConnectManager.isHealthConnectAvailable(requireContext().applicationContext)) {
+            pref?.isVisible = false
+        } else {
+            requestPermissionLauncher = registerForActivityResult(HealthConnectManager.getPermissionRequestContract()) { grantedPermissions ->
+                if (grantedPermissions.containsAll(HealthConnectManager.WRITE_GLUCOSE_PERMISSIONS)) {
+                    Log.i(LOG_ID, "Health Connect permissions granted by user.")
+                    // Berechtigungen erteilt, UI aktualisieren oder weitere Aktionen ausführen
+                } else {
+                    Log.w(LOG_ID, "Health Connect permissions were not fully granted.")
+                    // Berechtigungen nicht (vollständig) erteilt
+                    pref?.isChecked = false
+                }
+            }
+        }
+    }
+/*
+    override fun onResume() {
+        super.onResume()
+        val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_SEND_TO_HEALTH_CONNECT)
+        if(pref?.isChecked == true) {
+            lifecycleScope.launch { // Changed from GlobalScope
+                if(!HealthConnectManager.isHealthConnectAvailable(requireContext().applicationContext) || !HealthConnectManager.hasAllPermissions(requireContext().applicationContext)) {
+                    withContext(Dispatchers.Main) {
+                        pref.isChecked = false
+                    }
+                }
+            }
+        }
+    }
+*/
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        if(key == Constants.SHARED_PREF_SEND_TO_HEALTH_CONNECT) {
+            if(sharedPreferences!!.getBoolean(Constants.SHARED_PREF_SEND_TO_HEALTH_CONNECT, false)) {
+                lifecycleScope.launch { // Changed from GlobalScope
+                    val isReady = HealthConnectManager.checkAndEnsureRequirements(requireContext().applicationContext, requestPermissionLauncher)
+                    if (isReady) {
+                        // Health Connect ist sofort bereit
+                        Log.d(LOG_ID, "Health Connect ready to use.")
+                    } else {
+                        // Maßnahmen wurden eingeleitet (Play Store / Berechtigungsdialog)
+                        // Die Activity wartet auf das Ergebnis des Launchers oder auf Nutzerinteraktion
+                        Log.d(LOG_ID, "Health Connect requirements not met, actions initiated.")
+
+                    }
+                }
+            }
+        } else
+            super.onSharedPreferenceChanged(sharedPreferences, key)
+    }
 }
+
 class GDASettingsFragment: SettingsFragmentBase(R.xml.pref_gda) {
     override fun initPreferences() {
         Log.v(LOG_ID, "initPreferences called")

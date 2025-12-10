@@ -3,7 +3,7 @@ package de.michelinside.glucodatahandler.common.tasks
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.BuildConfig
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
@@ -141,22 +141,16 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
 
     override fun checkErrorResponse(code: Int, message: String?, errorResponse: String?) {
         Log.e(LOG_ID, "Error $code received: $message - $errorResponse")
-        if (code == HttpURLConnection.HTTP_INTERNAL_ERROR && errorResponse != null) {
-            val obj = JSONObject(errorResponse)
-            val errCode: String = obj.optString("Code")
-            when(errCode) {
-                "SessionNotValid",
-                "SessionIdNotFound" -> {
-                    reset()
-                    if(firstGetValue) {
-                        retry = true
-                        return
-                    }
-                }
+        try {
+            if (code == HttpURLConnection.HTTP_INTERNAL_ERROR && errorResponse != null) {
+                val obj = JSONObject(errorResponse)
+                val errMessage: String = obj.optString("Message")
+                super.checkErrorResponse(code, errMessage, null)
+            } else {
+                super.checkErrorResponse(code, message, errorResponse)
             }
-            val errMessage: String = obj.optString("Message")
-            setLastError("${errCode}: $errMessage", code)
-        } else {
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Exception while parsing error response: " + exc.message + " - " + errorResponse)
             super.checkErrorResponse(code, message, errorResponse)
         }
     }
@@ -179,7 +173,7 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
                         "            ]"
                 )
             } else {
-                setLastError("Missing data in response!", 500)
+                setLastError(GlucoDataService.context!!.resources.getString(R.string.missing_data), 500)
                 reset()
                 return false
             }
@@ -264,7 +258,7 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
             handleResult(glucoExtras)
             return true
         } else {
-            setLastError("Invalid response data")
+            setLastError(GlucoDataService.context!!.resources.getString(R.string.missing_data))
             Log.w(LOG_ID, "Unsupported format: $data")
         }
         return false
@@ -279,7 +273,7 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
             if (id != INVALID_ID) {
                 return id
             }
-            setLastError("Invalid user ID received!")
+            setLastError(GlucoDataService.context!!.resources.getString(R.string.invalid_user_id))
             Log.w(LOG_ID, "Invalid ID received: $id")
         }
         return null

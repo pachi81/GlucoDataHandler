@@ -2,6 +2,21 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <PreferenceCategory
+        app:iconSpaceReserved="false">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="send_to_health_connect"
+            android:summary="@string/pref_healthconnect_summary"
+            android:title="@string/pref_healthconnect"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="samsung_health_info"
+            android:summary="@string/pref_samsunghealth_summary"
+            app:iconSpaceReserved="false"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        app:iconSpaceReserved="false">
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="send_to_xdrip"
@@ -35,18 +50,19 @@
             android:summary="@string/pref_button_select_target_summary"
             android:title="@string/pref_button_select_target"
             app:iconSpaceReserved="false" />
-        <PreferenceCategory
-            android:title="@string/advanced_settings"
-            app:iconSpaceReserved="false">
-                <androidx.preference.SeekBarPreference
-                    app:showSeekBarValue="true"
-                    app:seekBarIncrement="1"
-                    app:min="1"
-                    android:max="15"
-                    android:defaultValue="1"
-                    android:key="send_to_receiver_interval"
-                    android:title="@string/alarm_interval"
-                    android:summary="@string/forward_to_values_summary"
-                    app:iconSpaceReserved="false" />
-        </PreferenceCategory>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/advanced_settings"
+        app:iconSpaceReserved="false">
+            <androidx.preference.SeekBarPreference
+                app:showSeekBarValue="true"
+                app:seekBarIncrement="1"
+                app:min="1"
+                android:max="15"
+                android:defaultValue="1"
+                android:key="send_to_receiver_interval"
+                android:title="@string/alarm_interval"
+                android:summary="@string/forward_to_values_summary"
+                app:iconSpaceReserved="false" />
+    </PreferenceCategory>
 </PreferenceScreen>

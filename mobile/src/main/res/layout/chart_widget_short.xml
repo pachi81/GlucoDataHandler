@@ -6,10 +6,25 @@
     android:background="@color/transparent_widget_background"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/patient_name"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="Patient Name"
+        android:autoSizeMinTextSize="5sp"
+        android:autoSizeMaxTextSize="30sp"
+        android:layout_marginHorizontal="10dp"
+        android:autoSizeStepGranularity="1sp"
+        android:autoSizeTextType="uniform"
+        android:maxLines="1"
+        android:textColor="@color/transparent_widget_textcolor" />
     <ImageView
         android:id="@+id/graphImage"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
         android:contentDescription="@string/graph"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"

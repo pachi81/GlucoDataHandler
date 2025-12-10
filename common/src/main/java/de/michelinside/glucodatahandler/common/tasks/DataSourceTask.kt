@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
@@ -222,7 +222,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             if(firstCall) {
                 executeRequest(false)
             } else {
-                setLastError("Timeout")
+                setLastError(GlucoDataService.context!!.resources.getString(R.string.timeout))
             }
         }
     }
@@ -243,7 +243,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                 throw ex // re throw interruption
             } catch(ex: SocketTimeoutException) {
                 Log.w(LOG_ID, "Timeout for $source: " + ex)
-                setLastError("Timeout")
+                setLastError(context.resources.getString(R.string.timeout))
             } catch (ex: UnknownHostException) {
                 Log.w(LOG_ID, "Internet connection issue for $source: " + ex)
                 setState(SourceState.NO_CONNECTION)
@@ -258,7 +258,8 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     open fun getNoNewValueInfo(time: Long): String = ""
 
     protected fun handleIobResult(extras: Bundle) {
-        Log.d(LOG_ID, "handleIobResult for $source: ${Utils.dumpBundle(extras)}")
+        if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
+            Log.d(LOG_ID, "handleIobResult for $source: ${Utils.dumpBundle(extras)}")
         if(!ReceiveData.hasNewIobCob(extras)) {
             setState(SourceState.CONNECTED)
             return
@@ -275,7 +276,8 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     }
 
     protected fun handleResult(extras: Bundle) {
-        Log.d(LOG_ID, "handleResult for $source: ${Utils.dumpBundle(extras)}")
+        if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
+            Log.d(LOG_ID, "handleResult for $source: ${Utils.dumpBundle(extras)}")
         if(!ReceiveData.hasNewValue(extras)) {
             if(extras.containsKey(ReceiveData.TIME)) {
                 setState(
@@ -307,10 +309,19 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                 Log.d(LOG_ID, "handleResult for $source in main thread")
                 ReceiveData.handleIntent(GlucoDataService.context!!, source, extras)
                 if(ReceiveData.getElapsedTimeMinute(RoundingMode.UP) > interval) {
-                    setState(
-                        SourceState.NO_NEW_VALUE
-                        //GlucoDataService.context!!.resources.getString(R.string.source_delay_too_short)
-                    )
+                    if(ReceiveData.getElapsedTimeMinute(RoundingMode.UP) < interval * 2) {
+                        setState(
+                            SourceState.NO_NEW_VALUE,
+                            GlucoDataService.context!!.resources.getString(R.string.source_delay_too_short)
+                        )
+                    } else {
+                        setState(
+                            SourceState.NO_NEW_VALUE,
+                            GlucoDataService.context!!.resources.getString(R.string.last_value_on_server, Utils.getUiTimeStamp(extras.getLong(ReceiveData.TIME))),
+                            -1,
+                            getNoNewValueInfo(extras.getLong(ReceiveData.TIME))
+                        )
+                    }
                 } else {
                     setState(SourceState.CONNECTED)
                 }
@@ -333,7 +344,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         if(!done.get()) {
             Log.e(LOG_ID, "Handler for $source not finished after $count ms! Active: ${active.get()} - Stop it!")
             handler.removeCallbacksAndMessages(null)
-            setLastError("Internal error!")
+            setLastError(GlucoDataService.context!!.resources.getString(R.string.internal_error), -1, GlucoDataService.context!!.resources.getString(R.string.provide_logs))
         }
         Log.d(LOG_ID, "handleResult for " + source + " done!")
     }
@@ -353,8 +364,8 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     }
 
     open fun checkErrorResponse(code: Int, message: String?, errorResponse: String? = null) {
-        Log.d(LOG_ID, "checkErrorResponse: $code - $message - $errorResponse")
-        if (code in 400..499) {
+        Log.e(LOG_ID, "checkErrorResponse: $code - $message - $errorResponse")
+        if (code >= 400) {  // reset for client and server errors -> better re-connect
             reset() // reset token for client error -> trigger reconnect
             if(firstGetValue) {
                 retry = true
@@ -362,7 +373,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             }
         }
         var errorMessage = getErrorMessage(code, message)
-        if(errorResponse != null) {
+        if(errorResponse != null && !errorResponse.startsWith("<")) {  // not for HTML responses!
             errorMessage += "\n" + errorResponse
         }
         setLastError(errorMessage, code, getErrorInfo(code))

@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.car.app.connection.CarConnection
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.database.dbAccess

@@ -13,7 +13,7 @@ import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.wear.watchface.complications.data.ComplicationData
 import androidx.wear.watchface.complications.data.ComplicationType
 import androidx.wear.watchface.complications.data.PhotoImageComplicationData
@@ -59,7 +59,7 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
         private fun addComplication(id: Int) {
             if(GlucoDataService.isServiceRunning && id > 0) {
                 if(!complications.contains(id)) {
-                    Log.d(LOG_ID, "Add complication $id")
+                    Log.i(LOG_ID, "Add complication $id")
                     complications.add(id)
                 }
                 createBitmap()
@@ -70,7 +70,7 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
 
         private fun remComplication(id: Int) {
             if(complications.contains(id)) {
-                Log.d(LOG_ID, "Remove complication $id")
+                Log.i(LOG_ID, "Remove complication $id")
                 complications.remove(id)
                 if(complications.isEmpty())
                     removeBitmap()
@@ -123,7 +123,7 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
 
     override suspend fun onComplicationRequest(request: ComplicationRequest): ComplicationData? {
         try {
-            Log.d(
+            Log.i(
                 LOG_ID,
                 "onComplicationRequest called for ID " + request.complicationInstanceId.toString() + " with type " + request.complicationType.toString()
             )
@@ -138,7 +138,7 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
 
     override fun onComplicationDeactivated(complicationInstanceId: Int) {
         try {
-            Log.d(LOG_ID, "onComplicationDeactivated called for id " + complicationInstanceId)
+            Log.i(LOG_ID, "onComplicationDeactivated called for id " + complicationInstanceId)
             super.onComplicationDeactivated(complicationInstanceId)
             remComplication(complicationInstanceId)
         } catch (exc: Exception) {
@@ -306,7 +306,8 @@ object ChartComplicationUpdater: NotifierInterface {
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
-        Log.d(LOG_ID, "OnNotifyData called for source $dataSource with extras ${Utils.dumpBundle(extras)} - graph-id ${ChartComplicationBase.getChartId()}" )
+        if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
+            Log.d(LOG_ID, "OnNotifyData called for source $dataSource with extras ${Utils.dumpBundle(extras)} - graph-id ${ChartComplicationBase.getChartId()}" )
         if(dataSource==NotifySource.DISPLAY_STATE_CHANGED) {
             if(ScreenEventReceiver.isDisplayOff())
                 ChartComplicationBase.pauseBitmap()

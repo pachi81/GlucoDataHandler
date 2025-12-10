@@ -17,7 +17,7 @@
                     android:summary="@string/pref_permanent_notification_info_summary"
                     app:iconSpaceReserved="false" />
                 <androidx.preference.ListPreference
-                    android:defaultValue="app"
+                    android:defaultValue="glucose"
                     android:entries="@array/pref_status_bar_icon_labels"
                     android:entryValues="@array/pref_status_bar_icon_values"
                     android:key="status_bar_notification_icon"
@@ -53,6 +53,12 @@
         <PreferenceCategory
             android:title="@string/pref_second_notification"
             app:iconSpaceReserved="false">
+                <Preference
+                    android:key="api_36_notification_info"
+                    android:title="@string/important"
+                    app:isPreferenceVisible="false"
+                    android:summary="@string/api_36_notification_info"
+                    app:iconSpaceReserved="false" />
                 <androidx.preference.SwitchPreferenceCompat
                     android:defaultValue="false"
                     android:key="second_permanent_notification"
@@ -60,7 +66,7 @@
                     android:title="@string/pref_second_notification"
                     app:iconSpaceReserved="false" />
                 <androidx.preference.ListPreference
-                    android:defaultValue="app"
+                    android:defaultValue="trend"
                     android:entries="@array/pref_status_bar_icon_labels"
                     android:entryValues="@array/pref_status_bar_icon_values"
                     android:key="second_status_bar_notification_icon"
@@ -85,7 +91,7 @@
                     android:title="@string/pref_third_notification"
                     app:iconSpaceReserved="false" />
                 <androidx.preference.ListPreference
-                    android:defaultValue="app"
+                    android:defaultValue="delta"
                     android:entries="@array/pref_status_bar_icon_labels"
                     android:entryValues="@array/pref_status_bar_icon_values"
                     android:key="third_status_bar_notification_icon"

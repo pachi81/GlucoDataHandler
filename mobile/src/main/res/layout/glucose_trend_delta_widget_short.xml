@@ -7,6 +7,20 @@
     android:background="@color/transparent_widget_background"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/patient_name"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="Patient Name"
+        android:autoSizeMinTextSize="5sp"
+        android:autoSizeMaxTextSize="30sp"
+        android:autoSizeStepGranularity="1sp"
+        android:autoSizeTextType="uniform"
+        android:maxLines="1"
+        android:layout_marginHorizontal="10dp"
+        android:textColor="@color/transparent_widget_textcolor" />
     <ImageView
         android:id="@+id/glucose_trend"
         android:contentDescription="@string/widget_glucose_trend"

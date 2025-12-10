@@ -3,7 +3,7 @@ package de.michelinside.glucodatahandler.settings
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import de.michelinside.glucodatahandler.R

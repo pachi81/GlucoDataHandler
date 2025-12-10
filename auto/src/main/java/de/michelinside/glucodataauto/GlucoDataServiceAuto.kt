@@ -9,7 +9,6 @@ import android.content.SharedPreferences
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.car.app.connection.CarConnection
 import de.michelinside.glucodataauto.android_auto.CarMediaBrowserService
@@ -41,6 +40,7 @@ import de.michelinside.glucodatahandler.common.receiver.GlucoseDataReceiver
 import de.michelinside.glucodatahandler.common.tasks.BackgroundWorker
 import de.michelinside.glucodatahandler.common.tasks.SourceTaskService
 import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
+import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import de.michelinside.glucodatahandler.common.R as CR
@@ -64,8 +64,6 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
         private var diaboxReceiver: DiaboxReceiver? = null
         private val broadcastServiceAPI = BroadcastServiceAPI()
         private var librePatchedReceiver: LibrePatchedReceiver?  = null
-        private var patient_name: String? = null
-        val patientName: String? get() = patient_name
 
         val connected: Boolean get() = car_connected || CarMediaBrowserService.active
 
@@ -74,6 +72,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
             if(!init) {
                 GlucoDataService.appSource = AppSource.AUTO_APP
                 GlucoDataService.context = context.applicationContext
+                Log.init(context)
                 migrateSettings(context)
                 CarNotification.initNotification(context)
                 startService(context, false)
@@ -88,12 +87,6 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
             if(!sharedPref.contains(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB)) {
                 with(sharedPref.edit()) {
                     putBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, false)
-                    apply()
-                }
-            }
-            if(Constants.IS_SECOND && !sharedPref.contains(Constants.PATIENT_NAME)) {
-                with(sharedPref.edit()) {
-                    putString(Constants.PATIENT_NAME, "SECOND")
                     apply()
                 }
             }
@@ -426,7 +419,6 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
             TextToSpeechUtils.initTextToSpeech(this)
             val sharedPref = getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             sharedPref.registerOnSharedPreferenceChangeListener(this)
-            patient_name = sharedPref.getString(Constants.PATIENT_NAME, "")
             val isForeground = (if(intent != null) intent.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, false) else false) || sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, false)
             if (isForeground && !isForegroundService) {
                 Log.i(LOG_ID, "Starting service in foreground!")
@@ -456,6 +448,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
         val sharedPref = getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         sharedPref.unregisterOnSharedPreferenceChangeListener(this)
         TextToSpeechUtils.destroyTextToSpeech(this)
+        Log.close(this)
         super.onDestroy()
     }
 
@@ -497,9 +490,6 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                     } else if(key == Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED && sharedPreferences.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)) {
                         checkNotificationReceiverPermission(this, true)
                     }
-                }
-                Constants.PATIENT_NAME -> {
-                    patient_name = sharedPreferences.getString(Constants.PATIENT_NAME, "")
                 }
             }
         } catch (exc: Exception) {

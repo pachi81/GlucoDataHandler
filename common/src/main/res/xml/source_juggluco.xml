@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <androidx.preference.SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="source_juggluco_enabled"
+        android:title="@string/src_enabled"
+        android:summaryOn="@string/src_offline_enabled_summary_on"
+        android:summaryOff="@string/src_offline_enabled_summary_off"
+        app:iconSpaceReserved="false" />
+    <androidx.preference.SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="source_juggluco_webserver_enabled"
+        android:title="@string/src_webserver"
+        android:summary="@string/src_juggluco_webserver_summary"
+        app:iconSpaceReserved="false" />
+    <androidx.preference.SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="source_juggluco_webserver_iob_support"
+        android:title="@string/src_iob_support"
+        android:summary="@string/src_juggluco_iob_support_summary"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="source_juggluco_info"
+        android:title="@string/pref_source_juggluco_setup_info"
+        android:summary="@string/pref_source_juggluco_info_summary"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="source_juggluco_info"
+        android:title="@string/pref_source_juggluco_webserver_info"
+        android:summary="@string/pref_source_juggluco_webserver_info_summary"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="source_juggluco_iob_info"
+        android:title="@string/pref_source_juggluco_iob_info"
+        android:summary="@string/pref_source_juggluco_iob_info_summary"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="source_juggluco_video"
+        android:title="@string/video_tutorial"
+        android:summary="@string/video_tutorial_summary"
+        app:iconSpaceReserved="false" />
+</PreferenceScreen>

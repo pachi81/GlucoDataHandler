@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="rate_calculation"
+            android:summaryOn="@string/pref_switch_use_rate_calculation_summary_on"
+            android:summaryOff="@string/pref_switch_use_rate_calculation_summary_off"
+            android:title="@string/pref_switch_use_rate_calculation"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SeekBarPreference
+            android:defaultValue="6"
+            app:showSeekBarValue="true"
+            app:seekBarIncrement="1"
+            app:min="2"
+            android:max="16"
+            android:key="obsolete_time"
+            android:title="@string/obsolete_time"
+            android:summary="@string/obsolete_time_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="standard_statistics"
+            android:title="@string/pref_switch_standard_statistics"
+            android:summary="@string/pref_switch_standard_statistics_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="relative_time"
+            android:summary="@string/pref_relative_time_summary"
+            android:title="@string/pref_relative_time"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="show_other_unit"
+            android:title="@string/pref_show_other_unit"
+            app:iconSpaceReserved="false" />
+</PreferenceScreen>

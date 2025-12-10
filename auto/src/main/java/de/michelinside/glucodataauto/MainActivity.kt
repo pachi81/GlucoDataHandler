@@ -11,7 +11,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
@@ -205,7 +205,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.TIME_VALUE,
                 NotifySource.SOURCE_STATE_CHANGE,
                 NotifySource.NEW_VERSION_AVAILABLE,
-                NotifySource.TTS_STATE_CHANGED))
+                NotifySource.TTS_STATE_CHANGED,
+                NotifySource.UPDATE_MAIN))
 
             GlucoDataServiceAuto.startDataSync()
             if(!GlucoDataService.isServiceRunning)
@@ -661,7 +662,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         try {
-            Log.v(LOG_ID, "onActivityResult called for requestCode: " + requestCode + " - resultCode: " + resultCode + " - data: " + Utils.dumpBundle(data?.extras))
+            if(Log.isLoggable(LOG_ID, android.util.Log.VERBOSE))
+                Log.v(LOG_ID, "onActivityResult called for requestCode: " + requestCode + " - resultCode: " + resultCode + " - data: " + Utils.dumpBundle(data?.extras))
             super.onActivityResult(requestCode, resultCode, data)
             if (resultCode == Activity.RESULT_OK) {
                 if (requestCode == CREATE_FILE) {

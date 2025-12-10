@@ -5,7 +5,7 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import com.joaomgcd.taskerpluginlibrary.condition.TaskerPluginRunnerConditionEvent
 import com.joaomgcd.taskerpluginlibrary.config.*
 import com.joaomgcd.taskerpluginlibrary.extensions.requestQuery

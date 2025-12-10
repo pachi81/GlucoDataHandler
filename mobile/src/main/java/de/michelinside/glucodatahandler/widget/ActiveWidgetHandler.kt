@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
@@ -83,7 +83,8 @@ object ActiveWidgetHandler: NotifierInterface, SharedPreferences.OnSharedPrefere
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
-        Log.d(LOG_ID, "OnNotifyData for source $dataSource with extras ${Utils.dumpBundle(extras)} - graph-id ${ChartBitmapHandler.chartId}")
+        if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
+            Log.d(LOG_ID, "OnNotifyData for source $dataSource with extras ${Utils.dumpBundle(extras)} - graph-id ${ChartBitmapHandler.chartId}")
         activeWidgets.forEach {
             if(it == WidgetType.CHART_GLUCOSE_TREND_DELTA_TIME_IOB_COB) {
                 // do not update for glucose values, wait for graph has changed!

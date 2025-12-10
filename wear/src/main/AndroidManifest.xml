@@ -215,6 +215,7 @@
         <receiver android:name=".common.notification.AlarmIntentReceiver" />
         <receiver android:name=".common.receiver.InternalActionReceiver" />
         <receiver android:name=".common.notification.AlarmSnoozeEndReceiver" />
+        <receiver android:name=".common.notification.AlarmInactiveTimeReceiver" />
         <receiver android:name=".StartServiceReceiver" />
         <receiver
             android:name=".StartServiceAtBootReceiver"
@@ -275,7 +276,7 @@
         <!-- Image:     Open Sans - 100 -->
         <!-- Big Image: Open Sans - 150 -->
         <service
-            android:name=".ShortClucoseComplication"
+            android:name=".ShortGlucoseComplication"
             android:exported="true"
             android:icon="@drawable/comp_short_value"
             android:label="@string/short_value"
@@ -877,6 +878,38 @@
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
                 android:value="0" />
+        </service>
+        <service
+            android:name=".ShortGlucoseWithNameComplication"
+            android:exported="true"
+            android:icon="@drawable/comp_value_patient_name"
+            android:label="@string/short_value_patient_name"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SHORT_TEXT,RANGED_VALUE" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+        </service>
+        <service
+            android:name=".ShortNameComplication"
+            android:exported="true"
+            android:icon="@drawable/comp_patient_name"
+            android:label="@string/patient_name"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SHORT_TEXT" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
         </service>
     </application>
     <queries>

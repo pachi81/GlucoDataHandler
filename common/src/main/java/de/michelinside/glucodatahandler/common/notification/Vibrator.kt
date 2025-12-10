@@ -8,7 +8,7 @@ import android.os.VibrationAttributes
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.annotation.RequiresApi
 import de.michelinside.glucodatahandler.common.GlucoDataService
 

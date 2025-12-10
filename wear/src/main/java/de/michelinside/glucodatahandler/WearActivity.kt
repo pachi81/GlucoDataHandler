@@ -8,7 +8,7 @@ import android.graphics.Paint
 import android.graphics.drawable.Icon
 import android.os.*
 import android.provider.Settings
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.Button
@@ -28,6 +28,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.setPadding
 import de.michelinside.glucodatahandler.common.chart.ChartBitmapHandlerView
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
+import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
 import de.michelinside.glucodatahandler.common.notification.AlarmState
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notification.ChannelType
@@ -64,6 +65,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var tableAlarms: TableLayout
     private lateinit var tableNotes: TableLayout
     private lateinit var chartImage: ImageView
+    private lateinit var txtPatientName: TextView
     private var doNotUpdate = false
     private var requestNotificationPermission = false
     private lateinit var chartBitmap: ChartBitmapHandlerView
@@ -74,7 +76,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             super.onCreate(savedInstanceState)
 
             //setTheme(android.R.style.Theme_DeviceDefault)
-            sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
 
             binding = ActivityWearBinding.inflate(layoutInflater)
             setContentView(binding.root)
@@ -93,6 +95,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             tableDelta = findViewById(R.id.tableDelta)
             tableNotes = findViewById(R.id.tableNotes)
             chartImage = findViewById(R.id.graphImage)
+            txtPatientName = findViewById(R.id.patient_name)
 
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
@@ -197,7 +200,8 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.CAR_CONNECTION,
                 NotifySource.TIME_VALUE,
                 NotifySource.SOURCE_STATE_CHANGE,
-                NotifySource.ALARM_STATE_CHANGED))
+                NotifySource.ALARM_STATE_CHANGED,
+                NotifySource.UPDATE_MAIN))
             if (requestNotificationPermission && Utils.checkPermission(this.applicationContext, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
                 Log.i(LOG_ID, "Notification permission granted")
                 requestNotificationPermission = false
@@ -274,6 +278,13 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
 
             txtValueInfo.visibility = if(ReceiveData.time>0) View.GONE else View.VISIBLE
 
+            if(GlucoDataService.patientName.isNullOrEmpty()) {
+                txtPatientName.visibility = View.GONE
+            } else {
+                txtPatientName.visibility = View.VISIBLE
+            }
+            txtPatientName.text = GlucoDataService.patientName
+
             updateNotesTable()
             updateAlarmsTable()
             updateConnectionsTable()
@@ -288,7 +299,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     private fun toggleAlarm() {
         try {
             doNotUpdate = true
-            val state = AlarmNotificationWear.getAlarmState(this.applicationContext)
+            val state = AlarmNotificationBase.currentAlarmState
             if(AlarmNotificationWear.channelActive(this.applicationContext)) {
                 Log.d(LOG_ID, "toggleAlarm called for state $state")
                 when (state) {
@@ -317,8 +328,18 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                             apply()
                         }
                     }
+                    AlarmState.ALARM -> {
+                        AlarmNotificationWear.stopCurrentNotification(this)
+                    }
                     AlarmState.TEMP_DISABLED -> {
-                        AlarmHandler.disableInactiveTime()
+                        if(AlarmHandler.inactiveAutoReenable)
+                            AlarmHandler.disableInactiveTime()
+                        else {
+                            with(sharedPref.edit()) {
+                                putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
+                                apply()
+                            }
+                        }
                     }
                 }
             } else {
@@ -344,7 +365,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                     apply()
                 }
             }
-            val state = AlarmNotificationWear.getAlarmState(this.applicationContext)
+            val state = AlarmNotificationBase.currentAlarmState
             Log.v(LOG_ID, "updateAlarmIcon called for state $state")
             alarmIcon.isEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_ENABLE_ALARM_ICON_TOGGLE, true)
             alarmIcon.setImageIcon(Icon.createWithResource(this, state.icon))
@@ -526,6 +547,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
         val textView = TextView(this)
         textView.layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1F)
         textView.text = text
+        textView.isFocusable = false
         textView.textSize = 14F
         if (end)
             textView.gravity = Gravity.CENTER_VERTICAL or Gravity.END
@@ -542,6 +564,8 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
 
     private fun createRow(key: String, value: String, onClickListener: View.OnClickListener? = null) : TableRow {
         val row = TableRow(this)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+            row.isScreenReaderFocusable = true
         row.weightSum = 2f
         //row.setBackgroundColor(resources.getColor(R.color.table_row))
         row.setPadding(Utils.dpToPx(5F, this))
@@ -556,6 +580,8 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
 
     private fun createRow(value: String, onClickListener: View.OnClickListener? = null) : TableRow {
         val row = TableRow(this)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+            row.isScreenReaderFocusable = true
         row.weightSum = 1f
         //row.setBackgroundColor(resources.getColor(R.color.table_row))
         row.setPadding(Utils.dpToPx(5F, this))

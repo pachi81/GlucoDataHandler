@@ -3,12 +3,13 @@ package de.michelinside.glucodatahandler.widget
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.AODAccessibilityService
 import de.michelinside.glucodatahandler.common.Constants
 
 class AodWidget(context: Context): WallpaperBase(context, "GDH.AodWidget") {
     private var yPos = 75
+    private var xPos = 20
     private var widgetColoured = false
     override val enabledPref = Constants.SHARED_PREF_AOD_WP_ENABLED
     override val stylePref = Constants.SHARED_PREF_AOD_WP_STYLE
@@ -44,6 +45,7 @@ class AodWidget(context: Context): WallpaperBase(context, "GDH.AodWidget") {
 
     override fun initSettings(sharedPreferences: SharedPreferences) {
         yPos = sharedPreferences.getInt(Constants.SHARED_PREF_AOD_WP_Y_POS, 75)
+        xPos = sharedPreferences.getInt(Constants.SHARED_PREF_AOD_WP_X_POS, 20)
         widgetColoured = sharedPreferences.getBoolean(Constants.SHARED_PREF_AOD_WP_COLOURED, false)
         Log.d(LOG_ID, "Widget is coloured : $widgetColoured")
         super.initSettings(sharedPreferences)
@@ -55,6 +57,10 @@ class AodWidget(context: Context): WallpaperBase(context, "GDH.AodWidget") {
             if (key == Constants.SHARED_PREF_AOD_WP_Y_POS && yPos != sharedPreferences.getInt(Constants.SHARED_PREF_AOD_WP_Y_POS, 75)) {
                 yPos = sharedPreferences.getInt(Constants.SHARED_PREF_AOD_WP_Y_POS, 75)
                 Log.d(LOG_ID, "New Y pos: $yPos")
+                update()
+            } else if (key == Constants.SHARED_PREF_AOD_WP_X_POS && xPos != sharedPreferences.getInt(Constants.SHARED_PREF_AOD_WP_X_POS, 20)) {
+                xPos = sharedPreferences.getInt(Constants.SHARED_PREF_AOD_WP_X_POS, 20)
+                Log.d(LOG_ID, "New X pos: $xPos")
                 update()
             } else if(key == Constants.SHARED_PREF_AOD_WP_COLOURED && widgetColoured != sharedPreferences.getBoolean(Constants.SHARED_PREF_AOD_WP_COLOURED, false)) {
                 widgetColoured = sharedPreferences.getBoolean(Constants.SHARED_PREF_AOD_WP_COLOURED, false)
@@ -74,6 +80,9 @@ class AodWidget(context: Context): WallpaperBase(context, "GDH.AodWidget") {
 
     fun getYPos() : Int {
         return yPos
+    }
+    fun getXPos() : Int {
+        return xPos
     }
 
 }

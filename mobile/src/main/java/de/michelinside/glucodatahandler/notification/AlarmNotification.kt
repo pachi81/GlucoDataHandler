@@ -12,10 +12,12 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
+import android.util.TypedValue
+import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.Toast
+import de.michelinside.glucodatahandler.PermanentNotification
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
@@ -86,6 +88,13 @@ object AlarmNotification : AlarmNotificationBase() {
         if (sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_CUSTOM_LAYOUT, true)) {
             val resId = getAlarmTextRes(alarmType)
             val contentView = RemoteViews(GlucoDataService.context!!.packageName, R.layout.alarm_notification)
+            if(GlucoDataService.patientName.isNullOrEmpty()) {
+                contentView.setViewVisibility(R.id.patient_name, View.GONE)
+                contentView.setTextViewText(R.id.patient_name, "")
+            } else {
+                contentView.setViewVisibility(R.id.patient_name, View.VISIBLE)
+                contentView.setTextViewText(R.id.patient_name, GlucoDataService.patientName)
+            }
             contentView.setTextViewText(R.id.alarm, context.getString(resId!!))
             contentView.setTextViewText(R.id.snoozeText, context.getString(CR.string.snooze))
             if(alarmType == AlarmType.OBSOLETE) {

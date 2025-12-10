@@ -1,0 +1,980 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="locale">sk</string>
+
+    <!-- start of resources -->
+
+    <string name="info_label_sensor_id">Senzor</string>
+    <string name="info_label_value">Hodnota</string>
+    <string name="info_label_raw">Nameraná hodnota</string>
+    <string name="info_label_delta">Rozdiel</string>
+    <string name="info_label_rate">Trend</string>
+    <string name="info_label_timestamp">Čas</string>
+    <string name="info_label_iob_cob_timestamp">Čas IOB/COB</string>
+    <string name="info_label_timediff">Časový rozdiel</string>
+    <string name="info_label_alarm">Alarm</string>
+    <string name="info_label_source">Zdroj</string>
+    <string name="info_label_per_minute">za minútu</string>
+    <string name="no_data">Zatiaľ neboli prijaté žiadne údaje!\nNajskôr nastavte zdroj.</string>
+
+    <string name="elapsed_time">%1$d min</string>
+    <string name="elapsed_time_hour">\> 1h</string>
+
+    <string name="rate_double_up">stúpa veľmi rýchlo</string>
+    <string name="rate_single_up">stúpa rýchlo</string>
+    <string name="rate_forty_five_up">stúpa</string>
+    <string name="rate_flat">stabilná</string>
+    <string name="rate_forty_five_down">klesá</string>
+    <string name="rate_single_down">klesá rýchlo</string>
+    <string name="rate_double_down">klesá veľmi rýchlo</string>
+
+    <string name="button_ok">OK</string>
+    <string name="button_cancel">Zrušiť</string>
+
+    <string name="alarm_none">-</string>
+    <string name="alarm_very_low">veľmi nízka</string>
+    <string name="alarm_low">nízka</string>
+    <string name="alarm_high">vysoká</string>
+    <string name="alarm_very_high">veľmi vysoká</string>
+    <string name="very_low">Veľmi nízka</string>
+    <string name="low">Nízka</string>
+    <string name="high">Vysoká</string>
+    <string name="very_high">Veľmi vysoká</string>
+
+    <!-- mobile -->
+
+    <string name="activity_main_battery_optimization_disabled">Optimalizácia batérie je zapnutá.</string>
+    <string name="activity_main_no_source_label">Zdroj: neaktívny</string>
+    <string name="activity_main_connected_label">Hodinky: pripojené (%1$s)</string>
+    <string name="activity_main_disconnected_label">Hodinky: odpojené</string>
+    <string name="activity_main_car_connected_label">Android Auto: pripojené</string>
+    <string name="activity_main_car_disconnected_label">Android Auto: odpojené</string>
+    <string name="activity_main_high_contrast_enabled">Vysoký kontrast je aktívny!\nStlačte tu pre prechod do nastavení.</string>
+    <string name="no_new_value">Žiadna nová hodnota za posledných %1$d minút!</string>
+
+    <string name="menu_settings">Nastavenia</string>
+    <string name="menu_sources">Zdroje</string>
+    <string name="menu_group_github">GitHub</string>
+    <string name="menu_update">Aktualizácie</string>
+    <string name="menu_support">Podpora</string>
+    <string name="menu_help">Pomoc</string>
+
+    <!-- tasker -->
+
+    <string name="tasker_event_glucodata">Nová hodnota glukózy</string>
+    <string name="tasker_event_glucodata_obsolete">Neplatná hodnota</string>
+    <string name="tasker_event_glucodata_alarm">Alarm glukózy</string>
+    <string name="tasker_wear_connection_state">Pripojenie hodiniek</string>
+    <string name="tasker_android_auto_connection_state">Pripojenie Android Auto</string>
+    <string name="tasker_target_range_state">Zmena rozsahu glukózy</string>
+
+    <!-- sources -->
+    <string name="source_phone">Telefón</string>
+    <string name="source_wear">Hodinky</string>
+
+    <string name="source_state_not_active">Neaktívny</string>
+    <string name="source_state_in_progress">Prebieha</string>
+    <string name="source_state_ok">OK</string>
+    <string name="source_state_no_new_value">Žiadna nová hodnota</string>
+    <string name="source_state_no_connection">Žiadne pripojenie k internetu</string>
+    <string name="source_state_error">Chyba</string>
+
+    <string name="source_interval">Interval</string>
+    <string name="source_interval_summary">Interval vyžiadania údajov zo zdroja.</string>
+    <string name="source_delay">Oneskorenie</string>
+    <string name="source_delay_summary">Oneskorenie v sekundách pred požiadavkou na údaje z cloudu, pretože trvá určitý čas, kým sa údaje tam zobrazia.</string>
+
+    <string name="src_cat_libreview">LibreLinkUp</string>
+    <string name="src_enabled">Povoliť</string>
+    <string name="src_libre_enabled_summary">Zapnúť LibreLinkUp sledovateľa, ak je nastavené používateľské meno a heslo.</string>
+    <string name="src_libre_user">E-mail</string>
+    <string name="src_libre_user_summary">E-mail pre prihlásenie do LibreLinkUp</string>
+    <string name="src_password">Heslo</string>
+    <string name="src_libre_password_summary">Heslo pre LibreLinkUp</string>
+    <string name="src_libre_reconnect">Opätovné pripojenie</string>
+    <string name="src_libre_reconnect_summary">Pri ďalšom intervale sa uskutoční nové prihlásenie.</string>
+
+    <string name="src_cat_nightscout">Nightscout</string>
+    <string name="src_ns_enabled">Povoliť</string>
+    <string name="src_ns_enabled_summary">Povoliť Nightscout sledovateľa.</string>
+    <string name="src_ns_url">Nightscout URL adresa</string>
+    <string name="src_ns_url_summary">URL adresa Nightscout servera.</string>
+    <string name="src_ns_secret">API tajný kľúč</string>
+    <string name="src_ns_secret_summary">API tajný kľúč na prístup k údajom (voliteľné).</string>
+    <string name="src_ns_token">Prístupový token</string>
+    <string name="src_ns_token_summary">Pridajte svoj prístupový token, ak ho potrebujete (voliteľné).</string>
+
+    <string name="source_request_interval_always">Vždy</string>
+    <string name="source_request_interval_1">1 minúta</string>
+    <string name="source_request_interval_5">5 minút</string>
+    <string name="source_request_interval_10">10 minút</string>
+    <string name="source_request_interval_15">15 minút</string>
+    <string name="source_request_interval_20">20 minút</string>
+    <string name="source_request_interval_30">30 minút</string>
+    <string name="source_request_interval_alarm">Iba alarm</string>
+
+
+    <!-- LibreLink source -->
+    <string name="state_disabled">vypnuté</string>
+    <string name="state_not_connected">nepripojené</string>
+    <string name="state_connected">pripojené</string>
+    <string name="state_error">chyba: %s</string>
+
+
+    <!-- settings -->
+
+    <string name="pref_cat_general">Všeobecné</string>
+    <string name="pref_cat_notification">Upozornenia</string>
+    <string name="pref_cat_widgets">Miniaplikácie</string>
+    <string name="pref_cat_android_auto">Android Auto</string>
+    <string name="pref_cat_forward_broadcast">Preposlať hodnoty glukózy</string>
+    <string name="pref_target_range">Cieľový rozsah</string>
+    <string name="pref_cat_colors">Farby</string>
+
+    <string name="pref_switch_notification">Fiktívne hodnoty</string>
+    <string name="pref_very_high_value">Veľmi vysoká hladina glukózy</string>
+    <string name="pref_very_high_value_summary">Hranica pre veľmi vysoké hodnoty glukózy.</string>
+    <string name="pref_high_value">Vysoká hladina glukózy</string>
+    <string name="pref_high_value_summary">Hranica pre vysoké hodnoty glukózy.</string>
+    <string name="pref_target_max_value">Cieľová horná hladina glukózy</string>
+    <string name="pref_target_max_value_summary">Maximálna hodnota pre cieľový rozsah glukózy.</string>
+    <string name="pref_target_min_value">Cieľová spodná hladina glukózy</string>
+    <string name="pref_target_min_value_summary">Spodná hodnota cieľového rozsahu glukózy.</string>
+    <string name="pref_very_low_value">Veľmi nízka hladina glukózy</string>
+    <string name="pref_very_low_value_summary">Hranica pre veľmi nízke hodnoty glukózy.</string>
+    <string name="pref_low_value">Nízka hladina glukózy</string>
+    <string name="pref_low_value_summary">Hranica pre nízke hodnoty glukózy.</string>
+    <string name="pref_switch_car_notification">Android Auto upozornenia</string>
+    <string name="pref_switch_car_notification_summary">Upozornenia pre Android Auto.</string>
+    <string name="pref_car_notification_interval">Interval upozornení</string>
+    <string name="pref_car_notification_interval_summary">Minimálny interval pre zobrazenie upozornení na novú hodnotu.\nAlarmy vždy zobrazia upozornenie.</string>
+    <string name="pref_switch_car_notification_alarm_only">Iba alarm</string>
+    <string name="pref_switch_car_notification_alarm_only_summary">Spustí iba upozornenia na alarmy v ich špecifickom intervale.\nPri veľmi nízkych hodnotách sa vždy zobrazí upozornenie.</string>
+    <string name="pref_switch_car_media">Falošný prehrávač médií</string>
+    <string name="pref_switch_car_media_summary">Zobraziť hodnotu glukózy ako aktuálnu skladbu pre Android Auto.</string>
+    <string name="pref_switch_send_to_aod">Odoslať vysielanie údajov o glykémii</string>
+    <string name="pref_switch_send_to_aod_summary">Odoslať vysielanie údajov o glykémii pre nové hodnoty prijaté z akéhokoľvek zdroja.</string>
+    <string name="pref_button_select_target">Identifikovať príjemcov údajov o glykémii</string>
+    <string name="pref_button_select_target_summary">Vyberte prijímateľov, ktorým sa budú vysielať údaje o glykémii. Globálne vysielanie sa bude posielať do každej aplikácie, ktorá sa dynamicky zaregistruje do vysielania.</string>
+    <string name="pref_switch_send_to_xdrip">Odoslať upravené libre vysielanie</string>
+    <string name="pref_switch_send_to_xdrip_summary">Preposlať hodnoty glukózy do xDrip+. V xDrip+ vyberte ako zdroj \„Libre (patched app)\”.</string>
+    <string name="pref_button_select_xdrip_target">Identifikovať upravené libre prijímače</string>
+    <string name="pref_button_select_xdrip_target_summary">Vyberte prijímače, ktorým sa má zasielať upravené libre vysielanie. Globálne vysielanie sa bude zasielať do každej aplikácie, ktorá sa dynamicky zaregistruje na vysielanie.</string>
+    <string name="pref_switch_send_xdrip_broadcast">Odoslať vysielanie xDrip+</string>
+    <string name="pref_switch_send_xdrip_broadcast_summary">Odoslať vysielanie podobné tomu, ktoré odosiela xDrip+. Napríklad do AAPS.</string>
+    <string name="pref_button_select_xdrip_broadcast_target">Identifikovať prijímače vysielania xDrip+</string>
+    <string name="pref_button_select_xdrip_broadcast_target_summary">Vyberte prijímače, ktorým sa má vysielať xDrip+. Globálne vysielanie sa bude odosielať do každej aplikácie, ktorá sa dynamicky zaregistruje na vysielanie.</string>
+    <string name="pref_switch_use_mmol">Použiť mmol/l</string>
+    <string name="pref_switch_use_mmol_summary">Použiť mmol/l namiesto mg/dl.</string>
+    <string name="pref_switch_use_5_min_delta">5 minútový rozdiel</string>
+    <string name="pref_switch_use_5_min_delta_summary">Zapnite túto funkciu, ak chcete používať hodnoty rozdielu v 5-minútových intervaloch, inak sa použijú 1-minútové intervaly.</string>
+    <string name="pref_color_alarm">Farba pre veľmi vysokú/nízku hodnotu</string>
+    <string name="pref_color_alarm_summary">Farba pre veľmi vysoké a veľmi nízke hodnoty glukózy.</string>
+    <string name="pref_color_out_of_range">Farba pre vysokú/nízku hodnotu</string>
+    <string name="pref_color_out_of_range_summary">Farba pre vysoké a nízke hodnoty glukózy.</string>
+    <string name="pref_color_ok">Farba cieľového rozsahu</string>
+    <string name="pref_color_ok_summary">Farba pre hodnoty glukózy v cieľovom rozsahu.</string>
+    <string name="pref_notification">Upozornenie</string>
+    <string name="pref_notification_summary">Zobraziť trvalé upozornenie s aktuálnou šípkou trendu, hodnotou glukózy a rozdielom v stavovom riadku.\nToto upozornenie zabraňuje systému Android zastaviť túto aplikáciu.</string>
+    <string name="pref_notification_icon">Ikona stavového riadku</string>
+    <string name="pref_notification_icon_summary">Štýl malej ikony stavového riadku upozornenia.</string>
+    <string name="pref_notification_big_icon">Veľká ikona v stavovom riadku</string>
+    <string name="pref_notification_big_icon_summary">Väčšia ikona v stavovom riadku. Ak je ikona príliš veľká a je orezaná, vypnite prosím toto nastavenie.</string>
+    <string name="pref_notification_no_content">Skryť obsah</string>
+    <string name="pref_notification_no_content_summary">Týmto sa odstráni obsah upozornenia a zostane len malé upozornenie s príslušnou ikonou.</string>
+    <string name="pref_second_notification">2. upozornenie</string>
+    <string name="pref_second_notification_summary">Zobraziť upozornenie bez obsahu, aby sa v stavovom riadku zobrazila ďalšia ikona.</string>
+    <string name="pref_second_notification_icon">2. ikona v stavovom riadku</string>
+    <string name="pref_second_notification_icon_summary">Štýl malej ikony stavového riadku upozornenia.</string>
+    <string name="pref_third_notification">3. upozornenie</string>
+    <string name="pref_third_notification_icon">3. ikona v stavovom riadku</string>
+    <string name="pref_floating_widget">Plávajúca miniaplikácia</string>
+    <string name="pref_floating_widget_summary">Zobraziť glukózu, trend, rozdiel, čas a IOB/COB ako plávajúca miniaplikácia.\nAk podržíte miniaplikáciu a nepohnete s ňou viac ako 5 sekúnd, zmizne.</string>
+    <string name="pref_floating_widget_size">Veľkosť</string>
+    <string name="pref_floating_widget_size_summary">Zmeniť veľkosť plávajúcej miniaplikácie.</string>
+    <string name="pref_floating_widget_style">Štýl</string>
+    <string name="pref_floating_widget_style_summary">Štýl plávajúcej miniaplikácie.</string>
+    <string name="pref_floating_widget_transparency">Priehľadnosť</string>
+    <string name="pref_floating_widget_transparency_summary">Priehľadné pozadie pre plávajúcu miniaplikáciu.</string>
+    <string name="pref_widget_transparency">Priehľadnosť miniaplikácie</string>
+    <string name="pref_widget_transparency_summary">Priehľadné pozadie pre miniaplikácie.</string>
+    <string name="pref_relative_time">Relatívny čas</string>
+    <string name="pref_relative_time_summary">Pre miniaplikácie použiť relatívny čas namiesto časovej značky glukózy.\nRelatívny čas závisí od nastavení batérie vo vašom zariadení a nemusí fungovať správne.</string>
+
+    <string name="pref_status_bar_icon_app">Ikona aplikácie</string>
+    <string name="pref_status_bar_icon_glucose">Hodnota glukózy</string>
+    <string name="pref_status_bar_icon_trend">Šípka trendu</string>
+    <string name="pref_status_bar_icon_delta">Rozdiel</string>
+
+    <string name="pref_wear_notification">Hodinky: vibrácie</string>
+
+    <string name="pref_global_broadcast">Globálne vysielanie</string>
+
+    <string name="select_receiver_show_all">Zobraziť všetko</string>
+    <string name="select_receiver_no_glucodata_receiver">Nenašiel sa žiadny prijímač!</string>
+
+    <string name="widget_glucose">Glukóza</string>
+    <string name="widget_glucose_trend">Glukóza a trend</string>
+    <string name="widget_glucose_trend_delta">Glukóza, trend a rozdiel</string>
+    <string name="widget_glucose_trend_delta_timestamp">Glukóza, trend, rozdiel a čas</string>
+    <string name="widget_glucose_trend_delta_timestamp_iob_cob">Glukóza, trend, rozdiel, čas a IOB/COB</string>
+
+    <string name="pref_send_to_bangleJS">Podpora BangleJS</string>
+    <string name="pref_send_to_bangleJS_summary">Preposlať hodnoty do miniaplikácie widbgjs pre BangleJS.</string>
+
+    <!-- wear -->
+
+    <string name="forground_notification_descr">Prijímanie údajov pre komplikácie</string>
+
+    <string name="activity_connected_label">Telefón: pripojený (%1$s)</string>
+    <string name="activity_disconnected_label">Telefón: odpojený</string>
+
+    <string name="activity_switch_foreground">Režim popredia</string>
+    <string name="activity_large_arrow_icon">Veľká šípka trendu</string>
+    <string name="activity_switch_colored_aod">Farebné AOD</string>
+
+    <!-- complications -->
+
+    <string name="short_value">Glukóza</string>
+    <string name="image_value">Glukóza (veľmi veľká a farebná)</string>
+    <string name="small_image_value">Glukóza (farebná)</string>
+    <string name="icon_value">Glukóza (veľká)</string>
+    <string name="short_value_icon">Glukóza s ikonou</string>
+    <string name="short_value_arrow">Glukóza a trend</string>
+    <string name="short_value_arrow_image">Glukóza a trend (veľká a farebná)</string>
+    <string name="icon_value_arrow">Glukóza a trend (veľká)</string>
+    <string name="short_value_arrow_small_image">Glukóza a trend (farebná)</string>
+    <string name="short_value_trend_range">Glukóza a rozsah trendu (ak je podporované)</string>
+    <string name="short_value_delta_trend_range">Glukóza, rozdiel a rozsah trendu (ak je podporované)</string>
+    <string name="short_delta_trend_arrow_range">Rozdiel, šípka trendu a rozsah trendu (ak je podporované)</string>
+    <string name="short_value_delta">Glukóza a rozdiel</string>
+    <string name="long_value_arrow_delta">Glukóza, rozdiel a trend</string>
+    <string name="long_value_arrow_delta_time">Glukóza, rozdiel, trend a časová značka</string>
+    <string name="long_value_arrow_icon_delta_time">Glukóza, ikona trendu, rozdiel a časová značka</string>
+    <string name="short_value_rate">Glukóza a hodnota trendu</string>
+    <string name="icon_delta">Rozdiel (veľká)</string>
+    <string name="image_delta">Rozdiel (veľká, farebná)</string>
+    <string name="short_delta">Rozdiel</string>
+    <string name="short_delta_arrow">Rozdiel a trend</string>
+    <string name="short_delta_icon">Rozdiel s ikonou</string>
+    <string name="short_delta_time">Rozdiel a časová značka</string>
+    <string name="image_delta_time">Rozdiel a časová značka (farebná)</string>
+    <string name="icon_delta_time">Rozdiel a časová značka (veľká)</string>
+    <string name="image_arrow">Trend (veľká, farebná)</string>
+    <string name="small_image_arrow">Trend (farebná)</string>
+    <string name="icon_arrow">Ikona trendu</string>
+    <string name="test_neg_range">Komplikácia testovacieho rozsahu s negatívnymi hodnotami (pre podporu trendového rozsahu)</string>
+    <string name="short_rate">Hodnota trendu</string>
+    <string name="short_rate_arrow">Hodnota a šípka trendu</string>
+    <string name="short_rate_icon">Hodnota trendu s ikonou</string>
+    <string name="timestamp">Časová značka glukózy</string>
+    <string name="short_timestamp">Časová značka</string>
+    <string name="image_timestamp">Časová značka (farebná)</string>
+    <string name="icon_timestamp">Časová značka (veľká)</string>
+    <string name="battery_level">Úroveň batérie (hodinky a telefón)</string>
+    <string name="watch_battery_level">Úroveň batérie hodiniek</string>
+    <string name="phone_battery_level">Úroveň batérie telefónu</string>
+    <string name="iob_cob">IOB/COB</string>
+
+    <!-- GlucoDataAuto -->
+
+   <string name="gda_no_data">Ak chcete túto aplikáciu používať v Android Auto, musíte v Android Auto aktivovať nastavenia pre vývojárov niekoľkonásobným ťuknutím na verziu. Potom musíte v ponuke nastavení pre vývojárov povoliť položku „Neznáme zdroje“.</string>
+    <string name="pref_information">Informácie</string>
+    <string name="pref_gda_info_summary">Ak používate GlucoDataHandler ako zdroj, tieto nastavenia budú prepísané z GlucoDataHandler, takže ich tu nemusíte meniť.</string>
+    <string name="pref_no_gda_info">Chýba GlucoDataAuto</string>
+    <string name="pref_no_gda_info_summary">Ak chcete používať GlucoDataHandler pre Android Auto, musíte nainštalovať GlucoDataAuto z GitHubu.\nPre viac informácií a na stiahnutie GlucoDataAuto ťuknite sem.</string>
+    <string name="pref_send_to_glucodataauto">Preposlať do GlucoDataAuto</string>
+    <string name="pref_send_to_glucodataauto_summary">Odoslať hodnoty glukózy a nastavenia do GlucoDataAuto, ak je telefón pripojený k Android Auto.</string>
+
+
+    <!-- Notifications -->
+
+    <string name="mobile_foreground_notification_name">Upozornenie v popredí</string>
+    <string name="mobile_foreground_notification_descr">Upozornenie v popredí, ktoré zabraňuje zastaveniu aplikácie počas jej behu na pozadí.</string>
+    <string name="mobile_second_notification_name">Druhé upozornenie</string>
+    <string name="mobile_third_notification_name">Tretie upozornenie</string>
+    <string name="mobile_second_notification_descr">Dodatočné upozornenie na zobrazenie ďalšej ikony v stavovom riadku.</string>
+    <string name="worker_notification_name">Pracovné upozornenie</string>
+    <string name="worker_notification_descr">Pracovné upozornenie zobrazené počas vykonávania úloh na pozadí.</string>
+    <string name="wear_foreground_notification_name">Upozornenie v popredí</string>
+    <string name="wear_foreground_notification_descr">Upozornenie v popredí, ktoré zabraňuje zastaveniu aplikácie počas behu na pozadí.</string>
+    <string name="android_auto_notification_name">Upozornenie pre Android Auto</string>
+    <string name="android_auto_notification_descr">Upozornenie, ktorí sa zobrazí v Android Auto</string>
+    <string name="src_xdrip_noise_blocking">Funkcia Noise-Block je aktívna v nastaveniach aplikácie xDrip+ Inter-app!\nZmeňte ju na \„Extrémne hlučné\“!</string>
+    <string name="pref_cat_follower">Cloudové služby</string>
+    <string name="pref_source_juggluco_info">Juggluco</string>
+    <string name="pref_source_xdrip_info">xDrip+</string>
+    <string name="pref_source_xdrip_info_1_summary">Na prijímanie hodnôt z xDrip+:\n- otvorte xDrip+\n- prejdite do nastavení\n- prejdite do nastavení medzi aplikáciami\n- povoľte \„Vysielať lokálne\“\n- nastavte \„Blokovanie šumu\“ na \„Odosielať aj extrémne rušivé signály\“</string>
+    <string name="pref_source_xdrip_info_2_summary">- povoľte \„Kompatibilné vysielanie\“ - skontrolujte, či je pole \„Identifikovať prijímač\“ prázdne, alebo ak už záznam existuje, pridajte \„de.michelinside.glucodatahandler\“ oddelený medzerou</string>
+    <string name="pref_gda_source_xdrip_info_2_summary">- povoľte \„Kompatibilné vysielanie\“ - skontrolujte, či je pole \„Identifikovať prijímač\“ prázdne, alebo ak už záznam existuje, pridajte \„de.michelinside.glucodataauto\“ oddelený medzerou</string>
+    <string name="pref_source_librelinkup_info">Nastavenie LibreLinkUp</string>
+    <string name="pref_source_librelinkup_info_summary">DÔLEŽITÉ: toto nie je účet používaný pre aplikáciu FreeStyle Libre!\nAktivácia sledovateľa LibreLinkUp:\n- otvorte aplikáciu FreeStyle Libre a v ponuke vyberte možnosť Zdieľať alebo Pripojené aplikácie\n- povoľte pripojenie LibreLinkUp\n- nainštalujte LibreLinkUp z obchodu Play Store\n- nastavte svoj účet a počkajte na pozvánku</string>
+    <string name="menu_contact">Kontakt</string>
+    <string name="src_ns_iob_cob">Podpora IOB/COB</string>
+    <string name="src_ns_iob_cob_summary">Prijímať tiež hodnoty IOB a COB z koncového bodu Nightscout Pebble.</string>
+    <string name="pref_permanent_notification_info_summary">Upozornenie je povinné pre správne fungovanie aplikácie.\nOd verzie Android 13 môžete toto upozornenie odstrániť potiahnutím prsta. Ak nechcete, aby sa upozornenie opäť zobrazovalo, nastavte \„Ikona stavového riadku\“ na \„Ikona aplikácie\“ a povoľte \„Skryť obsah\“.</string>
+    <string name="source_aaps">AAPS</string>
+    <string name="pref_source_aaps_info">AndroidAPS</string>
+    <string name="pref_source_aaps_info_summary">Na prijímanie hodnôt z AAPS:\n- otvorte aplikáciu AAPS\n- prejdite do \„Config Builder\“\n- povoľte \„Samsung Tizen\“ alebo \„Data Broadcaster\“</string>
+    <string name="pref_switch_watchdrip_enabled">WatchDrip+</string>
+:    <string name="pref_switch_watchdrip_enabled_summary">Povoliť komunikáciu WatchDrip+.\nDÔLEŽITÉ po aktivovaní tohto nastavenia povoľte v WatchDrip+ funkciu \„Aktivovať službu\“!</string>
+    <string name="pref_car_notification_reappear_interval">Znovu-zobrazenie</string>
+    <string name="pref_car_notification_reappear_interval_summary">Interval, po ktorom sa upozornenie znovu zobrazí, ak nie je k dispozícii žiadna nová hodnota. (0 znamená nikdy).</string>
+    <string name="pref_aa_media_player_icon_style_summary">Štýl ikony/obrázku fiktívneho prehrávača médií.</string>
+    <string name="pref_aa_media_player_icon_style">Štýl ikony/obrázku</string>
+    <string name="menu_save_mobile_logs">Mobil</string>
+    <string name="menu_save_wear_logs">Hodinky</string>
+    <string name="menu_save_logs">Uložiť záznamy</string>
+    <string name="logcat_save_succeeded">Záznamy boli úspešne uložené</string>
+    <string name="logcat_save_failed">Ukladanie záznamov zlyhalo!</string>
+    <string name="logcat_wear_save_succeeded">Záznamy z hodiniek boli úspešne uložené</string>
+    <string name="logcat_wear_save_failed">Ukladanie záznamov z hodiniek zlyhalo!</string>
+    <string name="request_exact_alarm_summary">Pre všetky úlohy súvisiace s časom/intervalom vyžaduje táto aplikácia povolenie pre alarmy a pripomienky.\nNebude pridávať ani meniť žiadne pripomienky používateľov, slúži iba na interné plánovanie.\nAk stlačíte OK, budete presmerovaní na nastavenie povolení, kde ho môžete povoliť pre GlucoDataHandler.</string>
+    <string name="request_exact_alarm_title">Povolenie pre alarmy a pripomienky</string>
+    <string name="activity_main_schedule_exact_alarm">Plánovanie presného alarmu je vypnuté!!!\nGlucoDataHandler nemusí fungovať správne!!!\nStlačte tu pre priamy prechod na nastavenie povolení.</string>
+
+
+    <string name="src_libre_patient">Pacient</string>
+    <string name="src_libre_patient_summary">Ak je k účtu libre pripojených viacero pacientov, vyberte pacienta, pre ktorého sa majú prijímať údaje.</string>
+    <string name="pref_cat_locksreen_wallpaper">Tapeta uzamknutej obrazovky</string>
+    <string name="pref_lockscreen_enabled">Povoliť</string>
+    <string name="pref_lockscreen_enabled_summary">Ak povolíte tapetu uzamknutej obrazovky, aplikácia nahradí tapetu na uzamknutej obrazovke.</string>
+    <string name="pref_lockscreen_y_pos">Vertikálna poloha</string>
+    <string name="pref_lockscreen_y_pos_summary">Vertikálna poloha obrazu trendu glukózy:\n0 je horná časť displeja\n100 je spodná časť displeja</string>
+    <string name="activity_main_notification_permission">Zobrazenie upozornení je vypnuté!!!\nGlucoDataHandler nemusí fungovať správne a nemôže zobrazovať alarmy!!!\nStlačte tu, aby ste prešli priamo k nastaveniu povolení.</string>
+
+    <string name="src_libre_setup_librelink">Chýbajú údaje! Najprv prijmite pozvánku v aplikácii LibreLinkUp!</string>
+    <string name="prefstatus_bar_notification_colored_icon">Farebná ikona v stavovom riadku</string>
+    <string name="pref_status_bar_notification_colored_icon_summary">Ak vaše zariadenie podporuje farebné ikony v stavovom riadku. Môžete ju tiež deaktivovať a použiť biele ikony.</string>
+
+    <string name="menu_alarms">Alarmy</string>
+    <string name="alarm_interval">Interval</string>
+    <string name="alarm_interval_summary_low">Minimálny interval v minútach medzi upozorneniami pre tento typ alarmu.\nInformácia: nové upozornenie sa zobrazí až po uplynutí času, ak je rozdiel záporný.</string>
+    <string name="alarm_interval_summary_high">Minimálny interval v minútach medzi upozorneniami pre tento typ alarmu.\nInformácia: nové upozornenie sa zobrazí až po uplynutí času, ak je rozdiel kladný.</string>
+    <string name="alarm_interval_summary_obsolete">Čas v minútach od prijatia poslednej hodnoty glukózy, ktorá spustila toto upozornenie. Znovu sa objaví v tomto intervale.</string>
+    <string name="alarm_enabled">Zapnuté</string>
+    <string name="alarm_enabled_summary_on">Upozornenia sú pre tento typ alarmu zapnuté.</string>
+    <string name="alarm_enabled_summary_off">Upozornenia sú pre tento typ alarmu vypnuté.</string>
+    <string name="alarm_test">Vyskúšajte to</string>
+    <string name="alarm_test_summary">Stlačte tu, aby sa po 3 sekundách spustilo upozornenie pre tento typ alarmu.</string>
+    <string name="alarm_settings">Nastavenia</string>
+    <string name="alarm_settings_summary">Ťuknutím sem prejdete do nastavení kanála upozornení pre tento alarm.\nTam môžete zmeniť všetky súvisiace nastavenia.</string>
+    <string name="alarm_save_sound">Uložiť zvuk</string>
+    <string name="alarm_save_sound_summary">Ťuknite sem, ak chcete uložiť predvolený zvuk alarmu do súboru vo vašom telefóne..</string>
+    <string name="alarm_saved">Alarm uložený!</string>
+    <string name="snooze">Odložiť na</string>
+    <string name="alarm_cat_all">Všetky alarmy</string>
+    <string name="alarm_notifications_enabled">Upozornenia alarmov</string>
+    <string name="wear_alarm_notifications_enabled">Hodinky: Upozornenia alarmov</string>
+    <string name="alarm_notifications_enabled_summary_on">Upozornenia alarmu sú aktívne na telefóne.\nPoznámka: alarmy používajú hlasitosť alarmu telefónu.</string>
+    <string name="alarm_notifications_enabled_summary_off">Upozornenia alarmu nie sú v telefóne aktívne.</string>
+    <string name="stop_snooze">Zrušiť odloženie</string>
+    <string name="very_low_alarm_text">Veľmi nízka!</string>
+    <string name="very_low_text">Nízka!</string>
+    <string name="very_high_text">Vysoká!</string>
+    <string name="very_high_alarm_text">Veľmi vysoká!</string>
+    <string name="very_low_alarm_notification_name">Alarm pre veľmi nízku glukózu</string>
+    <string name="very_low_alarm_notification_descr">Upozornenie pre alarmy veľmi nízkej hodnoty.</string>
+    <string name="low_alarm_notification_name">Alarm pre nízku glukózu</string>
+    <string name="low_alarm_notification_descr">Upozornenie pre alarmy nízkej hodnoty.</string>
+    <string name="high_alarm_notification_name">Alarm pre vysokú glukózu</string>
+    <string name="high_alarm_notification_descr">Upozornenie pre alarmy vysokej hodnoty.</string>
+    <string name="very_high_alarm_notification_name">Alarm pre veľmi vysokú glukózu</string>
+    <string name="very_high_alarm_notification_descr">Upozornenie pre alarmy veľmi vysokej hodnoty.</string>
+    <string name="btn_dismiss">Zrušiť</string>
+    <string name="test_alarm">Vyskúšať Alarm!</string>
+    <string name="alarm_cat_categories">Kategórie alarmov</string>
+    <string name="alarm_fullscreen_notification_enabled">Upozornenie na celej obrazovke</string>
+    <string name="alarm_fullscreen_notification_enabled_summary">Umožňuje zobrazenie upozornení na celú obrazovku na uzamknutej obrazovke.\nToto môže vyžadovať dodatočné povolenie.</string>
+    <string name="alarm_fullscreen_dismiss_keyguard">Zrušiť zámok klávesnice</string>
+    <string name="alarm_fullscreen_dismiss_keyguard_summary">Prosím, povoľte toto nastavenie, ak máte problémy s upozornením na celej obrazovke.\nNa niektorých zariadeniach to spôsobí odomknutie obrazovky, keď sa spustí upozornenie na celej obrazovke.\nAk nemáte žiadne problémy, nepovoľte ho.</string>
+    <string name="alarm_force_sound">Vynútiť zvuk alarmu</string>
+    <string name="alarm_force_sound_summary">Vynúti zvuk alarmu a vibrácie, aj keď je telefón v tichom alebo vibračnom režime. Vždy zastaví režim Nerušiť!\nPre povolenie tohto nastavenia môžete byť požiadaní o povolenie tejto aplikácii meniť režim Nerušiť.</string>
+    <string name="wear_alarm_force_sound">Hodinky: Vynútiť zvuk alarmu</string>
+    <string name="alarm_force_vibration">Vynútiť vibrácie</string>
+    <string name="alarm_force_vibration_summary">Vynútiť vibrovanie, aj keď je telefón v tichom režime. Toto vždy zastaví režim Nerušiť!\nNa zapnutie tohto nastavenia môže byť potrebné povoliť tejto aplikácii zmenu režimu Nerušiť.</string>
+    <string name="alarm_sound_level">Hlasitosť zvuku</string>
+    <string name="alarm_sound_level_summary">Vynútiť nastavenie hlasitosti zvuku alarmu.\n-1 pre použitie predvolených nastavení telefónu.</string>
+    <string name="advanced_settings">Pokročilé</string>
+    <string name="advanced_settings_alarm_summary">Pokročilé nastavenia alarmu pre oznámenia na celú obrazovku a zvuky.</string>
+    <string name="alarm_advanced_cat_notifcation">Upozornenia</string>
+    <string name="alarm_advanced_cat_sound">Zvuk</string>
+    <string name="alarm_type_summary">Nastavenia alarmu pre hodnoty glukózy začínajúce od %1$s.</string>
+    <string name="alarm_no_notification_wear_connected">Žiadny alarm, kým sú hodinky pripojené</string>
+    <string name="alarm_no_notification_wear_connected_summary_on">Na telefóne sa nezobrazí žiadne upozornenie, ak je telefón pripojený k aplikácii GlucoDataHandler na hodinkách.</string>
+    <string name="alarm_no_notification_wear_connected_summary_off">Na telefóne sa zobrazí upozornenie, aj keď je telefón pripojený k aplikácii GlucoDataHandler na hodinkách.</string>
+    <string name="alarm_no_notification_auto_connected">Žiadny alarm, kým je pripojené Android Auto</string>
+    <string name="alarm_no_notification_auto_connected_summary_on">Ak je pripojené zariadenie Android Auto, na telefóne sa nezobrazí žiadne upozornenie.</string>
+    <string name="alarm_no_notification_auto_connected_summary_off">Na telefóne sa zobrazí upozornenie na alarm, aj keď je pripojené Android Auto.</string>
+    <string name="alarm_retrigger">Opätovné spustenie</string>
+    <string name="alarm_retrigger_summary">Ak sa oznámenie o alarme nezatvorí, alarm sa znova spustí po tomto intervale v minútach, a to až 3-krát.\n0 - žiadne opätovné spustenie</string>
+    <string name="alarm_obsolete">Neaktuálne</string>
+    <string name="obsolete_alarm_notification_name">Alarm pre neaktuálne hodnoty</string>
+    <string name="alarm_obsolete_summary">Alarm, ak nie je k dispozícii nová hodnota glukózy po dobu %1$s minút.</string>
+    <string name="obsolete_alarm_notification_descr">Toto upozornenie sa zobrazí, ak v danom intervale nepríde žiadna nová hodnota.</string>
+    <string name="obsolete_alarm_text">Žiadna nová hodnota!</string>
+
+    <string name="permission_notification_title">Zobrazenie upozornení je vypnuté!!!</string>
+    <string name="permission_notification_message">GlucoDataHandler potrebuje upozornenia na vykonávanie úloh na pozadí a na zobrazovanie alarmov.</string>
+    <string name="alarm_notification_name">Upozornenia alarmu</string>
+    <string name="alarm_notification_descr">Upozornenia o alarme. Prosím, nemeňte nastavenia, pretože aplikácia poskytuje zvukové a vibračné upozornenia.</string>
+    <string name="alarm_sound">Vybrať vlastný zvuk</string>
+    <string name="alarm_sound_summary">Tiché - žiadny zvuk</string>
+    <string name="alarm_use_custom_sound">Použiť vlastný zvuk</string>
+    <string name="alarm_use_custom_sound_summary_on">Používa sa vlastný vybraný zvuk.</string>
+    <string name="alarm_use_custom_sound_summary_off">Používa sa zvuk poskytovaný aplikáciou.</string>
+    <string name="alarm_sound_delay">Oneskorenie zvuku</string>
+    <string name="alarm_sound_delay_summary">Čas v sekundách pred prehratím zvuku.\nCelý čas bude vibrovať, aj keď nie je vybraný žiadny zvuk.</string>
+    <string name="pref_cat_alarm_vibration_sound">Zvuk a vibrácie</string>
+    <string name="alarm_vibrate_only">Iba vibrovať</string>
+    <string name="wear_alarm_vibrate_only">Hodinky: Iba vibrovať</string>
+    <string name="permission_alarm_notification_title">Upozornenie je vypnuté!</string>
+    <string name="permission_alarm_notification_message">Na zobrazenie upozornení potrebuje aplikácia GlucoDataHandler aspoň povolený kanál upozornení.\nBudete presmerovaní do nastavení upozornení pre túto aplikáciu.\nTam prosím povolte kanál upozornení.</string>
+    <string name="alarm_app_sound">Interný zvuk aplikácie</string>
+    <string name="pref_send_pref_to_glucodataauto">Zahrnúť nastavenia</string>
+    <string name="pref_send_pref_to_glucodataauto_summary">Zahrnúť nastavenia do správy pre GlucoDataAuto.\nTýmto sa prepíšu nastavenia v GlucoDataAuto.</string>
+    <string name="pref_source_gdh_info_summary">Na prijímanie hodnôt z GlucoDataHandler:\n- otvorte GlucoDataHandler\n- prejdite do nastavení\n- povoľte \„Presmerovať do GlucoDataAuto\“\n- ak chcete použiť rovnaké nastavenia, povoľte \„Zahrnúť nastavenia\“</string>
+    <string name="very_low_alarm_summary">Ak používate upozornenia Android Auto, veľmi nízke alarmy vždy spustia upozornenie a túto funkciu nie je možné deaktivovať ani zmeniť.</string>
+    <string name="pref_source_juggluco_iob_info">IOB z Juggluco</string>
+    <string name="pref_source_xdrip_iob_info">IOB z xDrip+</string>
+    <string name="pref_source_xdrip_iob_info_summary">Na prijímanie hodnôt z xDrip+:\n- otvorte xDrip+\n- prejdite do nastavení\n- prejdite do nastavení medzi aplikáciami\n- povoľte \„xDrip Web Service\“</string>
+    <string name="pref_source_activate_local_nightscout_iob">Aktivovať použitie IOB</string>
+    <string name="pref_source_activate_local_nightscout_iob_summary">Stlačte tu, aby ste nastavili nastavenia Nightscout na použitie lokálneho webového servera na prijímanie dodatočných hodnôt IOB..</string>
+    <string name="activate_local_nightscout_iob_title">Prepísať Nightscout</string>
+    <string name="activate_local_nightscout_iob_message">Týmto sa prepíšu vaše aktuálne nastavenia zdroja Nightscout, aby sa na prijímanie hodnôt IOB použila lokálna webová služba na porte 17580.\nSte si istí?</string>
+    <string name="gda_media_notification_toggle_title">Prepínanie upozornení</string>
+    <string name="gda_notifications_on">Upozornenia sú zapnuté</string>
+    <string name="gda_notifications_off">Upozornenia sú vypnuté</string>
+    <string name="gda_media_notification_toggle_action">Stlačte tlačidlo prehrávania, aby ste zapli/vypli upozornenia.</string>
+    <string name="pref_gda_alarm_info_summary">Nastavenia alarmu sa týkajú iba upozornení v systéme Android Auto a nespúšťajú žiadny zvuk.</string>
+    <string name="pref_cat_general_summary">Všeobecné nastavenia, ako napríklad jednotky, čas a rozdiel.</string>
+    <string name="pref_target_range_summary">Nastavenia pre hranice glukózy a zodpovedajúce farby.</string>
+    <string name="pref_cat_widgets_summary">Nastavenia pre miniaplikácie telefónu a plávajúcu miniaplikáciu.</string>
+    <string name="pref_cat_notification_summary">Nastavenia upozornení.</string>
+    <string name="pref_cat_locksreen_wallpaper_summary">Nastavenia na nahradenie tapety uzamknutej obrazovky.</string>
+    <string name="pref_cat_android_auto_summary">Nastavenie aplikácie GlucoDataAuto na použitie v systéme Android Auto.</string>
+    <string name="pref_cat_watchdrip">Hodinky Mi Band, Smart Band a Amazfit</string>
+    <string name="pref_cat_wear_os">Hodinky Wear OS</string>
+    <string name="pref_cat_watch">Hodinky</string>
+    <string name="pref_cat_watch_summary">Nastavenia pre pripojené inteligentné hodinky.</string>
+    <string name="pref_cat_transfer_summary">Nastavenia na prenos hodnôt glukózy do iných aplikácií.</string>
+    <string name="pref_cat_transfer">Prenos hodnôt</string>
+    <string name="pref_cat_visualisation">Vizualizácia</string>
+    <string name="pref_cat_banglejs">Hodinky BangleJS</string>
+    <string name="pref_wearos_info_summary">Ak chcete používať GlucoDataHandler na hodinkách Wear OS, prosím, nainštalujte si ho z obchodu Google Play Store na hodinkách.</string>
+    <string name="pref_wear_os_check_connection">Skontrolovať pripojenie</string>
+    <string name="pref_wear_os_check_connection_summary">Stlačte tu, aby ste znovu skontrolovali pripojenie k Wear OS.\nTúto kontrolu môžete spustiť aj stlačením informácií o pripojení na domovskej obrazovke (aj v aplikácii Wear OS).</string>
+    <string name="pref_watchdrip_info_summary">WatchDrip+ podporuje viacero zariadení Mi Band, Xiaomi Smart Band a Amazfit.\nAk chcete získať kompletný zoznam podporovaných zariadení a ďalšie informácie o konfigurácii WatchDrip+, prosím, stlačte tu.</string>
+    <string name="alarm_vibrate_only_wear_info">Vibrovať iba bez upozornenia nefunguje na každom zariadení!</string>
+    <string name="alarm_use_alarm_sound">Použiť zvuk alarmu</string>
+    <string name="alarm_use_alarm_sound_summary">Použiť hlasitosť zvuku alarmu namiesto zvuku zvonenia.\nToto môže byť nezávislé od režimu vibrácií.</string>
+    <string name="alarm_vibrate_only_summary">Povoľte túto funkciu, aby ste vynútili neprehrávanie akéhokoľvek zvukového signálu alarmu, nezávisle od akéhokoľvek iného nastavenia zvuku alarmu.</string>
+    <string name="alarm_start_delay">Oneskorenie spustenia</string>
+    <string name="alarm_start_delay_wear_summary">Oneskorenie pred prvým prehrávaním vibrácií a zvuku.\nNiekedy upozornenie z telefónu okamžite zastaví vibrácie..</string>
+    <string name="pref_color_obsolete">Farba pre neplatné hodnoty</string>
+    <string name="pref_color_obsolete_summary">Farba pre žiadne nové hodnoty glukózy.</string>
+    <string name="alarm_wear_no_notification_phone_connected">Žiadne vyskakovacie okienka počas pripojeného telefónu</string>
+    <string name="alarm_wear_no_notification_phone_connected_summary">Žiadne ďalšie  vyskakovacie okno s upozornením na hodinkách, kým je telefón pripojený.\nVibrácie a zvuk sa spustia podľa nastavenia.</string>
+    <string name="table_header_details">Podrobnosti</string>
+    <string name="table_header_connections">Pripojenia</string>
+    <string name="disconnected_label">odpojené</string>
+    <string name="connected_label">pripojené</string>
+    <string name="pref_application_color_scheme">Farebná téma aplikácie</string>
+    <string name="application_color_scheme_system">Použiť systémovú tému</string>
+    <string name="application_color_scheme_light">Svetlá téma</string>
+    <string name="application_color_scheme_dark">Tmavá téma</string>
+    <string name="tap_action">Akcia ťuknutia</string>
+    <string name="tap_action_summary">Vyberte akciu alebo aplikáciu, ktorá sa má vykonať pri ťuknutí na túto položku.</string>
+    <string name="no_action">Žiadna akcia</string>
+    <string name="action_floating_widget_toggle">Prepnúť plávajúcu miniaplikáciu</string>
+    <string name="wear_complication_tap_action">Akcia pri ťuknutí na komplikáciu</string>
+    <string name="activity_large_arrow_icon_summary">Prosím, vypnite toto nastavenie, ak je šípka trendu príliš veľká alebo orezaná.</string>
+    <string name="pref_cat_ui_settings">Používateľské rozhranie</string>
+    <string name="gda_foreground_info">GlucoDataAuto je spustené</string>
+    <string name="gda_foreground_summary">Povoľte túto funkciu len v prípade, že používate zdroj sledovateľa a iba upozornenia Android Auto.\nToto zabráni systému Android v zatvorení tejto aplikácie, keď nie je pripojená k Android Auto, takže aplikácia nemôže rozpoznať pripojenie Android Auto.\nNamiesto aktivovania tohto nastavenia môžete aplikáciu v Android Auto otvoriť raz, ak ste pripojení.</string>
+    <string name="gda_battery_optimization_disabled">Optimalizácia batérie je zapnutá!\nStlačte tu, aby ste ju vypli.</string>
+    <string name="gda_source_follower_info_summary">Ak používate zdroj sledovateľa, aplikácia sa nemusí spustiť, keď je pripojená k Android Auto, ak používate iba upozornenia Android Auto.\nAby aplikácia rozpoznala pripojenie Android Auto, musíte deaktivovať optimalizáciu batérie.\nAk to stále nefunguje, môžete tiež aktivovať režim popredia alebo musíte aplikáciu raz otvoriť v Android Auto, ak je pripojená k Android Auto.</string>
+    <string name="gda_help_aa_title">Nastaviť Android Auto</string>
+    <string name="gda_help_aa_title_summary">Android Auto je buď samostatná aplikácia, alebo súčasť systému a je prístupná cez nastavenia Androidu.\nNa aktiváciu GlucoDataAuto pre Android Auto je potrebné vykonať nasledujúce kroky:</string>
+    <string name="gda_help_aa_dev_mode">1. Aktivovať režim vývojára</string>
+    <string name="gda_help_aa_dev_mode_summary">- otvorte Android Auto\n- prejdite nadol na Verzia\n- niekoľkokrát ťuknite na Verzia, kým sa nezobrazí vyskakovacie okno \„Povoliť nastavenia pre vývojárov\“\n- stlačte \„OK\“</string>
+    <string name="gda_help_aa_sources">2. Aktivovať \"Neznáme zdroje\"</string>
+    <string name="gda_help_aa_sources_summary">- otvorte Android Auto\n- v ponuke s tromi bodkami otvorte \„Nastavenia pre vývojárov\“\n- prejdite nadol na \„Neznáme zdroje\“\n- povoľte túto funkciu</string>
+    <string name="gda_help_aa_notification">3. Nastaviť nastavenia upozornení</string>
+    <string name="gda_help_aa_notification_summary">- otvorte Android Auto\n- prejdite nadol na \„Správy\“\n- povoľte \„Zobraziť upozornenia o správach\“\n- povoľte \„Zobraziť prvý riadok správ\“</string>
+    <string name="gda_help_aa_enable_gda">4. Zapnúť GlucoDataAuto</string>
+    <string name="gda_help_aa_enable_gda_summary">- otvorte Android Auto\n- prejdite nadol na \„Zobrazenie\“\n- otvorte \„Prispôsobiť spúšťač\“\n- povoľte \„GlucoDataAuto\“\nAk GlucoDataAuto nie je dostupný, prosím, reštartujte telefón.</string>
+    <string name="pref_notification_custom_layout">Farebné rozloženie</string>
+    <string name="pref_notification_custom_layout_summary">Zobrazuje hodnoty veľkým a farebným písmom.\nNa niektorých zariadeniach Samsung s operačným systémom Android 13 a vyšším môže táto funkcia spôsobiť zlyhanie aplikácie kvôli chybe na strane spoločnosti Samsung.\nAk sa tento problém vyskytne, toto nastavenie sa automaticky deaktivuje, aby bola zabezpečená funkčnosť aplikácie.</string>
+    <string name="app_crash_title">Zistená porucha!</string>
+    <string name="app_crash_message">Je mi veľmi ľúto, že aplikácia počas behu spadla!\nProsím, pošlite mi záznamy, aby som mohol analyzovať chybu a pokúsiť sa ju čo najskôr opraviť.\nĎakujem!</string>
+    <string name="src_cat_dexcom_share">Dexcom Share</string>
+    <string name="src_dexcom_share_us_server">Účet v USA</string>
+    <string name="src_dexcom_share_us_server_summary_on">Používa sa účet v USA.</string>
+    <string name="src_dexcom_share_us_server_summary_off">Používa sa medzinárodný účet.</string>
+    <string name="src_dexcom_share_enabled_summary">Povoliť účet Dexcom Share. Predtým je potrebné nastaviť používateľské meno a heslo.</string>
+    <string name="src_username">Používateľské meno</string>
+    <string name="src_dexcom_share_user_summary">Používateľské meno, e-mailová adresa alebo telefónne číslo na prihlásenie do vášho účtu Dexcom Share.\nDÔLEŽITÉ: ak používate telefónne číslo, musí obsahovať predvoľbu krajiny (napr. +1 pre USA).</string>
+    <string name="src_dexcom_share_password_summary">Heslo pre účet Dexcom Share.</string>
+    <string name="pref_source_dexcom_share_info">Nastavenie Dexcom Share</string>
+    <string name="permission_missing_title">Chýbajúce povolenie!</string>
+    <string name="setting_permission_missing_message">Nastavenie\n\'%1$s\'\nje nastavené, ale príslušné povolenie nie je udelené!\nStlačte tlačidlo \„OK\“, aby ste prešli na dialógové okno povolení, alebo stlačte tlačidlo \„Zrušiť\“, aby ste toto nastavenie deaktivovali.</string>
+    <string name="xdrip_broadcast_service_api_enabled">API služby Broadcast</string>
+    <string name="xdrip_broadcast_service_api_enabled_summary">Použite rozhranie API služby xDrip+ Broadcast Service na prijímanie údajov (aj IOB) zo služby xDrip+.\nNajskôr povoľte rozhranie \„Broadcast Service API\“ v nastaveniach \„Inter-App\“ v službe xDrip+!</string>
+    <string name="obsolete_time">Neplatný čas</string>
+    <string name="obsolete_time_summary">Čas v minútach po tom, čo je hodnota považovaná za neplatnú.\nPo uplynutí dvojnásobku tohto času je hodnota odstránená.</string>
+    <string name="pref_source_offline">Lokálne aplikácie</string>
+    <string name="pref_source_offline_summary">Aplikácie na rovnakom zariadení, ktoré poskytujú hodnoty glukózy ako interné vysielané správy, ako napríklad Juggluco, xDrip+, AAPS a podobne.</string>
+    <string name="pref_cat_follower_summary">Cloudové služby poskytujúce hodnoty glukózy cez internet, ako napríklad LibreLinkUp, Dexcom Share, Nightscout a Medtrum.</string>
+    <string name="pref_source_xdrip_broadcast">xDrip+ Vysielať lokálne</string>
+    <string name="pref_source_dexcom_byoda_info_summary">Ak chcete prijímať hodnoty z Dexcom BYODA, musíte pri vytváraní aplikácie povoliť vysielanie do AAPS.</string>
+    <string name="pref_source_eversense_info_summary">Ak chcete prijímať hodnoty z Eversense, musíte použiť ESEL buď v sprievodnom režime (čítanie upozornení), alebo pripojený k upravenej aplikácii Eversense.\nViac informácií o ESEL nájdete tu.</string>
+    <string name="pref_source_eversense_byoda_info_summary">Aby ste mohli prijímať hodnoty z Dexcom BYODA, musíte počas vytvárania aplikácie povoliť vysielanie do xDrip+..</string>
+    <string name="new_version">Verzia %s je k dispozícii</string>
+    <string name="info_label_notes">Poznámky</string>
+    <string name="gda_notification_permission">Upozornenia sú vypnuté! \nŤuknite sem, aby ste ich zapli.</string>
+    <string name="pref_show_other_unit">Zobraziť inú jednotku</string>
+    <string name="pref_show_other_unit_summary">Zobraziť hodnotu glukózy v %s v podrobnostiach.</string>
+    <string name="other_unit">Iná jednotka</string>
+    <string name="dexcom_share_check_non_us_account">Stlačte tu, aby ste skontrolovali údaje svojho účtu Dexcom Share pre váš účet mimo USA.</string>
+    <string name="dexcom_share_check_us_account">Stlačte tu, aby ste skontrolovali údaje svojho účtu Dexcom Share pre váš účet v USA.</string>
+    <string name="pref_lockscreen_size_summary">Zmeniť veľkosť údajov na uzamknutej obrazovke.</string>
+    <string name="pref_wear_os_reset_connection">Obnoviť pripojenie</string>
+    <string name="pref_wear_os_reset_connection_summary">Stlačte tu, aby ste obnovili pripojenie hodiniek k telefónu, ak nefunguje podľa očakávania.\nAk obnovenie nevyrieši problém, prosím, reštartujte hodinky.</string>
+    <string name="detail_reset_connection">Pripojenie nefunguje podľa očakávania! Prosím, skúste reštartovať hodinky.</string>
+    <string name="pref_floating_widget_time_to_close">Čas do zatvorenia</string>
+    <string name="pref_floating_widget_time_to_close_summary">Čas v sekundách na zatvorenie plávajúcej miniaplikácie pri stlačení miniaplikácie bez jej presunutia.\n0 pre deaktiváciu tohto nastavenia..</string>
+    <string name="alarm_inactive_enabled">Povoliť tichú dobu</string>
+    <string name="alarm_inactive_enabled_summary">Počas tichej doby nebudú pre tento alarm zasielané žiadne upozornenia.\nNastavte si požadované časy, kedy chcete túto funkciu použiť.</string>
+    <string name="all_alarm_inactive_enabled_summary">Žiadne upozornenia na všetky alarmy počas tichej doby.\nNastavte si požadované časy, kedy chcete túto funkciu použiť.</string>
+    <string name="alarm_inactive_start_time">Čas začiatku</string>
+    <string name="alarm_inactive_start_time_summary">Vyberte čas, kedy chcete, aby sa začala vaša tichá doba.</string>
+    <string name="alarm_inactive_end_time">Čas konca</string>
+    <string name="alarm_inactive_end_time_summary">Vyberte čas, kedy chcete, aby skončila vaša tichá doba</string>
+    <string name="alarm_inactive_weekdays">Dni pre tichú dobu</string>
+    <string name="alarm_inactive_weekdays_summary">Určite dni v týždni, v ktorých by sa mala tichá doba začať vo vybranom čase začiatku.</string>
+
+    <string name="app_crash_bad_notification">Aplikácia sa zlyháva kvôli farebnému rozloženiu upozornení!\nTáto funkcia bola deaktivovaná, aby sa zabránilo tomuto zlyhaniu.\nReštart telefónu zvyčajne tento problém vyrieši.</string>
+    <string name="auto_close_notification">Automaticky zatvoriť upozornenie</string>
+    <string name="auto_close_notification_summary">Automaticky zatvoriť upozornenie alarmu po skončení zvuku a vibrácií, ale až po uplynutí minimálne 30 sekúnd.\nAk je funkcia opätovného spustenia aktívna, upozornenie sa zatvorí, ak nedôjde k ďalšiemu spusteniu.</string>
+
+    <string name="settings_save_succeeded">Nastavenia boli úspešne uložené</string>
+    <string name="settings_save_failed">Zlyhalo uloženie nastavení!</string>
+    <string name="settings_read_succeeded">Nastavenia boli úspešne načítané</string>
+    <string name="settings_read_failed">Zlyhalo načítanie nastavení!</string>
+    <string name="pref_cat_export_import">Exportovanie / Importovanie</string>
+    <string name="pref_cat_export_import_summary">Exportovať alebo importovať nastavenia.</string>
+    <string name="pref_export_settings">Exportovať</string>
+    <string name="pref_export_settings_summary">Stlačte tu, aby ste exportovali všetky nastavenia do súboru. \nDÔLEŽITÉ: exportujú sa len zmenené nastavenia! Nastavenia s predvolenými hodnotami nebudú súčasťou exportu.</string>
+    <string name="pref_import_settings">Importovať</string>
+    <string name="pref_import_settings_summary">Stlačte tu, aby ste importovali nastavenia zo súboru.\nDÔLEŽITÉ: týmto sa neobnovia predvolené nastavenia, pretože nie sú súčasťou exportu.\nAk chcete obnoviť predvolené nastavenia, najskôr odstráňte údaje aplikácie a potom importujte.</string>
+
+    <string name="menu_save_mobile_logs_summary">Uložiť záznamy z telefónu do súboru.</string>
+    <string name="menu_save_wear_logs_summary">Uložiť záznamy z pripojených hodiniek Wear OS do súboru.</string>
+    <string name="alarm_repeat">Opakovať</string>
+    <string name="no_vibration">Žiadne vibrácie</string>
+    <string name="alarm_vibrate_mode">Režim vibrácií</string>
+
+    <string name="alarm_rising_fast">Stúpa rýchlo</string>
+    <string name="rising_fast_alarm_notification_name">Alarm pre rýchle stúpanie</string>
+    <string name="alarm_rising_fast_summary">Varovať, ak je hodnota glukózy vyššia alebo rovná %1$s a rozdiel stúpne najmenej o +%2$s počas %3$d po sebe nasledujúcich meraniach.</string>
+    <string name="rising_fast_alarm_text">Stúpa rýchlo!</string>
+
+    <string name="alarm_falling_fast">Klesá rýchlo</string>
+    <string name="falling_fast_alarm_notification_name">Alarm pre rýchly pokles</string>
+    <string name="alarm_falling_fast_summary">Varovať, ak je hodnota glukózy nižšia alebo rovná %1$s a rozdiel klesne minimálne o -%2$s počas %3$d po sebe nasledujúcich meraniach.</string>
+    <string name="falling_fast_alarm_text">Rýchly pokles!</string>
+    <string name="alarm_vibrate_amplitude">Intenzita vibrácií</string>
+    <string name="alarm_vibrate_amplitude_summary">Intenzita vibrácií</string>
+    <string name="pref_cat_alarm_settings">Nastavenia alarmu</string>
+    <string name="pref_alarm_delta_summary">Hodnota rozdielu, pri ktorej sa má spustiť alarm.</string>
+    <string name="alarm_occurrence_count">Počet výskytov</string>
+    <string name="alarm_occurrence_count_summary">Počet výskytov, kedy musí byť po sebe idúca hodnota rozdielu dosiahnutá.</string>
+    <string name="pref_alarm_rising_falling_border">Hranica</string>
+    <string name="pref_alarm_rising_falling_border_summary">Hranica pre alarm stúpania/klesania.\nHodnota glukózy musí byť vyššia/nižšia, aby sa spustil alarm.</string>
+    <string name="delta_per_minute">za minútu</string>
+    <string name="delta_per_5_minute">za 5 minút</string>
+    <string name="other_alarm_cat_categories">Iné alarmy</string>
+    <string name="advanced_settings_alarm">Pokročilé nastavenia alarmu</string>
+    <string name="src_offline_enabled_summary_on">Interné správy z tohto zdroja budú spracované.</string>
+    <string name="src_offline_enabled_summary_off">Interné správy z tohto zdroja budú ignorované.</string>
+    <string name="temp_disabled">Dočasne vypnutý</string>
+    <string name="temp_disabled_until">Dočasne vypnutý do</string>
+    <string name="snooze_until">Odložiť alarm do</string>
+
+    <!-- Talkback -->
+    <string name="trend">Trend</string>
+    <string name="rate_rising">%1$d stupňov nahor</string>
+    <string name="rate_falling">%1$d stupňov nadol</string>
+
+    <string name="alarm_toggle_state">Alarmy: %1$s</string>
+    <string name="alarm_state_inactive">neaktívny</string>
+    <string name="alarm_state_snooze">odložený do %1$s</string>
+    <string name="alarm_state_temp_disabled">dočasne vypnutý do %1$s</string>
+
+    <string name="enabled">zapnuté</string>
+    <string name="disabled">vypnuté</string>
+
+    <string name="not_available">nedostupné</string>
+
+    <string name="action_read_values">Vysloviť hodnoty</string>
+
+    <plurals name="elapsed_time_full_text">
+        <item quantity="one">Čas %d minúta</item>
+        <item quantity="few">Čas %d minúty</item>
+        <item quantity="many">Čas %d minút</item>
+        <item quantity="other">Čas %d minút</item>
+    </plurals>
+    <string name="pref_source_diabox_info_summary">Otvorte integráciu a povoľte \„Zdieľať údaje s GWatch\“.</string>
+    <string name="pref_source_dexcom_byoda_not_working_info_summary">Poznámka: Vysielanie AAPS z BYODA nefunguje s inými aplikáciami. \nPoužite prosím vysielanie xDrip+ v BYODA.</string>
+
+    <string name="gda_help_aa_summary">Začnite používať GDA v systéme Android Auto</string>
+    <string name="no_tts">Funkcia premeny textu na reč (TTS) nie je povolená.\nAk chcete túto funkciu používať, povolte TTS v nastaveniach dostupnosti systému Android.\nPo povolení ťuknite sem na aktualizáciu.</string>
+    <string name="pref_cat_android_auto_speak">Vysloviť hodnotu</string>
+    <string name="pref_cat_play_button">Prehrávanie</string>
+    <string name="pref_aa_media_player_speak_values_on_summary">Pri prehrávaní vysloviť aktuálnu hodnotu.\nVyžaduje povolenie funkcie Text-to-speech.</string>
+    <string name="pref_aa_media_player_speak_values_off_summary">Prehrať prázdny zvuk, aby sa prehrávač médií dostal do popredia rozdelenej obrazovky.</string>
+    <string name="pref_aa_media_player_always_speak">Vysloviť novú hodnotu</string>
+    <string name="pref_aa_media_player_always_speak_summary">Vysloviť nové hodnoty v Android Auto, aj keď používate iný prehrávač médií.</string>
+    <string name="tts_test_summary">Ťuknutím otestujte premenu textu na reč.</string>
+    <string name="pref_aa_media_player_speak_alarm_only_summary">Vysloviť iba alarmy.</string>
+    <string name="pref_aa_media_player_speak_interval_summary">Nastaviť interval pre vyslovovanie nových hodnôt v Android Auto.</string>
+    <string name="pref_aa_media_player_duration_summary">Interval prijímania nových hodnôt glukózy sa použije ako dĺžka trvania ukazovateľa priebehu v prehrávači médií.\nNastavením hodnoty na 0 sa ukazovateľ priebehu deaktivuje.</string>
+
+    <string name="gda_media_speak_toggle_title">Prepínač vyslovenia novej hodnoty</string>
+    <string name="gda_speak_on">Vyslovovanie je zapnuté</string>
+    <string name="gda_speak_off">Vyslovovanie je vypnuté</string>
+    <string name="enable_alarm_icon_toggle">Zapnúť ikonu alarmu</string>
+    <string name="enable_alarm_icon_toggle_summary">Povoliť ikonu alarmu na hlavnej obrazovke pre prepínanie stavu alarmu.</string>
+
+    <!-- v1.3  -->
+
+    <string name="source_libre_auto_accept_tou">Automaticky prijať nové podmienky</string>
+    <string name="source_libre_auto_accept_tou_summary">Povolením tejto funkcie automaticky akceptujete nové podmienky používania, aby sa zaistilo nepretržité prijímanie údajov. O nových podmienkach nebudete informovaní osobitne. Ak si ich chcete prečítať, deaktivujte toto nastavenie a v prípade chyby 4 sa obráťte na aplikáciu LibreLinkUp.</string>
+    <string name="src_libre_tou_message">GlucoDataHandler môže automaticky prijať nové podmienky používania aplikácie LibreLinkUp.\nStlačte tlačidlo OK, aby ste túto funkciu povolili, alebo tlačidlo Zrušiť, aby ste si prečítali a ručne prijali podmienky v aplikácii LibreLinkUp.</string>
+
+    <string name="src_librelink_error4">Chyba, prosím prihláste sa znovu do aplikácie LibreLinkUp a skontrolujte, či nie je potrebné vykonať nejaké kroky!</string>
+    <string name="src_librelink_error4_type">Chyba typu %1$s, prosím, prihláste sa znovu do aplikácie LibreLinkUp a skontrolujte, či nie je potrebné vykonať nejaké kroky!</string>
+    <string name="src_librelink_error4_tou">Je potrebné prijať nové podmienky používania. Povoľte automatické prijatie v nastaveniach zdroja LibreLinkUp alebo sa znovu prihláste do aplikácie LibreLinkUp a prijmite podmienky.</string>
+    <string name="src_librelink_error2">Nesprávne používateľské meno alebo heslo. Prosím, skontrolujte nastavenia zdroja LibreLinkUp. V prípade potreby sa pokúste prihlásiť znovu alebo preinštalujte aplikáciu LibreLinkUp a skontrolujte nastavenia svojho účtu.\nZastavte všetky ostatné aplikácie, ktoré majú prístup k rovnakému účtu!</string>
+    <string name="last_value_on_server">Posledné meranie glukózy na serveri z %1$s</string>
+    <string name="no_data_in_server_response">Na serveri neboli nájdené žiadne hodnoty glukózy..</string>
+    <string name="http_error_429">Príliš veľa požiadaviek!</string>
+    <string name="http_error_429_info">Zastavte prosím všetky ostatné aplikácie, ktoré majú prístup k rovnakému účtu!</string>
+
+    <string name="state_await_data">Čaká sa na údaje</string>
+    <string name="pref_send_battery_level_to_watch">Odoslať úroveň batérie</string>
+    <string name="pref_send_battery_level_to_watch_summary">Odoslať úroveň nabitia batérie do hodiniek, aby sa zobrazila v komplikácii a na hlavnej obrazovke.</string>
+    <string name="pref_battery_level">Zobraziť úroveň batérie</string>
+    <string name="forward_to_watch_interval_summary">Nastavte minimálny čas (v minútach) medzi meraniami glukózy pred odoslaním novej aktualizácie do hodiniek.\nAlarmy a veľmi nízke hodnoty merania sa odosielajú vždy.</string>
+    <string name="forward_to_values_summary">Nastavte minimálny čas (v minútach) medzi meraniami glukózy pred odoslaním novej aktualizácie do prijímačov (nie pre Health Connect).</string>
+    <string name="alarm_repeat_summary">Alarm bude opakovane zvoniť a vibrovať, kým nezrušíte upozornenie alebo nedosiahne nastavenú maximálnu dĺžku trvania alarmu.</string>
+    <string name="alarm_repeat_time">Maximálna dĺžka alarmu</string>
+    <string name="alarm_repeat_time_summary">Určite maximálny čas (v minútach), počas ktorého bude alarm zvoniť a vibrovať. Hodnota 0 znamená, že alarm sa bude opakovať donekonečna.</string>
+    <string name="wear_source_info">Ak chcete povoliť zdroje, prosím, najskôr ich nastavte v aplikácii v telefóne. Zdroj povoľte na hodinkách len vtedy, ak ešte nedostávate údaje do telefónu.</string>
+    <string name="gdh_disclaimer_title">Poznámka vývojára</string>
+    <string name="gdh_disclaimer_message">Táto aplikácia bola vyvinutá v mojom voľnom čase ako hobby projekt. Preto nemôžem zaručiť, že všetky funkcie budú fungovať bezchybne na každom zariadení. Neustále však pracujem na vylepšeniach.\nAk narazíte na akékoľvek problémy alebo máte otázky, kontaktujte ma prosím priamo pred zanechaním negatívnej recenzie. \nPre informácie o dôležitých aktualizáciách a opravách chýb sa môžete pridať do skupiny na Facebooku alebo do Google Groups.</string>
+
+    <string name="pref_source_dexcom_share_info_1_summary">Aby ste mohli prijímať údaje zo serverov Dexcom Share:\nV aplikácii Dexcom:\n - Vytvorte sledovateľa\n - V časti \„Pripojenia\“ sa uistite, že je zobrazená možnosť \„Zdieľanie zapnuté\“</string>
+    <string name="pref_source_dexcom_share_info_2_summary">V GlucoDataHandler: \n- Zadajte svoje používateľské meno a heslo pre Dexcom Clarity \n   (ak používate svoje telefónne číslo ako používateľské meno, uveďte aj predvoľbu krajiny) \n- Skontrolujte nastavenie servera pre účet EÚ, USA alebo Japonsko\nDôležité: Nefunguje to s účtom sledovateľa!</string>
+
+    <string name="request_timestamp">Aktualizované</string>
+    <string name="alarm_header">Alarmy</string>
+    <string name="wearos_watchfaces">Ciferníky</string>
+    <string name="wearos_watchfaces_summary">Informácie o ciferníkoch tretích strán pre Wear OS.</string>
+    <string name="setup">Nastavenie</string>
+    <string name="pref_watchfaces_cat">Ciferníky tretích strán</string>
+    <string name="pref_watchfaces_info_summary">Táto aplikácia neposkytuje ciferník, ale poskytuje niekoľko komplikácií (malé okrúhle časti ciferníka), ktoré sa dajú použiť pre ciferníky podporujúce komplikácie tretích strán.</string>
+    <string name="pref_watchfaces_default">Štandardné</string>
+    <string name="pref_watchfaces_default_summary">Väčšina výrobcov hodiniek už poskytuje ciferníky, ktoré sa dajú použiť s komplikáciou GlucoDataHandler.\nNapríklad väčšina ciferníkov Samsung \„Info\“ je kompatibilná.</string>
+    <string name="pref_watchfaces_pujie">Pujie</string>
+    <string name="pref_watchfaces_pujie_summary">Pujie je aplikácia na tvorbu ciferníkov s cloudovou knižnicou. Ak chcete nájsť kompatibilné ciferníky, vyhľadajte v knižnici ciferníky začínajúce na \„GDH_\“.\nPoznámka: Pujie nie je kompatibilná so zariadeniami Wear OS 5.\nŤuknutím sem otvoríte aplikáciu v obchode Play Store.</string>
+    <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>
+    <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man vytvára ciferníky tretích strán, ktoré sú špeciálne navrhnuté pre použitie s aplikáciou GlucoDataHandler.\nŤuknutím sem otvoríte jeho stránku v obchode Play Store.</string>
+    <string name="pref_watchfaces_gdc">GDC ciferníky</string>
+    <string name="pref_watchfaces_gdc_summary">Ciferníky GDC sú určené na použitie s aplikáciou GlucoDataHandler.\nŤuknutím sem otvoríte obchod Play Store.</string>
+    <string name="pref_phone_wear_screen_off_update">Vždy aktualizovať komplikácie</string>
+    <string name="pref_phone_wear_screen_off_update_summary">Vždy odosielať nové hodnoty glukózy do hodiniek.\nZakážte túto funkciu, aby sa zabránilo aktualizácii údajov v hodinkách, keď je obrazovka hodiniek vypnutá, a šetrila sa tak batéria.\nHodnoty alarmu sa budú vždy odosielať do hodiniek.\nDÔLEŽITÉ: Ak je toto nastavenie zakázané, alarm pre neplatné hodnoty je v hodinkách vypnutý!</string>
+    <string name="alarm_ignore_snooze_for_very_low">Vždy upozorniť na veľmi nízku hodnotu</string>
+    <string name="alarm_ignore_snooze_for_very_low_summary">Tento alarm vás upozorní aj v prípade, že je aktívna funkcia odloženia alebo všeobecná tichá doba pre všetky alarmy, čím je zaistené, že budete upozornení na veľmi nízku hladinu glukózy.</string>
+
+    <string name="libre_no_new_value_info">Ak táto chyba pretrváva, skúste preinštalovať aplikáciu Libre. To často vyrieši problém.</string>
+    <string name="src_libre_server">Server</string>
+    <string name="source_libre_server_default">Predvolený (.io)</string>
+    <string name="source_libre_server_russian">Ruský (.ru)</string>
+
+    <string name="patient_name">Meno</string>
+    <string name="patient_name_gda_summary">Meno používateľa/pacienta, ktoré sa má zobraziť v upozorneniach a počas vyslovovania.\nToto by sa malo používať, ak používate viacero verzií GlucoDataAuto, inak môže pole zostať prázdne.</string>
+
+    <string name="video_tutorial">Video návod</string>
+    <string name="video_tutorial_summary">Ťuknite sem, aby ste sa dostali na YouTube video, ktoré ilustruje nastavenie tohto zdroja. Veľká vďaka Diabetic Masked Man za vytvorenie videí.</string>
+
+    <string name="snooze_30">30 minút</string>
+    <string name="snooze_60">60 minút</string>
+    <string name="snooze_90">90 minút</string>
+    <string name="snooze_120">120 minút</string>
+    <string name="alarm_snooze_on_notification_enabled">Odloženie upozornenia</string>
+    <string name="alarm_snooze_on_notification_summary">Vyberte až 3 dĺžky odloženia, ktoré sa zobrazia ako tlačidlá na upozornení alarmu.</string>
+    <string name="pref_show_iob_cob">Zobraziť hodnoty IOB/COB</string>
+    <string name="pref_show_iob_cob_summary">Zobraziť hodnoty IOB a COB, ak sú dostupné.</string>
+
+    <!-- v2.0 -->
+
+    <string name="delta_per_10_minute">za 10 minút</string>
+    <string name="delta_per_15_minute">za 15 minút</string>
+
+    <string name="widget_wearos_battery_level">Úroveň batérie WearOS</string>
+
+    <string name="graph">Graf</string>
+    <string name="graph_duration">Dĺžka grafu</string>
+    <string name="graph_duration_wear_summary">Počet hodín zobrazených v grafe v komplikácii a na hlavnej obrazovke.\nPoužite 0 na vypnutie grafu.</string>
+    <string name="graph_duration_summary">Počet hodín zobrazených v grafe.\nPoužite 0 na vypnutie grafu.</string>
+    <string name="graph_duration_phone_widget_summary">Počet hodín zobrazených v grafe.</string>
+    <string name="show_graph">Zobraziť graf</string>
+    <string name="menu_database">Databáza</string>
+    <string name="reset_db">Obnoviť databázu</string>
+    <string name="reset_db_summary">Ťuknite sem, aby ste odstránili všetky údaje z databázy.</string>
+    <string name="reset_db_warning">Ak stlačíte OK, všetky údaje z databázy budú odstránené!\nSte si istí?</string>
+    <string name="graph_disabled">Graf vypnutý!</string>
+    <string name="no_graph_data">Vytvorenie grafu sa nepodarilo!</string>
+    <string name="graph_comp_square">Graf 3x3</string>
+    <string name="graph_comp_rect">Graf 3x1</string>
+
+    <string name="pref_switch_use_rate_calculation">Výpočet trendu</string>
+    <string name="pref_switch_use_rate_calculation_summary_on">Použiť interný výpočet trendu súvisiaci s poslednými hodnotami.\nTýmto sa zobrazí rotácia šípky trendu v 5° intervaloch.</string>
+    <string name="pref_switch_use_rate_calculation_summary_off">Použiť trend poskytnutý zdrojom.\nAk nie je k dispozícii žiadny trend, použije sa interný výpočet.</string>
+    
+   <string name="accessibility_service_description">Zobraziť hodnoty glukózy na obrazovke AOD</string>
+
+    <string name="pref_cat_aod">Always on Display</string>
+    <string name="pref_cat_aod_summary">Nastavenia pre funkciu (AOD) Vždy na obrazovke.</string>
+
+    <string name="pref_aod_enabled_summary">Zobraziť hodnoty na obrazovke AOD.</string>
+    <string name="pref_aod_size_summary">Zmeniť veľkosť údajov AOD.</string>
+    <string name="pref_aod_coloured">Farebné</string>
+    <string name="pref_aod_coloured_summary">Zobraziť AOD farebne.</string>
+
+    <string name="graph_show_axis">Zobraziť osi grafu</string>
+    <string name="graph_show_axis_summary">Zobraziť osi času a hodnoty glukózy.</string>
+
+    <string name="source_notification">Upozornenia</string>
+    <string name="pref_source_notification">Čítačka upozornení (Beta)</string>
+    <string name="pref_source_notification_summary">Na prijímanie hodnôt glukózy a IOB/COB z upozornení iných aplikácií, ako sú Dexcom, CamAPS FX a Omnipod 5.</string>
+    <string name="notification_reader_app">Aplikácia</string>
+    <string name="notification_reader_app_summary">Vyberte aplikáciu, z ktorej sa má upozornenie prečítať.</string>
+    <string name="notification_reader_enabled_summary_on">Čítačka upozornení je aktivovaná na spracovanie hodnôt z upozornení pre konkrétne aplikácie.</string>
+    <string name="notification_reader_enabled_summary_off">Čítačka upozornení je vypnutá a žiadne upozornenia nebudú spracované.\nNajskôr určite aspoň jednu aplikáciu.</string>
+    <string name="notification_cat_glucose">Prečítať hodnotu glukózy</string>
+    <string name="notification_cat_iob">Prečítať hodnotu IOB</string>
+    <string name="notification_reader_enabled">Povoliť čítačku upozornení</string>
+    <string name="no_receiver">Žiadna aplikácia</string>
+    <string name="notification_reader_app_regex">Filter Regex hodnôt</string>
+    <string name="notification_reader_app_regex_summary">Regex na spracovanie hodnoty z textu v upozornení.\nZmeňte len v prípade, ak viete, čo robíte, alebo ak máte odporúčanie od vývojára.</string>
+    <string name="notification_reader_five_minute_interval">5 minútový interval</string>
+    <string name="notification_reader_five_minute_interval_summary">Niektoré aplikácie, ako napríklad Dexcom, aktualizujú svoje upozornenia pomerne často. Ak chcete ignorovať tieto aktualizácie s rovnakou hodnotou, povoľte 5-minútový interval.\nAk je táto funkcia povolená, nová hodnota sa zobrazí len každých 5 minút alebo v prípade, že sa hodnota v upozornení zmenila.</string>
+    <string name="pref_source_notification_info_summary">Na prijímanie hodnôt z upozornení iných aplikácií je potrebné povolenie na prístup k upozorneniam!\nUpozornenie musí obsahovať buď hodnotu glukózy, alebo IOB/COB ako reťazec.\nKeďže každé upozornenie má iné rozloženie, nemusí fungovať s každou aplikáciou. V prípade problémov prosím ma kontaktujte so snímkou obrazovky s upozornenia a záznamami.</string>
+    <string name="sensor_age_label">Životnosť senzora</string>
+    <string name="sensor_age_value">%1$dd %2$dh</string>
+    <string name="vibrate_pattern_shorty">Shorty</string>
+
+    <string name="pref_cat_locksreen_aod">Zamknutá obrazovka a AOD</string>
+    <string name="pref_cat_locksreen_aod_summary">Nastavenia pre pridanie tapety na zamknutú obrazovku a funkciu Always On Display.</string>
+    <string name="pref_graph_transparency_phone_main_summary">Priehľadné pozadie pre graf na hlavnej obrazovke.\nToto je potrebné len pre svetlú farebnú tému.</string>
+    <string name="pref_floating_widget_lock_position">Uzamknúť polohu</string>
+    <string name="pref_floating_widget_lock_position_summary">Ak je poloha uzamknutá, plávajúcu miniaplikáciu nie je možné presunúť. Vždy bude na rovnakej pozícii.</string>
+
+    <string name="widget_chart_glucose_trend_delta_time_iob_cob">Hodnoty a graf</string>
+
+    <string name="aod_permission_info">Na zobrazenie glukózy vždy na displeji Always On Display vyžaduje táto aplikácia povolenie služby dostupnosti.\nToto povolenie sa používa výlučne na zobrazenie údajov o glukóze na displeji AOD. Vaše súkromie je dôležité, preto sa žiadne ďalšie osobné údaje nezískavajú, nezhromažďujú ani nezdieľajú.\nStlačte tlačidlo \„OK\“, aby ste prešli na obrazovku povolení.</string>
+
+    <string name="graph_duration_phone_main_summary">Počet hodín zobrazených v grafe na hlavnej obrazovke.\nPoužite 0 na vypnutie grafu.</string>
+    <string name="graph_circle_radius">Veľkosť bodu</string>
+    <string name="graph_circle_radius_summary">Veľkosť bodov grafu pre všetky miniaplikácie, uzamknutú obrazovku a funkciu Always-On Display (AOD). Toto nastavenie nemá vplyv na graf na hlavnej obrazovke aplikácie.</string>
+    <string name="graph_days_phone_main">Počet dní</string>
+    <string name="graph_days_phone_main_summary">Počet dní, ktoré sú k dispozícii v grafe.\nDÔLEŽITÉ: príliš veľa dní môže spôsobiť problémy s pamäťou!</string>
+    <string name="graph_main">Graf na hlavnej obrazovke</string>
+    <string name="graph_main_summary">Nastavenia grafu na hlavnej obrazovke.</string>
+    <string name="graph_widgets">Graf v miniaplikáciách</string>
+    <string name="graph_widgets_summary">Nastavenia grafov pre miniaplikácie, upozornenia, uzamknutú obrazovku a funkciu Always-On Display (AOD).</string>
+    <string name="show_graph_notification_summary">Zobraziť graf v upozornení.</string>
+    <string name="pref_cat_ui_graph_settings_summary">Všeobecné nastavenia používateľského rozhrania a grafu na hlavnej obrazovke a miniaplikáciách.</string>
+    <string name="pref_cat_ui_graph_settings">Používateľské rozhranie a graf</string>
+    <string name="state_update_required">Vyžaduje sa aktualizácia!</string>
+
+    <string name="pref_source_juggluco_info_summary">Aby ste mohli prijímať hodnoty z Juggluco:\n- otvorte Juggluco\n- prejdite do \„Nastavenia\“\n- otvorte \„Výmena údajov\“\n- povoľte „\Vysielanie Glucodata\“\n- povoľte \„de.michelinside.glucodatahandler\"</string>
+    <string name="pref_gda_source_juggluco_info_summary">Aby ste mohli prijímať hodnoty z Juggluco:\n- otvorte Juggluco\n- prejdite do \„Nastavenia\“\n- otvorte \„Výmena údajov\“\n- povoľte „\Vysielanie Glucodata\“\n- povoľte \„de.michelinside.glucodataauto\“</string>
+    <string name="pref_source_juggluco_iob_info_summary">Aby ste mohli prijímať hodnoty IOB z Juggluco:\n- otvorte Juggluco\n- prejdite do \„Nastavenia\“\n- otvorte \„Zobrazenie\“\n- povoľte \„IOB\“</string>
+
+    <!-- v2.1 -->
+
+    <string name="pref_notification_recreate">Znovu vytvoriť upozornenia</string>
+    <string name="pref_notification_recreate_summary">Odstrániť a znovu vytvoriť druhé a tretie upozornenie.\nTo je potrebné len v prípade špeciálnych obrazoviek AOD, ktoré neaktualizujú ikonu upozornení.\nIkona upozornenia v popredí sa nedá znovu vytvoriť.</string>
+    <string name="source_dexcom_server_eu">Medzinárodný/EÚ</string>
+    <string name="source_dexcom_server_us">Spojené štáty</string>
+    <string name="source_dexcom_server_jp">Japonsko</string>
+    <string name="source_dexcom_server_summary">Vyberte server podľa krajiny, s ktorou je váš Dexcom Clarity spojený.</string>
+    <string name="dexcom_share_check_jp_account">Ťuknite sem a skontrolujte údaje svojho účtu Dexcom Share pre váš japonský účet.</string>
+    <string name="src_cat_medtrum">Medtrum</string>
+    <string name="src_medtrum_enabled_summary">Povoľte pripojenie Medtrum po nastavení používateľského mena a hesla.</string>
+    <string name="src_medtrum_user">Používateľ</string>
+    <string name="src_medtrum_user_summary">Používateľské meno Medtrum pre účet sledovateľa.</string>
+    <string name="src_medtrum_password_summary">Heslo pre účet sledovateľa Medtrum.</string>
+    <string name="src_medtrum_patient_summary">Ak je k účtu Medtrum pripojených viacero pacientov, vyberte pacienta, pre ktorého sa majú prijímať údaje.</string>
+    <string name="source_medtrum_server_default">Predvolené (.eu)</string>
+    <string name="source_medtrum_server_france">Francúzsko (.fr)</string>
+    <string name="source_medtrum">Medtrum</string>
+    <string name="source_request_interval_2">2 minúty</string>
+    <string name="source_select_patient">Najprv prosím vyberte pacienta!</string>
+    <string name="source_no_patient">Žiadny pacient nebol nájdený!</string>
+    <string name="source_new_sensor_starting">Nový senzor sa spúšťa…</string>
+    <string name="source_sensor_need_calibration">Senzor potrebuje kalibráciu!</string>
+    <string name="source_no_valid_value">Nebola nájdená žiadna platná hodnota glukózy!</string>
+    <string name="source_invalid_patient">Neplatné údaje o pacientovi!</string>
+    <string name="pref_source_libre_patched_info_summary">Ak používate upravenú aplikáciu Libre alebo iné aplikácie poskytujúce toto vysielanie.</string>
+    <string name="pref_sensor_runtime">Doba používania senzora</string>
+    <string name="pref_sensor_runtime_summary">Počet dní, počas ktorých je možné mať senzor nasadený.</string>
+    <string name="runtime_10_days">10 dní</string>
+    <string name="runtime_14_days">14 dní</string>
+    <string name="runtime_15_days">15 dní</string>
+    <string name="runtime_24_days">24 dní</string>
+    <string name="table_header_statistics">Štatistiky</string>
+    <string name="info_label_average">Priemer</string>
+    <string name="time_in_range">TIR (Doba v rozsahu)</string>
+    <string name="src_webserver">Webový server</string>
+    <string name="src_juggluco_webserver_summary">Použiť webový server Juggluco na získanie životnosti senzora a chýbajúcich údajov, ak sú k dispozícii.\nNajskôr prosím povoľte webový server v Juggluco bez SSL a api_secret.</string>
+    <string name="src_iob_support">Podpora IOB</string>
+    <string name="src_juggluco_iob_support_summary">Prijímanie hodnôt IOB z webového servera Juggluco.</string>
+    <string name="pref_source_juggluco_setup_info">Nastaviť Juggluco</string>
+    <string name="pref_source_juggluco_webserver_info">Nastaviť webový server</string>
+    <string name="pref_source_juggluco_webserver_info_summary">Aby ste povolili webový server v Juggluco:\n- otvorte Juggluco\n- prejdite do \„Nastavenia\“\n- otvorte \„Výmena údajov\“\n- otvorte \„Webový server\“\n- Povoľte \„Aktívne“\n- NENASTAVUJTE \„api_secret\“ a \„Použiť SSL\“!\n- voliteľné: povoľte „\Iba lokálne\“</string>
+    <string name="pref_source_medtrum_info">Nastavenie Medtrum</string>
+    <string name="pref_source_medtrum_info_summary">Ak chcete prijímať údaje ako sledovateľ Medtrum:\n- Zaregistrujte si účet v aplikácii EasyFollower alebo na EasyView\n-> DÔLEŽITÉ: nemôžete použiť svoj účet Medtrum!\n- Pozvite sa\n- Prijmite pozvánku\n- Použite tento účet pre GlucoDataHandler\n- Voliteľné: Odinštalujte aplikáciu EasyFollower</string>
+    <string name="pref_battery_complication_percent">Zobraziť % v komplikácii batérie</string>
+    <string name="source_help_summary">Ťuknite sem pre wiki GDH, kde nájdete zoznam podporovaných senzorov a kompatibilných zdrojov.</string>
+    <string name="pref_switch_standard_statistics">Použiť štandardné štatistiky</string>
+    <string name="pref_switch_standard_statistics_summary">Použiť štandardné štatistické rozsahy alebo vlastné nastavenia cieľového rozsahu z GDH pre štatistické výpočty.</string>
+    <string name="aa_media_player_colored">Farebný obal</string>
+    <string name="aa_media_player_colored_summary_off">Zobraziť bielu hodnotu, trend a graf</string>
+    <string name="aa_media_player_colored_summary_on">Zobraziť farebnú hodnotu, trend a graf</string>
+
+    <!-- v2.2 -->
+
+    <string name="alarm_general_settings_summary">Všeobecné nastavenia alarmu pre všetky alarmy.</string>
+    <string name="alarm_cat_quiet_hours">Tichá doba</string>
+    <string name="source_delay_too_short">Nová hodnota je staršia ako interval. Ak sa to stáva častejšie, prejdite do zdrojov - Služby v cloude a zvýšte oneskorenie!</string>
+
+    <string name="health_connect_permission_rationale_title">Integrácia Health Connect</string>
+    <string name="health_connect_permission_rationale_long">
+Na pomoc pri zvládaní cukrovky môže GlucoDataHandler zdieľať vaše údaje o hladine glukózy v krvi s aplikáciou Health Connect.\n\n
+To vám umožňuje:\n
+- Bezpečne ukladať namerané hodnoty glukózy na jednom centrálnom mieste vo vašom zariadení.\n
+  - Zdieľať údaje o hladine glukózy s inými aplikáciami pre zdravie a kondíciu, ktoré autorizujete, čím získate komplexnejší prehľad o svojom zdraví.\n\n
+GlucoDataHandler zapisuje do aplikácie Health Connect iba údaje o hladine glukózy v krvi a nečíta iné typy zdravotných údajov, pokiaľ mu na to výslovne neudelíte samostatné povolenia.\n\n
+Tieto povolenia môžete kedykoľvek spravovať v nastaveniach aplikácie Health Connect.
+</string>
+    <string name="pref_healthconnect">Health Connect</string>
+    <string name="pref_healthconnect_summary">Ak chcete zdieľať svoje údaje so službou Health Connect, udeľte povolenie aplikácii GDH.</string>
+    <string name="pref_samsunghealth_summary">Ak chcete synchronizovať so službou Samsung Health, musíte v aplikácii Samsung Health povoliť aj možnosť „čítať z Health Connect“.\nUpozorňujeme, že napríklad aplikácia Samsung Health nečíta tieto hodnoty pravidelne!</string>
+    <string name="health_connect_error">Vyskytla sa chyba, prosím pošlite záznamy vývojárovi.</string>
+    <string name="health_connect_not_available">Nie je dostupné!</string>
+    <string name="health_connect_no_permission">Chýbajúce povolenie!</string>
+    <string name="select_patient_title">Vyberte pacienta</string>
+    <string name="invalid_glucose_value">Neplatná hodnota glukózy %1$s!</string>
+    <string name="missing_data">Chýbajúce údaje!</string>
+    <string name="timeout">Časový limit!</string>
+    <string name="internal_error">Vnútorná chyba!</string>
+    <string name="provide_logs">Prosím, odošlite záznamy vývojárovi.</string>
+    <string name="invalid_user_id">IBolo prijaté neplatné používateľské ID!</string>
+    <string name="invalid_redirect">Neplatné presmerovanie v odpovedi!</string>
+    <string name="invalid_iob_value">Nepodarilo sa spracovať IOB!</string>
+    <string name="source_iob_notification">Upozornenie IOB</string>
+
+    <string name="pref_cat_logs">Záznamy</string>
+    <string name="pref_cat_logs_summary">Nastavte zaznamenávanie a ukladanie záznamov do súboru.</string>
+    <string name="pref_cat_log_to_db">Zaznamenávať do databázy</string>
+    <string name="pref_log_to_db_summary">Upozornenie: Ukladanie záznamov do databázy môže ovplyvniť výkon a výdrž batérie.\nTúto možnosť aktivujte len v prípade, ak vás o to požiada vývojár, aby pomohol analyzovať problém.</string>
+    <string name="pref_log_duration_size">Doba uchovávania záznamov</string>
+    <string name="pref_log_duration_summary">Počet hodín, počas ktorých sa majú záznamy uchovávať v databáze.\nNastavte hodnotu 0, ak chcete zakázať zaznamenávanie do databázy.</string>
+    <string name="pref_log_debug">Povoliť zaznamenávanie chýb</string>
+    <string name="pref_log_debug_summary">Povoliť ukladanie podrobných ladiacich správ do databázy (max. posledných 30 minút).\nTúto funkciu povoľte len na žiadosť vývojára.</string>
+
+    <string name="pref_switch_xdrip_server">Lokálny webový server</string>
+    <string name="pref_switch_xdrip_server_summary">Umožňuje ciferníkom navrhnutým pre xDrip+ prijímať údaje o glukóze z tejto aplikácie. Emuluje funkciu webového servera xDrip+ na porte 17580.</string>
+    <string name="pref_switch_xdrip_server_reduce_data">Zjednodušený režim údajov</string>
+    <string name="pref_switch_xdrip_server_reduce_data_summary">Tým sa zníži množstvo poskytovaných údajov na minimum, aby sa predišlo problémom s pamäťou na niektorých hodinkách Garmin.\nSkontrolujte prosím kompatibilitu s ciferníkom vašich hodiniek.</string>
+    <string name="error_port_in_use">Port sa používa!\nZastavte ostatné webové servery bežiace na tomto porte a reštartujte lokálny webový server.</string>
+    <string name="state_active">aktívny</string>
+    <string name="pref_garmin_info_summary">Pre Garmin alebo Pebble neexistuje žiadna špeciálna aplikácia, len lokálny webový server, ktorý sa používa pre ciferníky s podporou xDrip+.\nStačí vyhľadať takéto ciferníky v obchode Connect IQ Store a nastaviť zdroj xDrip+ pre tieto ciferníky.\nDÔLEŽITÉ: ak používate aj xDrip+ alebo Juggluco, lokálny webový server môžete aktivovať len v jednej aplikácii, pretože používajú rovnaký port (17580)!</string>
+    <string name="remaining">Zostáva</string>
+    <string name="pref_switch_xdrip_open_server">Otvoriť webový server</string>
+    <string name="pref_switch_xdrip_open_server_summary">Sprístupniť webový server pre ostatné zariadenia v sieti.\nMôže to spôsobiť bezpečnostné problémy, preto túto možnosť povoľte, len ak naozaj potrebujete pristupovať k údajom webového servera zo siete.\nCiferníky Garmin si vyžadujú údaje priamo v telefóne, takže otvorený server nie je potrebný!</string>
+    <string name="last_request">Posledná požiadavka</string>
+    <string name="close_activitiy">Zavrieť obrazovku</string>
+    <string name="collapse_view">Zbaliť zobrazenie</string>
+    <string name="expand_view">Rozbaliť zobrazenie</string>
+    <string name="patient_name_summary">Meno používateľa/pacienta, ktoré sa má zobraziť v upozorneniach, miniaplikáciách, atď.</string>
+    <string name="pref_switch_xdrip_server_1_minute_interval">Minútový interval</string>
+    <string name="pref_switch_xdrip_server_1_minute_interval_summary">Vráti zoznam hodnôt v minútovom intervale namiesto 5 minútového.\nTúto možnosť povoľte, len ak viete, že ciferník alebo miniaplikácia to zvládne!\nBežné ciferníky sú vytvorené tak, aby zvládali 5-minútové intervaly.</string>
+    <string name="short_value_patient_name">Glukóza a meno</string>
+    <string name="pref_cat_general_advanced_summary">Rozšírené nastavenia aplikácie.</string>
+    <string name="important">Dôležité</string>
+    <string name="api_36_notification_info">Počínajúc Androidom 16 sú viaceré ikony stavového riadku zoskupené systémom Android.\nPreto ich už nie je možné používať.</string>
+    <string name="pref_source_juggluco_summary">Aplikácia pre Android pre senzory Freestyle Libre 1, 2 a 3, Dexcom G7/ONE+, Sibionics GS1Sb a AccuChek SmartGuide.</string>
+    <string name="pref_source_xdrip_summary">Aplikácia pre Android na spravovanie cukrovky, ktorá sa dokáže pripojiť k rôznym senzorom a prijímať údaje z rôznych zdrojov, napríklad Medtronic.</string>
+    <string name="pref_source_aaps_summary">Android APS je automatizovaný systém podávania inzulínu s otvoreným zdrojovým kódom (uzavretý okruh).</string>
+    <string name="pref_source_eversense_summary">Prijímanie lokálne vysielaných správ z ESEL pre Eversense alebo z Dexcom BYODA pre senzory Dexcom G6.</string>
+    <string name="pref_source_diabox_summary">Aplikácia pre Android pre senzory Freestyle Libre.</string>
+    <string name="pref_source_libre_patched_summary">Upravená aplikácia Libre, ktorá posiela lokálne vysielanie.\nAj iné aplikácie používajú tento formát na preposielanie údajov o glykémii.</string>
+    <string name="pref_source_xdrip_broadcast_service_api_info">Služba xDrip+ Broadcast Service API</string>
+    <string name="pref_source_xdrip_broadcast_service_api_info_summary">Použite službu xDrip+ Broadcast Service API na príjem údajov (aj IOB) z xDrip+.</string>
+    <string name="src_libreview_summary">Vzdialene sledovať aplikáciu FreeStyle Libre.</string>
+    <string name="src_dexcom_share_summary">Vzdialene sledovať aplikáciu Dexcom.</string>
+    <string name="src_medtrum_summary">Vzdialene sledovať aplikáciu Medtrum.</string>
+    <string name="src_ns_summary">Vzdialene sledovať webovú službu Nightscout.</string>
+    <string name="pref_cat_wear_os_summary">Pre hodinky s Wear OS, napr. všetky hodinky Google Pixel, hodinky Samsung Galaxy Watch 4 a novšie a mnohé ďalšie.</string>
+    <string name="pref_cat_watchdrip_summary">Pre hodinky podporované externou aplikáciou WatchDrip+, ako napríklad väčšina modelov Mi Band, Xiaomi Smart Band a Amazfit.</string>
+    <string name="pref_cat_garminpebble">Hodinky Garmin, Fitbit a Pebble</string>
+    <string name="pref_cat_garminpebble_summary">Pre zariadenia a aplikácie, ktoré môžu prijímať údaje o glykémii z webovej služby xDrip+, ako sú hodinky Garmin, Pebble a niektoré hodinky Fitbit.</string>
+    <string name="pref_garmin_watchfaces_summary">Stlačte tu pre otvorenie obchodu Connect IQ pre ciferníky xDrip+.\nAk ciferníky podporujú xDrip+, mali by byť kompatibilné aj s touto aplikáciou.</string>
+    <string name="pref_garmin_watchfaces">Garmin</string>
+    <string name="pref_fitbit_watchfaces">Fitbit</string>
+    <string name="pref_fitbit_watchfaces_summary">Stlačte tu pre otvorenie webovej stránky Glance, ktorá podporuje webové služby xDrip+.</string>
+    <string name="pref_pebble_watchfaces">Pebble</string>
+    <string name="pref_pebble_watchfaces_summary">Stlačte tu pre otvorenie ciferníkov Pebble navrhnutých pre xDrip+, ktoré by mali byť tiež kompatibilné s touto aplikáciou.</string>
+    <string name="gmi">GMI</string>
+    <string name="pref_lockscreen_x_pos">Horizontálna poloha</string>
+    <string name="pref_lockscreen_x_pos_summary">Horizontálna poloha obrázka:\n0 je ľavá strana displeja\n40 je pravá strana displeja</string>
+    <string name="notification_cat_iob_cob">Čítať hodnotu IOB/COB</string>
+    <string name="notification_cat_glucose_summary">Čítanie hodnoty glykémie z upozornenia externej aplikácie, ktorá zobrazuje hodnotu glykémie v upozornení.</string>
+    <string name="notification_cat_iob_cob_summary">Čítanie hodnoty IOB a/alebo COB z upozornenia externej aplikácie, ktorá zobrazuje tieto hodnoty v upozornení.</string>
+    <string name="source_notification_iob_enabled_summary">Povoľte túto možnosť, ak upozornenie obsahuje hodnotu IOB.</string>
+    <string name="source_notification_cob_enabled_summary">Povoľte túto možnosť, ak upozornenie obsahuje hodnotu COB.</string>
+    <string name="source_notification_iob_cob_irregular">Špeciálne spracovanie</string>
+    <string name="source_notification_iob_cob_irregular_summary">Povoľte túto možnosť pre upozornenia, ktoré sa aktualizujú príliš často. Tým sa zabezpečí správne spracovanie všetkých hodnôt. Túto možnosť prosím povoľte, len ak vás o to požiada vývojár na analýzu problému.</string>
+    <string name="alarm_ignore_snooze_for_obsolete">Vždy upozorniť na neplatné hodnoty</string>
+    <string name="alarm_ignore_snooze_for_obsolete_summary">Tento alarm vás upozorní aj vtedy, ak je aktívne odloženie alebo všeobecný tichý režim pre všetky alarmy, čím sa zabezpečí, že budete upozornení, ak nie je k dispozícii žiadna nová hodnota glykémie.</string>
+    <string name="alarm_inactive_auto_reenable">Automaticky znovu povoliť</string>
+    <string name="alarm_inactive_auto_reenable_summary">Po deaktivácii tichej doby sa táto funkcia opäť aktivuje po čase ukončenia.</string>
+
+    <plurals name="minutes_long">
+        <item quantity="one">%d minúta</item>
+        <item quantity="few">%d minúty</item>
+        <item quantity="many">%d minút</item>
+        <item quantity="other">%d minút</item>
+    </plurals>
+    <plurals name="days_long">
+        <item quantity="one">%d deň</item>
+        <item quantity="few">%d dni</item>
+        <item quantity="many">%d dní</item>
+        <item quantity="other">%d dní</item>
+    </plurals>
+    <plurals name="hours_long">
+        <item quantity="one">%d hodina</item>
+        <item quantity="few">%d hodiny</item>
+        <item quantity="many">%d hodín</item>
+        <item quantity="other">%d hodín</item>
+    </plurals>
+
+    <string name="dexcom_server_down_error">Zdá sa, že server Dexcom nefunguje!\nŤuknutím sem skontrolujete stav servera.\nAk je aplikácia Dexcom na rovnakom telefóne, môžete namiesto toho použiť Čítačku upozornení (Notification Reader).</string>
+</resources>
+

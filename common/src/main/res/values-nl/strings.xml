@@ -277,7 +277,6 @@
 
     <!-- GlucoDataAuto -->
 
-    <string name="glucodataauto_link">https://github.com/pachi81/GlucoDataAuto/blob/main/README.md</string>
     <string name="gda_no_data">Om deze app in Android Auto te gebruiken, moet u de ontwikkelaarsinstellingen in Android Auto activeren door meerdere keren op de versie te klikken. Vervolgens moet u \"Onbekende bronnen\" inschakelen in het menu met ontwikkelaarsinstellingen.</string>
     <string name="pref_information">Informatie</string>
     <string name="pref_gda_info_summary">Als u GlucoDataHandler als bron gebruikt, worden deze instellingen overschreven vanuit GlucoDataHandler, dus u hoeft ze hier niet te wijzigen.</string>
@@ -456,7 +455,7 @@
     <string name="pref_cat_notification_summary">Meldingsinstellingen.</string>
     <string name="pref_cat_locksreen_wallpaper_summary">Instellingen om de vergrendelschermachtergrond te vervangen.</string>
     <string name="pref_cat_android_auto_summary">Instelling voor GlucoDataAuto voor gebruik met Android Auto.</string>
-    <string name="pref_cat_watchdrip">MiBand en Amazfit horloges</string>
+    <string name="pref_cat_watchdrip">Mi Band, Smart Band en Amazfit horloges</string>
     <string name="pref_cat_wear_os">Wear OS horloges</string>
     <string name="pref_cat_watch">Horloge</string>
     <string name="pref_cat_watch_summary">Instellingen voor verbonden smartwatches.</string>
@@ -467,7 +466,7 @@
     <string name="pref_wearos_info_summary">Om GlucoDataHandler op Wear OS horloges te gebruiken, installeert u deze vanuit de Google Play Store op het horloge.</string>
     <string name="pref_wear_os_check_connection">Verbinding controleren</string>
     <string name="pref_wear_os_check_connection_summary">Druk hier om de verbinding met Wear OS opnieuw te controleren.\nU kunt deze controle ook activeren door op de verbindingsinfo op het startscherm te drukken (zelfs in de Wear OS app).</string>
-    <string name="pref_watchdrip_info_summary">WatchDrip+ ondersteunt verschillende MiBand en Amazfit apparaten.\nOm een volledige lijst met ondersteunde apparaten en meer informatie over het configureren van WatchDrip+ te krijgen, drukt u hier.</string>
+    <string name="pref_watchdrip_info_summary">WatchDrip+ ondersteunt verschillende Mi Band, Xiaomi Smart Band en Amazfit apparaten.\nOm een volledige lijst met ondersteunde apparaten en meer informatie over het configureren van WatchDrip+ te krijgen, drukt u hier.</string>
     <string name="alarm_vibrate_only_wear_info">Alleen trillen zonder melding werkt niet op elk apparaat!</string>
     <string name="alarm_use_alarm_sound">Gebruik alarmgeluid</string>
     <string name="alarm_use_alarm_sound_summary">Gebruik het volume van het alarmgeluid in plaats van het beltoon geluid.\nDit kan onafhankelijk zijn van de trilmodus.</string>
@@ -529,7 +528,7 @@
     <string name="pref_source_offline">Lokale applicaties</string>
     <string name="pref_source_offline_summary">Applicaties op hetzelfde apparaat die glucosewaarden leveren als intern broadcastbericht, zoals Juggluco, xDrip+, AAPS, enzovoort.</string>
     <string name="pref_cat_follower_summary">Cloudservices die glucosewaarden leveren via internet, zoals LibreLinkUp, Dexcom Share, Nightscout en Medtrum.</string>
-    <string name="pref_source_xdrip_broadcast">Alternatief: Lokaal uitzenden</string>
+    <string name="pref_source_xdrip_broadcast">xDrip+ Lokaal uitzenden</string>
     <string name="pref_source_dexcom_byoda_info_summary">Om waarden van Dexcom BYODA te ontvangen, moet u uitzenden naar AAPS inschakelen tijdens het bouwen van de app.</string>
     <string name="pref_source_eversense_info_summary">Om waarden van Eversense te ontvangen, moet u ESEL gebruiken in de companion-modus (melding lezen) of verbonden met de gepatchte Eversense-app.\nVoor meer informatie over ESEL, drukt u hier.</string>
     <string name="pref_source_eversense_byoda_info_summary">Om waarden van Dexcom BYODA te ontvangen, moet u uitzenden naar xDrip+ inschakelen tijdens het bouwen van de app.</string>
@@ -566,7 +565,7 @@
     <string name="settings_read_succeeded">Instellingen succesvol gelezen</string>
     <string name="settings_read_failed">Instellingen lezen mislukt!</string>
     <string name="pref_cat_export_import">Exporteren / Importeren</string>
-    <string name="pref_cat_export_import_summary">Instellingen exporteren of importeren en logboeken opslaan.</string>
+    <string name="pref_cat_export_import_summary">Instellingen exporteren of importeren.</string>
     <string name="pref_export_settings">Exporteren</string>
     <string name="pref_export_settings_summary">Druk hier om alle instellingen naar een bestand te exporteren. \nBELANGRIJK: hiermee worden alleen gewijzigde instellingen geëxporteerd! Instellingen met standaardwaarden maken geen deel uit van de export.</string>
     <string name="pref_import_settings">Importeren</string>
@@ -668,7 +667,7 @@
     <string name="pref_send_battery_level_to_watch_summary">Verzend batterijniveau naar horloge om weer te geven in complicatie en op hoofdscherm.</string>
     <string name="pref_battery_level">Batterijniveau weergeven</string>
     <string name="forward_to_watch_interval_summary">Stel de minimale tijd (in minuten) in tussen glucosemetingen voordat een nieuwe update naar het horloge wordt verzonden.\nAlarmen en zeer lage metingen worden altijd verzonden.</string>
-    <string name="forward_to_values_summary">Stel de minimale tijd (in minuten) in tussen glucosemetingen voordat een nieuwe update naar de ontvangers wordt verzonden.</string>
+    <string name="forward_to_values_summary">Stel de minimale tijd (in minuten) in tussen glucosemetingen voordat een nieuwe update naar de ontvangers wordt verzonden (niet voor Health Connect).</string>
     <string name="alarm_repeat_summary">Het alarm zal herhaaldelijk klinken en trillen totdat u de melding sluit of de ingestelde maximale alarmduur is bereikt.</string>
     <string name="alarm_repeat_time">Maximale alarmduur</string>
     <string name="alarm_repeat_time_summary">Geef de maximale tijd (in minuten) op dat het alarm zal klinken en trillen. Een waarde van 0 betekent dat het alarm oneindig zal herhalen.</string>
@@ -705,7 +704,7 @@
     <string name="source_libre_server_russian">Russisch (.ru)</string>
 
     <string name="patient_name">Naam</string>
-    <string name="patient_name_summary">Naam van de gebruiker/patiënt, die moet worden weergegeven in de melding en tijdens het spreken.\nDit moet worden gebruikt als u meerdere varianten van GlucoDataAuto gebruikt, anders kan het leeg zijn.</string>
+    <string name="patient_name_gda_summary">Naam van de gebruiker/patiënt, die moet worden weergegeven in de melding en tijdens het spreken.\nDit moet worden gebruikt als u meerdere varianten van GlucoDataAuto gebruikt, anders kan het leeg zijn.</string>
 
     <string name="video_tutorial">Video-tutorial</string>
     <string name="video_tutorial_summary">Klik hier om naar de YouTube-video te gaan die de installatie van deze bron illustreert. Veel dank aan Diabetic Masked Man voor het maken van de video\'s.</string>
@@ -761,7 +760,7 @@
 
     <string name="source_notification">Melding</string>
     <string name="pref_source_notification">Meldingslezer (Bèta)</string>
-    <string name="pref_source_notification_summary">Om de glucosewaarde en IOB te ontvangen van meldingen van andere apps, zoals Dexcom, CamAPS FX en Omnipod 5.</string>
+    <string name="pref_source_notification_summary">Om de glucosewaarde en IOB/COB te ontvangen van meldingen van andere apps, zoals Dexcom, CamAPS FX en Omnipod 5.</string>
     <string name="notification_reader_app">Applicatie</string>
     <string name="notification_reader_app_summary">Selecteer een applicatie waarvan de melding moet worden gelezen.</string>
     <string name="notification_reader_enabled_summary_on">Meldingslezer is ingeschakeld om waarden te analyseren van meldingen voor specifieke applicaties.</string>
@@ -774,7 +773,7 @@
     <string name="notification_reader_app_regex_summary">Regex om de waarde uit de tekst in de melding te analyseren.\nWijzig dit alleen als je weet wat je doet of als je advies krijgt van de ontwikkelaar.</string>
     <string name="notification_reader_five_minute_interval">5 minuten interval</string>
     <string name="notification_reader_five_minute_interval_summary">Sommige apps, zoals Dexcom, werken hun meldingen vrij vaak bij. Om deze updates met dezelfde waarde te negeren, schakel je het interval van 5 minuten in.\nIndien ingeschakeld, is er slechts om de 5 minuten een nieuwe waarde of als de waarde in de melding is gewijzigd.</string>
-    <string name="pref_source_notification_info_summary">Om waarden te ontvangen van meldingen van andere apps, is een toestemming nodig om toegang te krijgen tot de meldingen!\nDe melding moet de glucosewaarde of IOB als string bevatten.\nAangezien elke melding een andere lay-out heeft, werkt het mogelijk niet met elke app. Neem in geval van problemen contact met mij op met een screenshot van de melding en de logs.</string>
+    <string name="pref_source_notification_info_summary">Om waarden te ontvangen van meldingen van andere apps, is een toestemming nodig om toegang te krijgen tot de meldingen!\nDe melding moet de glucosewaarde of IOB/COB als string bevatten.\nAangezien elke melding een andere lay-out heeft, werkt het mogelijk niet met elke app. Neem in geval van problemen contact met mij op met een screenshot van de melding en de logs.</string>
     <string name="sensor_age_label">Sensorleeftijd</string>
     <string name="sensor_age_value">%1$dd %2$dh</string>
     <string name="vibrate_pattern_shorty">Kort</string>
@@ -861,4 +860,118 @@
     <string name="aa_media_player_colored">Gekleurde hoes</string>
     <string name="aa_media_player_colored_summary_off">Toon witte waarde, trend en grafiek</string>
     <string name="aa_media_player_colored_summary_on">Toon gekleurde waarde, trend en grafiek</string>
+
+    <!-- v2.2 -->
+
+    <string name="alarm_general_settings_summary">Algemene alarminstellingen voor alle alarmen.</string>
+    <string name="alarm_cat_quiet_hours">Stille uren</string>
+    <string name="source_delay_too_short">Nieuwe waarde is ouder dan het interval. Als dit vaker gebeurt, ga naar bronnen - Clouddiensten en verhoog de vertraging!</string>
+
+    <string name="health_connect_permission_rationale_title">Health Connect-integratie</string>
+    <string name="health_connect_permission_rationale_long">
+Om u te helpen uw diabetes te beheren, kan GlucoDataHandler uw bloedglucosegegevens delen met Health Connect.\n\n
+Dit stelt u in staat om: \n
+  - Uw glucosemetingen veilig op te slaan op één centrale plek op uw apparaat.\n
+  - Uw glucosegegevens te delen met andere gezondheids- en fitnessapps die u autoriseert, waardoor u een completer beeld van uw gezondheid krijgt.\n\n
+GlucoDataHandler schrijft alleen bloedglucosegegevens naar Health Connect en leest geen andere soorten gezondheidsgegevens, tenzij u daar expliciet afzonderlijke toestemmingen voor verleent.\n\n
+U kunt deze toestemmingen op elk moment beheren in de instellingen van de Health Connect-app.
+</string>
+    <string name="pref_healthconnect">Health Connect</string>
+    <string name="pref_healthconnect_summary">Om uw gegevens te delen met Health Connect, verleent u toestemming aan GDH.</string>
+    <string name="pref_samsunghealth_summary">Om te synchroniseren met Samsung Health, moet u ook "lezen van Health Connect" inschakelen in de Samsung Health-app.\nHoud er rekening mee dat bijvoorbeeld Samsung Health deze waarden niet periodiek leest!</string>
+    <string name="health_connect_error">Er is een fout opgetreden, stuur de logboeken naar de ontwikkelaar.</string>
+    <string name="health_connect_not_available">Niet beschikbaar!</string>
+    <string name="health_connect_no_permission">Toestemming ontbreekt!</string>
+    <string name="select_patient_title">Selecteer patiënt</string>
+    <string name="invalid_glucose_value">Ongeldige glucosewaarde %1$s!</string>
+    <string name="missing_data">Gegevens ontbreken!</string>
+    <string name="timeout">Time-out!</string>
+    <string name="internal_error">Interne fout!</string>
+    <string name="provide_logs">Stuur de logboeken naar de ontwikkelaar.</string>
+    <string name="invalid_user_id">Ongeldige gebruikers-ID ontvangen!</string>
+    <string name="invalid_redirect">Ongeldige omleiding in antwoord!</string>
+    <string name="invalid_iob_value">Kon IOB niet parseren!</string>
+    <string name="source_iob_notification">IOB-melding</string>
+
+    <string name="pref_cat_logs">Logboeken</string>
+    <string name="pref_cat_logs_summary">Configureer logboekregistratie en sla logboeken op in een bestand.</string>
+    <string name="pref_cat_log_to_db">Loggen naar database</string>
+    <string name="pref_log_to_db_summary">Waarschuwing: Het opslaan van logboeken in de database kan de prestaties en de levensduur van de batterij beïnvloeden.\nSchakel deze optie alleen in op instructie van de ontwikkelaar om een probleem te analyseren.</string>
+    <string name="pref_log_duration_size">Bewaartermijn logboeken</string>
+    <string name="pref_log_duration_summary">Aantal uren dat logboeken in de database worden bewaard.\nStel in op 0 om loggen naar de database uit te schakelen.</string>
+    <string name="pref_log_debug">Debug-logboekregistratie inschakelen</string>
+    <string name="pref_log_debug_summary">Gedetailleerde debug-berichten opslaan in de database (max. laatste 30 minuten).\nSchakel dit alleen in op verzoek van de ontwikkelaar.</string>
+
+    <string name="pref_switch_xdrip_server">Lokale webserver</string>
+    <string name="pref_switch_xdrip_server_summary">Staat watchfaces die voor xDrip+ zijn ontworpen toe om glucosegegevens van deze app te ontvangen. Het emuleert de xDrip+ webserverfunctie op poort 17580.</string>
+    <string name="pref_switch_xdrip_server_reduce_data">Vereenvoudigde gegevensmodus</string>
+    <string name="pref_switch_xdrip_server_reduce_data_summary">Dit reduceert de verstrekte gegevens tot een minimum om geheugenproblemen op sommige Garmin-horloges te voorkomen.\nControleer de compatibiliteit met uw watchface.</string>
+    <string name="error_port_in_use">Poort is in gebruik!\nStop andere webservers die op deze poort draaien en herstart de lokale webserver opnieuw.</string>
+    <string name="state_active">actief</string>
+    <string name="pref_garmin_info_summary">Er is geen speciale app voor Garmin, Fitbit of Pebble, alleen een lokale webserver die wordt gebruikt door watchfaces met xDrip+-ondersteuning.\nZoek gewoon naar dergelijke watchfaces in de Connect IQ Store en stel de xDrip+-bron in voor deze watchfaces.\nBELANGRIJK: als u ook xDrip+ of Juggluco gebruikt, kunt u de lokale webserver slechts in één app inschakelen, omdat ze dezelfde poort (17580) gebruiken!</string>
+    <string name="remaining">Resterend</string>
+    <string name="pref_switch_xdrip_open_server">Open webserver</string>
+    <string name="pref_switch_xdrip_open_server_summary">Maak de webserver open voor andere apparaten in het netwerk.\nDit kan beveiligingsproblemen veroorzaken, dus schakel dit alleen in als u echt toegang nodig heeft tot de gegevens van de webserver vanuit het netwerk.\nDe Garmin-watchfaces vragen gegevens rechtstreeks op de telefoon op, dus er is geen open server nodig!</string>
+    <string name="last_request">Laatste verzoek</string>
+    <string name="close_activitiy">Scherm sluiten</string>
+    <string name="collapse_view">Weergave inklappen</string>
+    <string name="expand_view">Weergave uitklappen</string>
+    <string name="patient_name_summary">Naam van de gebruiker/patiënt, die moet worden weergegeven in meldingen, widgets, enzovoort.</string>
+    <string name="pref_switch_xdrip_server_1_minute_interval">1 Minuut Interval</string>
+    <string name="pref_switch_xdrip_server_1_minute_interval_summary">Retourneer een lijst met waarden in een interval van 1 minuut in plaats van 5 minuten.\nSchakel deze instelling alleen in als u weet dat de watchface of widget dit aankan!\nNormale watchfaces zijn gemaakt om een interval van 5 minuten te verwerken.</string>
+    <string name="short_value_patient_name">Glucose en naam</string>
+    <string name="pref_cat_general_advanced_summary">Geavanceerde app-instellingen.</string>
+    <string name="important">Belangrijk</string>
+    <string name="api_36_notification_info">Vanaf Android 16 worden meerdere statusbalkpictogrammen door Android gegroepeerd.\nHet is dus niet meer mogelijk om ze te gebruiken.</string>
+    <string name="pref_source_juggluco_summary">Android-app voor Freestyle Libre 1, 2 en 3, Dexcom G7/ONE+, Sibionics GS1Sb en AccuChek SmartGuide-sensoren.</string>
+    <string name="pref_source_xdrip_summary">Android-app voor diabetesbeheer, die verbinding kan maken met verschillende sensoren en gegevens kan ontvangen van verschillende bronnen, zoals Medtronic.</string>
+    <string name="pref_source_aaps_summary">Android APS is een open-source geautomatiseerd insulinetoedieningssysteem (closed loop).</string>
+    <string name="pref_source_eversense_summary">Lokale broadcastberichten ontvangen van ESEL voor Eversense of Dexcom BYODA voor Dexcom G6-sensoren.</string>
+    <string name="pref_source_diabox_summary">Android-app voor Freestyle Libre-sensoren.</string>
+    <string name="pref_source_libre_patched_summary">Gepatchte Libre-app die lokale broadcasts verzendt.\nOok andere apps gebruiken dit broadcastformaat om glucosegegevens door te sturen.</string>
+    <string name="pref_source_xdrip_broadcast_service_api_info">xDrip+ Broadcast Service API</string>
+    <string name="pref_source_xdrip_broadcast_service_api_info_summary">Gebruik xDrip+ Broadcast Service API om gegevens (ook IOB) van xDrip+ te ontvangen.</string>
+    <string name="src_libreview_summary">Volg de FreeStyle Libre-app op afstand.</string>
+    <string name="src_dexcom_share_summary">Volg de Dexcom-app op afstand.</string>
+    <string name="src_medtrum_summary">Volg de Medtrum-app op afstand.</string>
+    <string name="src_ns_summary">Volg de Nightscout-webservice op afstand.</string>
+    <string name="pref_cat_wear_os_summary">Voor Wear OS-horloges, bijv. alle Google Pixel Watches, Samsung Galaxy Watch 4 en nieuwer, en vele anderen.</string>
+    <string name="pref_cat_watchdrip_summary">Voor horloges die worden ondersteund door de externe WatchDrip+-app, zoals de meeste Mi Band, Xiaomi Smart Band- en Amazfit-modellen.</string>
+    <string name="pref_cat_garminpebble">Zegarki Garmin, Fitbit i Pebble</string>
+    <string name="pref_cat_garminpebble_summary">Voor apparaten en apps die glucosegegevens kunnen ontvangen van de xDrip+-webservice, zoals Garmin, Pebble en sommige Fitbit-horloges.</string>
+    <string name="pref_garmin_watchfaces_summary">Druk hier om de Connect IQ-store te openen voor xDrip+-watchfaces.\nAls de watchfaces xDrip+ ondersteunen, moeten ze ook compatibel zijn met deze app.</string>
+    <string name="pref_garmin_watchfaces">Garmin</string>
+    <string name="pref_fitbit_watchfaces">Fitbit</string>
+    <string name="pref_fitbit_watchfaces_summary">Druk hier om de Glance-webpagina te openen, die xDrip+-webservices ondersteunt.</string>
+    <string name="pref_pebble_watchfaces">Pebble</string>
+    <string name="pref_pebble_watchfaces_summary">Druk hier om Pebble-watchfaces te openen die zijn ontworpen voor xDrip+, die ook compatibel moeten zijn met deze app.</string>
+    <string name="gmi">GMI</string>
+    <string name="pref_lockscreen_x_pos">Horizontale positie</string>
+    <string name="pref_lockscreen_x_pos_summary">Horizontale positie van de afbeelding:\n0 is de linkerkant van het scherm\n40 is de rechterkant van het scherm</string>
+    <string name="notification_cat_iob_cob">Lees IOB/COB-waarde</string>
+    <string name="notification_cat_glucose_summary">Glucosewaarde lezen uit een melding van een externe app, die de glucosewaarde in de melding toont.</string>
+    <string name="notification_cat_iob_cob_summary">IOB- en/of COB-waarde lezen uit een melding van een externe app, die deze waarden in de melding toont.</string>
+    <string name="source_notification_iob_enabled_summary">Schakel dit in als de melding de IOB-waarde bevat.</string>
+    <string name="source_notification_cob_enabled_summary">Schakel dit in als de melding de COB-waarde bevat.</string>
+    <string name="source_notification_iob_cob_irregular">Speciale afhandeling</string>
+    <string name="source_notification_iob_cob_irregular_summary">Schakel dit in voor meldingen die te vaak worden bijgewerkt. Dit zorgt ervoor dat alle waarden correct worden verwerkt. Schakel deze optie alleen in op verzoek van de ontwikkelaar om een probleem te analyseren.</string>
+    <string name="alarm_ignore_snooze_for_obsolete">Altijd waarschuwen voor verouderde waarden</string>
+    <string name="alarm_ignore_snooze_for_obsolete_summary">Dit alarm geeft een melding, zelfs als snooze of de algemene stille uren voor alle alarmen actief zijn, zodat u wordt gewaarschuwd als er geen nieuwe glucosewaarde is.</string>
+    <string name="alarm_inactive_auto_reenable">Automatisch opnieuw inschakelen</string>
+    <string name="alarm_inactive_auto_reenable_summary">Na het uitschakelen van de stille uren, wordt deze op de eindtijd opnieuw ingeschakeld.</string>
+
+    <plurals name="minutes_long">
+        <item quantity="one">%d minuut</item>
+        <item quantity="other">%d minuten</item>
+    </plurals>
+    <plurals name="days_long">
+        <item quantity="one">%d dag</item>
+        <item quantity="other">%d dagen</item>
+    </plurals>
+    <plurals name="hours_long">
+        <item quantity="one">%d uur</item>
+        <item quantity="other">%d uur</item>
+    </plurals>
+
+    <string name="dexcom_server_down_error">De Dexcom-server lijkt offline te zijn!\nDruk hier om de serverstatus te controleren.\nAls de Dexcom-app op dezelfde telefoon staat, kun je in plaats daarvan de Notification Reader gebruiken.</string>
 </resources>
