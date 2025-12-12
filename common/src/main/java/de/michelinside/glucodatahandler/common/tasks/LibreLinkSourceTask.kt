@@ -71,7 +71,7 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
     private fun getHeader(): MutableMap<String, String> {
         val result = mutableMapOf(
             "product" to "llu.android",
-            "version" to "4.16.0",
+            "version" to "4.17.0",
             "Accept" to "application/json",
             "Content-Type" to "application/json",
             "cache-control" to "no-cache",
