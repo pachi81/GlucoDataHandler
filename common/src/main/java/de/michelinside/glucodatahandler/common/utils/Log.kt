@@ -20,7 +20,7 @@ import java.util.Locale
 val format = SimpleDateFormat("dd.MM HH:mm:ss.SSS", Locale.GERMAN)
 
 object Log: SharedPreferences.OnSharedPreferenceChangeListener {
-    private val LOG_ID = "GDH.Log"
+    private const val LOG_ID = "GDH.Log"
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var minLevel = android.util.Log.DEBUG  // use initial DEBUG to get all DEBUG messages during startup
     private var logDuration = 60*60*1000 // 1h
@@ -72,29 +72,36 @@ object Log: SharedPreferences.OnSharedPreferenceChangeListener {
 
     fun v(tag: String, msg: String): Int {
         if (BuildConfig.DEBUG) {
-            return android.util.Log.println(android.util.Log.VERBOSE, tag, msg)
+            return android.util.Log.v(tag, msg)
         }
         return 0
     }
 
     fun d(tag: String, msg: String): Int {
-        return println(android.util.Log.DEBUG, tag, msg)
+        logToDB(android.util.Log.DEBUG, tag, msg)
+        if(!Constants.RELEASE)
+            return android.util.Log.d(tag, msg)
+        return 0
     }
 
     fun i(tag: String, msg: String): Int {
-        return println(android.util.Log.INFO, tag, msg)
+        logToDB(android.util.Log.INFO, tag, msg)
+        return android.util.Log.i(tag, msg)
     }
 
     fun w(tag: String, msg: String): Int {
-        return println(android.util.Log.WARN, tag, msg)
+        logToDB(android.util.Log.WARN, tag, msg)
+        return android.util.Log.w(tag, msg)
     }
 
     fun e(tag: String, msg: String): Int {
-        return println(android.util.Log.ERROR, tag, msg)
+        logToDB(android.util.Log.ERROR, tag, msg)
+        return android.util.Log.e(tag, msg)
     }
 
     fun e(tag: String, msg: String, throwable: Throwable?): Int {
-        return println(android.util.Log.ERROR, tag, msg, throwable = throwable)
+        logToDB(android.util.Log.ERROR, tag, msg)
+        return android.util.Log.e(tag, msg, throwable)
     }
 
     fun isLoggable(tag: String, priority: Int): Boolean {
@@ -107,17 +114,14 @@ object Log: SharedPreferences.OnSharedPreferenceChangeListener {
         return android.util.Log.isLoggable(tag, priority)
     }
 
-    private fun println(priority: Int, tag: String, msg: String, forUser: Boolean = false, throwable: Throwable? = null): Int {
+    private fun logToDB(priority: Int, tag: String, msg: String) {
         try {
-            val result = if(throwable != null) android.util.Log.e(tag, msg, throwable) else android.util.Log.println(priority, tag, msg)
-            if(forUser || (dbLoggingEnabled && priority >= minLevel)) {
+            if(dbLoggingEnabled && priority >= minLevel) {
                 saveLog(LogEntry(priority, tag, msg))
             }
-            return result
         } catch (exc: Exception) {
             android.util.Log.e(LOG_ID, "Error while logging", exc)
         }
-        return -1
     }
 
     private fun saveLog(logEntry: LogEntry) {
@@ -134,8 +138,11 @@ object Log: SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     fun flushLogBuffer(wait: Boolean = false) {
-        if(!dbAccess.active)
+        if(!dbAccess.active) {
+            // clear logs to prevent filling buffer with old entries
+            logBuffer.clear()
             return  // wait for database is ready
+        }
         val entriesToSave = synchronized(logBuffer) {
             if (logBuffer.isEmpty()) {
                 return@synchronized null
@@ -198,11 +205,27 @@ object Log: SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     fun getLogs(): String {
-        flushLogBuffer(true)
-        val entries = dbAccess.getLogs()
+        val entries = if(dbAccess.active) {
+                flushLogBuffer(true)
+                dbAccess.getLogs()
+            } else {
+                synchronized(logBuffer) {
+                    if (logBuffer.isEmpty()) {
+                        return@synchronized emptyList()
+                    }
+                    val entries = ArrayList(logBuffer)
+                    logBuffer.clear()
+                    entries
+                }
+            }
         if(entries.isEmpty())
-            return ""
+            return "--- No DB Logs found: duration=${Duration.ofMillis(logDuration.toLong()).toHours()}h - level=${getPriorityString(minLevel)} - (DB version: ${dbAccess.version} ${dbAccess.creationError})---"
         val sb = StringBuilder()
+        sb.append("------------------ DB Logs: ${Duration.ofMillis(logDuration.toLong()).toHours()}h - level=${getPriorityString(minLevel)} ----------------------\n\n")
+        if(!dbAccess.active) {
+            sb.append("---------------- DB NOT ACTIVE !!!! ----------------------------\n")
+            sb.append(dbAccess.creationError).append("\n\n")
+        }
         entries.forEach {
             sb.append(toString(it)).append("\n")
         }
