@@ -562,7 +562,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 intent.data = Uri.parse("package:$packageName")
                 startActivity(intent)
             }
-            tableNotes.addView(createRow(resources.getString(CR.string.gda_battery_optimization_disabled), onClickListener))
+            tableNotes.addView(createRow(resources.getString(CR.string.battery_optimization_disabled), onClickListener))
         }
         if (!TextToSpeechUtils.isAvailable()) {
             val onClickListener = View.OnClickListener {

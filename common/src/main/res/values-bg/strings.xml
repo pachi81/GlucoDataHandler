@@ -41,7 +41,6 @@
 
     <!-- mobile -->
 
-    <string name="activity_main_battery_optimization_disabled">Оптимизацията на батерията е активирана.</string>
     <string name="activity_main_no_source_label">Източник: не е активен</string>
     <string name="activity_main_connected_label">Носимо: свързано (%1$s)</string>
     <string name="activity_main_disconnected_label">Носимо: изключено</string>
@@ -492,7 +491,7 @@
     <string name="pref_cat_ui_settings">Потребителски интерфейс</string>
     <string name="gda_foreground_info">GlucoDataAuto работи</string>
     <string name="gda_foreground_summary">Активирайте го само ако използвате източник на последовател и само известия за Android Auto.\nТова предотвратява затварянето на това приложение от Android, докато не е свързано с Android Auto, така че приложението не може да разпознае връзката с Android Auto.\nВместо да активирате тази настройка, можете също да отворите приложението в Android Auto веднъж, ако сте свързани.</string>
-    <string name="gda_battery_optimization_disabled">Оптимизацията на батерията е активирана!\nНатиснете тук, за да я деактивирате.</string>
+    <string name="battery_optimization_disabled">Оптимизацията на батерията е активирана!\nНатиснете тук, за да я деактивирате.</string>
     <string name="gda_source_follower_info_summary">Ако използвате източник на последовател, приложението може да не се стартира, докато е свързано с Android Auto, ако използвате само известия за Android Auto.\nЗа да сте сигурни, че приложението открива връзката с Android Auto, трябва да деактивирате оптимизацията на батерията.\nАко все още не работи, можете също да активирате режима на преден план или трябва да отворите приложението в Android Auto веднъж, ако е свързано с Android Auto.</string>
     <string name="gda_help_aa_title">Настройка на Android Auto</string>
     <string name="gda_help_aa_title_summary">Android Auto е или отделно приложение, или част от системата и може да бъде достъпно чрез настройките на Android.\nЗа да активирате GlucoDataAuto за Android Auto, трябва да изпълните следните стъпки:</string>

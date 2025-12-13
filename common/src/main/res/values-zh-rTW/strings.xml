@@ -41,7 +41,6 @@
 
     <!-- mobile -->
 
-    <string name="activity_main_battery_optimization_disabled">已啟用電池最佳化</string>
     <string name="activity_main_no_source_label">來源: 未啟用</string>
     <string name="activity_main_connected_label">Wear: 已連線 (%1$s)</string>
     <string name="activity_main_disconnected_label">Wear: 已斷線</string>
@@ -493,7 +492,7 @@
     <string name="pref_cat_ui_settings">使用者介面</string>
     <string name="gda_foreground_info">GlucoDataAuto 執行中</string>
     <string name="gda_foreground_summary">僅在您使用追蹤器資料來源且只使用 Android Auto 通知時才啟用\n這可以避免 Android 未連線到 Android Auto 時就將程式關閉，導致程式無法偵測 Android Auto 連線\n除了啟用此選項外，也可以在連線時於 Android Auto 中手動開啟程式一次</string>
-    <string name="gda_battery_optimization_disabled">已啟用電池最佳化！\n按這裡停用</string>
+    <string name="battery_optimization_disabled">已啟用電池最佳化！\n按這裡停用</string>
     <string name="gda_source_follower_info_summary">如果您使用追蹤器資料來源且只使用 Android Auto 通知時，程式可能無法在連線 Android Auto 時自動啟動\n若要確保程式能偵測 Android Auto 連線，必須停用電池最佳化\n如果仍然無法運作，也可以啟用前景模式，或在連線時於 Android Auto 中手動開啟程式一次</string>
     <string name="gda_help_aa_title">設定 Android Auto</string>
     <string name="gda_help_aa_title_summary">Android Auto 可能是獨立的程式或整合於系統中且可從 Android 設定中存取\n若要於 Android Auto 啟用 GlucoDataAuto，您必須依照下列步驟: </string>

@@ -777,16 +777,12 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         val pm = getSystemService(POWER_SERVICE) as PowerManager
         if (!pm.isIgnoringBatteryOptimizations(packageName)) {
             Log.w(LOG_ID, "Battery optimization is active")
-            val onClickListener = OnClickListener {
-                try {
-                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                    intent.data = Uri.parse("package:$packageName")
-                    startActivity(intent)
-                } catch (exc: Exception) {
-                    Log.e(LOG_ID, "Battery optimization exception: " + exc.message.toString() )
-                }
+            val onClickListener = View.OnClickListener {
+                val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+                intent.data = Uri.parse("package:$packageName")
+                startActivity(intent)
             }
-            tableNotes.addView(createRow(CR.string.activity_main_battery_optimization_disabled, onClickListener))
+            tableNotes.addView(createRow(resources.getString(CR.string.battery_optimization_disabled), onClickListener))
         }
         checkTableVisibility(tableNotes)
     }

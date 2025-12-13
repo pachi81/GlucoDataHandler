@@ -41,7 +41,6 @@
 
     <!-- mobile -->
 
-    <string name="activity_main_battery_optimization_disabled">Akkuoptimierungen sind aktiv.</string>
     <string name="activity_main_no_source_label">Quelle: nicht aktiv</string>
     <string name="activity_main_connected_label">Uhr: verbunden (%1$s)</string>
     <string name="activity_main_disconnected_label">Uhr: getrennt</string>
@@ -484,7 +483,7 @@
     <string name="pref_cat_ui_settings">Oberfläche</string>
     <string name="gda_foreground_info">GlucoDataAuto wird ausgeführt</string>
     <string name="gda_foreground_summary">Nur aktivieren, wenn eine Online Datenquelle und nur Android Auto-Benachrichtigungen verwendet werden.\nDiese Einstellung verhindert, dass Android diese App schließt, wenn sie nicht mit Android Auto verbunden ist, sodass die App die Android Auto-Verbindung nicht erkennen kann.\nAlternativ kann man auch einmal die App direkt in Android Auto öffnen.</string>
-    <string name="gda_battery_optimization_disabled">Akkuoptimierungen sind aktiv!\nHier drücken, um es zu deaktivieren.</string>
+    <string name="battery_optimization_disabled">Akkuoptimierungen sind aktiv!\nHier drücken, um sie zu deaktivieren.</string>
     <string name="gda_source_follower_info_summary">Wenn eine Online Datenquelle verwendet wird, wird die App möglicherweise nicht gestartet, wenn man mit Android Auto verbunden ist und nur Android Auto-Benachrichtigungen verwendet werden.\nUm sicherzustellen, dass die App die Android Auto-Verbindung erkennt, muss die Akkuoptimierung deaktiviert werden.\nWenn es immer noch nicht funktioniert, sollte man auch den Vordergrundmodus aktivieren oder die App einmal direkt in Android Auto öffnen.</string>
     <string name="gda_help_aa_title">Android Auto einrichten</string>
     <string name="gda_help_aa_title_summary">Android Auto ist entweder eine separate App oder Bestandteil vom System und kann über die Android Einstellungen geöffnet werden.\nUm GlucoDataAuto in Android Auto zu verwenden, müssen die folgende Schritte durchgeführt werden:</string>

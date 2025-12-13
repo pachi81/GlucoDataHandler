@@ -41,7 +41,6 @@
 
     <!-- mobile -->
 
-    <string name="activity_main_battery_optimization_disabled">Optymalizacja baterii jest włączona.</string>
     <string name="activity_main_connected_label">Zegarek: połączono (%1$s)</string>
     <string name="activity_main_disconnected_label">Zegarek: nie połączono</string>
     <string name="activity_main_car_connected_label">Android Auto: połączono</string>
@@ -490,7 +489,7 @@
     <string name="pref_cat_ui_settings">Interfejs użytkownika</string>
     <string name="gda_foreground_info">GlucoDataAuto działa</string>
     <string name="gda_foreground_summary">Włącz tę opcję tylko wtedy, gdy jako źródła używasz funkcji \"follower\" (obserwatora) i wyłącznie powiadomień z Android Auto.\nZapobiega to zamknięciu tej aplikacji przez system Android, gdy nie jest podłączona do Android Auto, więc aplikacja nie może rozpoznać połączenia z Android Auto.\nZamiast włączać to ustawienie, możesz również otworzyć aplikację w Android Auto raz, gdy jesteś już podłączony.</string>
-    <string name="gda_battery_optimization_disabled">Optymalizacja baterii jest włączona!\nNaciśnij tutaj, aby ją wyłączyć.</string>
+    <string name="battery_optimization_disabled">Optymalizacja baterii jest włączona!\nNaciśnij tutaj, aby ją wyłączyć.</string>
     <string name="gda_source_follower_info_summary">Jeżeli jako źródła używasz funkcji \"follower\" (obserwatora), aplikacja może nie zostać uruchomiona podczas połączenia z Android Auto, gdy używa się wyłącznie powiadomień z Android Auto.\nAby upewnić się, że aplikacja wykrywa połączenie z Android Auto, należy wyłączyć optymalizację baterii.\nJeśli to nadal nie działa, można również włączyć tryb pierwszoplanowy lub otworzyć aplikację w Android Auto raz, gdy jest podłączona do Android Auto.</string>
     <string name="gda_help_aa_title">Konfiguracja Android Auto</string>
     <string name="gda_help_aa_title_summary">Android Auto jest albo osobną aplikacją, albo częścią systemu i można do niej uzyskać dostęp poprzez ustawienia Androida.\nAby aktywować GlucoDataAuto dla Android Auto, należy wykonać następujące kroki:</string>
