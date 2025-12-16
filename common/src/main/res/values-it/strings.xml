@@ -39,7 +39,6 @@
     <string name="high">Alto</string>
     <string name="very_high">Molto alto</string>
 
-    <string name="activity_main_battery_optimization_disabled">L\'ottimizzazione della batteria è abilitata.</string>
     <string name="activity_main_no_source_label">Fonte: non attiva</string>
     <string name="activity_main_connected_label">Wear: connesso (%1$s)</string>
     <string name="activity_main_disconnected_label">Wear: disconnesso</string>
@@ -490,7 +489,7 @@
     <string name="pref_cat_ui_settings">Interfaccia utente</string>
     <string name="gda_foreground_info">GlucoDataAuto è in esecuzione</string>
     <string name="gda_foreground_summary">Abilitalo solo se utilizzi una sorgente follower e solo notifiche Android Auto.\nQuesto impedisce ad Android di chiudere questa app mentre non è connessa ad Android Auto, quindi l\'app non può riconoscere la connessione Android Auto.\nInvece di abilitare questa impostazione, puoi anche aprire l\'app in Android Auto una volta, se sei connesso.</string>
-    <string name="gda_battery_optimization_disabled">L\'ottimizzazione della batteria è abilitata!\nPremi qui per disabilitarla.</string>
+    <string name="battery_optimization_disabled">L\'ottimizzazione della batteria è abilitata!\nPremi qui per disabilitarla.</string>
     <string name="gda_source_follower_info_summary">Se utilizzi una sorgente follower, l\'app potrebbe non essere avviata mentre è connessa ad Android Auto, se utilizzi solo le notifiche di Android Auto.\nPer assicurarti che l\'app rilevi la connessione Android Auto, devi disabilitare l\'ottimizzazione della batteria.\nSe ancora non funziona, puoi anche abilitare la modalità in primo piano oppure devi aprire l\'app in Android Auto una volta, se è connessa ad Android Auto.</string>
     <string name="gda_help_aa_title">Configurazione di Android Auto</string>
     <string name="gda_help_aa_title_summary">Android Auto è un\'app separata o parte del sistema e può essere accessibile tramite le impostazioni di Android.\nPer attivare GlucoDataAuto per Android Auto, devi eseguire i seguenti passaggi:</string>

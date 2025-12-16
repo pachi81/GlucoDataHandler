@@ -42,7 +42,6 @@
     <string name="high">высокий</string>
     <string name="very_high">оч. высокий</string>
 
-    <string name="activity_main_battery_optimization_disabled">Рекомендуется отключить оптимизацию батареи.</string>
     <string name="activity_main_no_source_label">Источник: не активен</string>
     <string name="activity_main_connected_label">Wear OS: подключено (%1$s)</string>
     <string name="activity_main_disconnected_label">Wear OS: отключено</string>
@@ -493,7 +492,7 @@
     <string name="pref_cat_ui_settings">Пользовательский интерфейс</string>
     <string name="gda_foreground_info">GlucoDataAuto запущено</string>
     <string name="gda_foreground_summary">Включайте это только в том случае, если вы используете источник-фолловер и только уведомления Android Auto.\nЭто предотвращает закрытие приложения Android, пока оно не подключено к Android Auto, поэтому приложение не может распознать подключение Android Auto.\nВместо того, чтобы включать этот параметр, вы также можете один раз открыть приложение в Android Auto, если вы подключены.</string>
-    <string name="gda_battery_optimization_disabled">Включена оптимизация батареи!\nНажмите здесь, чтобы отключить ее.</string>
+    <string name="battery_optimization_disabled">Включена оптимизация батареи!\nНажмите здесь, чтобы отключить ее.</string>
     <string name="gda_source_follower_info_summary">Если вы используете источник-фолловер, приложение может не запускаться при подключении к Android Auto, если вы используете только уведомления Android Auto.\nЧтобы приложение обнаруживало подключение Android Auto, необходимо отключить оптимизацию батареи.\nЕсли это по-прежнему не работает, вы также можете включить режим переднего плана или вам нужно один раз открыть приложение в Android Auto, если оно подключено к Android Auto.</string>
     <string name="gda_help_aa_title">Настройка Android Auto</string>
     <string name="gda_help_aa_title_summary">Android Auto — это отдельное приложение или часть системы, к которому можно получить доступ через настройки Android.\nЧтобы активировать GlucoDataAuto для Android Auto, необходимо выполнить следующие действия:</string>

@@ -41,7 +41,6 @@
 
     <!-- mobile -->
 
-    <string name="activity_main_battery_optimization_disabled">Batterijoptimalisatie is ingeschakeld</string>
     <string name="activity_main_no_source_label">Bron: niet actief</string>
     <string name="activity_main_connected_label">Wear: verbonden (%1$s)</string>
     <string name="activity_main_disconnected_label">Wear: niet verbonden</string>
@@ -494,7 +493,7 @@
     <string name="pref_cat_ui_settings">Gebruikersinterface</string>
     <string name="gda_foreground_info">GlucoDataAuto is actief</string>
     <string name="gda_foreground_summary">Schakel dit alleen in als u een volgerbron en alleen Android Auto-meldingen gebruikt.\nDit voorkomt dat Android deze app sluit terwijl deze niet is verbonden met Android Auto, zodat de app de Android Auto-verbinding niet kan herkennen.\nIn plaats van deze instelling in te schakelen, kunt u de app ook eenmaal openen in Android Auto als u verbonden bent.</string>
-    <string name="gda_battery_optimization_disabled">Batterijoptimalisatie is ingeschakeld!\nDruk hier om het uit te schakelen.</string>
+    <string name="battery_optimization_disabled">Batterijoptimalisatie is ingeschakeld!\nDruk hier om het uit te schakelen.</string>
     <string name="gda_source_follower_info_summary">Als u een volgerbron gebruikt, wordt de app mogelijk niet gestart terwijl deze is verbonden met Android Auto, als u alleen Android Auto-meldingen gebruikt.\nOm ervoor te zorgen dat de app de Android Auto-verbinding detecteert, moet u batterijoptimalisatie uitschakelen.\nAls het nog steeds niet werkt, kunt u ook de voorgrondmodus inschakelen of moet u de app eenmaal openen in Android Auto als deze is verbonden met Android Auto.</string>
     <string name="gda_help_aa_title">Android Auto instellen</string>
     <string name="gda_help_aa_title_summary">Android Auto is een aparte app of onderdeel van het systeem en is toegankelijk via de Android-instellingen.\nOm GlucoDataAuto voor Android Auto te activeren, moet u de volgende stappen uitvoeren:</string>

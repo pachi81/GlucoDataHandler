@@ -9,7 +9,6 @@ Biztos benne?</string>
     <string name="activity_disconnected_label">Telefon: leválasztva</string>
     <string name="activity_large_arrow_icon">Nagy trendnyíl</string>
     <string name="activity_large_arrow_icon_summary">Kérjük ezt kapcsolja ki, ha a trendnyíl túl nagy és emiatt levágásra kerül!</string>
-    <string name="activity_main_battery_optimization_disabled">Akkumulátor optimalizálás aktív!</string>
     <string name="activity_main_car_connected_label">Android Auto: csatlakozva</string>
     <string name="activity_main_car_disconnected_label">Android Auto: leválasztva</string>
     <string name="activity_main_connected_label">Óra: csatlakozva (%1$s)</string>
@@ -173,7 +172,7 @@ Ha az \"Újraindítás\" aktív, az értesítés csak akkor záródik be, ha a r
     <string name="forward_to_values_summary">Állítsa be a minimális időt (percben) a vércukormérések között, mielőtt új frissítést küld a címzetteknek (nem a Health Connecthez).</string>
     <string name="forward_to_watch_interval_summary">Állítsa be a minimális időt (percben) a vércukormérések között, mielőtt új frissítést küld az okosórára.
 A riasztások és a nagyon alacsony értékek mindig elküldésre kerülnek.</string>
-    <string name="gda_battery_optimization_disabled">Az akkumulátor optimalizálás aktív!
+    <string name="battery_optimization_disabled">Az akkumulátor optimalizálás aktív!
 Kattintson ide a letiltáshoz.</string>
     <string name="gda_foreground_info">A GlucoDataAuto fut</string>
     <string name="gda_foreground_summary">Csak akkor engedélyezze, ha csak egy követő forrást és Android Auto értesítéseket használ.

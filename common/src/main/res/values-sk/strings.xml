@@ -43,7 +43,6 @@
 
     <!-- mobile -->
 
-    <string name="activity_main_battery_optimization_disabled">Optimalizácia batérie je zapnutá.</string>
     <string name="activity_main_no_source_label">Zdroj: neaktívny</string>
     <string name="activity_main_connected_label">Hodinky: pripojené (%1$s)</string>
     <string name="activity_main_disconnected_label">Hodinky: odpojené</string>
@@ -492,7 +491,7 @@
     <string name="pref_cat_ui_settings">Používateľské rozhranie</string>
     <string name="gda_foreground_info">GlucoDataAuto je spustené</string>
     <string name="gda_foreground_summary">Povoľte túto funkciu len v prípade, že používate zdroj sledovateľa a iba upozornenia Android Auto.\nToto zabráni systému Android v zatvorení tejto aplikácie, keď nie je pripojená k Android Auto, takže aplikácia nemôže rozpoznať pripojenie Android Auto.\nNamiesto aktivovania tohto nastavenia môžete aplikáciu v Android Auto otvoriť raz, ak ste pripojení.</string>
-    <string name="gda_battery_optimization_disabled">Optimalizácia batérie je zapnutá!\nStlačte tu, aby ste ju vypli.</string>
+    <string name="battery_optimization_disabled">Optimalizácia batérie je zapnutá!\nStlačte tu, aby ste ju vypli.</string>
     <string name="gda_source_follower_info_summary">Ak používate zdroj sledovateľa, aplikácia sa nemusí spustiť, keď je pripojená k Android Auto, ak používate iba upozornenia Android Auto.\nAby aplikácia rozpoznala pripojenie Android Auto, musíte deaktivovať optimalizáciu batérie.\nAk to stále nefunguje, môžete tiež aktivovať režim popredia alebo musíte aplikáciu raz otvoriť v Android Auto, ak je pripojená k Android Auto.</string>
     <string name="gda_help_aa_title">Nastaviť Android Auto</string>
     <string name="gda_help_aa_title_summary">Android Auto je buď samostatná aplikácia, alebo súčasť systému a je prístupná cez nastavenia Androidu.\nNa aktiváciu GlucoDataAuto pre Android Auto je potrebné vykonať nasledujúce kroky:</string>

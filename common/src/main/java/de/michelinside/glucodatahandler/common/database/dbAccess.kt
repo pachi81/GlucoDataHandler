@@ -33,10 +33,16 @@ object dbAccess {
     private val LOG_ID = "GDH.dbAccess"
     private val DATABASE_NAME = "gdh_database"
     private var database: Database? = null
+    var creationError = ""
+        private set
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     val active: Boolean get() {
         return database != null
+    }
+
+    val version: Int get() {
+        return database?.openHelper?.readableDatabase?.version ?: -1
     }
 
     private val migration_1_2 = object : androidx.room.migration.Migration(1, 2) {
@@ -82,7 +88,9 @@ object dbAccess {
             createDatabase(context.applicationContext, true)
             cleanUpOldData()
             PackageUtils.registerReceiver(context.applicationContext, InternalActionReceiver(), IntentFilter(Intent.ACTION_DATE_CHANGED))
+            creationError = ""
         } catch (exc: Exception) {
+            creationError += "\n" + exc.toString() + ": " + exc.stackTraceToString()
             Log.e(LOG_ID, "init exception: " + exc.toString() + ": " + exc.stackTraceToString() )
         }
     }
@@ -97,12 +105,14 @@ object dbAccess {
             )
                 .addMigrations(migration_1_2, migration_2_3, migration_3_4)
                 .build()
-
+            Log.i(LOG_ID, "Database created - version $version")
         } catch (exc: Exception) {
             Log.e(LOG_ID, "createDatabase exception: " + exc.toString() + ": " + exc.stackTraceToString() )
             if(retryOnError) {
                 if(deleteDatabase(context))
                     createDatabase(context, false)
+            } else {
+                creationError = exc.toString() + ": " + exc.stackTraceToString()
             }
         }
     }
