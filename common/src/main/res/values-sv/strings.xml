@@ -1,1 +1,967 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="locale">sv</string>
 
+    <string name="info_label_per_minute">per minut</string>
+    <string name="info_label_alarm">Larm</string>
+    <string name="info_label_timediff">Tidsskillnad</string>
+    <string name="info_label_timestamp">Tidpunkt</string>
+    <string name="info_label_iob_cob_timestamp">IOB/COB tid</string>
+    <string name="info_label_rate">Trend</string>
+    <string name="info_label_delta">Delta</string>
+    <string name="info_label_value">Värde</string>
+    <string name="info_label_raw">Råvärde</string>
+    <string name="info_label_sensor_id">Sensor</string>
+    <string name="info_label_source">Källa</string>
+    <string name="no_data">Inga data mottagna ännu!\nVänligen konfigurera en källa först.</string>
+
+    <string name="elapsed_time">%1$d min</string>
+    <string name="elapsed_time_hour">\> 1h</string>
+
+    <string name="rate_double_down">snabbt fallande</string>
+    <string name="rate_single_down">fallande</string>
+    <string name="rate_forty_five_down">lätt fallande</string>
+    <string name="rate_flat">oförändrat</string>
+    <string name="rate_forty_five_up">lätt stigande</string>
+    <string name="rate_single_up">stigande</string>
+    <string name="rate_double_up">snabbt stigande</string>
+
+    <string name="button_ok">OK</string>
+    <string name="button_cancel">Avbryt</string>
+
+    <string name="alarm_none">-</string>
+    <string name="alarm_very_low">mycket lågt</string>
+    <string name="alarm_low">lågt</string>
+    <string name="alarm_high">högt</string>
+    <string name="alarm_very_high">mycket högt</string>
+    <string name="very_low">Mycket lågt</string>
+    <string name="low">Lågt</string>
+    <string name="high">Högt</string>
+    <string name="very_high">Mycket högt</string>
+
+    <!-- mobile -->
+
+    <string name="activity_main_no_source_label">Källa: inte aktiv</string>
+    <string name="activity_main_connected_label">Klocka: ansluten (%1$s)</string>
+    <string name="activity_main_disconnected_label">Klocka: frånkopplad</string>
+    <string name="activity_main_car_connected_label">Android Auto: ansluten</string>
+    <string name="activity_main_car_disconnected_label">Android Auto: frånkopplad</string>
+    <string name="no_new_value">Inget nytt värde sedan %1$d minuter!</string>
+    <string name="activity_main_high_contrast_enabled">Hög kontrast är aktiv!\nTryck här för att komma till inställningarna.</string>
+
+    <string name="menu_settings">Inställningar</string>
+    <string name="menu_sources">Källor</string>
+    <string name="menu_group_github">GitHub</string>
+    <string name="menu_update">Uppdateringar</string>
+    <string name="menu_support">Support</string>
+    <string name="menu_help">Hjälp</string>
+
+
+    <!-- tasker -->
+
+    <string name="tasker_event_glucodata">Nytt glukosvärde</string>
+    <string name="tasker_event_glucodata_obsolete">Föråldrat värde</string>
+    <string name="tasker_event_glucodata_alarm">Glukosilarm</string>
+    <string name="tasker_wear_connection_state">Klockans anslutning</string>
+    <string name="tasker_android_auto_connection_state">Android Auto anslutning</string>
+    <string name="tasker_target_range_state">Glukosområde ändrat</string>
+
+    <!-- sources -->
+    <string name="source_phone">Telefon</string>
+    <string name="source_wear">Klocka</string>
+
+    <string name="source_state_not_active">Inaktiv</string>
+    <string name="source_state_in_progress">Körs</string>
+    <string name="source_state_ok">OK</string>
+    <string name="source_state_no_new_value">Inget nytt värde</string>
+    <string name="source_state_no_connection">Ingen internetanslutning</string>
+    <string name="source_state_error">Fel</string>
+
+    <string name="source_interval">Intervall</string>
+    <string name="source_interval_summary">Intervall för att hämta data från källan.</string>
+    <string name="source_delay">Fördröjning</string>
+    <string name="source_delay_summary">Fördröjning i sekunder innan data hämtas, då det tar en viss tid för data att bli tillgänglig i molnet.</string>
+
+    <string name="src_cat_libreview">LibreLinkUp</string>
+    <string name="src_enabled">Aktiv</string>
+    <string name="src_libre_enabled_summary">Aktivera LibreLinkUp datakälla om användare och lösenord är inställda.</string>
+    <string name="src_libre_user">E-post</string>
+    <string name="src_libre_user_summary">E-post för inloggning till LibreLinkUp</string>
+    <string name="src_password">Lösenord</string>
+    <string name="src_libre_password_summary">Lösenord för LibreLinkUp</string>
+    <string name="src_libre_reconnect">Återanslut</string>
+    <string name="src_libre_reconnect_summary">Vid nästa körning kommer en ny inloggning att utföras.</string>
+    <string name="src_libre_setup_librelink">Ingen data! Vänligen acceptera inbjudan i LibreLinkUp-appen först!</string>
+
+    <string name="src_cat_nightscout">Nightscout</string>
+    <string name="src_ns_enabled">Aktiv</string>
+    <string name="src_ns_enabled_summary">Aktivera Nightscout datakälla.</string>
+    <string name="src_ns_url">Nightscout URL</string>
+    <string name="src_ns_url_summary">URL till Nightscout servern.</string>
+    <string name="src_ns_secret">API Secret</string>
+    <string name="src_ns_secret_summary">API Secret för åtkomst (valfritt).</string>
+    <string name="src_ns_token">Access Token</string>
+    <string name="src_ns_token_summary">Ytterligare Access Token om denna behövs (valfritt).</string>
+
+    <string name="source_request_interval_always">Alltid</string>
+    <string name="source_request_interval_1">1 minut</string>
+    <string name="source_request_interval_5">5 minuter</string>
+    <string name="source_request_interval_10">10 minuter</string>
+    <string name="source_request_interval_15">15 minuter</string>
+    <string name="source_request_interval_20">20 minuter</string>
+    <string name="source_request_interval_30">30 minuter</string>
+    <string name="source_request_interval_alarm">Endast för larm</string>
+
+    <!-- LibreLink source -->
+    <string name="state_disabled">inaktiverad</string>
+    <string name="state_not_connected">ej ansluten</string>
+    <string name="state_connected">ansluten</string>
+    <string name="state_error">Fel: %s</string>
+
+    <!-- settings -->
+
+    <string name="pref_cat_general">Allmänt</string>
+    <string name="pref_cat_notification">Avisering</string>
+    <string name="pref_cat_widgets">Widgets</string>
+    <string name="pref_cat_android_auto">Android Auto</string>
+    <string name="pref_cat_forward_broadcast">Vidarebefordra glukosvärden</string>
+    <string name="pref_cat_colors">Färger</string>
+
+    <string name="pref_target_range">Målområde</string>
+    <string name="pref_switch_notification">Dummy-värden</string>
+    <string name="pref_switch_car_notification">Android Auto-avisering</string>
+    <string name="pref_switch_car_notification_summary">Avisering för Android Auto.</string>
+    <string name="pref_switch_car_media">Falsk mediaspelare</string>
+    <string name="pref_switch_car_media_summary">Visar glukosvärdet som aktuell låt.</string>
+    <string name="pref_car_notification_interval">Aviseringsintervall</string>
+    <string name="pref_car_notification_interval_summary">Intervall för att visa popup-aviseringar i Android Auto för nya värden.\nLarm visas alltid oavsett.</string>
+    <string name="pref_switch_car_notification_alarm_only">Endast för larm</string>
+    <string name="pref_switch_car_notification_alarm_only_summary">Visar endast popups för larm.\nMycket låga värden aviseras alltid.</string>
+    <string name="pref_switch_send_to_aod">Skicka Glucodata Broadcast</string>
+    <string name="pref_switch_send_to_aod_summary">Skicka Glucodata Broadcast för nya värden från alla källor.</string>
+    <string name="pref_button_select_target">Definiera Glucodata-mottagare</string>
+    <string name="pref_button_select_target_summary">Välj mottagare som ska få Glucodata Broadcast. En global broadcast kan tas emot av alla appar som har registrerat sig internt för denna broadcast.</string>
+    <string name="pref_switch_send_to_xdrip">Skicka patchad Libre-broadcast</string>
+    <string name="pref_switch_send_to_xdrip_summary">Vidarebefordra glukosvärden till xDrip+.\nI xDrip+ ställ in källan till \'Libre (patched app)\'.</string>
+    <string name="pref_button_select_xdrip_target">Definiera patchad Libre-mottagare</string>
+    <string name="pref_button_select_xdrip_target_summary">Välj mottagare som den patchade Libre-broadcasten ska skickas till. En global broadcast kan tas emot av alla appar som har registrerat sig internt för denna broadcast.</string>
+    <string name="pref_switch_send_xdrip_broadcast">Skicka xDrip+ Broadcast</string>
+    <string name="pref_switch_send_xdrip_broadcast_summary">Skicka broadcast analogt med xDrip+ broadcast. Till exempel till AAPS.</string>
+    <string name="pref_button_select_xdrip_broadcast_target">Definiera xDrip+ Broadcast-mottagare</string>
+    <string name="pref_button_select_xdrip_broadcast_target_summary">Välj mottagare som xDrip+ broadcast ska skickas till. En global broadcast kan tas emot av alla appar som har registrerat sig internt för denna broadcast.</string>
+    <string name="pref_switch_use_mmol">mmol/l</string>
+    <string name="pref_switch_use_mmol_summary">Använd mmol/l istället för mg/dl.</string>
+    <string name="pref_very_high_value">Mycket högt blodsockervärde</string>
+    <string name="pref_very_high_value_summary">Gräns för mycket höga blodsockervärden.</string>
+    <string name="pref_high_value">Högt blodsockervärde</string>
+    <string name="pref_high_value_summary">Gräns för höga blodsockervärden.</string>
+    <string name="pref_target_max_value">Övre gräns</string>
+    <string name="pref_target_max_value_summary">Övre gräns för målintervallet.</string>
+    <string name="pref_target_min_value">Nedre gräns</string>
+    <string name="pref_target_min_value_summary">Nedre gräns för målintervallet.</string>
+    <string name="pref_very_low_value">Mycket lågt blodsockervärde</string>
+    <string name="pref_very_low_value_summary">Gräns för mycket låga blodsockervärden.</string>
+    <string name="pref_low_value">Lågt blodsockervärde</string>
+    <string name="pref_low_value_summary">Gräns för låga blodsockervärden.</string>
+    <string name="pref_switch_use_5_min_delta">5 minuters delta</string>
+    <string name="pref_switch_use_5_min_delta_summary">För deltavärden i 5-minutersintervall, annars visas deltavärdet per minut.</string>
+    <string name="pref_color_alarm">Mycket höga/låga värden</string>
+    <string name="pref_color_alarm_summary">Färg för mycket höga och mycket låga blodsockervärden.</string>
+    <string name="pref_color_out_of_range">Höga/låga värden</string>
+    <string name="pref_color_out_of_range_summary">Färg för höga och låga blodsockervärden.</string>
+    <string name="pref_color_ok">Värden inom målintervallet</string>
+    <string name="pref_color_ok_summary">Färg för blodsockervärden inom målintervallet.</string>
+    <string name="pref_notification">Avisering</string>
+    <string name="pref_notification_summary">Visar en permanent avisering med aktuell trendpil, blodsocker- och deltavärde i statusfältet.\nDenna avisering förhindrar att Android stänger appen i bakgrunden.</string>
+    <string name="pref_notification_icon">Statusfältsikon</string>
+    <string name="pref_notification_icon_summary">Typ av statusfältsikon för aviseringen.</string>
+    <string name="pref_notification_big_icon">Stor statusfältsikon</string>
+    <string name="pref_notification_big_icon_summary">Stor ikon i statusfältet. Vänligen inaktivera om den blir beskuren.</string>
+    <string name="pref_notification_no_content">Tomt innehåll</string>
+    <string name="pref_notification_no_content_summary">Om endast statusfältsikonen är av intresse kan innehållet i aviseringen tas bort.</string>
+    <string name="pref_second_notification">2:a aviseringen</string>
+    <string name="pref_second_notification_summary">Visar en ytterligare avisering utan innehåll för att lägga till en extra statusfältsikon.</string>
+    <string name="pref_second_notification_icon">2:a statusfältsikon</string>
+    <string name="pref_second_notification_icon_summary">Typ av statusfältsikon för aviseringen.</string>
+    <string name="pref_third_notification">3:e aviseringen</string>
+    <string name="pref_third_notification_icon">3:e statusfältsikon</string>
+    <string name="pref_floating_widget">Flytande widget</string>
+    <string name="pref_floating_widget_summary">Visar trendpil, blodsocker-, deltavärde, tidpunkt och IOB/COB som en flytande widget.\nFör att inaktivera den måste widgeten hållas nedtryckt i minst 5 sekunder utan att flyttas.</string>
+    <string name="pref_floating_widget_size">Storlek</string>
+    <string name="pref_floating_widget_size_summary">Ändra storleken på den flytande widgeten</string>
+    <string name="pref_floating_widget_style">Stil</string>
+    <string name="pref_floating_widget_style_summary">Stil på den flytande widgeten.</string>
+    <string name="pref_floating_widget_transparency">Transparens</string>
+    <string name="pref_floating_widget_transparency_summary">Bakgrundstransparens för den flytande widgeten.</string>
+    <string name="pref_widget_transparency">Widget transparens</string>
+    <string name="pref_widget_transparency_summary">Bakgrundstransparens för widgetarna.</string>
+    <string name="pref_relative_time">Relativ tid</string>
+    <string name="pref_relative_time_summary">Använd relativ tid istället för den fasta blodsockertidpunkten.\nBeroende på enhetens batterioptimeringar kan det hända att detta inte fungerar korrekt.</string>
+
+    <string name="pref_status_bar_icon_app">Appikon</string>
+    <string name="pref_status_bar_icon_glucose">Glukosvärde</string>
+    <string name="pref_status_bar_icon_trend">Trendpil</string>
+    <string name="pref_status_bar_icon_delta">Delta</string>
+
+    <string name="pref_global_broadcast">Global broadcast</string>
+    <string name="pref_wear_notification">Klocka: Vibration</string>
+
+    <string name="select_receiver_show_all">Visa alla</string>
+    <string name="select_receiver_no_glucodata_receiver">Ingen mottagare hittades!</string>
+
+    <string name="widget_glucose">Glukosvärde</string>
+    <string name="widget_glucose_trend">Glukosvärde och trendpil</string>
+    <string name="widget_glucose_trend_delta">Glukosvärde, trendpil och delta</string>
+    <string name="widget_glucose_trend_delta_timestamp">Glukosvärde, trendpil, delta och tidpunkt</string>
+    <string name="widget_glucose_trend_delta_timestamp_iob_cob">Glukosvärde, trendpil, delta, tid och IOB/COB</string>
+
+    <string name="pref_send_to_bangleJS">BangleJS-stöd</string>
+    <string name="pref_send_to_bangleJS_summary">Skicka värden till widbgjs-widgeten på BangleJS-klockor.</string>
+
+    <!-- wear -->
+
+    <string name="forground_notification_descr">Databehandling för komplikationer</string>
+
+    <string name="activity_connected_label">Mobil: ansluten (%1$s)</string>
+    <string name="activity_disconnected_label">Mobil: frånkopplad</string>
+
+    <string name="activity_switch_foreground">Förgrund</string>
+    <string name="activity_switch_colored_aod">Färgad AOD</string>
+    <string name="activity_large_arrow_icon">Stor trendpil</string>
+
+    <!-- complications -->
+
+    <string name="short_value">Glukosvärde</string>
+    <string name="image_value">Glukosvärde (mycket stort och färgat)</string>
+    <string name="small_image_value">Glukosvärde (färgat)</string>
+    <string name="icon_value">Glukosvärde (stort)</string>
+    <string name="short_value_icon">Glukosvärde med ikon</string>
+    <string name="short_value_arrow">Glukosvärde och trendpil</string>
+    <string name="short_value_arrow_image">Glukosvärde och trendpil (stor och färgad)</string>
+    <string name="icon_value_arrow">Glukosvärde och trendpil (stor)</string>
+    <string name="short_value_arrow_small_image">Glukosvärde och trendpil (färgad)</string>
+    <string name="short_value_trend_range">Glukosvärde och trendcirkel (om det stöds)</string>
+    <string name="short_value_delta_trend_range">Glukosvärde, delta och trendcirkel (om det stöds)</string>
+    <string name="short_delta_trend_arrow_range">Delta, trendpil och cirkel (om det stöds)</string>
+    <string name="short_value_delta">Glukosvärde och delta</string>
+    <string name="long_value_arrow_delta">Glukosvärde, trendpil och delta</string>
+    <string name="long_value_arrow_delta_time">Glukosvärde, trendpil, delta och tidpunkt</string>
+    <string name="long_value_arrow_icon_delta_time">Glukosvärde, trendikon, delta och tidpunkt</string>
+    <string name="short_value_rate">Glukosvärde och trendvärde</string>
+    <string name="icon_delta">Delta (stor)</string>
+    <string name="image_delta">Delta (stor, färgad)</string>
+    <string name="short_delta">Delta</string>
+    <string name="short_delta_arrow">Delta och trendpil</string>
+    <string name="short_delta_icon">Delta med ikon</string>
+    <string name="short_delta_time">Delta och tidpunkt</string>
+    <string name="image_delta_time">Delta och tidpunkt (färgad)</string>
+    <string name="icon_delta_time">Delta och tidpunkt (stor)</string>
+    <string name="image_arrow">Trendpil (stor, färgad)</string>
+    <string name="small_image_arrow">Trendpil (färgad)</string>
+    <string name="icon_arrow">Trendpil</string>
+    <string name="test_neg_range">Testintervallkomplikation med negativa värden (för stöd för trendcirkel)</string>
+    <string name="short_rate">Trendvärde</string>
+    <string name="short_rate_arrow">Trendvärde och -pil</string>
+    <string name="short_rate_icon">Trendvärde med ikon</string>
+    <string name="timestamp">Tidpunkt för glukosvärdet</string>
+    <string name="short_timestamp">Tidpunkt</string>
+    <string name="icon_timestamp">Tidpunkt (stor)</string>
+    <string name="image_timestamp">Tidpunkt (färgad)</string>
+    <string name="battery_level">Batteri (klocka och telefon)</string>
+    <string name="iob_cob">IOB/COB</string>
+
+    <!-- GlucoDataAuto -->
+
+    <string name="glucodataauto_link">https://github.com/pachi81/GlucoDataAuto/blob/main/README_SV.md</string>
+    <string name="gda_no_data">För att använda denna app i Android Auto måste utvecklarinställningarna vara aktiverade. Klicka på versionen i Android Auto flera gånger. Aktivera sedan \"Okända källor\" i utvecklarinställningarna.</string>
+    <string name="pref_information">Information</string>
+    <string name="pref_gda_info_summary">Om GlucoDataHandler används som källa skrivs data från GlucoDataHandler över och behöver inte konfigureras här.</string>
+    <string name="pref_no_gda_info">Installera GlucoDataAuto</string>
+    <string name="pref_no_gda_info_summary">För att använda GlucoDataHandler för Android Auto måste GlucoDataAuto installeras från GitHub.\nKlicka här för mer information och för att komma till nedladdningen.</string>
+    <string name="pref_send_to_glucodataauto">Skicka till GlucoDataAuto</string>
+    <string name="pref_send_to_glucodataauto_summary">Skickar det aktuella glukosvärdet och inställningarna till GlucoDataAuto.</string>
+
+    <!-- Notifications -->
+
+    <string name="mobile_foreground_notification_name">Förgrundsmeddelande</string>
+    <string name="mobile_foreground_notification_descr">Förgrundsmeddelandet förhindrar att appen stängs av Android.</string>
+    <string name="mobile_second_notification_name">Andra meddelande</string>
+    <string name="mobile_third_notification_name">Tredje meddelande</string>
+    <string name="mobile_second_notification_descr">Ytterligare meddelande för att visa en extra ikon i statusfältet.</string>
+    <string name="worker_notification_name">Worker-meddelande</string>
+    <string name="worker_notification_descr">Worker-meddelande som visas så länge en aktivitet körs i bakgrunden.</string>
+    <string name="wear_foreground_notification_name">Förgrundsmeddelande</string>
+    <string name="wear_foreground_notification_descr">Förgrundsmeddelandet förhindrar att appen stängs av Android.</string>
+    <string name="android_auto_notification_name">Meddelande för Android Auto</string>
+    <string name="android_auto_notification_descr">Meddelande som visas i Android Auto.</string>
+    <string name="src_xdrip_noise_blocking">Brusreducering aktiv i xDrip+ Inter-App-inställningar!\nVänligen ställ in inställningen på \"Extremely noisy\"!</string>
+    <string name="pref_cat_follower">Molntjänster</string>
+    <string name="pref_source_juggluco_info">Juggluco</string>
+    <string name="pref_source_juggluco_info_summary">Konfiguration av Juggluco:\n- Öppna Juggluco-appen\n- Öppna \"Inställningar\"\n- Öppna \"Dela data\"\n- Aktivera \"Glucodata broadcast\"\n- Välj \"de.michelinside.glucodatahandler\"</string>
+    <string name="pref_gda_source_juggluco_info_summary">Konfiguration av Juggluco:\n- Öppna Juggluco-appen\n- Öppna \"Inställningar\"\n- Öppna \"Dela data\"\n- Aktivera \"Glucodata broadcast\"\n- Välj \"de.michelinside.glucodataauto\"</string>
+    <string name="pref_source_xdrip_info">xDrip+</string>
+    <string name="pref_source_xdrip_info_1_summary">Konfiguration av xDrip+:\n- Öppna xDrip+-appen\n- Öppna \"Inställningar\"\n- Välj \"Inter-App-inställningar\"\n- Aktivera \"Lokal broadcast\"\n- i \"Brusreducering\" välj \"Send even Extremely noisy signals\"</string>
+    <string name="pref_source_xdrip_info_2_summary">- Aktivera \"Kompatibla broadcasts\"\n- Lämna \"Identifiera mottagare\" tomt eller lägg till \"de.michelinside.glucodatahandler\" separerat med ett mellanslag</string>
+    <string name="pref_gda_source_xdrip_info_2_summary">- Aktivera \"Kompatibla broadcasts\"\n- Lämna \"Identifiera mottagare\" tomt eller lägg till en ny rad med \"de.michelinside.glucodataauto\" separerat med ett mellanslag</string>
+    <string name="pref_source_librelinkup_info">Ställ in LibreLinkUp</string>
+    <string name="pref_source_librelinkup_info_summary">VIKTIGT: använd inte inloggningsuppgifterna för FreeStyle Libre-appen!\nInställning av LibreLinkUp-anslutning:\n- Öppna FreeStyle Libre-appen och klicka på Dela eller Anslutna applikationer under Anslut\n- Aktivera LibreLinkUp\n- Installera LibreLinkUp från Play Store\n- Logga in i LibreLinkUp-appen och acceptera inbjudan</string>
+    <string name="menu_contact">Kontakt</string>
+    <string name="src_ns_iob_cob">IOB/COB-stöd</string>
+    <string name="src_ns_iob_cob_summary">Ta dessutom emot IOB- och COB-värden från Nightscout Pebble-slutpunkten.</string>
+    <string name="pref_permanent_notification_info_summary">Meddelandet behövs för en fungerande app.\nFrån och med Android version 13 kan detta meddelande tas bort med en svepning. För att meddelandet inte ska visas igen efter det, måste man i området \"Statusfältsikon\" välja \"Appikon\" och dessutom aktivera punkten \"Tomt innehåll\".</string>
+    <string name="source_aaps">AAPS</string>
+    <string name="pref_source_aaps_info">AndroidAPS</string>
+    <string name="pref_source_aaps_info_summary">Konfiguration av AAPS:\n- Öppna AAPS-appen\n- Öppna \"Konfiguration\"\n- Aktivera \"Samsung Tizen\" eller \"Data Broadcaster\"</string>
+    <string name="pref_switch_watchdrip_enabled">WatchDrip+</string>
+    <string name="pref_switch_watchdrip_enabled_summary">Aktivera WatchDrip+-anslutning.\nVIKTIGT: Aktivera \"Enable service\" i WatchDrip+ först efter att det har aktiverats här!</string>
+    <string name="pref_car_notification_reappear_interval">Visa igen</string>
+    <string name="pref_car_notification_reappear_interval_summary">Intervall för när meddelandet ska visas igen om det inte finns något nytt värde (0 för aldrig).</string>
+    <string name="pref_aa_media_player_icon_style_summary">Stil på ikonen/bakgrundsbilden för dummymediaspelaren.</string>
+    <string name="pref_aa_media_player_icon_style">Ikon/bakgrundsbild</string>
+    <string name="menu_save_mobile_logs">Telefon</string>
+    <string name="menu_save_wear_logs">Klocka</string>
+    <string name="menu_save_logs">Spara loggar</string>
+    <string name="logcat_save_succeeded">Loggar har sparats</string>
+    <string name="logcat_save_failed">Fel vid sparande av loggar!</string>
+    <string name="logcat_wear_save_succeeded">Loggar från klockan har sparats</string>
+    <string name="logcat_wear_save_failed">Fel vid sparande av loggar från klockan!</string>
+    <string name="request_exact_alarm_summary">För alla tids- och intervallspecifika uppgifter behöver appen behörighet för larm och påminnelser.\nAppen ändrar inga av användaren inställda larm eller påminnelser. Den behöver behörigheten endast för interna utlösare.\nEfter att ha tryckt på OK öppnas motsvarande behörighetsinställning. Vänligen aktivera denna behörighet för GlucoDataHandler.</string>
+    <string name="request_exact_alarm_title">Behörighet för larm och påminnelser</string>
+    <string name="activity_main_schedule_exact_alarm">Exakt hantering av intervaller inaktiverad!!!\nKorrekt funktionalitet för GlucoDataHandler garanteras inte!!!\nVänligen tryck här för att komma till motsvarande behörighetsinställning.</string>
+    <string name="src_libre_patient">Patient</string>
+    <string name="src_libre_patient_summary">Om Libre-kontot används för mer än en patient, välj den patient för vilken data ska tas emot.</string>
+    <string name="pref_cat_locksreen_wallpaper">Bakgrundsbild för låsskärm</string>
+    <string name="pref_lockscreen_enabled">Aktivera</string>
+    <string name="pref_lockscreen_enabled_summary">När bakgrundsbilden för låsskärmen är aktiverad skapar appen en bakgrund på låsskärmen.</string>
+    <string name="pref_lockscreen_y_pos">Vertikal position</string>
+    <string name="pref_lockscreen_y_pos_summary">Vertikal position:\n0: vid skärmens övre kant\n100: vid skärmens nedre kant</string>
+    <string name="activity_main_notification_permission">!!!Visning av meddelanden är inaktiverad!!!\nKorrekt funktionalitet för GlucoDataHandler garanteras inte och inga larm kan visas!!!\nVänligen tryck här för att komma till motsvarande behörighetsinställning.</string>
+    <string name="prefstatus_bar_notification_colored_icon">Färgad statusfältsikon</string>
+    <string name="pref_status_bar_notification_colored_icon_summary">Om det finns problem med den färgade statusfältsikonen kan den inaktiveras här för att använda en vit ikon.</string>
+    <string name="menu_alarms">Larm</string>
+    <string name="alarm_interval">Intervall</string>
+    <string name="alarm_interval_summary_low">Minsta tid i minuter mellan meddelanden för detta larm.\nInformation: ett nytt meddelande kommer först efter detta intervall om delta är negativt.</string>
+    <string name="alarm_interval_summary_high">Minsta tid i minuter mellan meddelanden för detta larm.\nInformation: ett nytt meddelande kommer först efter detta intervall om delta är positivt.</string>
+    <string name="alarm_interval_summary_obsolete">Tid i minuter efter att det senaste sockervärdet mottogs för att generera detta meddelande. Meddelandet visas igen med samma intervall om inget nytt värde finns tillgängligt.</string>
+    <string name="alarm_enabled">Aktiv</string>
+    <string name="alarm_enabled_summary_on">Meddelanden är aktiva för detta larm.</string>
+    <string name="alarm_enabled_summary_off">Meddelanden är inaktiva för detta larm.</string>
+    <string name="alarm_test">Test</string>
+    <string name="alarm_test_summary">Tryck här för att generera meddelandet efter 3 sekunder.</string>
+    <string name="alarm_settings">Inställningar</string>
+    <string name="alarm_settings_summary">Tryck här för att komma till meddelandeinställningarna för detta larm.</string>
+    <string name="alarm_save_sound">Spara ljud</string>
+    <string name="alarm_save_sound_summary">Tryck här för att spara standardlarmljudet på telefonen.</string>
+    <string name="alarm_saved">Larm sparat!</string>
+    <string name="snooze">Snooze</string>
+    <string name="alarm_cat_all">Alla larm</string>
+    <string name="wear_alarm_notifications_enabled">Klocka: Larmmeddelanden</string>
+    <string name="alarm_notifications_enabled">Larmmeddelanden</string>
+    <string name="alarm_notifications_enabled_summary_on">Larmmeddelanden är aktiva på telefonen.\nObs: larmen använder telefonens larm-/väckarklockevolyminställningar.</string>
+    <string name="alarm_notifications_enabled_summary_off">Larmmeddelanden är avstängda på telefonen.</string>
+    <string name="stop_snooze">Stopp</string>
+    <string name="very_low_alarm_text">Mycket lågt!</string>
+    <string name="very_low_text">Lågt!</string>
+    <string name="very_high_text">Högt!</string>
+    <string name="very_high_alarm_text">Mycket högt!</string>
+    <string name="very_low_alarm_notification_name">Mycket lågt larm</string>
+    <string name="very_low_alarm_notification_descr">Meddelande för mycket låga larm.</string>
+    <string name="low_alarm_notification_name">Lågt larm</string>
+    <string name="low_alarm_notification_descr">Meddelande för låga larm.</string>
+    <string name="high_alarm_notification_name">Högt larm</string>
+    <string name="high_alarm_notification_descr">Meddelande för höga larm.</string>
+    <string name="very_high_alarm_notification_name">Mycket högt larm</string>
+    <string name="very_high_alarm_notification_descr">Meddelande för mycket höga larm.</string>
+    <string name="btn_dismiss">Stäng</string>
+    <string name="test_alarm">Testlarm!</string>
+    <string name="alarm_cat_categories">Larmkategorier</string>
+    <string name="alarm_fullscreen_notification_enabled">Helskärmsmeddelande</string>
+    <string name="alarm_fullscreen_notification_enabled_summary">Aktiverar helskärmsmeddelande på låsskärmen.\nVid aktivering kan det hända att motsvarande behörighet efterfrågas.</string>
+    <string name="alarm_fullscreen_dismiss_keyguard">Avvisa nyckelskydd</string>
+    <string name="alarm_fullscreen_dismiss_keyguard_summary">Aktivera endast den här inställningen om det finns problem med visningen av helskärmsmeddelandet på låsskärmen.\nPå vissa enheter gör den här inställningen att PIN-frågan alltid visas före meddelandet.</string>
+    <string name="alarm_force_sound">Tvinga larmljud</string>
+    <string name="alarm_force_sound_summary">För att tvinga fram ljud och vibration under ett larmmeddelande, även om telefonen är i tyst läge eller på vibration. Stör ej kommer att inaktiveras så länge.\nDenna inställning kräver behörighet för att ändra Stör ej-läget.</string>
+    <string name="wear_alarm_force_sound">Klocka: Tvinga larmljud</string>
+    <string name="alarm_force_vibration">Tvinga vibration</string>
+    <string name="alarm_force_vibration_summary">För att tvinga fram vibration under ett larmmeddelande, även om telefonen är i tyst läge. Stör ej kommer att inaktiveras så länge.\nDenna inställning kräver behörighet för att ändra Stör ej-läget.</string>
+    <string name="alarm_sound_level">Volym</string>
+    <string name="alarm_sound_level_summary">Tvinga en fast volym för larmmeddelandet.\nVid -1 används telefonens standardinställning.</string>
+    <string name="advanced_settings">Avancerat</string>
+    <string name="advanced_settings_alarm_summary">Avancerade larminställningar för ljud och meddelanden.</string>
+    <string name="alarm_advanced_cat_notifcation">Meddelande</string>
+    <string name="alarm_advanced_cat_sound">Ljud</string>
+    <string name="alarm_type_summary">Larminställningar för sockervärden från %1$s.</string>
+    <string name="alarm_no_notification_wear_connected">Inget larm när klockan är ansluten</string>
+    <string name="alarm_no_notification_wear_connected_summary_on">Det finns inget larmmeddelande på telefonen så länge GlucoDataHandler är ansluten till klockan.</string>
+    <string name="alarm_no_notification_wear_connected_summary_off">Det finns också ett larmmeddelande på telefonen när GlucoDataHandler är ansluten till klockan.</string>
+    <string name="alarm_no_notification_auto_connected">Inget larm när Android Auto är ansluten</string>
+    <string name="alarm_no_notification_auto_connected_summary_on">Det finns inget larmmeddelande på telefonen så länge Android Auto är ansluten.</string>
+    <string name="alarm_no_notification_auto_connected_summary_off">Det finns också ett larmmeddelande på telefonen när Android Auto är ansluten.</string>
+    <string name="alarm_retrigger">Utlös igen</string>
+    <string name="alarm_retrigger_summary">Så länge larmmeddelandet inte stängs, utlöses larmet igen efter detta intervall i minuter.\n0 - för att inte utlösa larmet igen</string>
+    <string name="alarm_obsolete">föråldrad</string>
+    <string name="obsolete_alarm_notification_name">Föråldrat värde</string>
+    <string name="alarm_obsolete_summary">Larm, om inget nytt värde tas emot under %1$s minuter.</string>
+    <string name="obsolete_alarm_notification_descr">Detta meddelande visas när det inte finns något nytt värde.</string>
+    <string name="obsolete_alarm_text">Inget nytt värde!</string>
+    <string name="permission_notification_title">Visning av meddelanden är inaktiverad!!!</string>
+    <string name="permission_notification_message">GlucoDataHandler behöver meddelanden för att utföra uppgifter i bakgrunden och för att visa larm.</string>
+    <string name="alarm_notification_name">Larmmeddelande</string>
+    <string name="alarm_notification_descr">Larmmeddelanden. Vänligen ändra inte, eftersom ljud och vibration genereras internt.</string>
+    <string name="alarm_sound_summary">Tyst</string>
+    <string name="alarm_sound">Välj meddelandeljud</string>
+    <string name="alarm_use_custom_sound">Externt meddelandeljud.</string>
+    <string name="alarm_use_custom_sound_summary_on">Det valda meddelandeljudet används.</string>
+    <string name="alarm_use_custom_sound_summary_off">Det interna meddelandeljudet används.</string>
+    <string name="alarm_sound_delay">Ljudfördröjning</string>
+    <string name="alarm_sound_delay_summary">Tid i sekunder innan meddelandeljudet startas.\nOm inget ljud är valt, genereras vibrationen så länge.</string>
+    <string name="pref_cat_alarm_vibration_sound">Ljud och vibration</string>
+    <string name="alarm_vibrate_only">Endast vibrera</string>
+    <string name="wear_alarm_vibrate_only">Klocka: Endast vibrera</string>
+    <string name="permission_alarm_notification_title">Meddelande inaktiverat!</string>
+    <string name="permission_alarm_notification_message">För att använda larm måste meddelandekategorin för larm vara aktiv!\nEfter att ha tryckt på OK öppnas meddelandeinställningarna.\nVänligen aktivera meddelandekategorin för larm där.</string>
+    <string name="alarm_app_sound">Internt appljud</string>
+    <string name="pref_send_pref_to_glucodataauto">Skicka inställningar</string>
+    <string name="pref_send_pref_to_glucodataauto_summary">Skicka inställningar till GlucoDataAuto.\nInställningarna i GlucoDataAuto kommer att skrivas över med dessa.</string>
+    <string name="pref_source_gdh_info_summary">Konfiguration av GlucoDataHandler:\n- Öppna GlucoDataHandler-appen\n- Öppna inställningar\n- Aktivera \"Skicka till GlucoDataAuto\"\n- Aktivera \"Skicka inställningar\" för att tillämpa inställningarna</string>
+    <string name="very_low_alarm_summary">Om Android Auto-meddelandet är aktiverat visas mycket låga larm alltid. Detta kan inte ändras.</string>
+    <string name="pref_source_juggluco_iob_info">IOB från Juggluco</string>
+    <string name="pref_source_juggluco_iob_info_summary">För att ta emot IOB från Juggluco:\n- Öppna Juggluco-appen\n- Öppna \"Inställningar\"\n- Öppna \"Display\"\n- Aktivera \"IOB\"</string>
+    <string name="pref_source_xdrip_iob_info">IOB från xDrip+</string>
+    <string name="pref_source_xdrip_iob_info_summary">För att ta emot IOB från xDrip+:\n- Öppna xDrip+-appen\n- Öppna \"Inställningar\"\n- Välj \"Inter-App-inställningar\"\n- Aktivera \"xDrip Web Service\"</string>
+    <string name="pref_source_activate_local_nightscout_iob">Aktivera IOB-användning</string>
+    <string name="pref_source_activate_local_nightscout_iob_summary">Tryck här för att ställa om Nightscout-källan till den lokala webbservern för att ta emot IOB-värden.</string>
+    <string name="activate_local_nightscout_iob_title">Ändra Nightscout</string>
+    <string name="activate_local_nightscout_iob_message">Nightscout-källan kommer att skrivas över med konfigurationen för att ta emot data från den lokala webbservern på port 17580!\nÄr du säker?</string>
+    <string name="gda_media_notification_toggle_title">Växla meddelanden</string>
+    <string name="gda_notifications_on">Meddelanden är på</string>
+    <string name="gda_notifications_off">Meddelanden är av</string>
+    <string name="gda_media_notification_toggle_action">För att växla, tryck på Play</string>
+    <string name="pref_gda_alarm_info_summary">Larminställningar avser endast meddelanden i Android Auto och genererar inget ljud eller liknande.</string>
+    <string name="pref_cat_general_summary">Allmänna inställningar, som enhet, tidsvisning och deltberäkning</string>
+    <string name="pref_target_range_summary">Inställningar för blodsockervärdesgränser och motsvarande färger</string>
+    <string name="pref_cat_widgets_summary">Inställningar för widgets och den flytande widgeten.</string>
+    <string name="pref_cat_notification_summary">Meddelandeinställning, som ikonen och innehållet.</string>
+    <string name="pref_cat_locksreen_wallpaper_summary">Inställningar för att ändra bakgrunden på låsskärmen.</string>
+    <string name="pref_cat_android_auto_summary">Inställningar för användning av GlucoDataAuto för visning i Android Auto.</string>
+    <string name="pref_cat_watchdrip">Mi Band, Smart Band och Amazfit-klockor</string>
+    <string name="pref_cat_wear_os">Wear OS-klockor</string>
+    <string name="pref_cat_watch">Klockor</string>
+    <string name="pref_cat_watch_summary">Inställningar för visning på anslutna klockor.</string>
+    <string name="pref_cat_transfer_summary">Inställningar för att vidarebefordra blodsockervärden till andra appar.</string>
+    <string name="pref_cat_transfer">Vidarebefordra glukosvärden</string>
+    <string name="pref_cat_visualisation">Visualisering</string>
+    <string name="pref_cat_banglejs">BangleJS-klockor</string>
+    <string name="pref_wearos_info_summary" tools:ignore="Typos">För att använda GlucoDataHandler på en Wear OS-klocka måste den installeras från Google Play Store på klockan.</string>
+    <string name="pref_wear_os_check_connection">Kontrollera anslutning</string>
+    <string name="pref_wear_os_check_connection_summary">Tryck här för att kontrollera anslutningen till klockan i bakgrunden.\nDetta kan också startas med ett klick på anslutningsinformationen på startsidan på klockan och telefonen.</string>
+    <string name="pref_watchdrip_info_summary">WatchDrip+ stöder olika Mi Band-, Xiaomi Smart Band- och Amazfit-modeller.\nFör en lista över alla klockor som stöds och information om installation, klicka här.</string>
+    <string name="alarm_vibrate_only_wear_info">Vibration utan meddelande fungerar inte på alla klockor!</string>
+    <string name="alarm_use_alarm_sound">Använd väckarklockans volym</string>
+    <string name="alarm_use_alarm_sound_summary">Använd väckarklockans volym istället för ringsignalens volym.\nBeroende på modell är detta oberoende av vibrationsläget!</string>
+    <string name="alarm_vibrate_only_summary">Om aktivt spelas ingen larmsignal upp, oavsett andra inställningar för larmsignalen.</string>
+    <string name="alarm_start_delay">Fördröjning</string>
+    <string name="alarm_start_delay_wear_summary">Fördröjning innan ljud och vibration startas.\nOm vibration eller ljud bara är mycket kort.</string>
+    <string name="pref_color_obsolete">Föråldrat värde</string>
+    <string name="pref_color_obsolete_summary">Färg när det inte finns något nytt värde.</string>
+    <string name="alarm_wear_no_notification_phone_connected">Ingen popup när telefonen är ansluten</string>
+    <string name="alarm_wear_no_notification_phone_connected_summary">Ingen extra klock-popup så länge telefonen är ansluten.\nLjud och vibration sker enligt inställningarna.</string>
+    <string name="table_header_details">Detaljer</string>
+    <string name="table_header_connections">Anslutningar</string>
+    <string name="disconnected_label">frånkopplad</string>
+    <string name="connected_label">ansluten</string>
+    <string name="pref_application_color_scheme">Appens färgschema</string>
+    <string name="application_color_scheme_system">Systemets schema</string>
+    <string name="application_color_scheme_light">Ljust schema</string>
+    <string name="application_color_scheme_dark">Mörkt schema</string>
+    <string name="tap_action">Åtgärd vid tryck</string>
+    <string name="tap_action_summary">Välj en åtgärd eller app som ska köras vid tryck.</string>
+    <string name="no_action">Ingen åtgärd</string>
+    <string name="action_floating_widget_toggle">Växla flytande widget</string>
+    <string name="wear_complication_tap_action">Komplikationstipsåtgärd</string>
+    <string name="activity_large_arrow_icon_summary">Avaktivera om trendpilen är för stor och därmed beskärs.</string>
+    <string name="pref_cat_ui_settings">Gränssnitt</string>
+    <string name="gda_foreground_info">GlucoDataAuto körs</string>
+    <string name="gda_foreground_summary">Aktivera endast om en online-datakälla och endast Android Auto-meddelanden används.\nDenna inställning förhindrar att Android stänger den här appen när den inte är ansluten till Android Auto, så att appen inte kan identifiera Android Auto-anslutningen.\nAlternativt kan man också öppna appen direkt i Android Auto en gång.</string>
+    <string name="battery_optimization_disabled">Batterioptimeringar är aktiva!\nTryck här för att inaktivera dem.</string>
+    <string name="gda_source_follower_info_summary">Om en online-datakälla används kanske appen inte startar när man är ansluten till Android Auto och endast använder Android Auto-meddelanden.\nFör att säkerställa att appen känner igen Android Auto-anslutningen måste batterioptimeringen inaktiveras.\nOm det fortfarande inte fungerar bör man också aktivera förgrundsläget eller öppna appen en gång direkt i Android Auto.</string>
+    <string name="gda_help_aa_title">Ställ in Android Auto</string>
+    <string name="gda_help_aa_title_summary">Android Auto är antingen en separat app eller en del av systemet och kan öppnas via Android-inställningarna.\nFör att använda GlucoDataAuto i Android Auto måste följande steg utföras:</string>
+    <string name="gda_help_aa_dev_mode">1. Aktivera utvecklarinställningar</string>
+    <string name="gda_help_aa_dev_mode_summary">- Öppna Android Auto\n- rulla till version\n- tryck flera gånger på versionen tills en popup med \"Tillåt utvecklarinställningar\" visas\n- tryck på \"OK\"</string>
+    <string name="gda_help_aa_sources">2. Aktivera \"Okända källor\"</string>
+    <string name="gda_help_aa_sources_summary">- Öppna Android Auto\n- i 3-punktsmenyn välj \"Utvecklarinställningar\"\n- rulla till \"Okända källor\" och aktivera</string>
+    <string name="gda_help_aa_notification">3. Aktivera meddelanden</string>
+    <string name="gda_help_aa_notification_summary">- Öppna Android Auto\n- rulla till \"Meddelanden\"\n- aktivera \"Visa meddelanden för meddelanden\"\n- aktivera \"Visa första raden i ett meddelande\"</string>
+    <string name="gda_help_aa_enable_gda">4. Aktivera GlucoDataAuto</string>
+    <string name="gda_help_aa_enable_gda_summary">- Öppna Android Auto\n- rulla till \"Display\"\n- öppna \"Anpassa startprogrammet\"\n- aktivera \"GlucoDataAuto\"\nOm GlucoDataAuto inte är tillgängligt, starta om telefonen.</string>
+    <string name="pref_notification_custom_layout">Färgad layout</string>
+    <string name="pref_notification_custom_layout_summary">Visar värdena i stor och färgad text.\nPå vissa Samsung-enheter från Android 13 kan detta leda till att appen kraschar på grund av ett fel på Samsungs sida.\nOm problemet uppstår inaktiveras den här inställningen automatiskt så att appen kan köras igen.</string>
+    <string name="app_crash_title">Krasch upptäckt!</string>
+    <string name="app_crash_message">Jag är så ledsen att appen kraschade under körning!\nSkicka mig loggarna så kan jag analysera felet och försöka fixa det så snabbt som möjligt.\nTack!</string>
+    <string name="src_cat_dexcom_share">Dexcom Share</string>
+    <string name="src_dexcom_share_us_server">US Konto</string>
+    <string name="src_dexcom_share_us_server_summary_on">US-konto används.</string>
+    <string name="src_dexcom_share_us_server_summary_off">Internationellt konto används.</string>
+    <string name="src_dexcom_share_enabled_summary">Aktivera Dexcom Share-datakälla.\nAnvändare och lösenord måste vara inställda för detta.</string>
+    <string name="src_username">Användarnamn</string>
+    <string name="src_dexcom_share_user_summary">Användarnamn, e-post eller telefonnummer för inloggning till Dexcom Share-kontot.\nVIKTIGT: telefonnumret måste innehålla landskoden, t.ex. +46 för Sverige.</string>
+    <string name="src_dexcom_share_password_summary">Lösenord för Dexcom Share-kontot.</string>
+    <string name="pref_source_dexcom_share_info">Ställ in Dexcom Share</string>
+    <string name="permission_missing_title">Behörighet saknas!</string>
+    <string name="setting_permission_missing_message">För den inställda inställningen\n\'%1$s\'\nhar behörigheten tagits bort!\nVänligen tryck på \"OK\" för att omdirigeras till motsvarande behörighetsinställning för att återaktivera den.\nOm du trycker på \"Avbryt\" inaktiveras inställningen och kan återaktiveras senare via menyn.</string>
+    <string name="xdrip_broadcast_service_api_enabled">Broadcast Service API</string>
+    <string name="xdrip_broadcast_service_api_enabled_summary">Använd xDrip+ Broadcast Service API för att ta emot data (inkl. IOB) från xDrip+.\nInnan den här inställningen aktiveras måste \"Broadcast Service API\" först aktiveras i xDrip+ under \"Inter-App-inställningar\"!</string>
+    <string name="obsolete_time">Tid för föråldrat värde</string>
+    <string name="obsolete_time_summary">Tid i minuter efter vilken värdet anses vara gammalt.\nEfter dubbla tiden försvinner det helt.</string>
+    <string name="pref_source_offline">Lokala appar</string>
+    <string name="pref_source_offline_summary">Appar som körs på samma enhet och skickar interna meddelanden (broadcasts), som Juggluco, xDrip+, AAPS etc.</string>
+    <string name="pref_cat_follower_summary">Molntjänster som tillhandahåller data via internet, som LibreLinkUp, Dexcom Share, Nightscout och Medtrum.</string>
+    <string name="pref_source_xdrip_broadcast">xDrip+ Lokal Broadcast</string>
+    <string name="pref_source_dexcom_byoda_info_summary">För att ta emot värden från Dexcom BYODA måste överföringen till AAPS aktiveras vid skapandet av appen.</string>
+    <string name="pref_source_eversense_info_summary">För att ta emot värden från Eversense krävs appen ESEL, som antingen kan köras i Companion Mode (läsa meddelanden) eller i anslutning till den patchade Eversense-appen.\nFör mer information om ESEL, klicka här.</string>
+    <string name="pref_source_eversense_byoda_info_summary">För att ta emot värden från Dexcom BYODA måste överföringen till xDrip+ aktiveras vid skapandet av appen.</string>
+    <string name="new_version">Version %s är tillgänglig!</string>
+    <string name="info_label_notes">Anteckningar</string>
+    <string name="gda_notification_permission">Meddelanden är inaktiverade!\nKlicka här för att ändra inställningarna.</string>
+
+
+    <string name="pref_show_other_unit">Visa annan enhet</string>
+    <string name="pref_show_other_unit_summary">Visa blodsockervärdet dessutom i %s i detaljerna.</string>
+    <string name="watch_battery_level">Batteri klocka</string>
+    <string name="phone_battery_level">Batteri telefon</string>
+    <string name="other_unit">Annan enhet</string>
+    <string name="dexcom_share_check_non_us_account">Klicka här för att kontrollera dina inloggningsuppgifter för det internationella Dexcom Share-kontot.</string>
+    <string name="dexcom_share_check_us_account">Klicka här för att kontrollera dina inloggningsuppgifter för det amerikanska Dexcom Share-kontot.</string>
+    <string name="pref_lockscreen_size_summary">Anpassa storleken på visningen på låsskärmen.</string>
+    <string name="pref_wear_os_reset_connection">Återställ anslutning</string>
+    <string name="pref_wear_os_reset_connection_summary">Tryck här om anslutningen mellan telefon och klocka inte fungerar som förväntat.\nOm problemet inte löses, starta om klockan.</string>
+    <string name="detail_reset_connection">Anslutningen fungerar inte korrekt! Starta om klockan.</string>
+    <string name="pref_floating_widget_time_to_close">Tid för att stänga</string>
+    <string name="pref_floating_widget_time_to_close_summary">Tid i sekunder som man måste trycka på den flytande widgeten utan att flytta den för att den ska inaktiveras.\n0 för att inaktivera den här inställningen.\n</string>
+    <string name="alarm_inactive_enabled">Aktivera vilotid</string>
+    <string name="alarm_inactive_enabled_summary">Under den angivna vilotiden skapas inga meddelanden för detta larm.\nFör att använda den här funktionen måste start- och sluttid först ställas in.</string>
+    <string name="all_alarm_inactive_enabled_summary">Alla larm utlöses inte under vilotiden.\nFör att använda den här funktionen måste start- och sluttid först ställas in.</string>
+    <string name="alarm_inactive_start_time">Starttid</string>
+    <string name="alarm_inactive_start_time_summary">Tiden då vilotiden ska starta.</string>
+    <string name="alarm_inactive_end_time">Sluttid</string>
+    <string name="alarm_inactive_end_time_summary">Tiden då vilotiden ska sluta.</string>
+    <string name="alarm_inactive_weekdays">Dagar för vilotid</string>
+    <string name="alarm_inactive_weekdays_summary">Ställ in veckodagar då vilotiden ska aktiveras vid den valda starttiden.</string>
+
+    <string name="app_crash_bad_notification">Appen kraschade på grund av den färgade layouten i meddelandena!\nInställningen har därför inaktiverats.\nEn omstart av telefonen löser vanligtvis detta.</string>
+    <string name="auto_close_notification">Stäng meddelandet automatiskt</string>
+    <string name="auto_close_notification_summary">Stäng larmmeddelandet automatiskt efter att ljudet och vibrationen har upphört, men tidigast efter 30 sekunder.\nOm \"Utlös igen\" är aktivt, stängs meddelandet först när larmet inte längre utlöses igen.</string>
+    <string name="settings_save_succeeded">Inställningarna har sparats.</string>
+    <string name="settings_save_failed">Inställningarna kunde inte sparas!</string>
+    <string name="settings_read_succeeded">Inställningarna har importerats!</string>
+    <string name="settings_read_failed">Fel vid import!</string>
+    <string name="pref_cat_export_import">Export / Import</string>
+    <string name="pref_cat_export_import_summary">Ex- och importera inställningar.</string>
+    <string name="pref_export_settings">Export</string>
+    <string name="pref_export_settings_summary">Tryck här för att exportera inställningarna till en fil.\nVIKTIGT: inga standardinställningar exporteras, endast ändrade inställningar.</string>
+    <string name="pref_import_settings">Import</string>
+    <string name="pref_import_settings_summary">Tryck här för att importera inställningarna från en fil\nVIKTIGT: inga standardinställningar återställs.\nOm detta önskas, radera först appens data och utför sedan importen.</string>
+    <string name="menu_save_mobile_logs_summary">Spara loggar från telefonen i en fil.</string>
+    <string name="menu_save_wear_logs_summary">Spara loggar från en ansluten Wear OS-klocka i en fil.</string>
+    <string name="alarm_repeat">Upprepning</string>
+    <string name="no_vibration">Ingen vibration</string>
+    <string name="alarm_vibrate_mode">Vibrationsläge</string>
+
+    <string name="alarm_rising_fast">Stiger snabbt</string>
+    <string name="rising_fast_alarm_notification_name">Snabbt stigande larm</string>
+    <string name="alarm_rising_fast_summary">Larm när blodsockervärdet är större än eller lika med %1$s och delta stiger med minst +%2$s %3$d gånger i rad.</string>
+    <string name="rising_fast_alarm_text">Stiger snabbt!</string>
+
+    <string name="alarm_falling_fast">Sjunker snabbt</string>
+    <string name="falling_fast_alarm_notification_name">Snabbt sjunkande larm</string>
+    <string name="alarm_falling_fast_summary">Larm när blodsockervärdet är mindre än eller lika med %1$s och delta sjunker med minst -%2$s %3$d gånger i rad.</string>
+    <string name="falling_fast_alarm_text">Sjunker snabbt!</string>
+    <string name="alarm_vibrate_amplitude">Vibrationsstyrka</string>
+    <string name="alarm_vibrate_amplitude_summary">Intensitet på vibrationen</string>
+    <string name="pref_cat_alarm_settings">Larminställningar</string>
+    <string name="pref_alarm_delta_summary">Deltavärde från vilket larmet utlöses.</string>
+    <string name="alarm_occurrence_count">Antal</string>
+    <string name="alarm_occurrence_count_summary">Antal gånger deltavärdet måste uppnås i följd.</string>
+    <string name="pref_alarm_rising_falling_border">Gräns</string>
+    <string name="pref_alarm_rising_falling_border_summary">Gränsvärde för stigande eller fallande larm.\nBlodsockervärdet måste vara större respektive mindre för att larmet ska utlösas.</string>
+    <string name="delta_per_minute">per minut</string>
+    <string name="delta_per_5_minute">per 5 minuter</string>
+    <string name="other_alarm_cat_categories">Andra larm</string>
+    <string name="advanced_settings_alarm">Avancerade larminställningar</string>
+    <string name="src_offline_enabled_summary_on">Interna meddelanden från den här appen bearbetas.</string>
+    <string name="src_offline_enabled_summary_off">Interna meddelanden från den här appen ignoreras.</string>
+    <string name="temp_disabled">Tillfälligt inaktiverad</string>
+    <string name="temp_disabled_until">Tillfälligt inaktiverad till</string>
+    <string name="snooze_until">Snooze till</string>
+
+    <!-- Talkback -->
+    <string name="trend">Trend</string>
+    <string name="rate_rising">%1$d grader stigande</string>
+    <string name="rate_falling">%1$d grader fallande</string>
+
+    <string name="alarm_toggle_state">Larm: %1$s</string>
+    <string name="alarm_state_inactive">inaktiv</string>
+    <string name="alarm_state_snooze">Snooze till %1$s</string>
+    <string name="alarm_state_temp_disabled">Tillfälligt inaktiverad till %1$s</string>
+
+    <string name="enabled">aktiverad</string>
+    <string name="disabled">inaktiverad</string>
+
+    <string name="not_available">inte tillgänglig</string>
+    <string name="action_read_values">Läs upp värden</string>
+
+    <plurals name="elapsed_time_full_text">
+        <item quantity="one">Tid %d minut</item>
+        <item quantity="other">Tid %d minuter</item>
+    </plurals>
+    <string name="pref_source_diabox_info_summary">Öppna integration och aktivera \"Share data with GWatch\"</string>
+    <string name="pref_source_dexcom_byoda_not_working_info_summary">Obs: AAPS-sändningen från BYODA verkar inte fungera med andra appar.\nDärför bör xDrip+-sändningen från BYODA användas.</string>
+
+    <!-- new for GDA -->
+
+    <string name="gda_help_aa_summary">Kom igång med GDA på Android Auto</string>
+    <string name="no_tts">Text-till-tal-funktionen (TTS) är inte aktiverad.\nFör att använda den här funktionen, aktivera TTS i Androids tillgänglighetsinställningar.\nNär den är aktiverad, tryck här för att uppdatera.</string>
+    <string name="pref_cat_android_auto_speak">Läs upp värde</string>
+    <string name="pref_cat_play_button">Spela upp</string>
+    <string name="pref_aa_media_player_speak_values_on_summary">Läs upp aktuellt värde vid uppspelning.\nKräver att text-till-tal är aktiverat.</string>
+    <string name="pref_aa_media_player_speak_values_off_summary">Spela upp en tyst ton för att föra mediaspelaren till förgrunden på den delade skärmen.</string>
+    <string name="pref_aa_media_player_always_speak">Läs upp nytt värde</string>
+    <string name="pref_aa_media_player_always_speak_summary">Läs upp nya värden i Android Auto, även om en annan mediaspelare används.</string>
+    <string name="tts_test_summary">Tryck här för att testa text-till-tal-funktionen.</string>
+    <string name="pref_aa_media_player_speak_alarm_only_summary">Läs endast upp larm.</string>
+    <string name="pref_aa_media_player_speak_interval_summary">Ställ in intervall för uppläsning av nya värden i Android Auto.</string>
+    <string name="pref_aa_media_player_duration_summary">Intervallet för att ta emot nya blodsockervärden bestämmer varaktigheten på förloppsindikatorn i mediaspelaren.\nSätt värdet till 0 för att inaktivera förloppsindikatorn.</string>
+    <string name="gda_media_speak_toggle_title">Växla läs upp nytt värde</string>
+    <string name="gda_speak_on">Uppläsning är på</string>
+    <string name="gda_speak_off">Uppläsning är av</string>
+    <string name="enable_alarm_icon_toggle">Aktivera larmsymbol</string>
+    <string name="enable_alarm_icon_toggle_summary">Aktivera larmsymbol på huvudskärmen för att växla larmstatus.</string>
+
+    <!-- v1.3  -->
+
+    <string name="src_librelink_error4">Fel, logga in på LibreLinkUp-appen igen och kontrollera om några åtgärder krävs!</string>
+    <string name="src_librelink_error4_type">Feltyp %1$s, logga in på LibreLinkUp-appen igen och kontrollera om några åtgärder krävs!</string>
+    <string name="source_libre_auto_accept_tou">Acceptera nya användarvillkor automatiskt</string>
+    <string name="source_libre_auto_accept_tou_summary">Om du aktiverar detta accepterar du automatiskt nya användarvillkor för att säkerställa kontinuerlig datamottagning. Du kommer inte att informeras separat om nya villkor. Om du vill läsa dem, inaktivera den här inställningen och kontakta LibreLinkUp-appen vid fel 4.</string>
+    <string name="src_librelink_error4_tou">Nya användarvillkor måste accepteras. Aktivera automatisk acceptans i LibreLinkUp-källinställningarna eller logga in på LibreLinkUp-appen igen och acceptera villkoren.</string>
+    <string name="src_libre_tou_message">GlucoDataHandler kan automatiskt acceptera nya användarvillkor för LibreLinkUp.\nTryck på OK för att aktivera den här funktionen, eller Avbryt för att läsa och manuellt acceptera villkoren i LibreLinkUp-appen.</string>
+    <string name="src_librelink_error2">Felaktigt användarnamn eller lösenord. Kontrollera dina LibreLinkUp-källinställningar. Försök vid behov att logga in igen eller installera om LibreLinkUp-appen och kontrollera dina kontoinställningar.\nVänligen stäng alla andra appar som har åtkomst till samma konto!</string>
+    <string name="last_value_on_server">Senaste blodsockervärdet på servern från %1$s</string>
+    <string name="no_data_in_server_response">Inga blodsockervärden hittades på servern.</string>
+    <string name="http_error_429">För många förfrågningar!</string>
+    <string name="http_error_429_info">Vänligen stäng alla andra appar som har åtkomst till samma konto!</string>
+    <string name="state_await_data">Anslutning upprättas</string>
+    <string name="pref_send_battery_level_to_watch">Skicka batterinivå</string>
+    <string name="pref_send_battery_level_to_watch_summary">Skicka batterinivån till klockan för att visa den i komplikationen och på huvudskärmen.</string>
+    <string name="pref_battery_level">Visa batterinivå</string>
+    <string name="forward_to_watch_interval_summary">Ange den minsta tiden (i minuter) mellan glukosmätningar innan en ny uppdatering skickas till klockan.\nLarm och mycket låga värden skickas alltid.</string>
+    <string name="forward_to_values_summary">Ange den minsta tiden (i minuter) mellan glukosmätningar innan en ny uppdatering skickas till mottagarna (inte för Health Connect).</string>
+    <string name="alarm_repeat_summary">Larmet ljuder och vibrerar upprepade gånger tills meddelandet stängs eller den inställda maximala larmtiden har uppnåtts.</string>
+    <string name="alarm_repeat_time">Maximal larmtid</string>
+    <string name="alarm_repeat_time_summary">Ange den maximala tiden (i minuter) som larmet ljuder och vibrerar. Ett värde på 0 innebär att larmet upprepas på obestämd tid.</string>
+    <string name="wear_source_info">För att aktivera källor, ställ in dem först i telefonappen. Aktivera källor på din klocka endast om du inte redan tar emot data på din telefon.</string>
+    <string name="gdh_disclaimer_title">Anmärkning från utvecklaren</string>
+    <string name="gdh_disclaimer_message">Denna app har utvecklats på min fritid som ett hobbyprojekt. Därför kan jag inte garantera att alla funktioner fungerar felfritt på alla enheter. Jag arbetar dock ständigt med förbättringar.\nVid problem eller frågor, kontakta mig direkt innan du lämnar en negativ recension.\nFör att bli informerad om viktiga uppdateringar och felkorrigeringar kan du gärna gå med i Facebook-gruppen eller Google Groups.</string>
+
+    <string name="pref_source_dexcom_share_info_1_summary">För att ta emot data från Dexcom Share-servrar:\nI Dexcom-appen:\n - skapa en följare\n - kontrollera under Anslutningar om \"Dela på\" är aktivt</string>
+    <string name="pref_source_dexcom_share_info_2_summary">I GlucoDataHandler:\n - ange användarnamn och lösenord för Dexcom Clarity-kontot \n   (om du använder telefonnummer, ange landskod!)\n - kontrollera inställningen för USA-konto\nViktigt: Det fungerar inte med ett följarkonto!</string>
+
+    <string name="request_timestamp">Uppdaterad</string>
+    <string name="alarm_header">Larm</string>
+
+    <string name="wearos_watchfaces">Urtavlor</string>
+    <string name="wearos_watchfaces_summary">Information om urtavlor från tredje part för Wear OS.</string>
+    <string name="setup">Inställning</string>
+    <string name="pref_watchfaces_cat">Urtavlor från tredje part</string>
+    <string name="pref_watchfaces_info_summary">Denna app erbjuder ingen egen urtavla, utan flera komplikationer (de små runda elementen på urtavlan) som kan användas för urtavlor som stöder komplikationer från tredje part.</string>
+    <string name="pref_watchfaces_default">Standard</string>
+    <string name="pref_watchfaces_default_summary">De flesta tillverkare av smartklockor erbjuder redan urtavlor som kan användas med GlucoDataHandlers komplikationer.\nTill exempel är de flesta Samsung \"Info\"-urtavlor kompatibla.</string>
+    <string name="pref_watchfaces_pujie">Pujie</string>
+    <string name="pref_watchfaces_pujie_summary">Pujie är en app för att skapa urtavlor med ett molnbibliotek.\nFör att hitta kompatibla urtavlor, sök i biblioteket efter urtavlor som börjar med \"GDH_\".\nObs: Pujie är inte kompatibel med Wear OS 5-enheter.\nTryck här för att öppna appen i Play Store.</string>
+    <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>
+    <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man skapar tredjepartsurtavlor som är speciellt utvecklade för användning med GlucoDataHandler.\nTryck här för att öppna hans Play Store-sida.</string>
+    <string name="pref_watchfaces_gdc">GDC-urtavlor</string>
+    <string name="pref_watchfaces_gdc_summary">GDC-urtavlor har utvecklats för användning med GlucoDataHandler.\nTryck här för att öppna Play Store-sidan.</string>
+    <string name="pref_phone_wear_screen_off_update">Uppdatera alltid komplikationer</string>
+    <string name="pref_phone_wear_screen_off_update_summary">Skicka alltid nya blodsockervärden till klockan.\nInaktivera den här inställningen för att inte skicka data till klockan när klockans skärm är avstängd för att spara batteri.\nLarmvärden skickas alltid till klockan.\nVIKTIGT: Det föråldrade larmet på klockan inaktiveras om den här inställningen är inaktiverad!</string>
+    <string name="alarm_ignore_snooze_for_very_low">Tvinga mycket lågt larm</string>
+    <string name="alarm_ignore_snooze_for_very_low_summary">Meddela det mycket låga larmet även om snooze-funktionen eller vilotiderna för alla larm är aktiva.</string>
+
+    <string name="libre_no_new_value_info">Om det här felet kvarstår, försök att installera om Libre-appen. Detta löser vanligtvis problemet.</string>
+
+    <string name="src_libre_server">Server</string>
+    <string name="source_libre_server_default">Standard (.io)</string>
+    <string name="source_libre_server_russian">Ryska (.ru)</string>
+    <string name="patient_name">Namn</string>
+    <string name="patient_name_gda_summary">Namn på användaren/patienten som ska visas i meddelandet och sägas vid uppläsning.\nDetta bör användas om flera varianter av GlucoDataAuto används, annars kan det lämnas tomt.</string>
+
+    <string name="video_tutorial">Videohandledning</string>
+    <string name="video_tutorial_summary">Klicka här för att komma till YouTube-videon som illustrerar installationen av den här källan. Tack till Diabetic Masked Man för att ha skapat videorna.</string>
+
+    <string name="snooze_30">30 minuter</string>
+    <string name="snooze_60">60 minuter</string>
+    <string name="snooze_90">90 minuter</string>
+    <string name="snooze_120">120 minuter</string>
+    <string name="alarm_snooze_on_notification_enabled">Snooze</string>
+    <string name="alarm_snooze_on_notification_summary">Välj upp till 3 tider för snooze som ska visas som knappar i larmmeddelandet.</string>
+
+    <string name="pref_show_iob_cob">Visa IOB/COB-värden</string>
+    <string name="pref_show_iob_cob_summary">Visa IOB- och COB-värden, om tillgängliga.</string>
+
+    <!-- v2.0 -->
+
+    <string name="delta_per_10_minute">per 10 minuter</string>
+    <string name="delta_per_15_minute">per 15 minuter</string>
+
+    <string name="widget_wearos_battery_level">WearOS batterinivå</string>
+
+    <string name="graph">Graf</string>
+    <string name="graph_duration">Tidsperiod i grafen</string>
+    <string name="graph_duration_wear_summary">Antal timmar som visas i grafen i komplikationen och på huvudskärmen.\nAnvänd 0 för att inaktivera grafen.</string>
+    <string name="graph_duration_summary">Antal timmar som visas i grafen.\nAnvänd 0 för att inaktivera grafen.</string>
+    <string name="graph_duration_phone_widget_summary">Antal timmar som visas i grafen.</string>
+    <string name="show_graph">Visa graf</string>
+    <string name="menu_database">Databas</string>
+    <string name="reset_db">Återställ databas</string>
+    <string name="reset_db_summary">Tryck här för att ta bort all data från databasen.</string>
+    <string name="reset_db_warning">Om du trycker på OK kommer all data att tas bort från databasen!\nÄr du säker?</string>
+    <string name="graph_disabled">Graf inaktiverad!</string>
+    <string name="no_graph_data">Kunde inte skapa graf!</string>
+    <string name="graph_comp_square">Graf 3x3</string>
+    <string name="graph_comp_rect">Graf 3x1</string>
+
+    <string name="pref_switch_use_rate_calculation">Trendberäkning</string>
+    <string name="pref_switch_use_rate_calculation_summary_on">Använd intern trendberäkning baserat på de senaste värdena.\nDetta visar trendpilens rotation i 5°-intervaller.</string>
+    <string name="pref_switch_use_rate_calculation_summary_off">Använd den trend som sensorn tillhandahåller.\nOm ingen trend är tillgänglig används den interna beräkningen.</string>
+
+    <string name="accessibility_service_description">Visa blodsockervärden på Always-on-Display</string>
+
+    <string name="pref_cat_aod">Always-on-Display</string>
+    <string name="pref_cat_aod_summary">Inställningar för Always-on-Display.</string>
+
+    <string name="pref_aod_enabled_summary">Visa värden på AOD.</string>
+    <string name="pref_aod_size_summary">Anpassa storleken på visningen på AOD.</string>
+    <string name="pref_aod_coloured">Färgad</string>
+    <string name="pref_aod_coloured_summary">Visa AOD i färg.</string>
+
+    <string name="graph_show_axis">Visa axlar</string>
+    <string name="graph_show_axis_summary">Visa tids- och glukosevärdesaxlar.</string>
+
+    <string name="source_notification">Meddelande</string>
+    <string name="pref_source_notification">Meddelande (Beta)</string>
+    <string name="pref_source_notification_summary">För att ta emot blodsockervärde och IOB/COB från meddelanden från andra appar som Dexcom, CamAPS FX och Omnipod 5.</string>
+    <string name="notification_reader_app">Applikation</string>
+    <string name="notification_reader_app_summary">Välj en applikation från vilken meddelandet ska läsas.</string>
+    <string name="notification_reader_enabled_summary_on">Meddelandeläsaren är aktiverad för att analysera värden från meddelanden för specifika applikationer.</string>
+    <string name="notification_reader_enabled_summary_off">Meddelandeläsaren är inaktiverad och inga meddelanden analyseras.\nAnge minst en applikation först.</string>
+    <string name="notification_cat_glucose">Läs blodsockervärde</string>
+    <string name="notification_cat_iob">Läs IOB-värde</string>
+    <string name="notification_reader_enabled">Aktivera</string>
+    <string name="no_receiver">Ingen applikation</string>
+    <string name="notification_reader_app_regex">Regex-filter</string>
+    <string name="notification_reader_app_regex_summary">Regex för att analysera värdet från texten i meddelandet.\nÄndra endast om du vet vad du gör eller om du får en uppmaning från utvecklaren.</string>
+    <string name="notification_reader_five_minute_interval">5-minutersintervall</string>
+    <string name="notification_reader_five_minute_interval_summary">Vissa appar, som Dexcom, uppdaterar sina meddelanden ganska ofta. För att ignorera dessa uppdateringar med samma värde, aktivera 5-minutersintervallet.\nOm aktiverat finns det bara ett nytt värde var 5:e minut eller när värdet i meddelandet har ändrats.</string>
+    <string name="pref_source_notification_info_summary">För att ta emot värden från meddelanden från andra appar krävs en behörighet för åtkomst till meddelanden!\nMeddelandet måste innehålla antingen blodsockervärdet eller IOB/COB som en sträng.\nEftersom varje meddelande har en annan layout kanske det inte fungerar med varje app. Vid problem, kontakta mig med en skärmdump av meddelandet och loggarna.</string>
+    <string name="sensor_age_label">Sensorålder</string>
+    <string name="sensor_age_value">%1$dd %2$dh</string>
+    <string name="vibrate_pattern_shorty">Kort</string>
+
+    <string name="pref_cat_locksreen_aod">Låsskärm och AOD</string>
+    <string name="pref_cat_locksreen_aod_summary">Inställningar för att lägga till en bakgrundsbild på låsskärmen och Always On Display.</string>
+    <string name="pref_graph_transparency_phone_main_summary">Bakgrundstransparens för grafen på huvudskärmen.\nDetta krävs endast för det ljusa färgschemat.</string>
+
+    <string name="pref_floating_widget_lock_position">Lås position</string>
+    <string name="pref_floating_widget_lock_position_summary">Om positionen är låst kan den flytande widgeten inte flyttas. Den befinner sig alltid på samma position.</string>
+    <string name="widget_chart_glucose_trend_delta_time_iob_cob">Värden och graf</string>
+
+    <string name="aod_permission_info">För att aktivera glukosvisning på Always On Display behöver denna app behörighet för tillgänglighetstjänsten.\nDenna behörighet används uteslutande för att visa glukosdata på AOD. Din integritet är viktig, och inga andra personuppgifter hämtas, samlas in eller delas.\nTryck på \"OK\" för att komma till behörighetsskärmen.</string>
+
+    <string name="graph_duration_phone_main_summary">Antal timmar som visas i diagrammet på huvudskärmen.\nAnvänd 0 för att inaktivera diagrammet.</string>
+    <string name="graph_circle_radius">Punktstorlek</string>
+    <string name="graph_circle_radius_summary">Storlek på punkterna i diagrammet för alla widgets, låsskärmen och Always-on-Display (AOD). Denna inställning påverkar inte diagrammet på appens huvudskärm.</string>
+
+    <string name="graph_days_phone_main">Antal dagar</string>
+    <string name="graph_days_phone_main_summary">Antal dagar som är tillgängliga i diagrammet.\nVIKTIGT: För många dagar kan leda till minnesproblem!</string>
+
+    <string name="graph_main">Graf på huvudskärmen</string>
+    <string name="graph_main_summary">Grafinställningar för grafen på huvudskärmen.</string>
+    <string name="graph_widgets">Graf i widgets</string>
+    <string name="graph_widgets_summary">Grafinställningar för widgets, meddelanden, låsskärm och Always-on-Display (AOD).</string>
+    <string name="show_graph_notification_summary">Visa graf i meddelandet.</string>
+
+    <string name="pref_cat_ui_graph_settings_summary">Allmänna inställningar för användargränssnittet och grafen på huvudskärmen och i widgetarna.</string>
+    <string name="pref_cat_ui_graph_settings">Gränssnitt och graf</string>
+
+    <string name="state_update_required">Uppdatering krävs!</string>
+
+    <string name="pref_notification_recreate">Återskapa meddelanden</string>
+    <string name="pref_notification_recreate_summary">Ta bort och återskapa andra och tredje meddelandet.\nDetta krävs endast för speciella AOD-displayer som inte uppdaterar meddelandets ikon.\nDet är inte möjligt att återskapa ikonen för förgrundsmeddelandet.</string>
+    <string name="source_dexcom_server_eu">Internationell/EU</string>
+    <string name="source_dexcom_server_us">USA</string>
+    <string name="source_dexcom_server_jp">Japan</string>
+    <string name="source_dexcom_server_summary">Välj server beroende på vilket land ditt Dexcom Clarity är anslutet till.</string>
+    <string name="dexcom_share_check_jp_account">Tryck här för att kontrollera dina Dexcom Share-kontouppgifter för ditt japanska konto.</string>
+    <string name="src_cat_medtrum">Medtrum</string>
+    <string name="src_medtrum_enabled_summary">Aktivera Medtrum-anslutning efter att användare och lösenord har ställts in.</string>
+    <string name="src_medtrum_user">Användare</string>
+    <string name="src_medtrum_user_summary">Medtrum-användarnamn för följarkonto.</string>
+    <string name="src_medtrum_password_summary">Lösenord för Medtrum-följarkonto.</string>
+    <string name="src_medtrum_patient_summary">Om mer än en patient är ansluten till Medtrum-kontot, välj den patient för vilken data ska tas emot.</string>
+    <string name="source_medtrum_server_default">Standard (.eu)</string>
+    <string name="source_medtrum_server_france">Frankrike (.fr)</string>
+    <string name="source_medtrum">Medtrum</string>
+    <string name="source_request_interval_2">2 minuter</string>
+    <string name="source_select_patient">Välj en patient först!</string>
+    <string name="source_no_patient">Ingen patient hittades!</string>
+    <string name="source_new_sensor_starting">Ny sensor startar…</string>
+    <string name="source_sensor_need_calibration">Sensorn måste kalibreras!</string>
+    <string name="source_no_valid_value">Inget giltigt glukosvärde hittades!</string>
+    <string name="source_invalid_patient">Ogiltiga patientdata!</string>
+    <string name="pref_source_libre_patched_info_summary">Om du använder den patchade Libre-appen eller andra appar som tillhandahåller denna broadcast.</string>
+    <string name="pref_sensor_runtime">Sensorbäringstid</string>
+    <string name="pref_sensor_runtime_summary">Antal dagar som sensorn kan bäras.</string>
+    <string name="runtime_10_days">10 dagar</string>
+    <string name="runtime_14_days">14 dagar</string>
+    <string name="runtime_15_days">15 dagar</string>
+    <string name="runtime_24_days">24 dagar</string>
+    <string name="table_header_statistics">Statistik</string>
+    <string name="info_label_average">Genomsnitt</string>
+    <string name="time_in_range">TIR</string>
+    <string name="src_webserver">Webbserver</string>
+    <string name="src_juggluco_webserver_summary">Använd Juggluco-webbserver för att få sensorålder och saknade data, om tillgängligt. Aktivera först webbservern i Juggluco utan SSL och api_secret.</string>
+    <string name="src_iob_support">IOB-stöd</string>
+    <string name="src_juggluco_iob_support_summary">Ta emot IOB-värden från Juggluco-webbserver.</string>
+    <string name="pref_source_juggluco_setup_info">Ställ in Juggluco</string>
+    <string name="pref_source_juggluco_webserver_info">Ställ in webbserver</string>
+    <string name="pref_source_juggluco_webserver_info_summary">Så här aktiverar du webbservern i Juggluco:\n- Öppna Juggluco\n- Gå till \"Inställningar\"\n- Öppna \"Datautbyte\"\n- Öppna \"Webbserver\"\n- Aktivera \"Aktiv\"\n- Ställ INTE in \"api_secret\" och \"Använd SSL\"!\n- valfritt: aktivera \"Endast lokalt\"</string>
+
+    <string name="pref_source_medtrum_info">Ställ in Medtrum</string>
+    <string name="pref_source_medtrum_info_summary">För att ta emot data som Medtrum-följare:\n- Registrera ett konto i EasyFollower-appen eller på EasyView\n-> VIKTIGT: Du kan inte använda ditt Medtrum-konto för detta!\n- Bjud in dig själv\n- Acceptera inbjudan\n- Använd detta konto för GlucoDataHandler\n- Valfritt: Avinstallera EasyFollower-appen</string>
+
+    <string name="pref_battery_complication_percent">Visa % i batterikomplikation</string>
+
+    <string name="source_help_summary">Klicka här för att öppna GDH-wiki som listar sensorer som stöds och kompatibla källor.</string>
+
+    <string name="pref_switch_standard_statistics">Använd standardstatistik</string>
+    <string name="pref_switch_standard_statistics_summary">Använd standardstatistikintervall eller GDH:s anpassade målintervallsinställningar för statistiska beräkningar.</string>
+
+    <string name="aa_media_player_colored">Färgat omslag</string>
+    <string name="aa_media_player_colored_summary_off">Visa vitt värde, trend och graf</string>
+    <string name="aa_media_player_colored_summary_on">Visa färgat värde, trend och graf</string>
+
+    <!-- v2.2 -->
+
+    <string name="alarm_general_settings_summary">Allmänna larminställningar för alla larm.</string>
+    <string name="alarm_cat_quiet_hours">Vilotid</string>
+    <string name="source_delay_too_short">Nytt värde är äldre än intervallet. Om detta händer oftare, gå till Källor - Molntjänster och öka fördröjningen!</string>
+
+    <string name="health_connect_permission_rationale_title">Health Connect-integration</string>
+    <string name="health_connect_permission_rationale_long">
+För att hjälpa dig hantera din diabetes kan GlucoDataHandler dela dina blodsockerdata med Health Connect.\n\n
+Detta gör det möjligt för dig att: \n
+  - Lagra dina glukosmätvärden säkert på en central plats på din enhet.\n
+  - Dela dina glukosdata med andra hälso- och fitnessappar som du auktoriserar för att få en mer fullständig bild av din hälsa.\n\n
+GlucoDataHandler skriver endast blodsockerdata till Health Connect och läser inga andra hälsodatatyper såvida du inte ger separata behörigheter för detta.\n\n
+Du kan hantera dessa behörigheter när som helst i Health Connect-appens inställningar.
+</string>
+    <string name="pref_healthconnect">Health Connect</string>
+    <string name="pref_healthconnect_summary">För att dela data med Health Connect, ge GDH behörighet.</string>
+    <string name="pref_samsunghealth_summary">För att synkronisera med Samsung Health måste dessutom \"Läs från Health Connect\" aktiveras i Samsung Health-appen.\nObservera att appar som Samsung Health inte läser dessa värden periodiskt!</string>
+    <string name="health_connect_error">Fel uppstod, skicka loggarna till utvecklaren.</string>
+    <string name="health_connect_not_available">Inte tillgänglig!</string>
+    <string name="health_connect_no_permission">Behörighet saknas!</string>
+    <string name="select_patient_title">Välj patient</string>
+    <string name="invalid_glucose_value">Ogiltigt glukosvärde %1$s!</string>
+    <string name="missing_data">Data saknas!</string>
+    <string name="timeout">Tidsgräns överskred!</string>
+    <string name="internal_error">Internt fel!</string>
+    <string name="provide_logs">Skicka loggarna till utvecklaren.</string>
+    <string name="invalid_user_id">Ogiltigt användar-ID mottaget!</string>
+    <string name="invalid_redirect">Ogiltig omdirigering i svaret!</string>
+    <string name="invalid_iob_value">Kunde inte analysera IOB!</string>
+    <string name="source_iob_notification">IOB-meddelande</string>
+
+    <string name="pref_cat_logs">Loggar</string>
+    <string name="pref_cat_logs_summary">Konfigurera loggning och spara loggar.</string>
+    <string name="pref_cat_log_to_db">Logga till databas</string>
+    <string name="pref_log_to_db_summary">Varning: Att spara loggar i databasen kan påverka prestanda och batteritid.\nAktivera endast detta alternativ på instruktion från utvecklaren för att hjälpa till med att analysera ett problem.</string>
+    <string name="pref_log_duration_size">Logglagringstid</string>
+    <string name="pref_log_duration_summary">Antal timmar som loggar ska behållas i databasen.\nVärdet 0 inaktiverar databasloggning.</string>
+    <string name="pref_log_debug">Aktivera debug-loggning</string>
+    <string name="pref_log_debug_summary">Aktivera lagring av detaljerade debug-meddelanden i databasen (max. de senaste 30 minuterna).\nAktivera endast om det begärs av utvecklaren.</string>
+
+    <string name="pref_switch_xdrip_server">Lokal webbserver</string>
+    <string name="pref_switch_xdrip_server_summary">Gör det möjligt för urtavlor som utvecklats för xDrip+ att ta emot glukosdata från denna app. Den emulerar xDrip+-webbserverfunktionen på port 17580.</string>
+    <string name="pref_switch_xdrip_server_reduce_data">Förenklat dataläge</string>
+    <string name="pref_switch_xdrip_server_reduce_data_summary">Detta reducerar tillhandahållen data till ett minimum för att undvika minnesproblem på vissa Garmin-klockor.\nDetta kanske inte fungerar med varje urtavla.</string>
+    <string name="error_port_in_use">Porten används redan!\nAvsluta andra webbservrar som körs på denna port och starta sedan om den lokala webbservern.</string>
+    <string name="state_active">aktiv</string>
+    <string name="pref_garmin_info_summary">Det finns ingen dedikerad app för Garmin, Fitbit eller Pebble, endast en lokal webbserver som används av urtavlor med xDrip+-stöd.\nSök helt enkelt efter urtavlor för xDrip+ i Connect IQ Store och ställ in xDrip+-källan.\nVIKTIGT: Om xDrip+ eller Juggluco också används kan den lokala webbservern endast aktiveras i en app eftersom samma port (17580) används!</string>
+    <string name="remaining">Återstående</string>
+    <string name="pref_switch_xdrip_open_server">Öppen webbserver</string>
+    <string name="pref_switch_xdrip_open_server_summary">Denna inställning gör webbservern tillgänglig för andra enheter i nätverket.\nDetta kan orsaka säkerhetsproblem, så aktivera endast om du verkligen måste komma åt webbserverns data från en annan enhet.\nGarmin-urtavlorna begär data direkt på telefonen, så ingen öppen server krävs!</string>
+    <string name="last_request">Senaste förfrågan</string>
+    <string name="close_activitiy">Stäng skärm</string>
+    <string name="collapse_view">Fäll ihop vy</string>
+    <string name="expand_view">Expandera vy</string>
+    <string name="patient_name_summary">Namn på användaren/patienten som ska visas i meddelanden, widgets etc.</string>
+    <string name="pref_switch_xdrip_server_1_minute_interval">1-minutersintervall</string>
+    <string name="pref_switch_xdrip_server_1_minute_interval_summary">Returnerar en lista med värden i 1-minutersintervall istället för 5-minutersintervall.\nAktivera endast denna inställning om du vet att urtavlan eller widgeten kan hantera det!\nNormala urtavlor är designade för 5-minutersintervall.</string>
+    <string name="short_value_patient_name">Glukos och namn</string>
+    <string name="pref_cat_general_advanced_summary">Avancerade appinställningar.</string>
+    <string name="important">Viktigt</string>
+    <string name="api_36_notification_info">Från och med Android 16 grupperas flera statusfältsikoner av Android.\nDärför är det inte längre möjligt att använda dem.</string>
+    <string name="pref_source_juggluco_summary">Android-app för Freestyle Libre 1, 2 och 3, Dexcom G7/ONE+, Sibionics GS1Sb och AccuChek SmartGuide-sensorer.</string>
+    <string name="pref_source_xdrip_summary">Android-diabeteshanteringsapp som kan ansluta till olika sensorer och ta emot data från olika källor som Medtronic.</string>
+    <string name="pref_source_aaps_summary">Android APS är ett open source-system för automatiserad insulintillförsel (Closed Loop).</string>
+    <string name="pref_source_eversense_summary">Ta emot lokala broadcast-meddelanden från ESEL för Eversense eller Dexcom BYODA för Dexcom G6-sensorer.</string>
+    <string name="pref_source_diabox_summary">Android-app för Freestyle Libre-sensorer.</string>
+    <string name="pref_source_libre_patched_summary">Patchad Libre-app som skickar lokala broadcasts.\nAndra appar använder också detta broadcast-format för att vidarebefordra glukosdata.</string>
+    <string name="pref_source_xdrip_broadcast_service_api_info">xDrip+ Broadcast Service API</string>
+    <string name="pref_source_xdrip_broadcast_service_api_info_summary">xDrip+ Broadcast Service API är ett alternativt gränssnitt för att ta emot data (inkl. IOB) från xDrip+.</string>
+    <string name="src_libreview_summary">Följ FreeStyle Libre-app på distans.</string>
+    <string name="src_dexcom_share_summary">Följ Dexcom-app på distans.</string>
+    <string name="src_medtrum_summary">Följ Medtrum-app på distans.</string>
+    <string name="src_ns_summary">Följ Nightscout-webbtjänst på distans.</string>
+    <string name="pref_cat_wear_os_summary">För Wear OS-klockor, t.ex. alla Google Pixel Watches, Samsung Galaxy Watch 4 och nyare samt många andra.</string>
+    <string name="pref_cat_watchdrip_summary">För klockor som stöds av den externa WatchDrip+-appen, som de flesta Mi Band-, Xiaomi Smart Band- och Amazfit-modeller.</string>
+    <string name="pref_cat_garminpebble">Garmin-, Fitbit- och Pebble-klockor</string>
+    <string name="pref_cat_garminpebble_summary">För enheter och appar som kan ta emot glukosdata från xDrip+-webbtjänsten, som Garmin-, Pebble- och vissa Fitbit-klockor.</string>
+    <string name="pref_garmin_watchfaces_summary">Tryck här för att öppna Connect IQ Store för xDrip+-urtavlor.\nOm urtavlorna stöder xDrip+ bör de också vara kompatibla med denna app.</string>
+    <string name="pref_garmin_watchfaces">Garmin</string>
+    <string name="pref_fitbit_watchfaces">Fitbit</string>
+    <string name="pref_fitbit_watchfaces_summary">Tryck här för att öppna Glance-webbplatsen som stöder xDrip+-webbtjänster.</string>
+    <string name="pref_pebble_watchfaces">Pebble</string>
+    <string name="pref_pebble_watchfaces_summary">Tryck här för att öppna Pebble-urtavlor utvecklade för xDrip+ som också bör vara kompatibla med denna app.</string>
+    <string name="gmi">GMI</string>
+    <string name="pref_lockscreen_x_pos">Horisontell position</string>
+    <string name="pref_lockscreen_x_pos_summary">Horisontell position på bilden:\n0 är displayens vänstra kant\n40 är displayens högra kant</string>
+    <string name="notification_cat_iob_cob">Läs IOB/COB-värde</string>
+    <string name="notification_cat_glucose_summary">Läs glukosvärdet från ett meddelande från en extern app som visar glukosvärdet i meddelandet.</string>
+    <string name="notification_cat_iob_cob_summary">Läs IOB- och/eller COB-värdet från ett meddelande från en extern app som visar dessa värden i meddelandet.</string>
+    <string name="source_notification_iob_enabled_summary">Aktivera endast om meddelandet innehåller ett IOB-värde.</string>
+    <string name="source_notification_cob_enabled_summary">Aktivera endast om meddelandet innehåller ett COB-värde.</string>
+    <string name="source_notification_iob_cob_irregular">Speciell hantering</string>
+    <string name="source_notification_iob_cob_irregular_summary">Detta är en speciell inställning för meddelanden som uppdateras för ofta. Detta säkerställer att alla värden behandlas korrekt. Aktivera endast på instruktion från utvecklaren för att analysera ett problem.</string>
+    <string name="alarm_ignore_snooze_for_obsolete">Larma alltid vid föråldrade värden</string>
+    <string name="alarm_ignore_snooze_for_obsolete_summary">För att också utlösa detta larm medan snooze-funktionen eller den allmänna vilotiden för alla larm är aktiv, för att säkerställa att det alltid meddelas när nya glukosvärden saknas.</string>
+    <string name="alarm_inactive_auto_reenable">Återaktivera automatiskt</string>
+    <string name="alarm_inactive_auto_reenable_summary">Efter att vilotiden har inaktiverats återaktiveras den vid sluttiden.</string>
+
+    <plurals name="minutes_long">
+        <item quantity="one">%d minut</item>
+        <item quantity="other">%d minuter</item>
+    </plurals>
+    <plurals name="days_long">
+        <item quantity="one">%d dag</item>
+        <item quantity="other">%d dagar</item>
+    </plurals>
+    <plurals name="hours_long">
+        <item quantity="one">%d timme</item>
+        <item quantity="other">%d timmar</item>
+    </plurals>
+
+    <string name="dexcom_server_down_error">Dexcom-servern verkar vara offline!\nTryck här för att kontrollera serverstatus.\nOm Dexcom-appen är installerad på samma enhet kan du använda Notification Reader istället.</string>
+</resources>
