@@ -177,7 +177,7 @@
     <string name="pref_notification_icon_summary">Typ av statusfältsikon för aviseringen.</string>
     <string name="pref_notification_big_icon">Stor statusfältsikon</string>
     <string name="pref_notification_big_icon_summary">Stor ikon i statusfältet. Vänligen inaktivera om den blir beskuren.</string>
-    <string name="pref_notification_no_content">Tomt innehåll</string>
+    <string name="pref_notification_no_content">Dölj innehåll</string>
     <string name="pref_notification_no_content_summary">Om endast statusfältsikonen är av intresse kan innehållet i aviseringen tas bort.</string>
     <string name="pref_second_notification">2:a aviseringen</string>
     <string name="pref_second_notification_summary">Visar en ytterligare avisering utan innehåll för att lägga till en extra statusfältsikon.</string>
