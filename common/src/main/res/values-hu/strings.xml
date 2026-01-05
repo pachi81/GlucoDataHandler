@@ -727,7 +727,7 @@ Kérjük, állítsa a beállítást \"Extrém zajos\" értékre!</string>
     <string name="tasker_target_range_state">Vércukor tartomány változás</string>
     <string name="tasker_wear_connection_state">Okosóra kapcsolat</string>
     <string name="temp_disabled">Ideiglenesen letiltva</string>
-    <string name="temp_disabled_until">Ideiglenesen letiltva %1$s-ig</string>
+    <string name="temp_disabled_until">Ideiglenesen letiltva</string>
     <string name="test_alarm">Teszt riasztás!</string>
     <string name="test_neg_range">Teszt Range komplikáció negatív értékekkel (trendkör támogatáshoz)</string>
     <string name="timestamp">A vércukorérték időbélyege</string>
