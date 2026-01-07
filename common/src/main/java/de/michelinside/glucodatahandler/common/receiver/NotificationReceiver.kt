@@ -37,9 +37,23 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     private val trendRegex = "([→↗↑↘↓⇈⇊])".toRegex()
 
     companion object {
-        const val defaultGlucoseRegex = "(?:^|\\s)(\\d*\\.?\\d+)(?=\\s|\\p{S}|\$)" // old: "(?:^|\\s)(\\d*\\.?\\d+)(?=\\s|\$)"  "(?:^|\s)(\d{1,3}(?:\.\d{1,3})?)(?=\s|${'$'})"
-        const val defaultIobRegex = "(\\d*\\.?\\d+)\\s?[Uu]"
-        const val defaultCobRegex = "(\\d+)\\s?[Gg]"
+        val oldGlucoseRegexes = mutableSetOf(
+            "(\\d*\\.?\\d+)",
+            "(?:^|\\s)(\\d*\\.?\\d+)(?=\\s|\$)",
+            "(?:^|\\s)(\\d{1,3}(?:\\.\\d{1,3})?)(?=\\s|${'$'})"
+        )
+        val oldIobRegexes = mutableSetOf(
+            "IOB: (\\d*\\.?\\d+) U",
+            "(\\d*\\.?\\d+) U",
+            "(\\d*\\.?\\d+)\\s?[Uu]"
+        )
+        val oldCobRegexes = mutableSetOf(
+            "(\\d+)\\s?[Gg]"
+        )
+
+        const val defaultGlucoseRegex = """(?:^|\s)(\d+(\.\d)?)(?=\s|\p{S}|$)"""
+        const val defaultIobRegex = """(\d*\.?\d+)\s?[a-fh-z]\b"""
+        const val defaultCobRegex = """(\d+)\s?g\b"""
     }
 
     override fun getName(): String {

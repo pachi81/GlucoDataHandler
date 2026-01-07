@@ -588,7 +588,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
 
             if(isUpgrade && sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX)) {
                 val oldRegex = sharedPrefs.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX, "")
-                if(oldRegex.isNullOrEmpty() || oldRegex == "(\\d*\\.?\\d+)" || oldRegex == "(?:^|\\s)(\\d*\\.?\\d+)(?=\\s|\$)") {
+                if(oldRegex.isNullOrEmpty() || NotificationReceiver.oldGlucoseRegexes.contains(oldRegex)) {
                     Log.i(LOG_ID, "Change notification regex from $oldRegex to ${NotificationReceiver.defaultGlucoseRegex}")
                     with(sharedPrefs.edit()) {
                         putString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX, NotificationReceiver.defaultGlucoseRegex)
@@ -604,7 +604,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
 
             if(isUpgrade && sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX)) {
                 val oldRegex = sharedPrefs.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX, "")
-                if(oldRegex.isNullOrEmpty() || oldRegex == "IOB: (\\d*\\.?\\d+) U" || oldRegex == "(\\d*\\.?\\d+) U") {
+                if(oldRegex.isNullOrEmpty() || NotificationReceiver.oldIobRegexes.contains(oldRegex)) {
                     Log.i(LOG_ID, "Change IOB notification regex from $oldRegex to ${NotificationReceiver.defaultIobRegex}")
                     with(sharedPrefs.edit()) {
                         putString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX, NotificationReceiver.defaultIobRegex)
@@ -618,7 +618,16 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 }
             }
 
-            if(!sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_COB_APP_REGEX)) {
+            if(isUpgrade && sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_COB_APP_REGEX)) {
+                val oldRegex = sharedPrefs.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_COB_APP_REGEX, "")
+                if(oldRegex.isNullOrEmpty() || NotificationReceiver.oldCobRegexes.contains(oldRegex)) {
+                    Log.i(LOG_ID, "Change IOB notification regex from $oldRegex to ${NotificationReceiver.defaultCobRegex}")
+                    with(sharedPrefs.edit()) {
+                        putString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_COB_APP_REGEX, NotificationReceiver.defaultCobRegex)
+                        apply()
+                    }
+                }
+            } else if(!sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_COB_APP_REGEX)) {
                 with(sharedPrefs.edit()) {
                     putString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_COB_APP_REGEX, NotificationReceiver.defaultCobRegex)
                     apply()
