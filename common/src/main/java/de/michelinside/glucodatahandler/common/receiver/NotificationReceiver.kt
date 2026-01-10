@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.RemoteViews
 import android.widget.TextView
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
@@ -34,6 +35,8 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     private var lastValueChanged = false
     private var waitForAdditionalIobNotification: Thread? = null
     private val trendRegex = "([→↗↑↘↓⇈⇊])".toRegex()
+    private val receivedNotifications = mutableListOf<StatusBarNotification>()
+
 
     companion object {
         private val LOG_ID = "GDH.NotificationReceiver"
@@ -56,6 +59,26 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         const val defaultCobRegex = """(\d+)\s?g\b"""
     }
 
+    private fun getRegex(key: String, defaultRegex: String): Regex {
+        val sharedPref = GlucoDataService.sharedPref?: applicationContext.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
+        val regex = sharedPref.getString(key, defaultRegex)
+        if(regex.isNullOrEmpty())
+            return defaultRegex.toRegex(RegexOption.IGNORE_CASE)
+        return regex.toRegex(RegexOption.IGNORE_CASE)
+    }
+
+    private val glucoseRegex: Regex get() {
+        return getRegex(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX, defaultGlucoseRegex)
+    }
+
+    private val iobRegex: Regex get() {
+        return getRegex(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX, defaultIobRegex)
+    }
+
+    private val cobRegex: Regex get() {
+        return getRegex(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_COB_APP_REGEX, defaultCobRegex)
+    }
+
     override fun getName(): String {
         return LOG_ID
     }
@@ -66,20 +89,15 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
 
     private fun startWaitThread(sbn: StatusBarNotification, waitTime: Long = 3000) {
         stopWaitThread()
+        receivedNotifications.add(sbn)
         Log.i(LOG_ID, "Start wait thread for $waitTime ms")
         waitForAdditionalNotification = Thread {
             try {
                 Thread.sleep(waitTime)
                 // no additional notification, parse this one
                 Handler(applicationContext.mainLooper).post {
-                    val diffTime = (sbn.postTime - ReceiveData.time)/1000 // in seconds
-                    Log.i(LOG_ID, "Handle wait value notification - diff: $diffTime")
-                    if(diffTime > 50) {
-                        if(multiValueNotificationPackage == null)
-                            multiValueNotificationPackage = ""  // set to not receiving any additional notification for not trigger delay thread each time!
-                        updateOnlyChangedValue = diffTime < 250
-                        parseValue(sbn)
-                    }
+                    parseValueNotificationList(receivedNotifications)
+                    receivedNotifications.clear()
                 }
             } catch (_: InterruptedException) {
                 Log.d(LOG_ID, "Wait thread interrupted")
@@ -355,20 +373,40 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         return extractTrendValue(text)
     }
 
-    private fun parseValue(sbn: StatusBarNotification) {
-        val sharedPref = applicationContext.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
-        val regex = sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX, defaultGlucoseRegex)!!.toRegex(RegexOption.IGNORE_CASE)
+    private fun parseValueNotificationList(list: MutableList<StatusBarNotification>) {
+        Log.i(LOG_ID, "parse ${list.size} value notifications")
+        list.asReversed().forEach { sbn ->
+            val diffTime = (sbn.postTime - ReceiveData.time)/1000 // in seconds
+            Log.i(LOG_ID, "Handle wait value notification - diff: $diffTime")
+            if(diffTime > 50) {
+                if(multiValueNotificationPackage == null)
+                    multiValueNotificationPackage = ""  // set to not receiving any additional notification for not trigger delay thread each time!
+                updateOnlyChangedValue = diffTime < 250
+                if(parseValue(sbn, sbn == list.first()))
+                    return
+            } else {
+                return // all other notifications are older
+            }
+        }
+    }
+
+    private fun parseValue(sbn: StatusBarNotification, setError: Boolean = true): Boolean {
+        val regex = glucoseRegex
         Log.i(LOG_ID, "using regex $regex")
         val value = parseValueFromNotification(sbn, false, regex)
         if(!value.isNaN()) {
             lastValueNotificationTime = sbn.postTime
             val rate = parseTrendValue(sbn)
             handleGlucoseValue(value, rate, sbn)
-        } else if(parsedTextViews.isNotEmpty()) {
-            SourceStateData.setError(DataSource.NOTIFICATION, applicationContext.resources.getString(R.string.source_no_valid_value) + "\n${parsedTextViews.distinct()}")
-        } else {
-            SourceStateData.setError(DataSource.NOTIFICATION, applicationContext.resources.getString(R.string.missing_data))
+            return true
+        } else if(setError) {
+            if(parsedTextViews.isNotEmpty()) {
+                SourceStateData.setError(DataSource.NOTIFICATION, applicationContext.resources.getString(R.string.source_no_valid_value) + "\n${parsedTextViews.distinct()}")
+            } else {
+                SourceStateData.setError(DataSource.NOTIFICATION, applicationContext.resources.getString(R.string.missing_data))
+            }
         }
+        return false
     }
 
     private fun parseIobCobValue(sbn: StatusBarNotification) {
@@ -386,7 +424,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
 
     private fun parseIobValue(sbn: StatusBarNotification, sharedPref: SharedPreferences): Float {
         if(sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_ENABLED, true)) {
-            val regex = sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX, defaultIobRegex)!!.toRegex(RegexOption.IGNORE_CASE)
+            val regex = iobRegex
             Log.i(LOG_ID, "using IOB regex $regex")
             return parseValueFromNotification(sbn, true, regex)
 
@@ -396,7 +434,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
 
     private fun parseCobValue(sbn: StatusBarNotification, sharedPref: SharedPreferences): Float {
         if(sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_COB_ENABLED, true)) {
-            val regex = sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_COB_APP_REGEX, defaultCobRegex)!!.toRegex(RegexOption.IGNORE_CASE)
+            val regex = cobRegex
             Log.i(LOG_ID, "using COB regex $regex")
             return parseValueFromNotification(sbn, true, regex)
         }
@@ -409,13 +447,10 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                 Utils.parseRegexGroupValues(value, regex)?.get(1)?.toFloatOrNull()?.let {
                     if(!isIobCob) {
                         // check value not being a IOB or COB value
-                        val sharedPref = applicationContext.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
-                        val iobRegex = sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX, defaultIobRegex)!!.toRegex(RegexOption.IGNORE_CASE)
                         if(Utils.parseRegexGroupValues(value, iobRegex) != null) {
                             Log.d(LOG_ID, "Found IOB value: $it in $value - ignore for glucose value")
                             return null
                         }
-                        val cobRegex = sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_COB_APP_REGEX, defaultCobRegex)!!.toRegex(RegexOption.IGNORE_CASE)
                         if(Utils.parseRegexGroupValues(value, cobRegex) != null) {
                             Log.d(LOG_ID, "Found COB value: $it in $value - ignore for glucose value")
                             return null
@@ -596,6 +631,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             Log.i(LOG_ID, "Ignoring value notification with same value: $glucoseValue")
         } else if (validGlucoseValue(glucoseValue)) {
             stopWaitThread()
+            receivedNotifications.clear()
             lastValueChanged = lastValue != glucoseValue
             lastValue = glucoseValue
             val glucoExtras = Bundle()
