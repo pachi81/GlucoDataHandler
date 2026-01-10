@@ -20,9 +20,13 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 -dontwarn **
--keep class **
--keepclassmembers class *{*;}
--keepattributes *
+#-keep class **
+#-keepclassmembers class *{*;}
+#-keepattributes *
+
+# Prevent stripping the common library classes
+-keep class de.michelinside.glucodatahandler.common.** { *; }
+
 
 # --------------------------------------------------------------------
 # REMOVE all debug log messages

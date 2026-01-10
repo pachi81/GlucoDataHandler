@@ -17,7 +17,6 @@ android {
 
     buildTypes {
         release {
-            // Enable ProGuard
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "GlucoDataHandler"
@@ -29,6 +28,7 @@ android {
             resValue "string", "app_name", "GlucoDataHandler"
         }
         debug {
+            minifyEnabled false
             resValue "string", "app_name", "GlucoDataHandler"
         }
         second {
@@ -39,16 +39,10 @@ android {
             resValue "string", "app_name", "GDH Second"
         }
         applicationVariants.all {
-                // this method is use to rename your all apk weather
-                // it may be signed or unsigned(debug apk)
             variant ->
                 variant.outputs.each {
-                        // on below line we are setting a
-                        // name to our apk as GlucoDataHandler.apk
                     output ->
                         def name = "GlucoDataHandler_Wear_" + versionName + ".apk"
-                        // on below line we are setting the
-                        // outputFile Name to our apk file.
                         output.outputFileName = name
                 }
         }
@@ -62,33 +56,14 @@ android {
     }
     buildFeatures {
         viewBinding true
-        //compose true
     }
-    /*
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.11"
-    }*/
     dependenciesInfo {
-        // Disables dependency metadata when building APKs.
         includeInApk = false
-        // Disables dependency metadata when building Android App Bundles.
         includeInBundle = false
     }
 }
 
 dependencies {
-/*
-    def composeBom = platform('androidx.compose:compose-bom:2024.04.00')
-    implementation composeBom
-    androidTestImplementation composeBom
-    implementation "androidx.compose.runtime:runtime:1.6.5"
-
-    // Material Design 3
-    implementation 'androidx.compose.material3:material3'
-    // Android Studio Preview support
-    implementation 'androidx.compose.ui:ui-tooling-preview'
-    debugImplementation 'androidx.compose.ui:ui-tooling'
- */
     implementation 'androidx.core:core-ktx:1.17.0'
     implementation 'com.google.android.gms:play-services-wearable:19.0.0'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
@@ -108,7 +83,6 @@ dependencies {
 }
 
 afterEvaluate {
-    //noinspection ConfigurationAvoidance
     def bundleRelease = tasks.getByPath(':wear:bundleRelease')
     def copyAndroidBundlePostBuild = tasks.register('copyAndroidBundlePostBuild', Copy) {
         dependsOn bundleRelease
@@ -118,7 +92,6 @@ afterEvaluate {
     }
     bundleRelease.finalizedBy(copyAndroidBundlePostBuild)
 
-    //noinspection ConfigurationAvoidance
     def bundleDev_release = tasks.getByPath(':wear:bundleDev_release')
     def copyAndroidBundleDevPostBuild = tasks.register('copyAndroidBundleDevPostBuild', Copy) {
         dependsOn bundleDev_release
@@ -128,7 +101,6 @@ afterEvaluate {
     }
     bundleDev_release.finalizedBy(copyAndroidBundleDevPostBuild)
 
-    //noinspection ConfigurationAvoidance
     def assembleRelease = tasks.getByPath(':wear:assembleRelease')
     def copyAndroidApksPostBuild = tasks.register('copyAndroidApksPostBuild', Copy) {
         dependsOn assembleRelease
@@ -138,7 +110,6 @@ afterEvaluate {
     }
     assembleRelease.finalizedBy(copyAndroidApksPostBuild)
 
-    //noinspection ConfigurationAvoidance
     def assembleDevRelease = tasks.getByPath(':wear:assembleDev_release')
     def copyAndroidDevApksPostBuild = tasks.register('copyAndroidDevApksPostBuild', Copy) {
         dependsOn assembleDevRelease
@@ -148,7 +119,6 @@ afterEvaluate {
     }
     assembleDevRelease.finalizedBy(copyAndroidDevApksPostBuild)
 
-    //noinspection ConfigurationAvoidance
     def assembleSecond = tasks.getByPath(':wear:assembleSecond')
     def copyAndroidSecondApksPostBuild = tasks.register('copyAndroidSecondApksPostBuild', Copy) {
         dependsOn assembleSecond
