@@ -405,6 +405,8 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             } else {
                 SourceStateData.setError(DataSource.NOTIFICATION, applicationContext.resources.getString(R.string.missing_data))
             }
+        } else {
+            Log.w(LOG_ID, "No valid value found in notification:\n${parsedTextViews.distinct()}")
         }
         return false
     }
