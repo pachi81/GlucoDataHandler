@@ -20,6 +20,11 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    buildFeatures {
+        buildConfig = true
+        viewBinding true
+    }
+
     buildTypes {
         release {
             // Enable ProGuard
@@ -29,7 +34,7 @@ android {
         }
         dev_release {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-dev-rules.pro'
             versionNameSuffix '-dev.' + project.ext.versionCode
             resValue "string", "app_name", "GlucoDataAuto"
             signingConfig signingConfigs.debug
@@ -69,9 +74,6 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-    buildFeatures {
-        viewBinding true
-    }
     dependenciesInfo {
         // Disables dependency metadata when building APKs.
         includeInApk = false
@@ -86,6 +88,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.13.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     implementation 'com.joaomgcd:taskerpluginlibrary:0.4.10'
+    implementation project(path: ':common')
     implementation project(path: ':common')
     implementation "androidx.car.app:app:1.7.0"
     implementation "androidx.preference:preference-ktx:1.2.1"
