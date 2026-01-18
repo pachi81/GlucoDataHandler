@@ -43,15 +43,18 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         val oldGlucoseRegexes = mutableSetOf(
             "(\\d*\\.?\\d+)",
             "(?:^|\\s)(\\d*\\.?\\d+)(?=\\s|\$)",
-            "(?:^|\\s)(\\d{1,3}(?:\\.\\d{1,3})?)(?=\\s|${'$'})"
+            "(?:^|\\s)(\\d{1,3}(?:\\.\\d{1,3})?)(?=\\s|${'$'})",
+            """(?:^|\s)(\d+(\.\d)?)(?=\s|\p{S}|$)"""
         )
         val oldIobRegexes = mutableSetOf(
             "IOB: (\\d*\\.?\\d+) U",
             "(\\d*\\.?\\d+) U",
-            "(\\d*\\.?\\d+)\\s?[Uu]"
+            "(\\d*\\.?\\d+)\\s?[Uu]",
+            """(\d*\.?\d+)\s?[a-fh-z]\b"""
         )
         val oldCobRegexes = mutableSetOf(
-            "(\\d+)\\s?[Gg]"
+            "(\\d+)\\s?[Gg]",
+            """(\d+)\s?g\b"""
         )
 
         const val defaultGlucoseRegex = """(?:^|\s)(\d+(\.\d)?)(?=\s|\p{S}|$)"""
@@ -335,6 +338,8 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         if (isRegistered()) {
             statusBarNotification?.let { sbn ->
                 Log.d(LOG_ID, "New notification posted from ${sbn.packageName} - ongoing: ${sbn.isOngoing} (flags: ${sbn.notification?.flags}, prio: ${sbn.notification?.priority}) - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`})")
+                if(sbn.packageName == applicationContext.packageName)
+                    return  // ignore notification from own app
                 val sharedPref = applicationContext.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
                 if (validGlucoseNotification(sbn, sharedPref)) {
                     parseValue(sbn)
