@@ -19,10 +19,90 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--dontwarn **
--keep class **
--keepclassmembers class *{*;}
--keepattributes *
+-dontwarn de.michelinside.glucodatahandler.common.**
+
+# --------------------------------------------------------------------
+# Internal Common Module Classes
+# --------------------------------------------------------------------
+# This prevents R8 from stripping away your core logic classes
+-keep class de.michelinside.glucodatahandler.common.** { *; }
+
+# Also keep the wear specific classes to ensure services and receivers
+# are not renamed, which would break Android system callbacks
+-keep class de.michelinside.glucodatahandler.** { *; }
+
+# --------------------------------------------------------------------
+# Play Services / Wear OS
+# --------------------------------------------------------------------
+-keep class com.google.android.gms.wearable.** { *; }
+-keep class androidx.wear.** { *; }
+-keep class androidx.wear.watchface.** { *; }
+
+# --------------------------------------------------------------------
+# Wear OS Watchface & Complications
+# --------------------------------------------------------------------
+# Verhindert, dass die Komplikations-Provider-Services umbenannt werden
+-keep class * extends androidx.wear.watchface.complications.datasource.ComplicationDataSourceService { *; }
+
+# Falls du eigene Custom Renderers für Watchfaces nutzt
+-keep class * extends androidx.wear.watchface.Renderer { *; }
+-keep class * extends androidx.wear.watchface.WatchFaceService { *; }
+
+
+# --------------------------------------------------------------------
+# MPAndroidChart
+# --------------------------------------------------------------------
+-keep class com.github.mikephil.charting.** { *; }
+-dontwarn com.github.mikephil.charting.**
+
+# --------------------------------------------------------------------
+# Ktor (CIO Server)
+# --------------------------------------------------------------------
+-keepattributes Signature, RuntimeVisibleAnnotations, AnnotationDefault
+-keep class io.ktor.** { *; }
+-dontwarn io.ktor.**
+
+# --------------------------------------------------------------------
+# Kotlin Serialization (falls genutzt für Phone-Watch Sync)
+#--------------------------------------------------------------------
+-keepattributes *Annotation*, EnclosingMethod, Signature
+-keepclassmembers class * {
+    @kotlinx.serialization.Serializable *;
+}
+
+# --------------------------------------------------------------------
+# UI & Layouts (ViewBinding / ConstraintLayout)
+# --------------------------------------------------------------------
+# Keeps ViewBinding and custom UI components working
+-keep class androidx.constraintlayout.widget.** { *; }
+-keepclassmembers class * extends androidx.viewbinding.ViewBinding {
+    public static *** bind(android.view.View);
+    public static *** inflate(android.view.LayoutInflater);
+    public static *** inflate(android.view.LayoutInflater, android.view.ViewGroup, boolean);
+}
+
+# --------------------------------------------------------------------
+# Splashscreen (Android 12+)
+# --------------------------------------------------------------------
+-keep class androidx.core.splashscreen.** { *; }
+
+
+
+# --------------------------------------------------------------------
+# General View Handling (for ViewBinding/Custom Views)
+# --------------------------------------------------------------------
+-keepclassmembers class * extends android.view.View {
+   public <init>(android.content.Context);
+   public <init>(android.content.Context, android.util.AttributeSet);
+   public <init>(android.content.Context, android.util.AttributeSet, int);
+   public void set*(***);
+}
+
+# --------------------------------------------------------------------
+# WorkManager
+# --------------------------------------------------------------------
+-keep class * extends androidx.work.ListenableWorker { *; }
+-keep class * extends androidx.work.Worker { *; }
 
 # --------------------------------------------------------------------
 # REMOVE all debug log messages

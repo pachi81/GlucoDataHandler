@@ -20,7 +20,6 @@ android {
 
     buildTypes {
         release {
-            // Enable ProGuard
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "GlucoDataHandler"
@@ -45,16 +44,10 @@ android {
             signingConfig signingConfigs.debug
         }
         applicationVariants.all {
-                // this method is use to rename your all apk weather
-                // it may be signed or unsigned(debug apk)
             variant ->
                 variant.outputs.each {
-                        // on below line we are setting a
-                        // name to our apk as GlucoDataHandler.apk
                     output ->
                         def name = "GlucoDataHandler_" + versionName + ".apk"
-                        // on below line we are setting the
-                        // outputFile Name to our apk file.
                         output.outputFileName = name
                 }
         }
@@ -63,7 +56,6 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
-        // Flag to enable support for the new language APIs
         coreLibraryDesugaringEnabled true
     }
     kotlinOptions {
@@ -73,9 +65,7 @@ android {
         viewBinding true
     }
     dependenciesInfo {
-        // Disables dependency metadata when building APKs.
         includeInApk = false
-        // Disables dependency metadata when building Android App Bundles.
         includeInBundle = false
     }
 }
@@ -99,11 +89,9 @@ dependencies {
     implementation 'androidx.coordinatorlayout:coordinatorlayout:1.3.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'androidx.health.connect:connect-client:1.1.0'
-    //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.3.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
-    // For AGP 7.4+
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
     implementation("io.ktor:ktor-server-cio:3.3.2")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.9.0")
@@ -112,7 +100,6 @@ dependencies {
 }
 
 afterEvaluate {
-    //noinspection ConfigurationAvoidance
     def bundleRelease = tasks.getByPath(':mobile:bundleRelease')
     def copyAndroidBundlePostBuild = tasks.register('copyAndroidBundlePostBuild', Copy) {
         dependsOn bundleRelease
@@ -122,7 +109,6 @@ afterEvaluate {
     }
     bundleRelease.finalizedBy(copyAndroidBundlePostBuild)
 
-    //noinspection ConfigurationAvoidance
     def bundleDev_release = tasks.getByPath(':mobile:bundleDev_release')
     def copyAndroidBundleDevPostBuild = tasks.register('copyAndroidBundleDevPostBuild', Copy) {
         dependsOn bundleDev_release
@@ -132,7 +118,6 @@ afterEvaluate {
     }
     bundleDev_release.finalizedBy(copyAndroidBundleDevPostBuild)
 
-    //noinspection ConfigurationAvoidance
     def assembleRelease = tasks.getByPath(':mobile:assembleRelease')
     def copyAndroidApksPostBuild = tasks.register('copyAndroidApksPostBuild', Copy) {
         dependsOn assembleRelease
@@ -142,7 +127,6 @@ afterEvaluate {
     }
     assembleRelease.finalizedBy(copyAndroidApksPostBuild)
 
-    //noinspection ConfigurationAvoidance
     def assembleDevRelease = tasks.getByPath(':mobile:assembleDev_release')
     def copyAndroidDevApksPostBuild = tasks.register('copyAndroidDevApksPostBuild', Copy) {
         dependsOn assembleDevRelease
@@ -152,7 +136,6 @@ afterEvaluate {
     }
     assembleDevRelease.finalizedBy(copyAndroidDevApksPostBuild)
 
-    //noinspection ConfigurationAvoidance
     def assembleSecond = tasks.getByPath(':mobile:assembleSecond')
     def copyAndroidSecondApksPostBuild = tasks.register('copyAndroidSecondApksPostBuild', Copy) {
         dependsOn assembleSecond
