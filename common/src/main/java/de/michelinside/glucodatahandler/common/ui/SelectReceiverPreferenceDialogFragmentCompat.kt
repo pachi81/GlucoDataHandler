@@ -33,8 +33,11 @@ class SelectReceiverPreferenceDialogFragmentCompat : PreferenceDialogFragmentCom
             return dialog
         }
 
-        private fun getReceivers(context: Context): HashMap<String, String> {
-            return PackageUtils.getPackages(context)
+        private fun getReceivers(context: Context, isTapAction: Boolean): HashMap<String, String> {
+            val receivers = PackageUtils.getPackages(context)
+            if(!isTapAction)
+                receivers.remove(context.packageName)
+            return receivers
         }
         private fun getActions(context: Context): HashMap<String, String> {
             val actions = HashMap<String, String>()
@@ -57,7 +60,7 @@ class SelectReceiverPreferenceDialogFragmentCompat : PreferenceDialogFragmentCom
                 if(actions.containsKey(value))
                     return actions[value].toString()
             }
-            val receivers = getReceivers(context)
+            val receivers = getReceivers(context, isTapAction)
             if(receivers.containsKey(value))
                 return receivers[value].toString()
             return default
@@ -158,7 +161,7 @@ class SelectReceiverPreferenceDialogFragmentCompat : PreferenceDialogFragmentCom
     private fun updateReceiver(view: View, all: Boolean) {
         try {
             val receiverLayout = view.findViewById<LinearLayout>(R.id.receiverLayout)
-            val receivers = getReceivers(requireContext())
+            val receivers = getReceivers(requireContext(), selectReceiverPreference!!.isTapAction)
             Log.d(LOG_ID, receivers.size.toString() + " receivers found!")
             val receiverScrollView = view.findViewById<ScrollView>(R.id.receiverScrollView)
             receiverLayout.removeAllViews()

@@ -31,6 +31,7 @@ import de.michelinside.glucodatahandler.widget.LockScreenWallpaper
 import de.michelinside.glucodatahandler.xdripserver.XDripServer
 import java.math.RoundingMode
 import androidx.core.content.edit
+import de.michelinside.glucodatahandler.tasker.TaskerWatchBatteryReceiver
 
 
 class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInterface {
@@ -312,6 +313,13 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                     NotifySource.DELTA_ALARM_TRIGGER
                 )
             )
+            InternalNotifier.addNotifier(
+                this,
+                TaskerWatchBatteryReceiver,
+                mutableSetOf(
+                    NotifySource.NODE_BATTERY_LEVEL
+                )
+            )
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
@@ -343,6 +351,9 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
     override fun onDestroy() {
         try {
             Log.w(LOG_ID, "onDestroy called")
+            InternalNotifier.remNotifier(this, this)
+            InternalNotifier.remNotifier(this, TaskerDataReceiver)
+            InternalNotifier.remNotifier(this, TaskerWatchBatteryReceiver)
             PermanentNotification.destroy()
             AlarmNotification.destroy(this)
             CarModeReceiver.cleanup(applicationContext)

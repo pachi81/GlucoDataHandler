@@ -30,4 +30,10 @@
     <string name="iob_html_label">Insulin On Board</string>
     <string name="cob_label">COB</string>
     <string name="cob_html_label">Carbs On Board</string>
+    <string name="battery_level_label">Level</string>
+    <string name="battery_level_html_label">Battery level of the watch</string>
+    <string name="watch_id_label">Watch ID</string>
+    <string name="watch_id_html_label">ID of the watch</string>
+    <string name="watch_name_label">Watch name</string>
+    <string name="watch_name_html_label">Name of the watch</string>
 </resources>

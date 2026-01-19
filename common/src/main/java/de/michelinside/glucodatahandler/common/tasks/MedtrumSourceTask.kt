@@ -39,8 +39,8 @@ class MedtrumSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_MEDTRUM
         private var dataReceived = false   // mark this endpoint as already received data
         val patientData: MutableMap<String, String> get() {
             if(instance == null)
-                return mutableMapOf<String, String>()
-            return instance!!.getPatientData()
+                return mutableMapOf()
+            return instance!!.getPatientData()?: mutableMapOf()
         }
         const val server = "https://easyview.medtrum.%s"
         const val LOGIN_ENDPOINT = "/mobile/ajax/login"
@@ -117,7 +117,7 @@ class MedtrumSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_MEDTRUM
         return true
     }
 
-    override fun getPatientData(): MutableMap<String, String> {
+    override fun getPatientData(): MutableMap<String, String>? {
         return handleLoginDataResult(httpGet(getUrl(LOGINDATA_ENDPOINT), getHeader()))
     }
 
@@ -214,8 +214,10 @@ class MedtrumSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_MEDTRUM
         return false
     }
 
-    private fun handleLoginDataResult(body: String?): MutableMap<String, String> {
-        val jsonObject = checkResponse(body) ?: return mutableMapOf()
+    private fun handleLoginDataResult(body: String?): MutableMap<String, String>? {
+        if(body == null)
+            return null
+        val jsonObject = checkResponse(body) ?: return null
         val dataArray = jsonObject.optJSONArray("monitorlist")
         if(dataArray == null || dataArray.length() == 0) {
             setLastError(GlucoDataService.context!!.getString(R.string.source_no_patient))

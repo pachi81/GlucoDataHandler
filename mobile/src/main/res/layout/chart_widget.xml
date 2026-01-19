@@ -10,7 +10,7 @@
         android:id="@+id/patient_name"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="1"
         android:gravity="center"
         android:text="Patient Name"
         android:layout_marginHorizontal="10dp"
@@ -31,28 +31,28 @@
         android:layout_marginTop="6dp"
         android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/glucose"
-        android:layout_weight="3"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:autoSizeMinTextSize="1sp"
-        android:autoSizeStepGranularity="1sp"
-        android:autoSizeTextType="uniform"
-        android:text="12.3"
-        android:maxLines="1"
-        tools:ignore="HardcodedText,NestedWeights" />
+        <TextView
+            android:id="@+id/glucose"
+            android:layout_weight="3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:autoSizeMinTextSize="1sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:text="12.3"
+            android:maxLines="1"
+            tools:ignore="HardcodedText,NestedWeights" />
 
-    <ImageView
-        android:id="@+id/trendImage"
-        android:layout_weight="2"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:contentDescription="@string/trend"
-        android:gravity="center"
-        android:layout_marginStart="6dp"
-        android:src="@drawable/icon_question" />
+        <ImageView
+            android:id="@+id/trendImage"
+            android:layout_weight="2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/trend"
+            android:gravity="center"
+            android:layout_marginStart="6dp"
+            android:src="@drawable/icon_question" />
     </LinearLayout>
 
     <LinearLayout
@@ -95,6 +95,7 @@
             tools:ignore="HardcodedText" />
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/layout_iob_cob"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:minWidth="60dp"
@@ -141,7 +142,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:minWidth="60dp"
-        android:layout_weight="7"
+        android:layout_weight="3"
         android:contentDescription="@string/graph"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"

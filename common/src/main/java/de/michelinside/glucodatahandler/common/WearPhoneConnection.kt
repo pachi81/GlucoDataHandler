@@ -342,6 +342,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             nodeBatteryLevel[nodeId] = level
             val extra = Bundle()
             extra.putInt(BatteryReceiver.LEVEL, level)
+            extra.putString(Constants.EXTRA_NODE_ID, nodeId)
             InternalNotifier.notify(context, NotifySource.NODE_BATTERY_LEVEL, extra)
         }
     }

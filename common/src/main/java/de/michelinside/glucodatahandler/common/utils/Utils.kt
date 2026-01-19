@@ -700,4 +700,8 @@ object Utils {
         }
     }
 
+    fun parseRegexGroupValues(valueToParse: String, regex: Regex): List<String>? {
+        return regex.find(valueToParse.replace(",", ".").trim().lowercase())?.groupValues
+    }
+
 }
