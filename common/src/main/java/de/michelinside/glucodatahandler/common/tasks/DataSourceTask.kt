@@ -209,7 +209,8 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
 
     private fun executeRequest(firstCall: Boolean = true) {
         try {
-            Log.d(LOG_ID, "getData called: firstCall: $firstCall")
+            Log.d(LOG_ID, "executeRequest called: firstCall: $firstCall")
+            firstGetValue = false // for setting login errors
             if (authenticate()) {
                 firstGetValue = firstCall
                 retry = false
@@ -364,7 +365,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     }
 
     open fun checkErrorResponse(code: Int, message: String?, errorResponse: String? = null) {
-        Log.e(LOG_ID, "checkErrorResponse: $code - $message - $errorResponse")
+        Log.e(LOG_ID, "checkErrorResponse: $code - $message - $errorResponse - (firstGetValue: $firstGetValue)")
         if (code >= 400) {  // reset for client and server errors -> better re-connect
             reset() // reset token for client error -> trigger reconnect
             if(firstGetValue) {
