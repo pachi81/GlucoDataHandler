@@ -8,7 +8,13 @@ import java.util.Locale
 import com.github.mikephil.charting.formatter.ValueFormatter
 
 class TimeValueFormatter(private val mChart: LineChart) : ValueFormatter() {
-    private val formatMinutes: SimpleDateFormat = SimpleDateFormat("HH:mm", Locale.ENGLISH)
+    //private val formatMinutes: SimpleDateFormat = SimpleDateFormat("HH:mm", Locale.ENGLISH)
+    private val formatMinutes: SimpleDateFormat
+        get() {
+            // Check system settings for 24h or 12h format
+            val pattern = if (android.text.format.DateFormat.is24HourFormat(mChart.context)) "HH:mm" else "h:mm a"
+            return SimpleDateFormat(pattern, Locale.getDefault())
+        }
     private val formatDays: SimpleDateFormat = SimpleDateFormat("MMM d", Locale.ENGLISH)
 
     private val c: Calendar = Calendar.getInstance()
