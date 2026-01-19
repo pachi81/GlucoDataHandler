@@ -12,12 +12,10 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.util.TypedValue
 import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.Toast
-import de.michelinside.glucodatahandler.PermanentNotification
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
@@ -271,6 +269,7 @@ object AlarmNotification : AlarmNotificationBase() {
                         )
                         GlucoDataService.sendCommand(Command.AA_CONNECTION_STATE, bundle)
                     }
+                    updateAlarmState(context)
                 }
                 else -> super.OnNotifyData(context, dataSource, extras)
 
