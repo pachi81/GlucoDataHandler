@@ -292,6 +292,15 @@
                 <action android:name="com.twofortyfouram.locale.intent.action.EDIT_CONDITION" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".tasker.BatteryLevelEvent"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/watch_battery_level">
+            <intent-filter>
+                <action android:name="net.dinglisch.android.tasker.ACTION_EDIT_EVENT" />
+            </intent-filter>
+        </activity>
 
         <receiver
             android:name=".common.receiver.GlucoseDataReceiver"
