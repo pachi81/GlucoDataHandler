@@ -10,7 +10,7 @@ Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 project.ext.set("versionCode", 169)
-project.ext.set("versionName", "2.2.1")
+project.ext.set("versionName", "2.2.1.1")
 project.ext.set("compileSdk", 36)
 project.ext.set("targetSdk", 36)
 project.ext.set("minSdk", 26)

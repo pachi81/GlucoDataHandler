@@ -317,6 +317,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                 this,
                 TaskerWatchBatteryReceiver,
                 mutableSetOf(
+                    NotifySource.BROADCAST,
                     NotifySource.NODE_BATTERY_LEVEL
                 )
             )

@@ -74,11 +74,11 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
             if(task.active(elapsedTimeMinute)) {
                 if (elapsedTimeMinute != 0L) {
                     if (lastElapsedMinute < 0 && initialExecution) {
-                        Log.d(LOG_ID, "Trigger initial task execution")
+                        Log.i(LOG_ID, "Trigger initial task execution")
                         return true   // trigger initial execution
                     }
                     if (elapsedTimeMinute.mod(task.getIntervalMinute()) == 0L) {
-                        Log.d(LOG_ID, "Trigger "+ task.javaClass.simpleName + " execution after " + elapsedTimeMinute + " min")
+                        Log.i(LOG_ID, "Trigger "+ task.javaClass.simpleName + " execution after " + elapsedTimeMinute + " min")
                         return true   // interval expired for active task
                     }
                 }
@@ -88,8 +88,12 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                         return true   // IOB/COB interval expired for active task
                     }
                 }
+                Log.i(LOG_ID, "Nothing to execute for " + task.javaClass.simpleName + ": elapsedTimeMinute=" + elapsedTimeMinute
+                        + " - lastElapsedMinute=" + lastElapsedMinute
+                        + " - elapsedIobCobTimeMinute=" + Utils.getElapsedTimeMinute(task.getLastIobCobTime(), RoundingMode.HALF_UP)
+                        + " - interval=" + task.getIntervalMinute()
+                        + " - active=" + task.active(elapsedTimeMinute))
             }
-            Log.d(LOG_ID, "nothing to execute for " + task.javaClass.simpleName)
         } else {
             Log.v(LOG_ID,"checkExecution: " + "elapsedTimeMinute=" + elapsedTimeMinute
                     + " - lastElapsedMinute=" + lastElapsedMinute
@@ -102,7 +106,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                 Log.d(LOG_ID, "Check IOB/COB task execution after " + elapsedIobCobTimeMinute + " min")
                 return true // check each task for additional IOB COB data
             }
-            Log.d(LOG_ID, "nothing to execute: " + "elapsedTimeMinute=" + elapsedTimeMinute
+            Log.i(LOG_ID, "nothing to execute: " + "elapsedTimeMinute=" + elapsedTimeMinute
                     + " - lastElapsedMinute=" + lastElapsedMinute
                     + " - elapsedIobCobTimeMinute=" + elapsedIobCobTimeMinute)
         }

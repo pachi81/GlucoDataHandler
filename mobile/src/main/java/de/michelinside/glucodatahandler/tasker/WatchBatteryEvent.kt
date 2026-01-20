@@ -27,25 +27,27 @@ import de.michelinside.glucodatahandler.common.utils.Log
 @TaskerInputRoot
 @TaskerOutputObject()
 @SuppressLint("NonConstantResourceId")
-open class WatchBattery(level: Int, nodeId: String, name: String) {
+class WatchBattery @JvmOverloads constructor(
     @field:TaskerInputField("level")
     @get:TaskerOutputVariable("level", R.string.battery_level_label, R.string.battery_level_html_label)
-    val level: Int = level
+    val level: Int = -1,
     @field:TaskerInputField("nodeId")
     @get:TaskerOutputVariable("nodeId", R.string.watch_id_label, R.string.watch_id_html_label)
-    val nodeId: String = nodeId
+    val nodeId: String = "<id>",
     @field:TaskerInputField("name")
     @get:TaskerOutputVariable("name", R.string.watch_name_label, R.string.watch_name_html_label)
-    val name: String = name
-}
+    val name: String = "<name>"
+)
+
+
+private val LOG_ID = "GDH.Tasker.WatchBatteryPlugin"
 
 class WatchBatteryActionRunner() : TaskerPluginRunnerConditionEvent<WatchBattery, WatchBattery, WatchBattery>() {
     override fun getSatisfiedCondition(context: Context, input: TaskerInput<WatchBattery>, update: WatchBattery?): TaskerPluginResultCondition<WatchBattery> {
-        return TaskerPluginResultConditionSatisfied(context)
+        return TaskerPluginResultConditionSatisfied(context, update)
     }
 }
 
-private val LOG_ID = "GDH.Tasker.BatterLevelPlugin"
 
 class WatchBatteryHelper(config: TaskerPluginConfig<WatchBattery>) : TaskerPluginConfigHelper<WatchBattery, WatchBattery, WatchBatteryActionRunner>(config) {
     override val runnerClass = WatchBatteryActionRunner::class.java
@@ -57,7 +59,7 @@ class WatchBatteryHelper(config: TaskerPluginConfig<WatchBattery>) : TaskerPlugi
 class WatchBatteryEvent : Activity(), TaskerPluginConfig<WatchBattery> {
     override val context: Context get() = applicationContext
     override fun assignFromInput(input: TaskerInput<WatchBattery>) {}
-    override val inputForTasker = TaskerInput(WatchBattery(-1, "", ""))
+    override val inputForTasker = TaskerInput(WatchBattery())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
@@ -72,18 +74,21 @@ class WatchBatteryEvent : Activity(), TaskerPluginConfig<WatchBattery> {
 
 
 object TaskerWatchBatteryReceiver: NotifierInterface {
-    private val LOG_ID = "GDH.Tasker.BatterLevelAction"
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
             if(extras != null && extras.containsKey(BatteryReceiver.LEVEL) && extras.containsKey(Constants.EXTRA_NODE_ID)) {
-                Log.d(LOG_ID, "sending watch battery level to tasker for source " + dataSource.toString())
                 val nodeId = extras.getString(Constants.EXTRA_NODE_ID)
                 if(nodeId != null) {
                     WearPhoneConnection.getNodeBatteryLevel(nodeId, false).firstNotNullOf { (name, level) ->
-                        if (level > 0)
+                        if (level > 0) {
+                            Log.d(LOG_ID, "sending watch battery level $level for node $nodeId - name $name to tasker for source " + dataSource.toString())
                             WatchBatteryEvent::class.java.requestQuery(context, WatchBattery(level, nodeId, name))
+                        } else {
+                            Log.w(LOG_ID, "No level found for node $nodeId - name $name")
+                        }
                     }
-
+                } else {
+                    Log.w(LOG_ID, "No node id received")
                 }
             }
         } catch (exc: Exception) {

@@ -293,7 +293,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".tasker.BatteryLevelEvent"
+            android:name=".tasker.WatchBatteryEvent"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/watch_battery_level">
