@@ -35,6 +35,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     protected var retry = false
     protected var firstGetValue = false
     private var isFirstRequest = true  // first request after startup
+    private var lastExecution = 0L
 
     private val interval: Long get() {
         return max(minInterval, prefInterval)
@@ -239,6 +240,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             }
             Log.d(LOG_ID, "Execute request for $source")
             try {
+                lastExecution = System.currentTimeMillis()
                 executeRequest()
             } catch (ex: InterruptedException) {
                 throw ex // re throw interruption
@@ -426,6 +428,14 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
 
     override fun active(elapsetTimeMinute: Long): Boolean {
         return enabled
+    }
+
+    override fun forceExecution(): Boolean {
+        if(enabled && (lastExecution == 0L || Utils.getElapsedTimeMinute(lastExecution) >= getIntervalMinute())) {
+            Log.i(LOG_ID, "Force execution after " + Utils.getElapsedTimeMinute(lastExecution) + " min")
+            return true
+        }
+        return false
     }
 
     private fun setEnabled(newEnabled: Boolean): Boolean {

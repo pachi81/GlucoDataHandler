@@ -67,6 +67,7 @@ abstract class BackgroundWorker(val context: Context, workerParams: WorkerParame
 
         fun checkServiceRunning(context: Context) {
             // watchdog to check, if all services are running
+            Log.d(LOG_ID, "check service running")
             if(!TimeTaskService.checkRunning()) {
                 Log.e(LOG_ID, "TimeTaskService not running! Restart it")
                 TimeTaskService.stop()

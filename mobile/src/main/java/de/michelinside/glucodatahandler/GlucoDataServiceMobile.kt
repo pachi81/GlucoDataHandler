@@ -471,9 +471,6 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             if (dataSource == NotifySource.DB_DATA_CHANGED && CarModeReceiver.connected) {
                 CarModeReceiver.sendToGlucoDataAuto(context, false, true)
             }
-            if (dataSource == NotifySource.BATTERY_LEVEL) {
-                checkServices(context)
-            }
             if (extras != null) {
                 if (dataSource == NotifySource.MESSAGECLIENT || dataSource == NotifySource.BROADCAST) {
                     forwardBroadcast(context, extras)
