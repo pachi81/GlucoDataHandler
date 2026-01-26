@@ -1036,6 +1036,8 @@ You can manage these permissions at any time in the Health Connect app settings.
     <!-- v2.3 -->
 
     <string name="medtrum_wrong_user_type_info">Only follower users are allowed account.\nPress here to create a new follower account and invite yourself.</string>
+    <string name="notification_reader_value_with_unit">Value with unit</string>
+    <string name="notification_reader_value_with_unit_summary">If the unit (mmol or mg) is part of the value in notification, enable this to ignore all fields without unit.</string>
 
 </resources>
 
