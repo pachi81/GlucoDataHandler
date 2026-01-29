@@ -267,7 +267,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 SourceStateData.reset()
                 GlucoseStatistics.reset()
                 ReceiveData.reset(context!!)
-                sendCommand(Command.CLEAN_UP_DB)
+                if (appSource == AppSource.PHONE_APP)
+                    sendCommand(Command.CLEAN_UP_DB)
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "resetDB exception: " + exc.message.toString())
             }

@@ -1039,6 +1039,10 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="notification_reader_value_with_unit">Value with unit</string>
     <string name="notification_reader_value_with_unit_summary">If the unit (mmol or mg) is part of the value in notification, enable this to ignore all fields without unit.</string>
 
+    <string name="button_yes">Yes</string>
+    <string name="button_no">No</string>
+    <string name="patient_changed">Patient changed</string>
+    <string name="patient_changed_reset_db">You have changed the patient.\nDo you want to reset the database to remove the old patient data?</string>
 </resources>
 
 

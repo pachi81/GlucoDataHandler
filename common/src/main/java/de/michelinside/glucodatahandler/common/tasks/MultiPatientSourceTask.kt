@@ -115,8 +115,7 @@ abstract class MultiPatientSourceTask(enabledKey: String, source: DataSource) : 
             if (patientId != sharedPreferences.getString(patientIdKey, "")) {
                 patientId = sharedPreferences.getString(patientIdKey, "")!!
                 Log.w(LOG_ID, "PatientID changed to ${getPatient(patientId)}")
-                GlucoDataService.resetDB()
-                trigger = false // will be triggered by reset of db!
+                trigger = true // will be triggered by reset of db!
             }
         }
         return super.checkPreferenceChanged(sharedPreferences, key, context) || trigger

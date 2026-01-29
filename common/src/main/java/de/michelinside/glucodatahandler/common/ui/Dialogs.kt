@@ -32,6 +32,19 @@ object Dialogs {
             .show()
     }
 
+    fun showYesNoDialog(context: Context, titleResId: Int, messageResId: Int, okListener: DialogInterface.OnClickListener?, cancelListener: DialogInterface.OnClickListener? = null) {
+        showYesNoDialog(context, context.resources.getString(titleResId), context.resources.getString(messageResId), okListener, cancelListener)
+    }
+
+    fun showYesNoDialog(context: Context, title: String, message: String, okListener: DialogInterface.OnClickListener?, cancelListener: DialogInterface.OnClickListener? = null) {
+        MaterialAlertDialogBuilder(context)
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton(context.resources.getText(R.string.button_yes), okListener)
+            .setNegativeButton(context.resources.getText(R.string.button_no), cancelListener)
+            .show()
+    }
+
     fun showSelectItemDialog(context: Context, titleResId: Int, items: Array<String>, selectedItem: Int, okListener: DialogInterface.OnClickListener?, selectItemListener: DialogInterface.OnClickListener?, cancelListener: DialogInterface.OnClickListener? = null) {
         MaterialAlertDialogBuilder(context)
             .setTitle(context.resources.getString(titleResId))
