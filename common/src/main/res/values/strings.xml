@@ -1043,6 +1043,7 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="button_no">No</string>
     <string name="patient_changed">Patient changed</string>
     <string name="patient_changed_reset_db">You have changed the patient.\nDo you want to reset the database to remove the old patient data?</string>
+    <string name="update">Update</string>
 </resources>
 
 

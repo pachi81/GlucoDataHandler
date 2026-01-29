@@ -7,18 +7,22 @@ import android.provider.Settings
 import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceDialogFragmentCompat
 import de.michelinside.glucodatahandler.common.BuildConfig
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import de.michelinside.glucodatahandler.common.R
+import kotlinx.coroutines.launch
 
 
 class SelectReceiverPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat() {
@@ -104,6 +108,22 @@ class SelectReceiverPreferenceDialogFragmentCompat : PreferenceDialogFragmentCom
             showAllSwitch.isChecked = sharedPref.getBoolean(showAllKey, false)
             showAllSwitch.setOnCheckedChangeListener { _, isChecked ->
                 updateReceiver(view, isChecked)
+            }
+            val reloadImage = view.findViewById<ImageView>(R.id.reloadImage)
+            val updatingProgress = view.findViewById<ProgressBar>(R.id.updatingProgress)
+            
+            reloadImage.setOnClickListener {
+                PackageUtils.updatePackages(requireContext())
+            }
+
+            lifecycleScope.launch {
+                PackageUtils.isUpdating.collect { isUpdating ->
+                    reloadImage.visibility = if (isUpdating) View.INVISIBLE else View.VISIBLE
+                    updatingProgress.visibility = if (isUpdating) View.VISIBLE else View.GONE
+                    if (!isUpdating) {
+                        updateReceiver(view, showAllSwitch.isChecked)
+                    }
+                }
             }
 
             if(selectReceiverPreference!!.description.isNotEmpty()) {
