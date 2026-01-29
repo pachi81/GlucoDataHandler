@@ -9,6 +9,7 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.os.Build
+import androidx.work.impl.utils.forNameInline
 import com.google.android.gms.wearable.WearableListenerService.RECEIVER_EXPORTED
 import com.google.android.gms.wearable.WearableListenerService.RECEIVER_VISIBLE_TO_INSTANT_APPS
 import de.michelinside.glucodatahandler.common.Constants
@@ -64,6 +65,31 @@ object PackageUtils {
                 result.await()
             }
         }
+    }
+
+    fun checkPackageName(context: Context, packageName: String): String? {
+        try {
+            getPackages(context)
+            if(packages.containsKey(packageName))
+                return packages[packageName]
+            Log.d(LOG_ID, "Package $packageName found")
+            val packageManager = context.packageManager
+            val appInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                packageManager.getApplicationInfo(packageName, PackageManager.ApplicationInfoFlags.of(0))
+            } else {
+                @Suppress("DEPRECATION")
+                packageManager.getApplicationInfo(packageName, 0)
+            }
+            val name = packageManager.getApplicationLabel(appInfo).toString()
+            Log.i(LOG_ID, "Package $packageName found with name $name")
+            packages[packageName] = name
+            return name
+        } catch (_: PackageManager.NameNotFoundException) {
+            Log.w(LOG_ID, "Package $packageName not found")
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "getPackageInfo exception for $packageName: " + exc.toString())
+        }
+        return null
     }
 
     fun getPackages(context: Context): HashMap<String, String> {
