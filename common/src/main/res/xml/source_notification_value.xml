@@ -17,8 +17,15 @@
             android:title="@string/notification_reader_five_minute_interval"
             android:summary="@string/notification_reader_five_minute_interval_summary"
             app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="notification_reader_value_with_unit"
+            android:title="@string/notification_reader_value_with_unit"
+            android:summary="@string/notification_reader_value_with_unit_summary"
+            app:iconSpaceReserved="false" />
         <androidx.preference.EditTextPreference
             android:key="notification_reader_app_regex"
+            android:defaultValue=""
             android:title="@string/notification_reader_app_regex"
             android:summary="@string/notification_reader_app_regex_summary"
             app:iconSpaceReserved="false" />

@@ -26,11 +26,11 @@ class BatteryReceiver: BroadcastReceiver() {
                     InternalNotifier.notify(context, NotifySource.BATTERY_LEVEL, batteryBundle)
                 }
             } else {
-                // used as watchdog only!
-                GlucoDataService.checkServices(context)
                 if(batteryPercentage != 0)
                     batteryPercentage = 0
             }
+            // used as watchdog!
+            GlucoDataService.checkServices(context)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "BatteryReceiver exception: " + exc.message.toString() )
         }

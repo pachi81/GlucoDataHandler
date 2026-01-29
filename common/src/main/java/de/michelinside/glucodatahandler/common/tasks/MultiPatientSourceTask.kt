@@ -19,13 +19,14 @@ abstract class MultiPatientSourceTask(enabledKey: String, source: DataSource) : 
     private val patientData = mutableMapOf<String, String>()
     private var patientId = ""
 
-    protected abstract fun getPatientData(): MutableMap<String, String>
+    protected abstract fun getPatientData(): MutableMap<String, String>?
 
     protected abstract fun getPatientValue(patientId: String): Boolean
 
     override fun reset() {
         patientData.clear()
         patientId = GlucoDataService.sharedPref!!.getString(patientIdKey, "")!!
+        Log.i(LOG_ID, "Reset called - using patientId: $patientId")
     }
 
     protected fun needPatientData(): Boolean {
@@ -33,11 +34,13 @@ abstract class MultiPatientSourceTask(enabledKey: String, source: DataSource) : 
     }
 
     override fun getValue(): Boolean {
+        Log.v(LOG_ID, "getValue called - using patientId: $patientId")
         if(needPatientData()) {
             Log.i(LOG_ID, "Need patient data (current size: ${patientData.size}) - id set: ${patientId.isNotEmpty()} - data contains id: ${patientData.containsKey(patientId)}")
-            handlePatientData(getPatientData())
+            if(!handlePatientData(getPatientData()))
+                return false
         }
-        if(patientId.isEmpty()) {
+        if(patientId.isEmpty() || !patientData.containsKey(patientId)) {
             if(patientData.isEmpty())
                 return false  // error should be set by source!
             if(patientData.size > 1) {
@@ -50,20 +53,23 @@ abstract class MultiPatientSourceTask(enabledKey: String, source: DataSource) : 
         return getPatientValue(patientId)
     }
 
-    private fun handlePatientData(newPatientData: MutableMap<String, String>) {
+    private fun handlePatientData(newPatientData: MutableMap<String, String>?): Boolean {
         Log.d(LOG_ID, "Handle patient data: $newPatientData")
+        if(newPatientData == null) {
+            return false
+        }
         if(newPatientData.isEmpty()) {
             Log.e(LOG_ID, "No patient data found!")
             setLastError(GlucoDataService.context!!.resources.getString(R.string.source_no_patient))
             reset()
-            return
+            return false
         }
         val triggerChange = patientData.size != newPatientData.size
         newPatientData.toMap(patientData)
         if (patientId.isNotEmpty() && !patientData.keys.contains(patientId)) {
             setPatientId(if(patientData.size == 1) patientData.keys.first() else "")
             Log.w(LOG_ID, "Reset patient as it is not in the list to ${getPatient(patientId)}")
-            return
+            return true
         }
         if(patientId.isEmpty() && patientData.size == 1) {
             setPatientId(patientData.keys.first())
@@ -75,6 +81,7 @@ abstract class MultiPatientSourceTask(enabledKey: String, source: DataSource) : 
                 }
             }
         }
+        return true
     }
 
     private fun setPatientId(id: String) {
@@ -108,8 +115,7 @@ abstract class MultiPatientSourceTask(enabledKey: String, source: DataSource) : 
             if (patientId != sharedPreferences.getString(patientIdKey, "")) {
                 patientId = sharedPreferences.getString(patientIdKey, "")!!
                 Log.w(LOG_ID, "PatientID changed to ${getPatient(patientId)}")
-                GlucoDataService.resetDB()
-                trigger = false // will be triggered by reset of db!
+                trigger = true // will be triggered by reset of db!
             }
         }
         return super.checkPreferenceChanged(sharedPreferences, key, context) || trigger

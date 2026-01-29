@@ -83,6 +83,7 @@ import java.util.Date
 import kotlin.math.min
 import kotlin.time.Duration.Companion.days
 import de.michelinside.glucodatahandler.common.R as CR
+import androidx.core.net.toUri
 
 
 class MainActivity : AppCompatActivity(), NotifierInterface {
@@ -843,6 +844,27 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 tableConnections.addView(
                     createRow(
                         resources.getString(resId),
+                        onClickListener
+                    )
+                )
+            }
+            if(SourceStateData.lastState == SourceState.ERROR && SourceStateData.lastSource == DataSource.MEDTRUM && msg == "User type wrong") {
+                // {"msg":"User type wrong","res":"ERR","resdetail":"MobResUserTypeWrong"}
+
+                val browserIntent = Intent(
+                    Intent.ACTION_VIEW,
+                    resources.getString(CR.string.medtrum_easy_view_url).toUri()
+                )
+                val onClickListener = OnClickListener {
+                    try {
+                        startActivity(browserIntent)
+                    } catch (exc: Exception) {
+                        Log.e(LOG_ID, "Medtrum browse exception: " + exc.message.toString() )
+                    }
+                }
+                tableConnections.addView(
+                    createRow(
+                        resources.getString(CR.string.medtrum_wrong_user_type_info),
                         onClickListener
                     )
                 )

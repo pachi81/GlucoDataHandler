@@ -52,7 +52,12 @@ class SelectReceiverPreference : DialogPreference {
     fun setReceiver(newReceiver: String, save: Boolean = true) {
         Log.d(LOG_ID, "setReceiver called for $newReceiver - save: $save")
         try {
-            receiver = newReceiver // Save to Shared Preferences
+            if(!isTapAction && newReceiver == context.packageName) {
+                Log.w(LOG_ID, "Unset receiver to own package name")
+                receiver = ""
+            } else {
+                receiver = newReceiver // Save to Shared Preferences
+            }
             if(save)
                 persistString(receiver)
             this.summary = SelectReceiverPreferenceDialogFragmentCompat.getSummary(context, receiver, defaultSummary, isTapAction)

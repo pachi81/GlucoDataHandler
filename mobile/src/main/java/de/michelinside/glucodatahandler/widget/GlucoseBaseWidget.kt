@@ -7,9 +7,11 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Paint
 import android.os.Bundle
-import android.util.TypedValue
+import android.view.LayoutInflater
 import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.View
+import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.RemoteViews
 import de.michelinside.glucodatahandler.GlucoDataServiceMobile
 import de.michelinside.glucodatahandler.R
@@ -277,6 +279,18 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
         if(hasGraph) {
             // update graph
             remoteViews.setImageViewBitmap(R.id.graphImage, ActiveWidgetHandler.chart)
+            if(!shortWidget) {
+                val targetHeight = calculateTargetWidgetHeight(context, layout, width)
+                if (targetHeight > 0 && targetHeight < height) {
+                    val verticalPadding = (height - targetHeight) / 2
+                    // Convert dp to pixels because setViewPadding expects pixels
+                    val density = context.resources.displayMetrics.density
+                    val verticalPaddingPx = (verticalPadding * density).toInt()
+
+                    remoteViews.setViewPadding(R.id.widget, 0, verticalPaddingPx, 0, verticalPaddingPx)
+                    Log.d(LOG_ID, "Adjusted widget padding: $verticalPaddingPx px ($verticalPadding dp) for target height: $targetHeight dp")
+                }
+            }
         }
 
         return remoteViews
@@ -315,4 +329,70 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
             Log.e(LOG_ID, "Exception in updateAppWidget: " + exc.message.toString())
         }
     }
+
+    private fun calculateTargetWidgetHeight(context: Context, layoutResId: Int, widgetWidth: Int): Int {
+        return try {
+            val inflater = LayoutInflater.from(context)
+            val root = inflater.inflate(layoutResId, null) as? ViewGroup ?: return 0
+
+            var totalWeight = 0f
+            var fixedHeightPx = 0
+            var graphWeight = 0f
+
+            for (i in 0 until root.childCount) {
+                val child = root.getChildAt(i)
+
+                val isGone = when (child.id) {
+                    R.id.patient_name -> GlucoDataService.patientName.isNullOrEmpty()
+                    R.id.cobText -> ReceiveData.cob.isNaN()
+                    R.id.iobText -> ReceiveData.iob.isNaN()
+                    R.id.layout_iob_cob -> ReceiveData.cob.isNaN() && ReceiveData.iob.isNaN()
+                    else -> false
+                }
+
+                if (isGone) continue // ignore as it is not visible
+
+                val params = child.layoutParams as? LinearLayout.LayoutParams
+
+                // 1. Weights summieren
+                val weight = params?.weight ?: 0f
+                totalWeight += weight
+
+                // Speziell für den Graphen das Weight merken
+                if (child.id == R.id.graphImage) {
+                    graphWeight = weight
+                }
+
+                // 2. Feste Höhen addieren (Padding + Margins)
+                // Da RemoteViews oft Padding direkt im Root oder in Elementen haben
+                fixedHeightPx += child.paddingTop + child.paddingBottom
+                params?.let {
+                    fixedHeightPx += it.topMargin + it.bottomMargin
+                    // Falls die Höhe nicht 0dp (match_parent/wrap_content) ist, sondern fix:
+                    if (it.height > 0) fixedHeightPx += it.height
+                }
+                Log.v(LOG_ID, "${child.javaClass.simpleName}: weight: $weight - padding: $fixedHeightPx px")
+            }
+
+            // Padding des Root-Layouts selbst
+            fixedHeightPx += root.paddingTop + root.paddingBottom
+
+            if (graphWeight > 0) {
+                // Annahme: Graph ist 3:1 -> Höhe = Breite / 3
+                val targetGraphHeight = widgetWidth / 3
+
+                // Berechnung der Höhe einer "Weight-Einheit" basierend auf dem Graphen
+                val heightPerWeight = targetGraphHeight.toFloat() / graphWeight
+
+                // Gesamthöhe = (Weight-Teil) + (alle festen Abstände)
+                (totalWeight * heightPerWeight + fixedHeightPx).toInt()
+            } else {
+                0
+            }
+        } catch (e: Exception) {
+            Log.e(LOG_ID, "Error calculating widget height", e)
+            0
+        }
+    }
+
 }

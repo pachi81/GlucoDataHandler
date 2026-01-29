@@ -15,6 +15,11 @@ android {
         versionName rootProject.versionName
     }
 
+    buildFeatures {
+        buildConfig = true
+        viewBinding true
+    }
+
     buildTypes {
         release {
             minifyEnabled true
@@ -23,7 +28,7 @@ android {
         }
         dev_release {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-dev-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             versionNameSuffix '-dev.' + rootProject.versionCode
             resValue "string", "app_name", "GlucoDataHandler"
         }
@@ -53,9 +58,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
-    }
-    buildFeatures {
-        viewBinding true
     }
     dependenciesInfo {
         includeInApk = false

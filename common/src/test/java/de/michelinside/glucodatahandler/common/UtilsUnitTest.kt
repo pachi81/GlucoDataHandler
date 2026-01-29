@@ -1,5 +1,7 @@
 package de.michelinside.glucodatahandler.common
 
+import android.util.Log as AndroidLog
+import de.michelinside.glucodatahandler.common.receiver.NotificationReceiver
 import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.utils.Utils
 import io.mockk.every
@@ -7,12 +9,30 @@ import io.mockk.mockkStatic
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Test
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 
 class UtilsUnitTest {
+
+    @Before
+    fun setup() {
+        mockkStatic(AndroidLog::class)
+        every { AndroidLog.v(any(), any()) } returns 0
+        every { AndroidLog.d(any(), any()) } returns 0
+        every { AndroidLog.i(any(), any()) } returns 0
+        every { AndroidLog.w(any(), any<String>()) } returns 0
+        every { AndroidLog.e(any(), any()) } returns 0
+
+        mockkStatic(Log::class)
+        every { Log.v(any(), any()) } returns 0
+        every { Log.d(any(), any()) } returns 0
+        every { Log.i(any(), any()) } returns 0
+        every { Log.w(any(), any()) } returns 0
+        every { Log.e(any(), any()) } returns 0
+    }
 
     fun time(time: String): LocalDateTime {
         val dateTime = "30.09.2024 $time"
@@ -28,12 +48,6 @@ class UtilsUnitTest {
 
     @Test
     fun testIsValidTime() {
-        mockkStatic(Log::class)
-        every { Log.v(any(), any()) } returns 0
-        every { Log.d(any(), any()) } returns 0
-        every { Log.i(any(), any()) } returns 0
-        every { Log.e(any(), any()) } returns 0
-
         assertTrue(Utils.isValidTime("12:00"))
         assertTrue(Utils.isValidTime("00:00"))
         assertTrue(Utils.isValidTime("23:59"))
@@ -45,12 +59,6 @@ class UtilsUnitTest {
 
     @Test
     fun testTimeBetweenTimes() {
-        mockkStatic(Log::class)
-        every { Log.v(any(), any()) } returns 0
-        every { Log.d(any(), any()) } returns 0
-        every { Log.i(any(), any()) } returns 0
-        every { Log.e(any(), any()) } returns 0
-
         assertTrue(Utils.timeBetweenTimes(time("12:00"), "10:00", "14:00"))
         assertTrue(Utils.timeBetweenTimes(time("10:00"), "10:00", "14:00"))
         assertTrue(Utils.timeBetweenTimes(time("14:00"), "10:00", "14:00"))
@@ -81,12 +89,6 @@ class UtilsUnitTest {
 
     @Test
     fun testTimeBetweenTimesWithDayFilter() {
-        mockkStatic(Log::class)
-        every { Log.v(any(), any()) } returns 0
-        every { Log.d(any(), any()) } returns 0
-        every { Log.i(any(), any()) } returns 0
-        every { Log.e(any(), any()) } returns 0
-
         assertTrue(Utils.timeBetweenTimes(time("23:00"), "23:00", "14:00", mutableSetOf("1")))
         assertTrue(Utils.timeBetweenTimes(time("23:10"), "23:00", "14:00", mutableSetOf("1")))
         assertTrue(Utils.timeBetweenTimes(datetime("01.10.2024 00:00"), "23:00", "14:00", mutableSetOf("1")))

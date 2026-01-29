@@ -9,6 +9,7 @@ import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.preference.*
 import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -16,10 +17,12 @@ import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
 import de.michelinside.glucodatahandler.common.tasks.DexcomShareSourceTask
 import de.michelinside.glucodatahandler.common.tasks.LibreLinkSourceTask
 import de.michelinside.glucodatahandler.common.tasks.MedtrumSourceTask
+import de.michelinside.glucodatahandler.common.ui.Dialogs
 
 class SourceOnlineFragment : PreferenceFragmentCompatBase(), SharedPreferences.OnSharedPreferenceChangeListener {
     private val LOG_ID = "GDH.SourceOnlineFragment"
     private var settingsChanged = false
+
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         Log.d(LOG_ID, "onCreatePreferences called")
         try {
@@ -126,6 +129,9 @@ class SourceOnlineFragment : PreferenceFragmentCompatBase(), SharedPreferences.O
 abstract class SourceOnlineFragmentBase(val preferenceResId: Int) : PreferenceFragmentCompatBase(), SharedPreferences.OnSharedPreferenceChangeListener, NotifierInterface {
     protected val LOG_ID = "GDH.SourceOnlineFragment"
     private var settingsChanged = false
+    protected open val patientIdKey = ""
+    private var patientId = ""
+
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         Log.d(LOG_ID, "onCreatePreferences called")
@@ -138,6 +144,10 @@ abstract class SourceOnlineFragmentBase(val preferenceResId: Int) : PreferenceFr
             PreferenceHelper.setLinkOnClick(findPreference("source_librelinkup_video"), R.string.video_tutorial_librelinkup, requireContext())
 
             setupPatientData()
+            if(patientIdKey.isNotEmpty()) {
+                patientId = preferenceManager.sharedPreferences!!.getString(patientIdKey, "")!!
+                Log.d(LOG_ID, "Using patientId: $patientId")
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreatePreferences exception: " + exc.toString())
         }
@@ -217,6 +227,24 @@ abstract class SourceOnlineFragmentBase(val preferenceResId: Int) : PreferenceFr
                 Constants.SHARED_PREF_LIBRE_ENABLED,
                 Constants.SHARED_PREF_MEDTRUM_ENABLED -> {
                     checkIntervalOnEnableChange(sharedPreferences, key)
+                }
+            }
+
+            if(key == patientIdKey) {
+                val listPreference = findPreference<ListPreference>(patientIdKey)
+                if(listPreference != null) {
+                    if(patientId != listPreference.value) {
+                        val shouldReset = patientId.isNotEmpty() && listPreference.isVisible
+                        patientId = listPreference.value
+                        Log.i(LOG_ID, "PatientID changed to $patientId - shouldReset: $shouldReset")
+                        if(shouldReset) {
+                            Dialogs.showYesNoDialog(requireContext(), resources.getString(R.string.patient_changed), resources.getString(R.string.patient_changed_reset_db),
+                                { _, _ ->
+                                    GlucoDataService.resetDB()
+                                }
+                            )
+                        }
+                    }
                 }
             }
         } catch (exc: Exception) {
@@ -322,6 +350,7 @@ abstract class SourceOnlineFragmentBase(val preferenceResId: Int) : PreferenceFr
 //**************************************************************************************************
 
 class SourceLibreLinkUp: SourceOnlineFragmentBase(R.xml.source_librelinkup) {
+    override val patientIdKey = Constants.SHARED_PREF_LIBRE_PATIENT_ID
     override fun getPasswordPref(): String = Constants.SHARED_PREF_LIBRE_PASSWORD
 
     override fun setupPatientData() {
@@ -395,6 +424,7 @@ class SourceDexcomShare: SourceOnlineFragmentBase(R.xml.source_dexcom_share) {
 //**************************************************************************************************
 
 class SourceMedtrum: SourceOnlineFragmentBase(R.xml.source_medtrum) {
+    override val patientIdKey = Constants.SHARED_PREF_MEDTRUM_PATIENT_ID
     override fun getPasswordPref(): String = Constants.SHARED_PREF_MEDTRUM_PASSWORD
 
     override fun update() {
@@ -404,6 +434,7 @@ class SourceMedtrum: SourceOnlineFragmentBase(R.xml.source_medtrum) {
     }
 
     private fun setMedtrumPatientSummary() {
+        Log.v(LOG_ID, "setMedtrumPatientSummary called")
         val listPreference = findPreference<ListPreference>(Constants.SHARED_PREF_MEDTRUM_PATIENT_ID)
         if(listPreference != null && listPreference.isVisible) {
             val pref = findPreference<Preference>(Constants.SHARED_PREF_MEDTRUM_PATIENT_ID)
@@ -425,15 +456,16 @@ class SourceMedtrum: SourceOnlineFragmentBase(R.xml.source_medtrum) {
         try {
             val listPreference = findPreference<ListPreference>(Constants.SHARED_PREF_MEDTRUM_PATIENT_ID)
             if(listPreference != null) {
+                Log.d(LOG_ID, "setupMedtrumPatientData called for ${MedtrumSourceTask.patientData.size} patients")
                 // force "global broadcast" to be the first entry
-                listPreference!!.entries = MedtrumSourceTask.patientData.values.toTypedArray()
+                listPreference.entries = MedtrumSourceTask.patientData.values.toTypedArray()
                 listPreference.entryValues = MedtrumSourceTask.patientData.keys.toTypedArray()
                 listPreference.isVisible = MedtrumSourceTask.patientData.size > 1
                 if(listPreference.isVisible)
                     setMedtrumPatientSummary()
             }
         } catch (exc: Exception) {
-            Log.e(LOG_ID, "setupMedtrumPatientData exception: $exc")
+            Log.e(LOG_ID, "setupMedtrumPatientData exception: $exc\n${exc.stackTrace}")
         }
     }
 }

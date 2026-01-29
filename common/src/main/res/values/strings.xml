@@ -35,6 +35,7 @@
     <string name="garmin_watchfaces" translatable="false">https://apps.garmin.com/search?keywords=xdrip</string>
     <string name="pebble_watchfaces" translatable="false">https://apps.rebble.io/en_US/search/watchfaces/1?native=false&amp;query=xdrip</string>
     <string name="glance_watchfaces" translatable="false">https://glancewatchface.com</string>
+    <string name="medtrum_easy_view_url" translatable="false">https://easyview.medtrum.eu/</string>
 
     <string name="video_tutorial_librelinkup" translatable="false">https://youtu.be/YRs9nY4DgnA?si=v108UhnBNfQSeK2I</string>
     <string name="video_tutorial_juggluco" translatable="false">https://youtu.be/evS5rXDiciY?si=DTxlGYhYm-nNboHl</string>
@@ -1032,11 +1033,17 @@ You can manage these permissions at any time in the Health Connect app settings.
         <item quantity="other">%d hours</item>
     </plurals>
 
+    <!-- v2.3 -->
 
-    <!-- <string name="dexcom_server_down_error">Dexcom server seems to be down!\nPress here to check
-        server status.\nIf the Dexcom app is on the same phone, you can use the Notification Reader
-        instead.
-    </string> -->
+    <string name="medtrum_wrong_user_type_info">Only follower users are allowed account.\nPress here to create a new follower account and invite yourself.</string>
+    <string name="notification_reader_value_with_unit">Value with unit</string>
+    <string name="notification_reader_value_with_unit_summary">If the unit (mmol or mg) is part of the value in notification, enable this to ignore all fields without unit.</string>
+
+    <string name="button_yes">Yes</string>
+    <string name="button_no">No</string>
+    <string name="patient_changed">Patient changed</string>
+    <string name="patient_changed_reset_db">You have changed the patient.\nDo you want to reset the database to remove the old patient data?</string>
+    <string name="update">Update</string>
 </resources>
 
 

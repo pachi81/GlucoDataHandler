@@ -7,68 +7,116 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.content.pm.ResolveInfo
 import android.os.Build
+import android.os.Looper
 import com.google.android.gms.wearable.WearableListenerService.RECEIVER_EXPORTED
 import com.google.android.gms.wearable.WearableListenerService.RECEIVER_VISIBLE_TO_INSTANT_APPS
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.receiver.InternalActionReceiver
 import kotlinx.coroutines.*
-import java.util.concurrent.atomic.AtomicBoolean
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 object PackageUtils {
     private val LOG_ID = "GDH.Utils.Packages"
     private val packages = HashMap<String, String>()
 
-    private var updateInProgress = AtomicBoolean(false)
+    private val _isUpdating = MutableStateFlow(false)
+    val isUpdating = _isUpdating.asStateFlow()
 
+    @SuppressLint("QueryPermissionsNeeded")
     fun updatePackages(context: Context) {
-        if(!updateInProgress.get()) {
-            updateInProgress.set(true)
+        if(!_isUpdating.value) {
+            _isUpdating.value = true
             packages.clear()
-            GlobalScope.launch {
+            // Use a specific scope instead of GlobalScope for better lifecycle control
+            CoroutineScope(Dispatchers.IO).launch {
                 Log.d(LOG_ID, "Start updating packages")
-                val receivers: List<ResolveInfo>
-                val intent = Intent(Intent.ACTION_MAIN)
-                intent.addCategory(Intent.CATEGORY_LAUNCHER)
-                receivers = context.packageManager.queryIntentActivities(
-                    intent,
-                    PackageManager.GET_META_DATA
-                )
-                for (resolveInfo in receivers) {
-                    val pkgName = resolveInfo.activityInfo.packageName
-                    val name =
-                        resolveInfo.activityInfo.loadLabel(context.packageManager).toString()
-                    if (pkgName != null) {
-                        Log.v(LOG_ID, "Package: $pkgName - $name")
-                        packages[pkgName] = name
+                try {
+                    val packageManager = context.packageManager
+                    // Get all installed packages
+                    // Due to the <queries> in Manifest, this returns all apps with a launcher intent
+                    val installedApps = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        packageManager.getInstalledPackages(PackageManager.PackageInfoFlags.of(0))
+                    } else {
+                        @Suppress("DEPRECATION")
+                        packageManager.getInstalledPackages(0)
                     }
+
+                    for (pkgInfo in installedApps) {
+                        val pkgName = pkgInfo.packageName
+                        val appInfo = pkgInfo.applicationInfo ?: continue
+
+                        // Filter: check if it is a system app
+                        val isSystemApp = (appInfo.flags and android.content.pm.ApplicationInfo.FLAG_SYSTEM != 0) ||
+                                (appInfo.flags and android.content.pm.ApplicationInfo.FLAG_UPDATED_SYSTEM_APP != 0)
+
+                        // Check if the app has a launcher icon
+                        val hasMainIntent = packageManager.getLaunchIntentForPackage(pkgName) != null
+
+                        // Add to list if it's a user app OR a system app with a launcher (e.g., Chrome, Gallery)
+                        if (!isSystemApp || hasMainIntent) {
+                            val name = appInfo.loadLabel(packageManager).toString()
+                            Log.d(LOG_ID, "Found package: $pkgName - $name")
+                            packages[pkgName] = name
+                        } else {
+                            Log.d(LOG_ID, "Skip hidden system package: $pkgName")
+                        }
+                    }
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "updatePackages exception: " + exc.toString())
+                } finally {
+                    _isUpdating.value = false
+                    Log.i(LOG_ID, "${packages.size} packages found")
                 }
-                updateInProgress.set(false)
-                Log.i(LOG_ID, "${packages.size} packages found")
             }
         }
     }
 
     private fun waitForUpdate() {
-        if(updateInProgress.get()) {
+        if(_isUpdating.value) {
             runBlocking {
-                val result = async {
+                if (Looper.myLooper() == Looper.getMainLooper()) {
+                    Log.d(LOG_ID, "Wait for updating packages on main thread")
+                } else {
                     Log.v(LOG_ID, "Wait for updating packages")
-                    while (updateInProgress.get()) {
-                        delay(10)
-                    }
-                    Log.v(LOG_ID, "Update packages done")
-                    true
                 }
-                result.await()
+                while (_isUpdating.value) {
+                    delay(10)
+                }
+                Log.v(LOG_ID, "Update packages done")
             }
         }
     }
 
+    fun checkPackageName(context: Context, packageName: String): String? {
+        try {
+            getPackages(context)
+            if(packages.containsKey(packageName))
+                return packages[packageName]
+            Log.d(LOG_ID, "Package $packageName not in cache, checking system...")
+            val packageManager = context.packageManager
+            val appInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                packageManager.getApplicationInfo(packageName, PackageManager.ApplicationInfoFlags.of(0))
+            } else {
+                @Suppress("DEPRECATION")
+                packageManager.getApplicationInfo(packageName, 0)
+            }
+            val name = packageManager.getApplicationLabel(appInfo).toString()
+            Log.i(LOG_ID, "Package $packageName found with name $name")
+            packages[packageName] = name
+            return name
+        } catch (_: PackageManager.NameNotFoundException) {
+            Log.w(LOG_ID, "Package $packageName not found")
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "getPackageInfo exception for $packageName: " + exc.toString())
+        }
+        return null
+    }
+
     fun getPackages(context: Context): HashMap<String, String> {
         waitForUpdate()
-        if (packages.isEmpty()) {
+        if (packages.isEmpty() && !_isUpdating.value) {
             Log.i(LOG_ID, "Updating receivers")
             updatePackages(context)
             waitForUpdate()
@@ -204,20 +252,6 @@ object PackageUtils {
     fun isDexcomApp(packageName: String): Boolean {
         return packageName.lowercase().startsWith("com.dexcom.")
     }
-
-    /*
-    fun getAppIntent(context: Context, packageName: String, requestCode: Int): PendingIntent? {
-        val launchIntent = context.packageManager.getLaunchIntentForPackage(packageName)
-        if (launchIntent != null) {
-            return PendingIntent.getActivity(
-                context,
-                requestCode,
-                launchIntent,
-                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-            )
-        }
-        return null
-    }*/
 
     fun isPackageAvailable(context: Context, packageName: String): Boolean {
         return getPackages(context).containsKey(packageName)

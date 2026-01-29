@@ -154,19 +154,7 @@ open class SourceNotificationBase(val resourceId: Int) : PreferenceFragmentCompa
 
 
 class SourceNotificationValue : SourceNotificationBase(R.xml.source_notification_value) {
-    override fun initPreferences() {
-        super.initPreferences()
-        val regexPref = findPreference<EditTextPreference>(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX)
-        regexPref?.setDefaultValue(NotificationReceiver.defaultGlucoseRegex)
-    }
 }
 
 class SourceNotificationIobCob : SourceNotificationBase(R.xml.source_notification_iob_cob) {
-    override fun initPreferences() {
-        super.initPreferences()
-        val iobRegexPref = findPreference<EditTextPreference>(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX)
-        iobRegexPref?.setDefaultValue(NotificationReceiver.defaultIobRegex)
-        val cobRegexPref = findPreference<EditTextPreference>(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_COB_APP_REGEX)
-        cobRegexPref?.setDefaultValue(NotificationReceiver.defaultCobRegex)
-    }
 }
