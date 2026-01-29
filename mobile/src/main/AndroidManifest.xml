@@ -29,39 +29,42 @@
     <uses-permission android:name="android.permission.health.WRITE_BLOOD_GLUCOSE"/>
 
     <queries>
+        <!-- Popular CGM & Diabetes Apps -->
         <package android:name="com.eveningoutpost.dexdrip" />
+        <package android:name="jamorham.xdrip.plus" />
         <package android:name="info.nightscout.androidaps" />
-        <package android:name="com.dexcom.g6.region1.mmol" />
-        <package android:name="com.dexcom.g6.region2.mmol" />
-        <package android:name="com.dexcom.g6.region3.mmol" />
-        <package android:name="com.dexcom.g6.region4.mmol" />
-        <package android:name="com.dexcom.g6.region5.mmol" />
-        <package android:name="com.dexcom.g6.region6.mmol" />
-        <package android:name="com.dexcom.g6.region7.mmol" />
-        <package android:name="com.dexcom.g6.region1.mgdl" />
-        <package android:name="com.dexcom.g6.region2.mgdl" />
-        <package android:name="com.dexcom.g6.region3.mgdl" />
-        <package android:name="com.dexcom.g6.region4.mgdl" />
-        <package android:name="com.dexcom.g6.region5.mgdl" />
-        <package android:name="com.dexcom.g6.region6.mgdl" />
-        <package android:name="com.dexcom.g6.region7.mgdl" />
-        <package android:name="com.dexcom.follow.region1.mmol" />
-        <package android:name="com.dexcom.follow.region2.mmol" />
-        <package android:name="com.dexcom.follow.region3.mmol" />
-        <package android:name="com.dexcom.follow.region4.mmol" />
-        <package android:name="com.dexcom.follow.region5.mmol" />
-        <package android:name="com.dexcom.follow.region6.mmol" />
-        <package android:name="com.dexcom.follow.region7.mmol" />
-        <package android:name="com.dexcom.follow.region1.mgdl" />
-        <package android:name="com.dexcom.follow.region2.mgdl" />
-        <package android:name="com.dexcom.follow.region3.mgdl" />
-        <package android:name="com.dexcom.follow.region4.mgdl" />
-        <package android:name="com.dexcom.follow.region5.mgdl" />
-        <package android:name="com.dexcom.follow.region6.mgdl" />
-        <package android:name="com.dexcom.follow.region7.mgdl" />
         <package android:name="tk.glucodata" />
+        <package android:name="com.microtech.aidexx.cgm" /> <!-- AiDEX -->
+        <package android:name="com.medtrum.easycare" /> <!-- Medtrum -->
+        <package android:name="com.signos.signos" /> <!-- Signos -->
+        <package android:name="com.gluroo.gluroo" /> <!-- Gluroo -->
+        <package android:name="jamorham.xdrip.plus" /> <!-- xDrip+ Original -->
+
+        <!-- Dexcom G7 & One -->
+        <package android:name="com.dexcom.g7" />
+        <package android:name="com.dexcom.cgm" /> <!-- Dexcom G6 (einige Regionen) -->
+        <package android:name="com.dexcom.one.region1" />
+        <package android:name="com.dexcom.one.region2" />
+
+        <!-- Libre LinkUp & 3 -->
+        <package android:name="org.nativescript.librelinkup" />
+        <package android:name="com.freestylelibre3.app.de" />
+
+        <!-- Pump & Loop -->        <!-- Pump & Loop -->
+        <package android:name="com.insulet.myblue.pdm" />
+        <package android:name="com.camdiab.camapsfx" />
+        <package android:name="com.camdiab.camapsfx.mgdl" />
+        <package android:name="com.medtronic.diabetes.minimedmobile.eu" />
+        <package android:name="com.medtronic.diabetes.minimedmobile.usa" />
+
+        <!-- Eversense -->
+        <package android:name="com.senseonics.gen2.plus" />
+        <package android:name="esel.esel" />
+
         <!-- Health Connect App -->
         <package android:name="com.google.android.apps.healthdata" />
+
+        <!-- Catch-all for any app with a launcher (fixes your "disappearing package" bug) -->
         <intent>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />

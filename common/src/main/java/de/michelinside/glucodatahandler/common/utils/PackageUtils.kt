@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.content.pm.ResolveInfo
 import android.os.Build
 import android.os.Looper
 import com.google.android.gms.wearable.WearableListenerService.RECEIVER_EXPORTED
@@ -25,27 +24,43 @@ object PackageUtils {
     private val _isUpdating = MutableStateFlow(false)
     val isUpdating = _isUpdating.asStateFlow()
 
+    @SuppressLint("QueryPermissionsNeeded")
     fun updatePackages(context: Context) {
         if(!_isUpdating.value) {
             _isUpdating.value = true
             packages.clear()
-            GlobalScope.launch {
+            // Use a specific scope instead of GlobalScope for better lifecycle control
+            CoroutineScope(Dispatchers.IO).launch {
                 Log.d(LOG_ID, "Start updating packages")
                 try {
-                    val receivers: List<ResolveInfo>
-                    val intent = Intent(Intent.ACTION_MAIN)
-                    intent.addCategory(Intent.CATEGORY_LAUNCHER)
-                    receivers = context.packageManager.queryIntentActivities(
-                        intent,
-                        PackageManager.GET_META_DATA
-                    )
-                    for (resolveInfo in receivers) {
-                        val pkgName = resolveInfo.activityInfo.packageName
-                        val name =
-                            resolveInfo.activityInfo.loadLabel(context.packageManager).toString()
-                        if (pkgName != null) {
-                            Log.v(LOG_ID, "Package: $pkgName - $name")
+                    val packageManager = context.packageManager
+                    // Get all installed packages
+                    // Due to the <queries> in Manifest, this returns all apps with a launcher intent
+                    val installedApps = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        packageManager.getInstalledPackages(PackageManager.PackageInfoFlags.of(0))
+                    } else {
+                        @Suppress("DEPRECATION")
+                        packageManager.getInstalledPackages(0)
+                    }
+
+                    for (pkgInfo in installedApps) {
+                        val pkgName = pkgInfo.packageName
+                        val appInfo = pkgInfo.applicationInfo ?: continue
+
+                        // Filter: check if it is a system app
+                        val isSystemApp = (appInfo.flags and android.content.pm.ApplicationInfo.FLAG_SYSTEM != 0) ||
+                                (appInfo.flags and android.content.pm.ApplicationInfo.FLAG_UPDATED_SYSTEM_APP != 0)
+
+                        // Check if the app has a launcher icon
+                        val hasMainIntent = packageManager.getLaunchIntentForPackage(pkgName) != null
+
+                        // Add to list if it's a user app OR a system app with a launcher (e.g., Chrome, Gallery)
+                        if (!isSystemApp || hasMainIntent) {
+                            val name = appInfo.loadLabel(packageManager).toString()
+                            Log.d(LOG_ID, "Found package: $pkgName - $name")
                             packages[pkgName] = name
+                        } else {
+                            Log.d(LOG_ID, "Skip hidden system package: $pkgName")
                         }
                     }
                 } catch (exc: Exception) {
