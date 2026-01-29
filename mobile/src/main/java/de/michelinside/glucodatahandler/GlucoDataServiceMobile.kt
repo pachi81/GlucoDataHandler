@@ -4,7 +4,6 @@ import android.app.Notification
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
@@ -18,8 +17,6 @@ import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 import de.michelinside.glucodatahandler.common.receiver.GlucoseDataReceiver
-import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
-import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.utils.Utils.isScreenReaderOn
 import de.michelinside.glucodatahandler.healthconnect.HealthConnectManager
 import de.michelinside.glucodatahandler.tasker.setWearConnectionState
@@ -29,15 +26,14 @@ import de.michelinside.glucodatahandler.widget.FloatingWidget
 import de.michelinside.glucodatahandler.widget.GlucoseBaseWidget
 import de.michelinside.glucodatahandler.widget.LockScreenWallpaper
 import de.michelinside.glucodatahandler.xdripserver.XDripServer
-import java.math.RoundingMode
 import androidx.core.content.edit
 import de.michelinside.glucodatahandler.tasker.TaskerWatchBatteryReceiver
+import de.michelinside.glucodatahandler.transfer.TransferValue
 
 
 class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInterface {
     private lateinit var floatingWidget: FloatingWidget
     private lateinit var lockScreenWallpaper: LockScreenWallpaper
-    private var lastForwardTime = 0L
 
     init {
         Log.i(LOG_ID, "init called")
@@ -369,95 +365,6 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         }
     }
 
-    fun sendBroadcast(intent: Intent, receiverPrefKey: String, context: Context, sharedPref: SharedPreferences) {
-        try {
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
-            var receivers = sharedPref.getStringSet(receiverPrefKey, HashSet<String>())
-            Log.i(LOG_ID, "Forward " + receiverPrefKey + " Broadcast to " + receivers?.size.toString() + " receivers")
-            if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
-                Log.d(LOG_ID, "Forward package: ${Utils.dumpBundle(intent.extras)}")
-            if (receivers == null || receivers.size == 0) {
-                receivers = setOf("")
-            }
-            for( receiver in receivers ) {
-                val sendIntent = intent.clone() as Intent
-                if (!receiver.isEmpty()) {
-                    sendIntent.setPackage(receiver)
-                    Log.d(LOG_ID, "Send broadcast " + receiverPrefKey + " to " + receiver.toString())
-                } else {
-                    Log.d(LOG_ID, "Send global broadcast " + receiverPrefKey)
-                    sendIntent.putExtra(Constants.EXTRA_SOURCE_PACKAGE, context.packageName)
-                }
-                context.sendBroadcast(sendIntent)
-            }
-            lastForwardTime = ReceiveData.time
-        } catch (ex: Exception) {
-            Log.e(LOG_ID, "Exception while sending broadcast for " + receiverPrefKey + ": " + ex)
-        }
-    }
-    /*
-    private fun sendToBangleJS(context: Context) {
-        val send2Bangle = "require(\"Storage\").writeJSON(\"widbgjs.json\", {" +
-                "'bg': " + ReceiveData.rawValue.toString() + "," +
-                "'bgTimeStamp': " + ReceiveData.time + "," +
-                "'bgDirection': '" + GlucoDataUtils.getDexcomLabel(ReceiveData.rate) + "'" +
-                "});"
-
-        Log.i(LOG_ID, "Send to bangleJS: " + send2Bangle)
-        val sendIntent = Intent("com.banglejs.uart.tx")
-        sendIntent.putExtra("line", send2Bangle)
-        context.sendBroadcast(sendIntent)
-    }
-*/
-    private fun forwardBroadcast(context: Context, extras: Bundle) {
-        Log.v(LOG_ID, "forwardBroadcast called")
-        CarModeReceiver.sendToGlucoDataAuto(context)
-
-        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
-        /*
-        if (sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_BANGLEJS, false)) {
-            sendToBangleJS(context)
-        }*/
-
-        val interval = sharedPref.getInt(Constants.SHARED_PREF_SEND_TO_RECEIVER_INTERVAL, 1)
-        val elapsed = Utils.getElapsedTimeMinute(lastForwardTime, RoundingMode.HALF_UP)
-        if (interval > 1 && elapsed < interval) {
-            Log.d(LOG_ID, "Ignore data because of interval $interval - elapsed: $elapsed")
-            return
-        }
-
-        if (sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_XDRIP, false)) {
-            val intent = Intent(Constants.XDRIP_ACTION_GLUCOSE_READING)
-            // always sends time as start time, because it is only set, if the sensorId have changed!
-            val sensor = Bundle()
-            sensor.putLong("sensorStartTime", if(ReceiveData.sensorStartTime > 0) ReceiveData.sensorStartTime else Utils.getDayStartTime())  // use start time of the current day
-            val currentSensor = Bundle()
-            currentSensor.putBundle("currentSensor", sensor)
-            intent.putExtra("sas", currentSensor)
-            val bleManager = Bundle()
-            bleManager.putString("sensorSerial", ReceiveData.sensorID ?: context.packageName)
-            intent.putExtra("bleManager", bleManager)
-            intent.putExtra("glucose", ReceiveData.rawValue.toDouble())
-            intent.putExtra("timestamp", ReceiveData.time)
-            sendBroadcast(intent, Constants.SHARED_PREF_XDRIP_RECEIVERS, context, sharedPref)
-        }
-
-        if (sharedPref.getBoolean(Constants.SHARED_PREF_SEND_XDRIP_BROADCAST, false)) {
-            val xDripExtras = XDripBroadcastReceiver.createExtras(context)
-            if (xDripExtras != null) {
-                val intent = Intent(Intents.XDRIP_BROADCAST_ACTION)
-                intent.putExtras(xDripExtras)
-                sendBroadcast(intent, Constants.SHARED_PREF_XDRIP_BROADCAST_RECEIVERS, context, sharedPref)
-            }
-        }
-
-        if (sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD, false)) {
-            val intent = Intent(Constants.GLUCODATA_BROADCAST_ACTION)
-            intent.putExtras(extras)
-            sendBroadcast(intent, Constants.SHARED_PREF_GLUCODATA_RECEIVERS, context, sharedPref)
-        }
-    }
-
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
             Log.d(LOG_ID, "OnNotifyData called for source " + dataSource.toString())
@@ -473,7 +380,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             }
             if (extras != null) {
                 if (dataSource == NotifySource.MESSAGECLIENT || dataSource == NotifySource.BROADCAST) {
-                    forwardBroadcast(context, extras)
+                    TransferValue.transferNewValue(context, extras)
                 }
             }
         } catch (exc: Exception) {
