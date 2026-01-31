@@ -175,6 +175,8 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             return true
         if(packageName.lowercase().startsWith("com.medtronic."))  // MiniMed has 5 min interval
             return true
+        if(packageName.lowercase().startsWith("com.microtechmd.cgms")) // Aidex has 5 minute interval
+            return true
         // else
         return sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_5_MINUTE_INTERVAl, true)
     }
