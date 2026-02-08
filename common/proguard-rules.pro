@@ -26,8 +26,7 @@
 
 # Prevent stripping the common library classes
 -keep class de.michelinside.glucodatahandler.common.** { *; }
-
-
+-keep class com.microtechmd.blecomm.entity.BleMessage { *; }
 # --------------------------------------------------------------------
 # REMOVE all debug log messages
 # --------------------------------------------------------------------
