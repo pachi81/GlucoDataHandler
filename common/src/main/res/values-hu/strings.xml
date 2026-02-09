@@ -1033,4 +1033,31 @@ Ezeket az engedélyeket bármikor kezelheti a Health Connect alkalmazás beáll�
     </plurals>
 
     <string name="dexcom_server_down_error">Úgy tűnik, a Dexcom szerver leállt!\nNyomja meg itt a szerver állapotának ellenőrzéséhez.\nHa a Dexcom alkalmazás ugyanazon a telefonon van, használhatja helyette az Értesítésolvasót (Notification Reader).</string>
+
+    <!-- v2.3 -->
+
+    <string name="medtrum_wrong_user_type_info">Csak követői fiókok engedélyezettek.\nNyomja meg itt egy új követői fiók létrehozásához és saját maga meghívásához.</string>
+    <string name="notification_reader_value_with_unit">Érték mértékegységgel</string>
+    <string name="notification_reader_value_with_unit_summary">Ha a mértékegység (mmol vagy mg) része az értéknek az értesítésben, engedélyezze ezt, hogy figyelmen kívül hagyja az összes mértékegység nélküli mezőt.</string>
+
+    <string name="button_yes">Igen</string>
+    <string name="button_no">Nem</string>
+    <string name="patient_changed">Beteg megváltozott</string>
+    <string name="patient_changed_reset_db">Megváltoztatta a beteget.\nSzeretné alaphelyzetbe állítani az adatbázist a régi betegadatok eltávolításához?</string>
+    <string name="update">Frissítés</string>
+    <string name="pref_transfer_to_healthconnect_summary">Glükózértékek megosztása a Health Connect szolgáltatással.</string>
+    <string name="pref_transfer_to_local_apps_summary">Broadcast küldése más helyi alkalmazásoknak ezen az eszközön.</string>
+    <string name="source_aidex_summary">AiDEX broadcast vevő engedélyezése. AiDEX alkalmazás 1.0.17-es vagy annál korábbi verziója szükséges.</string>
+    <string name="pref_source_aidex_summary">Broadcastokat fogad az AiDEX alkalmazásból. AiDEX alkalmazás 1.0.17-es vagy annál korábbi verziója szükséges.</string>
+
+    <string name="transfer_values_interval_summary">Intervallum a glükózértékek küldéséhez.\nAz utolsó átvitel óta rögzített összes érték bele lesz foglalva.</string>
+    <string name="health_connect_settings">Health Connect megnyitása</string>
+    <string name="health_connect_settings_summary">Engedélyek és adathozzáférés kezelése a Health Connect számára.</string>
+    <string name="health_connect_not_supported_version">A Health Connect legalább Android 9-et igényel.</string>
+    <string name="pref_transfer_to_nightscout_summary">Glükózértékek feltöltése a Nightscoutba.</string>
+    <string name="transfer_to_nightscout">Nightscout feltöltés</string>
+    <string name="label_profile">Profil</string>
+    <string name="pref_watchfaces_cx_summary">A Creative eXtreme óraszámlapok szintén támogatják a GlucoDataHandler komplikációkat.\nA Facer óraszámlap alkalmazást kell használnia ezen óraszámlapok használatához.\nKoppintson ide a Facer oldal megnyitásához a Creative eXtreme óraszámlapokhoz.</string>
+    <string name="notification_reader_interval_summary">Állítsa be ezt az érzékelő frissítési gyakoriságának megfelelően a felesleges értesítések feldolgozásának elkerülése érdekében.\nÁllítsa 0-ra, ha a forrásalkalmazás csak új glükózértékek esetén frissül (mint a CamAPS FX).</string>
+
 </resources>

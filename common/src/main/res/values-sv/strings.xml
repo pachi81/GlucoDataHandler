@@ -656,7 +656,7 @@
     <string name="pref_send_battery_level_to_watch_summary">Skicka batterinivån till klockan för att visa den i komplikationen och på huvudskärmen.</string>
     <string name="pref_battery_level">Visa batterinivå</string>
     <string name="forward_to_watch_interval_summary">Ange den minsta tiden (i minuter) mellan glukosmätningar innan en ny uppdatering skickas till klockan.\nLarm och mycket låga värden skickas alltid.</string>
-    <string name="forward_to_values_summary">Ange den minsta tiden (i minuter) mellan glukosmätningar innan en ny uppdatering skickas till mottagarna (inte för Health Connect).</string>
+    <string name="forward_to_values_summary">Ange den minsta tiden (i minuter) mellan glukosmätningar innan en ny uppdatering skickas till mottagarna.</string>
     <string name="alarm_repeat_summary">Larmet ljuder och vibrerar upprepade gånger tills meddelandet stängs eller den inställda maximala larmtiden har uppnåtts.</string>
     <string name="alarm_repeat_time">Maximal larmtid</string>
     <string name="alarm_repeat_time_summary">Ange den maximala tiden (i minuter) som larmet ljuder och vibrerar. Ett värde på 0 innebär att larmet upprepas på obestämd tid.</string>
@@ -678,8 +678,7 @@
     <string name="pref_watchfaces_default">Standard</string>
     <string name="pref_watchfaces_default_summary">De flesta tillverkare av smartklockor erbjuder redan urtavlor som kan användas med GlucoDataHandlers komplikationer.\nTill exempel är de flesta Samsung \"Info\"-urtavlor kompatibla.</string>
     <string name="pref_watchfaces_pujie">Pujie</string>
-    <string name="pref_watchfaces_pujie_summary">Pujie är en app för att skapa urtavlor med ett molnbibliotek.\nFör att hitta kompatibla urtavlor, sök i biblioteket efter urtavlor som börjar med \"GDH_\".\nObs: Pujie är inte kompatibel med Wear OS 5-enheter.\nTryck här för att öppna appen i Play Store.</string>
-    <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>
+    <string name="pref_watchfaces_pujie_summary">Pujie är en app för att skapa urtavlor med ett molnbibliotek.\nFör att hitta kompatibla urtavlor, sök i biblioteket efter urtavlor som börjar med \"GDH_\".\nTryck här för att öppna appen i Play Store.</string>
     <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man skapar tredjepartsurtavlor som är speciellt utvecklade för användning med GlucoDataHandler.\nTryck här för att öppna hans Play Store-sida.</string>
     <string name="pref_watchfaces_gdc">GDC-urtavlor</string>
     <string name="pref_watchfaces_gdc_summary">GDC-urtavlor har utvecklats för användning med GlucoDataHandler.\nTryck här för att öppna Play Store-sidan.</string>
@@ -898,7 +897,7 @@ Du kan hantera dessa behörigheter när som helst i Health Connect-appens instä
     <string name="pref_switch_xdrip_server_reduce_data_summary">Detta reducerar tillhandahållen data till ett minimum för att undvika minnesproblem på vissa Garmin-klockor.\nDetta kanske inte fungerar med varje urtavla.</string>
     <string name="error_port_in_use">Porten används redan!\nAvsluta andra webbservrar som körs på denna port och starta sedan om den lokala webbservern.</string>
     <string name="state_active">aktiv</string>
-    <string name="pref_garmin_info_summary">Det finns ingen dedikerad app för Garmin, Fitbit eller Pebble, endast en lokal webbserver som används av urtavlor med xDrip+-stöd.\nSök helt enkelt efter urtavlor för xDrip+ i Connect IQ Store och ställ in xDrip+-källan.\nVIKTIGT: Om xDrip+ eller Juggluco också används kan den lokala webbservern endast aktiveras i en app eftersom samma port (17580) används!</string>
+    <string name="pref_garmin_info_summary">Det finns ingen dedikerad app för Garmin eller Fitbit, endast en lokal webbserver som används av urtavlor med xDrip+-stöd.\nSök helt enkelt efter urtavlor för xDrip+ i Connect IQ Store och ställ in xDrip+-källan.\nVIKTIGT: Om xDrip+ eller Juggluco också används kan den lokala webbservern endast aktiveras i en app eftersom samma port (17580) används!</string>
     <string name="remaining">Återstående</string>
     <string name="pref_switch_xdrip_open_server">Öppen webbserver</string>
     <string name="pref_switch_xdrip_open_server_summary">Denna inställning gör webbservern tillgänglig för andra enheter i nätverket.\nDetta kan orsaka säkerhetsproblem, så aktivera endast om du verkligen måste komma åt webbserverns data från en annan enhet.\nGarmin-urtavlorna begär data direkt på telefonen, så ingen öppen server krävs!</string>
@@ -927,14 +926,12 @@ Du kan hantera dessa behörigheter när som helst i Health Connect-appens instä
     <string name="src_ns_summary">Följ Nightscout-webbtjänst på distans.</string>
     <string name="pref_cat_wear_os_summary">För Wear OS-klockor, t.ex. alla Google Pixel Watches, Samsung Galaxy Watch 4 och nyare samt många andra.</string>
     <string name="pref_cat_watchdrip_summary">För klockor som stöds av den externa WatchDrip+-appen, som de flesta Mi Band-, Xiaomi Smart Band- och Amazfit-modeller.</string>
-    <string name="pref_cat_garminpebble">Garmin-, Fitbit- och Pebble-klockor</string>
-    <string name="pref_cat_garminpebble_summary">För enheter och appar som kan ta emot glukosdata från xDrip+-webbtjänsten, som Garmin-, Pebble- och vissa Fitbit-klockor.</string>
+    <string name="pref_cat_garminpebble">Garmin- och Fitbit-klockor</string>
+    <string name="pref_cat_garminpebble_summary">För enheter och appar som kan ta emot glukosdata från xDrip+-webbtjänsten, som Garmin- och vissa Fitbit-klockor.</string>
     <string name="pref_garmin_watchfaces_summary">Tryck här för att öppna Connect IQ Store för xDrip+-urtavlor.\nOm urtavlorna stöder xDrip+ bör de också vara kompatibla med denna app.</string>
     <string name="pref_garmin_watchfaces">Garmin</string>
     <string name="pref_fitbit_watchfaces">Fitbit</string>
     <string name="pref_fitbit_watchfaces_summary">Tryck här för att öppna Glance-webbplatsen som stöder xDrip+-webbtjänster.</string>
-    <string name="pref_pebble_watchfaces">Pebble</string>
-    <string name="pref_pebble_watchfaces_summary">Tryck här för att öppna Pebble-urtavlor utvecklade för xDrip+ som också bör vara kompatibla med denna app.</string>
     <string name="gmi">GMI</string>
     <string name="pref_lockscreen_x_pos">Horisontell position</string>
     <string name="pref_lockscreen_x_pos_summary">Horisontell position på bilden:\n0 är displayens vänstra kant\n40 är displayens högra kant</string>
@@ -964,4 +961,31 @@ Du kan hantera dessa behörigheter när som helst i Health Connect-appens instä
     </plurals>
 
     <string name="dexcom_server_down_error">Dexcom-servern verkar vara offline!\nTryck här för att kontrollera serverstatus.\nOm Dexcom-appen är installerad på samma enhet kan du använda Notification Reader istället.</string>
+
+    <!-- v2.3 -->
+
+    <string name="medtrum_wrong_user_type_info">Endast följarkonton är tillåtna.\nTryck här för att skapa ett nytt följarkonto och bjuda in dig själv.</string>
+    <string name="notification_reader_value_with_unit">Värde med enhet</string>
+    <string name="notification_reader_value_with_unit_summary">Om enheten (mmol eller mg) är en del av värdet i aviseringen, aktivera detta för att ignorera alla fält utan enhet.</string>
+
+    <string name="button_yes">Ja</string>
+    <string name="button_no">Nej</string>
+    <string name="patient_changed">Patient ändrad</string>
+    <string name="patient_changed_reset_db">Du har bytt patient.\nVill du återställa databasen för att ta bort den gamla patientdatan?</string>
+    <string name="update">Uppdatera</string>
+    <string name="pref_transfer_to_healthconnect_summary">Dela glukosvärden med Health Connect.</string>
+    <string name="pref_transfer_to_local_apps_summary">Skickar broadcast till andra lokala applikationer på den här enheten.</string>
+    <string name="source_aidex_summary">Aktivera AiDEX broadcast-mottagare. Kräver AiDEX app-version 1.0.17 eller lägre.</string>
+    <string name="pref_source_aidex_summary">Tar emot broadcasts från AiDEX-appen. Kräver AiDEX app-version 1.0.17 eller lägre.</string>
+
+    <string name="transfer_values_interval_summary">Intervall för att skicka glukosvärden.\nAlla värden som registrerats sedan den senaste överföringen kommer att inkluderas.</string>
+    <string name="health_connect_settings">Öppna Health Connect</string>
+    <string name="health_connect_settings_summary">Hantera behörigheter och dataåtkomst för Health Connect.</string>
+    <string name="health_connect_not_supported_version">Health Connect kräver minst Android 9.</string>
+    <string name="pref_transfer_to_nightscout_summary">Ladda upp glukosvärden till Nightscout.</string>
+    <string name="transfer_to_nightscout">Nightscout-uppladdning</string>
+    <string name="label_profile">Profil</string>
+    <string name="pref_watchfaces_cx_summary">Creative eXtreme-urtavlor stöder också GlucoDataHandler-komplikationer.\nDu måste använda Facer-urtavelsappen för att använda dessa urtavlor.\nTryck här för att öppna Facer-sidan för Creative eXtreme-urtavlor.</string>
+    <string name="notification_reader_interval_summary">Ställ in detta för att matcha din sensors uppdateringsfrekvens för att undvika att bearbeta överflödiga aviseringar.\nStäll in på 0 om källappen bara uppdateras för nya glukosvärden (som CamAPS FX gör).</string>
+
 </resources>

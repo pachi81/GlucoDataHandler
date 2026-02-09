@@ -962,4 +962,31 @@ GlucoDataHandler 只會將血糖數據寫入健康連結，除非您明確授予
     </plurals>
 
     <string name="dexcom_server_down_error">Dexcom 伺服器似乎已關閉！\n按此處檢查伺服器狀態。\n如果 Dexcom 應用程式在同一支手機上，您可以改用通知讀取器 (Notification Reader)。</string>
+
+    <!-- v2.3 -->
+
+    <string name="medtrum_wrong_user_type_info">僅允許追蹤者帳戶。\n請點擊此處建立新的追蹤者帳戶並邀請您自己。</string>
+    <string name="notification_reader_value_with_unit">帶有單位的值</string>
+    <string name="notification_reader_value_with_unit_summary">如果單位（mmol 或 mg）是通知中值的一部分，請啟用此選項以忽略所有沒有單位的欄位。</string>
+
+    <string name="button_yes">是</string>
+    <string name="button_no">否</string>
+    <string name="patient_changed">病患已變更</string>
+    <string name="patient_changed_reset_db">您已變更病患。\n您是否要重設資料庫以移除舊病患的資料？</string>
+    <string name="update">更新</string>
+    <string name="pref_transfer_to_healthconnect_summary">與 Health Connect 分享血糖值。</string>
+    <string name="pref_transfer_to_local_apps_summary">向此裝置上的其他本機應用程式傳送廣播。</string>
+    <string name="source_aidex_summary">啟用 AiDEX 廣播接收器。需要 AiDEX 應用程式版本 1.0.17 或更低版本。</string>
+    <string name="pref_source_aidex_summary">從 AiDEX 應用程式接收廣播。需要 AiDEX 應用程式版本 1.0.17 或更低版本。</string>
+
+    <string name="transfer_values_interval_summary">傳送血糖值的間隔。\n將包含自上次傳輸以來記錄的所有值。</string>
+    <string name="health_connect_settings">開啟 Health Connect</string>
+    <string name="health_connect_settings_summary">管理 Health Connect 的權限和資料存取。</string>
+    <string name="health_connect_not_supported_version">Health Connect 至少需要 Android 9。</string>
+    <string name="pref_transfer_to_nightscout_summary">將血糖值上傳到 Nightscout。</string>
+    <string name="transfer_to_nightscout">Nightscout 上傳</string>
+    <string name="label_profile">個人資料</string>
+    <string name="pref_watchfaces_cx_summary">Creative eXtreme 錶盤也支援 GlucoDataHandler 併發症。\n您需要使用 Facer 錶盤應用程式來使用這些錶盤。\n點擊此處開啟 Creative eXtreme 錶盤的 Facer 頁面。</string>
+    <string name="notification_reader_interval_summary">將此設定為符合您感測器的更新速率，以避免處理多餘的通知。\n如果來源應用程式僅在有新的血糖值時才更新（如 CamAPS FX），請設定為 0。</string>
+
 </resources>

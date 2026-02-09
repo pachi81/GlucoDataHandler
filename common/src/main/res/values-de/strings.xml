@@ -124,7 +124,7 @@
     <string name="pref_cat_notification">Benachrichtigung</string>
     <string name="pref_cat_widgets">Widgets</string>
     <string name="pref_cat_android_auto">Android Auto</string>
-    <string name="pref_cat_forward_broadcast">Glucosewerte weiterleiten</string>
+    <string name="pref_cat_forward_broadcast">Zuckerwerte weiterleiten</string>
     <string name="pref_cat_colors">Farben</string>
 
     <string name="pref_target_range">Zielbereich</string>
@@ -132,7 +132,7 @@
     <string name="pref_switch_car_notification">Android Auto Benachrichtigung</string>
     <string name="pref_switch_car_notification_summary">Benachrichtigung für Android Auto.</string>
     <string name="pref_switch_car_media">Fake Media Player</string>
-    <string name="pref_switch_car_media_summary">Stellt den Glucose Wert als aktuellen Song dar.</string>
+    <string name="pref_switch_car_media_summary">Stellt den Zuckerwert als aktuellen Songtitel dar.</string>
     <string name="pref_car_notification_interval">Benachrichtigungsintervall</string>
     <string name="pref_car_notification_interval_summary">Intervall, um die Benachrichtigungspopups in Android Auto für neue Werte anzuzeigen.\nAlarme werden unabhängig davon immer angezeigt.</string>
     <string name="pref_switch_car_notification_alarm_only">Nur für Alarme</string>
@@ -142,7 +142,7 @@
     <string name="pref_button_select_target">Glucodata Empfänger definieren</string>
     <string name="pref_button_select_target_summary">Empfänger auswählen, die den Glucodata Broadcast erhalten sollen. Ein globaler Broadcast kann von allen Apps empfangen werden, welche sich für diesen Broadcast intern registriert haben.</string>
     <string name="pref_switch_send_to_xdrip">Patched libre Broadcast senden</string>
-    <string name="pref_switch_send_to_xdrip_summary">Weiterleiten von Glucose Werten zu xDrip+.\nIn xDrip+ als Quelle \'Libre (patched app)\' einstellen.</string>
+    <string name="pref_switch_send_to_xdrip_summary">Weiterleiten von Zuckerwerten zu xDrip+.\nIn xDrip+ als Quelle \'Libre (patched app)\' einstellen.</string>
     <string name="pref_button_select_xdrip_target">Patched Libre Empfänger definieren</string>
     <string name="pref_button_select_xdrip_target_summary">Empfänger auswählen, an die der Patched Libre Broadcast gesendet wird. Ein globaler Broadcast kann von allen Apps empfangen werden, welche sich für diesen Broadcast intern registriert haben.</string>
     <string name="pref_switch_send_xdrip_broadcast">xDrip+ Broadcast senden</string>
@@ -449,7 +449,7 @@
     <string name="pref_cat_watch">Uhren</string>
     <string name="pref_cat_watch_summary">Einstellungen für die Anzeige auf den verbundenen Uhren.</string>
     <string name="pref_cat_transfer_summary">Einstellungen um die Zuckerwerte an andere Apps weiterzuleiten.</string>
-    <string name="pref_cat_transfer">Glucosewerte weiterleiten</string>
+    <string name="pref_cat_transfer">Zuckerwerte weiterleiten</string>
     <string name="pref_cat_visualisation">Visualisierung</string>
     <string name="pref_cat_banglejs">BangleJS Uhren</string>
     <string name="pref_wearos_info_summary" tools:ignore="Typos">Um GlucoDataHandler auf einer Wear OS Uhr zu verwenden, muss es aus dem Google Play Store auf der Uhr installiert werden.</string>
@@ -961,4 +961,31 @@ Sie können diese Berechtigungen jederzeit in den Health Connect App-Einstellung
     </plurals>
 
     <string name="dexcom_server_down_error">Der Dexcom-Server scheint offline zu sein!\nHier drücken, um den Serverstatus zu prüfen.\nWenn die Dexcom-App auf demselben Gerät installiert ist, kannst du stattdessen den Notification Reader verwenden.</string>
+
+    <!-- v2.3 -->
+
+    <string name="medtrum_wrong_user_type_info">Nur Follower-Konten sind erlaubt.\nHier drücken, um ein neues Follower-Konto zu erstellen und sich selbst einzuladen.</string>
+    <string name="notification_reader_value_with_unit">Wert mit Einheit</string>
+    <string name="notification_reader_value_with_unit_summary">Wenn die Einheit (mmol oder mg) Teil des Wertes in der Benachrichtigung ist, aktiviere dies, um alle Felder ohne Einheit zu ignorieren.</string>
+
+    <string name="button_yes">Ja</string>
+    <string name="button_no">Nein</string>
+    <string name="patient_changed">Patient gewechselt</string>
+    <string name="patient_changed_reset_db">Du hast den Patienten gewechselt.\nMöchtest du die Datenbank zurücksetzen, um die alten Patientendaten zu entfernen?</string>
+    <string name="update">Aktualisierung</string>
+    <string name="pref_transfer_to_healthconnect_summary">Glukosewerte mit Health Connect teilen.</string>
+    <string name="pref_transfer_to_local_apps_summary">Sende einen Broadcast an andere lokale Apps auf diesem Gerät.</string>
+    <string name="source_aidex_summary">AiDEX Broadcast-Empfänger aktivieren. Erfordert AiDEX-App-Version 1.0.17 oder niedriger.</string>
+    <string name="pref_source_aidex_summary">Empfängt Broadcasts von der AiDEX-App. Erfordert AiDEX-App-Version 1.0.17 oder niedriger.</string>
+
+    <string name="transfer_values_interval_summary">Intervall zum Senden von Glukosewerten.\nAlle seit der letzten Übertragung erfassten Werte werden einbezogen.</string>
+    <string name="health_connect_settings">Health Connect öffnen</string>
+    <string name="health_connect_settings_summary">Berechtigungen und Datenzugriff für Health Connect verwalten.</string>
+    <string name="health_connect_not_supported_version">Health Connect erfordert mindestens Android 9.</string>
+    <string name="pref_transfer_to_nightscout_summary">Glukosewerte zu Nightscout hochladen.</string>
+    <string name="transfer_to_nightscout">Nightscout Upload</string>
+    <string name="label_profile">Profil</string>
+    <string name="pref_watchfaces_cx_summary">Creative eXtreme Zifferblätter unterstützen auch GlucoDataHandler-Komplikationen.\nDu musst die Facer-App verwenden, um diese Zifferblätter zu nutzen.\nHier tippen, um die Facer-Seite für Creative eXtreme Zifferblätter zu öffnen.</string>
+    <string name="notification_reader_interval_summary">Stelle das Intervall in Minuten passend zur Aktualisierungsrate deines Sensors ein, um doppelte Benachrichtigungen zu ignorieren.\nAuf 0 setzen, wenn die Quell-App nur bei neuen Werten aktualisiert (wie CamAPS FX).</string>
+
 </resources>

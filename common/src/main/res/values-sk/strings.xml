@@ -972,5 +972,32 @@ Tieto povolenia môžete kedykoľvek spravovať v nastaveniach aplikácie Health
     </plurals>
 
     <string name="dexcom_server_down_error">Zdá sa, že server Dexcom nefunguje!\nŤuknutím sem skontrolujete stav servera.\nAk je aplikácia Dexcom na rovnakom telefóne, môžete namiesto toho použiť Čítačku upozornení (Notification Reader).</string>
+
+    <!-- v2.3 -->
+
+    <string name="medtrum_wrong_user_type_info">Sú povolené iba účty sledujúcich.\nStlačte tu pre vytvorenie nového účtu sledujúceho a pozvite samého seba.</string>
+    <string name="notification_reader_value_with_unit">Hodnota s jednotkou</string>
+    <string name="notification_reader_value_with_unit_summary">Ak je jednotka (mmol alebo mg) súčasťou hodnoty v upozornení, povoľte toto, aby sa ignorovali všetky polia bez jednotky.</string>
+
+    <string name="button_yes">Áno</string>
+    <string name="button_no">Nie</string>
+    <string name="patient_changed">Pacient zmenený</string>
+    <string name="patient_changed_reset_db">Zmenili ste pacienta.\nChcete resetovať databázu, aby ste odstránili údaje o starom pacientovi?</string>
+    <string name="update">Aktualizovať</string>
+    <string name="pref_transfer_to_healthconnect_summary">Zdieľanie hodnôt glykémie so službou Health Connect.</string>
+    <string name="pref_transfer_to_local_apps_summary">Odosielanie broadcastu do iných lokálnych aplikácií na tomto zariadení.</string>
+    <string name="source_aidex_summary">Povoliť prijímač broadcastu AiDEX. Vyžaduje verziu aplikácie AiDEX 1.0.17 alebo nižšiu.</string>
+    <string name="pref_source_aidex_summary">Prijíma broadcasty z aplikácie AiDEX. Vyžaduje verziu aplikácie AiDEX 1.0.17 alebo nižšiu.</string>
+
+    <string name="transfer_values_interval_summary">Interval pre odosielanie hodnôt glykémie.\nZahrnuté budú všetky hodnoty zaznamenané od posledného prenosu.</string>
+    <string name="health_connect_settings">Otvoriť Health Connect</string>
+    <string name="health_connect_settings_summary">Spravovať povolenia a prístup k údajom pre Health Connect.</string>
+    <string name="health_connect_not_supported_version">Health Connect vyžaduje aspoň Android 9.</string>
+    <string name="pref_transfer_to_nightscout_summary">Nahrávanie hodnôt glykémie do Nightscoutu.</string>
+    <string name="transfer_to_nightscout">Nahrávanie do Nightscoutu</string>
+    <string name="label_profile">Profil</string>
+    <string name="pref_watchfaces_cx_summary">Ciferníky Creative eXtreme tiež podporujú GlucoDataHandler komplikácie.\nNa používanie týchto ciferníkov potrebujete aplikáciu Facer.\nŤuknite sem pre otvorenie stránky Facer pre ciferníky Creative eXtreme.</string>
+    <string name="notification_reader_interval_summary">Nastavte toto tak, aby zodpovedalo frekvencii aktualizácie vašich senzorov, aby ste predišli spracovaniu nadbytočných upozornení.\nNastavte na 0, ak sa zdrojová aplikácia aktualizuje iba pre nové hodnoty glykémie (ako to robí CamAPS FX).</string>
+
 </resources>
 

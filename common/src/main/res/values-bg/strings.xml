@@ -971,5 +971,30 @@ GlucoDataHandler само записва данни за кръвната зах
 
     <string name="dexcom_server_down_error">Сървърът на Dexcom изглежда не работи!\nНатиснете тук, за да проверите състоянието на сървъра.\nАко приложението Dexcom е на същия телефон, можете да използвате Четеца на известия (Notification Reader).</string>
 
+    <!-- v2.3 -->
+
+    <string name="medtrum_wrong_user_type_info">Само акаунти на последователи са разрешени.\nНатиснете тук, за да създадете нов акаунт на последовател и да поканите себе си.</string>
+    <string name="notification_reader_value_with_unit">Стойност с мерна единица</string>
+    <string name="notification_reader_value_with_unit_summary">Ако мерната единица (mmol или mg) е част от стойността в известието, активирайте това, за да игнорирате всички полета без единица.</string>
+
+    <string name="button_yes">Да</string>
+    <string name="button_no">Не</string>
+    <string name="patient_changed">Пациентът е променен</string>
+    <string name="patient_changed_reset_db">Променихте пациента.\nИскате ли да нулирате базата данни, за да премахнете данните за стария пациент?</string>
+    <string name="update">Актуализация</string>
+    <string name="pref_transfer_to_healthconnect_summary">Споделяне на стойности на глюкоза с Health Connect.</string>
+    <string name="pref_transfer_to_local_apps_summary">Изпращане на излъчване (broadcast) към други локални приложения на това устройство.</string>
+    <string name="source_aidex_summary">Активиране на AiDEX broadcast приемник. Изисква версия на приложението AiDEX 1.0.17 или по-ниска.</string>
+    <string name="pref_source_aidex_summary">Получава broadcast съобщения от приложението AiDEX. Изисква версия на приложението AiDEX 1.0.17 или по-ниска.</string>
+
+    <string name="transfer_values_interval_summary">Интервал за изпращане на стойности на глюкоза.\nВсички стойности, записани от последното предаване, ще бъдат включени.</string>
+    <string name="health_connect_settings">Отворете Health Connect</string>
+    <string name="health_connect_settings_summary">Управление на разрешенията и достъпа до данни за Health Connect.</string>
+    <string name="health_connect_not_supported_version">Health Connect изисква поне Android 9.</string>
+    <string name="pref_transfer_to_nightscout_summary">Качване на стойности на глюкоза в Nightscout.</string>
+    <string name="transfer_to_nightscout">Nightscout качване</string>
+    <string name="label_profile">Профил</string>
+    <string name="pref_watchfaces_cx_summary">Циферблатите Creative eXtreme също поддържат GlucoDataHandler компликации.\nТрябва да използвате приложението Facer, за да използвате тези циферблати.\nДокоснете тук, за да отворите страницата на Facer за циферблати Creative eXtreme.</string>
+    <string name="notification_reader_interval_summary">Задайте това според скоростта на актуализиране на вашия сензор, за да избегнете обработката на излишни известия.\nЗадайте 0, ако изходното приложение се актуализира само при нови стойности на глюкозата (като CamAPS FX).</string>
 
 </resources>

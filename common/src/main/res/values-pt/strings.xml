@@ -962,4 +962,31 @@ Pode gerir estas permissões a qualquer momento nas definições da aplicação 
     </plurals>
 
     <string name="dexcom_server_down_error">O servidor Dexcom parece estar fora do ar!\nToque aqui para verificar o status do servidor.\nSe o aplicativo Dexcom estiver no mesmo telefone, você pode usar o Leitor de Notificações.</string>
+
+    <!-- v2.3 -->
+
+    <string name="medtrum_wrong_user_type_info">Apenas usuários seguidores são permitidos.\nPressione aqui para criar uma nova conta de seguidor e convidar a si mesmo.</string>
+    <string name="notification_reader_value_with_unit">Valor com unidade</string>
+    <string name="notification_reader_value_with_unit_summary">Se a unidade (mmol ou mg) fizer parte do valor na notificação, habilite isto para ignorar todos os campos sem unidade.</string>
+
+    <string name="button_yes">Sim</string>
+    <string name="button_no">Não</string>
+    <string name="patient_changed">Paciente alterado</string>
+    <string name="patient_changed_reset_db">Você alterou o paciente.\nDeseja redefinir o banco de dados para remover os dados do paciente antigo?</string>
+    <string name="update">Atualizar</string>
+    <string name="pref_transfer_to_healthconnect_summary">Compartilhando valores de glicose com o Health Connect.</string>
+    <string name="pref_transfer_to_local_apps_summary">Enviando broadcast para outras aplicações locais neste dispositivo.</string>
+    <string name="source_aidex_summary">Habilitar receptor de broadcast AiDEX. Requer versão do app AiDEX igual ou inferior a 1.0.17.</string>
+    <string name="pref_source_aidex_summary">Recebe broadcasts do app AiDEX. Requer versão do app AiDEX igual ou inferior a 1.0.17.</string>
+
+    <string name="transfer_values_interval_summary">Intervalo para envio dos valores de glicose.\nTodos os valores registrados desde a última transmissão serão incluídos.</string>
+    <string name="health_connect_settings">Abrir Health Connect</string>
+    <string name="health_connect_settings_summary">Gerenciar permissões e acesso a dados para o Health Connect.</string>
+    <string name="health_connect_not_supported_version">O Health Connect requer pelo menos o Android 9.</string>
+    <string name="pref_transfer_to_nightscout_summary">Fazer upload dos valores de glicose para o Nightscout.</string>
+    <string name="transfer_to_nightscout">Upload Nightscout</string>
+    <string name="label_profile">Perfil</string>
+    <string name="pref_watchfaces_cx_summary">Os mostradores Creative eXtreme também suportam complicações do GlucoDataHandler.\nVocê precisa usar o app Facer para usar esses mostradores.\nToque aqui para abrir a página do Facer para os mostradores Creative eXtreme.</string>
+    <string name="notification_reader_interval_summary">Defina isso para corresponder à taxa de atualização dos seus sensores para evitar o processamento de notificações redundantes.\nDefina como 0 se o aplicativo de origem atualizar apenas para novos valores de glicose (como o CamAPS FX faz).</string>
+
 </resources>
