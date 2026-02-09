@@ -11,11 +11,15 @@
     <PreferenceCategory
         android:title="@string/advanced_settings"
         app:iconSpaceReserved="false">
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="notification_reader_five_minute_interval"
-            android:title="@string/notification_reader_five_minute_interval"
-            android:summary="@string/notification_reader_five_minute_interval_summary"
+        <androidx.preference.SeekBarPreference
+            android:defaultValue="5"
+            app:showSeekBarValue="true"
+            app:seekBarIncrement="1"
+            app:min="0"
+            android:max="5"
+            android:key="notification_reader_interval"
+            android:title="@string/source_interval"
+            android:summary="@string/notification_reader_interval_summary"
             app:iconSpaceReserved="false" />
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"

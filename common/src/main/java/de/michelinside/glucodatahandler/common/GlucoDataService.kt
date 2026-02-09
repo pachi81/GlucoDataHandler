@@ -618,6 +618,15 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 }
             }
 
+            if(sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_5_MINUTE_INTERVAl)) {
+                val use5Min = sharedPrefs.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_5_MINUTE_INTERVAl, false)
+                Log.i(LOG_ID, "Remove old notification interval (use 5 minutes: $use5Min)")
+                sharedPrefs.edit {
+                    putInt(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_INTERVAl, if(use5Min) 5 else 0)
+                    remove(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_5_MINUTE_INTERVAl)
+                }
+            }
+
             if(isUpgrade && sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX)) {
                 val oldRegex = sharedPrefs.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX, "")
                 if(oldRegex.isNullOrEmpty() || NotificationReceiver.oldGlucoseRegexes.contains(oldRegex)) {

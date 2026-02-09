@@ -37,6 +37,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     private var waitForAdditionalIobNotification: Thread? = null
     private val trendRegex = "([→↗↑↘↓⇈⇊])".toRegex()
     private val receivedNotifications = mutableListOf<StatusBarNotification>()
+    private val intervalCheckTimeSpan = 10 // seconds -> from interval-timespan until interval+timespan
 
 
     companion object {
@@ -204,19 +205,24 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         return true
     }
 
-    private fun has5MinuteInterval(packageName: String, sharedPref: SharedPreferences): Boolean {
+    private fun getInterval(packageName: String, sharedPref: SharedPreferences): Int {
         if(hasRegularNotification(packageName))
-            return false
+            return 0
         if(PackageUtils.isDexcomApp(packageName))
-            return true
+            return 5
         if(packageName.lowercase().startsWith("com.senseonics."))  // Eversense 365 CGM has 5 min interval
-            return true
+            return 5
         if(packageName.lowercase().startsWith("com.medtronic."))  // MiniMed has 5 min interval
-            return true
+            return 5
         if(packageName.lowercase().startsWith("com.microtechmd.cgms")) // Aidex has 5 minute interval
-            return true
+            return 5
+        if(packageName.lowercase().startsWith("com.sinocare.ican.health"))  // iCan has 3 minute interval
+            return 3
+        if(packageName.lowercase().startsWith("com.microtech.aidexx.diaexport.")) { // DiaExpert has 1 minute interval (irregular)
+            return if(sharedPref.getInt(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_INTERVAl, 0) == 1) 1 else 0
+        }
         // else
-        return sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_5_MINUTE_INTERVAl, true)
+        return sharedPref.getInt(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_INTERVAl, 5)
     }
 
     private fun hasValueWithUnit(packageName: String, sharedPref: SharedPreferences): Boolean {
@@ -231,12 +237,6 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     // returns true, if there are several IOB notifications
     private fun hasIrregularIobNotification(packageName: String): Boolean {
         if(packageName.lowercase().startsWith("com.gluroo."))  // Gluroo
-            return true
-        return false
-    }
-
-    private fun hasIrregularOneMinuteNotification(packageName: String): Boolean {
-        if(packageName.lowercase().startsWith("com.microtech.aidexx.diaexport."))  // DiaExpert
             return true
         return false
     }
@@ -318,8 +318,9 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                 return false
             if(isSpecialNotification(sbn))
                 return false
-            if(has5MinuteInterval(sbn.packageName, sharedPref)) {
-                Log.i(LOG_ID, "Handle 5 min notification - lastValueChanged: $lastValueChanged - diff: $diffValueTime")
+            val interval = getInterval(sbn.packageName, sharedPref)
+            if(interval > 1) {
+                Log.i(LOG_ID, "Handle $interval min notification - lastValueChanged: $lastValueChanged - diff: $diffValueTime")
                 stopWaitThread()
                 /*
                     - time to ignore notifications: 60s if the last value was not a new one and 180s if the last value was a new one
@@ -327,23 +328,26 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                     - after 250s wait until 315s for a newer notification if the value has not changed - if there is no new one, use this one
                     - after 310s use the value
                  */
-                val ignoreTime = if(lastValueChanged) 60 else 180
+                val intervalTimeSec = interval*60
+                val ignoreTime = if(lastValueChanged) (intervalTimeSec-60) else 60
                 if(diffValueTime<=ignoreTime) {
                     Log.i(LOG_ID, "Ignoring notification")
                     return false
                 }
-                if(diffValueTime<=250) {
+                if(diffValueTime<=(intervalTimeSec-intervalCheckTimeSpan)) {
                     Log.i(LOG_ID, "Check for changed value only")
                     updateOnlyChangedValue = true
                     return true
                 }
-                if(diffValueTime>=310)  // use this value
+                if(diffValueTime>=intervalTimeSec+intervalCheckTimeSpan)  // use this value
                     return true
-                Log.i(LOG_ID, "Check for changed value and wait for newer notification until 315s")
-                startWaitThread(sbn, (315-diffValueTime)*1000)   // wait for the case, the value is the same and there is no newer notification
+                // within the timespan wait for new notification to use the last one, which should contain the new value
+                val waitTime = intervalTimeSec+intervalCheckTimeSpan+5 // use 5s extra delay
+                Log.i(LOG_ID, "Check for changed value and wait for newer notification until $waitTime s")
+                startWaitThread(sbn, (waitTime-diffValueTime)*1000)   // wait for the case, the value is the same and there is no newer notification
                 updateOnlyChangedValue=true
                 return true
-            } else if(hasIrregularOneMinuteNotification(sbn.packageName)) {
+            } else if(interval == 1) {
                 val diffLastValueTime = (sbn.postTime - lastNewValueTime)/1000 // in seconds
                 Log.i(LOG_ID, "Handle irregular one minute notification - diff last new value: $diffLastValueTime")
                 if(diffLastValueTime <= 1L)
