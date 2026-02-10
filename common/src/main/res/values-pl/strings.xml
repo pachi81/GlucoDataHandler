@@ -972,27 +972,27 @@
 
     <!-- v2.3 -->
 
-    <string name="medtrum_wrong_user_type_info">Only follower users are allowed account.\nPress here to create a new follower account and invite yourself.</string>
-    <string name="notification_reader_value_with_unit">Value with unit</string>
-    <string name="notification_reader_value_with_unit_summary">If the unit (mmol or mg) is part of the value in notification, enable this to ignore all fields without unit.</string>
+    <string name="medtrum_wrong_user_type_info">Tylko użytkownicy będący obserwatorami mogą posiadać konto.\nNaciśnij tutaj, aby utworzyć nowe konto obserwatora i zaprosić siebie.</string>
+    <string name="notification_reader_value_with_unit">Wartość z jednostką</string>
+    <string name="notification_reader_value_with_unit_summary">Jeśli jednostka (mmol lub mg) jest częścią wartości w powiadomieniu, włącz tę opcję, aby zignorować wszystkie pola bez jednostki.</string>
 
-    <string name="button_yes">Yes</string>
-    <string name="button_no">No</string>
-    <string name="patient_changed">Patient changed</string>
-    <string name="patient_changed_reset_db">You have changed the patient.\nDo you want to reset the database to remove the old patient data?</string>
-    <string name="update">Update</string>
-    <string name="pref_transfer_to_healthconnect_summary">Sharing glucose values with Health Connect.</string>
-    <string name="pref_transfer_to_local_apps_summary">Sending broadcast to other local applications on this device.</string>
-    <string name="source_aidex_summary">Enable AiDEX broadcast receiver. Requires AiDEX app version equal to or less than 1.0.17.</string>
-    <string name="pref_source_aidex_summary">Receives broadcasts from the AiDEX app. Requires AiDEX app version equal to or less than 1.0.17.</string>
+    <string name="button_yes">Tak</string>
+    <string name="button_no">Nie</string>
+    <string name="patient_changed">Zmieniono pacjenta</string>
+    <string name="patient_changed_reset_db">Zmieniono pacjenta.\nCzy chcesz zresetować bazę danych, aby usunąć stare dane pacjenta?</string>
+    <string name="update">Aktualizacja</string>
+    <string name="pref_transfer_to_healthconnect_summary">Udostępnianie wartości glukozy w Health Connect.</string>
+    <string name="pref_transfer_to_local_apps_summary">Wysyłanie transmisji do innych lokalnych aplikacji na tym urządzeniu.</string>
+    <string name="source_aidex_summary">Włącz odbiornik transmisji AiDEX. Wymaga aplikacji AiDEX w wersji 1.0.17 lub starszej.</string>
+    <string name="pref_source_aidex_summary">Odbiera transmisje z aplikacji AiDEX. Wymaga aplikacji AiDEX w wersji 1.0.17 lub starszej.</string>
 
-    <string name="transfer_values_interval_summary">Interval for sending glucose values.\nAll values recorded since the last transmission will be included.</string>
-    <string name="health_connect_settings">Open Health Connect</string>
-    <string name="health_connect_settings_summary">Manage permissions and data access for Health Connect.</string>
-    <string name="health_connect_not_supported_version">Health Connect requires at least Android 9.</string>
-    <string name="pref_transfer_to_nightscout_summary">Upload glucose values to Nightscout.</string>
-    <string name="transfer_to_nightscout">Nightscout Upload</string>
-    <string name="label_profile">Profile</string>
-    <string name="pref_watchfaces_cx_summary">Creative eXtreme watch faces also supports GlucoDataHandler complications.\nYou need to use Facer watch face app to use these watch faces.\nTap here to open Facer page for Create eXtreme watch faces.</string>
-    <string name="notification_reader_interval_summary">Set this to match your sensors update rate to avoid processing redundant notifications.\nSet to 0 if the source app only updates for new glucose values (like CampAPS FX is doing).</string>
+    <string name="transfer_values_interval_summary">Interwał wysyłania wartości glukozy.\nZostaną uwzględnione wszystkie wartości zarejestrowane od ostatniej transmisji.</string>
+    <string name="health_connect_settings">Otwórz Health Connect</string>
+    <string name="health_connect_settings_summary">Zarządzaj uprawnieniami i dostępem do danych dla Health Connect.</string>
+    <string name="health_connect_not_supported_version">Health Connect wymaga co najmniej systemu Android 9.</string>
+    <string name="pref_transfer_to_nightscout_summary">Prześlij wartości glukozy do Nightscout.</string>
+    <string name="transfer_to_nightscout">Prześlij do Nightscout</string>
+    <string name="label_profile">Profil</string>
+    <string name="pref_watchfaces_cx_summary">Kreatywne tarcze zegarka eXtreme obsługują również komplikacje GlucoDataHandler.\nAby korzystać z tych tarcz, należy użyć aplikacji Facer watch face.\nNaciśnij tutaj, aby otworzyć stronę Facer i utworzyć tarcze zegarka eXtreme.</string>
+    <string name="notification_reader_interval_summary">Ustaw tę opcję zgodnie z częstotliwością aktualizacji używanego sensora, aby uniknąć przetwarzania zbędnych powiadomień.\nUstaw wartość 0, jeśli aplikacja źródłowa aktualizuje tylko nowe wartości glukozy (tak jak robi to CampAPS FX).</string>
 </resources>
