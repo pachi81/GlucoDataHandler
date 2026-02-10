@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.wear.widget.SwipeDismissFrameLayout
-import de.michelinside.glucodatahandler.common.Constants
 
 class GraphActivity : AppCompatActivity() {
     private val LOG_ID = "GDH.Main.Graph"
@@ -42,7 +41,7 @@ class GraphActivity : AppCompatActivity() {
                 Log.d(LOG_ID, "btnClose clicked")
                 finish()
             }
-            chartCreator = WearChartCreator(chart, this, Constants.SHARED_PREF_GRAPH_BITMAP_DURATION)
+            chartCreator = WearChartCreator(chart, this, "", 4)
             chartCreator.create()
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
