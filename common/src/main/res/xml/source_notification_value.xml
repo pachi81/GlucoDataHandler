@@ -10,6 +10,7 @@
         app:iconSpaceReserved="false" />
     <PreferenceCategory
         android:title="@string/advanced_settings"
+        android:summary="@string/advanced_settings_developer_summary"
         app:iconSpaceReserved="false">
         <androidx.preference.SeekBarPreference
             android:defaultValue="5"

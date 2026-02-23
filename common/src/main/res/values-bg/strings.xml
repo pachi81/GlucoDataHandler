@@ -766,7 +766,8 @@
     <string name="notification_reader_enabled">Активиране на четеца на известия</string>
     <string name="no_receiver">Няма приложение</string>
     <string name="notification_reader_app_regex">Филтър за стойност с Regex</string>
-    <string name="notification_reader_app_regex_summary">Regex за анализиране на стойността от текста в известието.\nМоля, променяйте само ако знаете какво правите или ако получите съвет от разработчика.</string>
+    <string name="notification_reader_app_regex_summary">Regex за анализиране на стойността от текста в известието.</string>
+    <string name="advanced_settings_developer_summary">Моля, променяйте само ако знаете какво правите или ако получите съвет от разработчика.</string>
     <string name="notification_reader_five_minute_interval">Интервал от 5 минути</string>
     <string name="notification_reader_five_minute_interval_summary">Някои приложения, като Dexcom, актуализират известията си доста често. За да игнорирате тези актуализации със същата стойност, активирайте интервала от 5 минути.\nАко е активирано, ще има нова стойност само на всеки 5 минути или ако стойността в известието се е променила.</string>
     <string name="pref_source_notification_info_summary">За да получавате стойности от известия на други приложения, е необходимо разрешение за достъп до известията!\nИзвестието трябва да включва или стойността на глюкозата, или IOB/COB като низ.\nТъй като всяко известие има различно оформление, може да не работи с всяко приложение. В случай на проблеми, моля, свържете се с мен със снимка на известието и логовете.</string>
@@ -995,6 +996,6 @@ GlucoDataHandler само записва данни за кръвната зах
     <string name="transfer_to_nightscout">Nightscout качване</string>
     <string name="label_profile">Профил</string>
     <string name="pref_watchfaces_cx_summary">Циферблатите Creative eXtreme също поддържат GlucoDataHandler компликации.\nТрябва да използвате приложението Facer, за да използвате тези циферблати.\nДокоснете тук, за да отворите страницата на Facer за циферблати Creative eXtreme.</string>
-    <string name="notification_reader_interval_summary">Задайте това според скоростта на актуализиране на вашия сензор, за да избегнете обработката на излишни известия.\nЗадайте 0, ако изходното приложение се актуализира само при нови стойности на глюкозата (като CamAPS FX).</string>
+    <string name="notification_reader_interval_summary">Задайте това според скоростта на актуализиране на вашия сензор, за да избегнете обработката на излишни известия.</string>
 
 </resources>

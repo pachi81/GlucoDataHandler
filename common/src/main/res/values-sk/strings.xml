@@ -767,7 +767,8 @@
     <string name="notification_reader_enabled">Povoliť čítačku upozornení</string>
     <string name="no_receiver">Žiadna aplikácia</string>
     <string name="notification_reader_app_regex">Filter Regex hodnôt</string>
-    <string name="notification_reader_app_regex_summary">Regex na spracovanie hodnoty z textu v upozornení.\nZmeňte len v prípade, ak viete, čo robíte, alebo ak máte odporúčanie od vývojára.</string>
+    <string name="notification_reader_app_regex_summary">Regex na spracovanie hodnoty z textu v upozornení.</string>
+    <string name="advanced_settings_developer_summary">Zmeňte len v prípade, ak viete, čo robíte, alebo ak máte odporúčanie od vývojára.</string>
     <string name="notification_reader_five_minute_interval">5 minútový interval</string>
     <string name="notification_reader_five_minute_interval_summary">Niektoré aplikácie, ako napríklad Dexcom, aktualizujú svoje upozornenia pomerne často. Ak chcete ignorovať tieto aktualizácie s rovnakou hodnotou, povoľte 5-minútový interval.\nAk je táto funkcia povolená, nová hodnota sa zobrazí len každých 5 minút alebo v prípade, že sa hodnota v upozornení zmenila.</string>
     <string name="pref_source_notification_info_summary">Na prijímanie hodnôt z upozornení iných aplikácií je potrebné povolenie na prístup k upozorneniam!\nUpozornenie musí obsahovať buď hodnotu glukózy, alebo IOB/COB ako reťazec.\nKeďže každé upozornenie má iné rozloženie, nemusí fungovať s každou aplikáciou. V prípade problémov prosím ma kontaktujte so snímkou obrazovky s upozornenia a záznamami.</string>
@@ -997,7 +998,7 @@ Tieto povolenia môžete kedykoľvek spravovať v nastaveniach aplikácie Health
     <string name="transfer_to_nightscout">Nahrávanie do Nightscoutu</string>
     <string name="label_profile">Profil</string>
     <string name="pref_watchfaces_cx_summary">Ciferníky Creative eXtreme tiež podporujú GlucoDataHandler komplikácie.\nNa používanie týchto ciferníkov potrebujete aplikáciu Facer.\nŤuknite sem pre otvorenie stránky Facer pre ciferníky Creative eXtreme.</string>
-    <string name="notification_reader_interval_summary">Nastavte toto tak, aby zodpovedalo frekvencii aktualizácie vašich senzorov, aby ste predišli spracovaniu nadbytočných upozornení.\nNastavte na 0, ak sa zdrojová aplikácia aktualizuje iba pre nové hodnoty glykémie (ako to robí CamAPS FX).</string>
+    <string name="notification_reader_interval_summary">Nastavte toto tak, aby zodpovedalo frekvencii aktualizácie vašich senzorov, aby ste predišli spracovaniu nadbytočných upozornení.</string>
 
 </resources>
 

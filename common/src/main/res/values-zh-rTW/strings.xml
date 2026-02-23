@@ -763,7 +763,8 @@
     <string name="notification_reader_enabled">啟用通知讀取器</string>
     <string name="no_receiver">沒有應用程式</string>
     <string name="notification_reader_app_regex">Regex 數值篩選器</string>
-    <string name="notification_reader_app_regex_summary">用於分析通知中文字數值的 Regex。\n請僅在您知道自己在做什麼或收到開發人員的建議時才進行變更。</string>
+    <string name="notification_reader_app_regex_summary">用於分析通知中文字數值的 Regex。</string>
+    <string name="advanced_settings_developer_summary">請僅在您知道自己在做什麼或收到開發人員的建議時才進行變更。</string>
     <string name="notification_reader_five_minute_interval">5 分鐘間隔</string>
     <string name="notification_reader_five_minute_interval_summary">某些應用程式（例如 Dexcom）會相當頻繁地更新其通知。若要忽略具有相同數值的更新，請啟用 5 分鐘間隔。\n如果已啟用，則只會每 5 分鐘出現一個新數值，或當通知中的數值已變更時。</string>
     <string name="pref_source_notification_info_summary">若要從其他應用程式的通知接收數值，需要有存取通知的權限！\n通知必須包含字串形式的血糖值、IOB 或 COB。\n由於每個通知都有不同的版面配置，因此可能無法與所有應用程式搭配使用。如果發生問題，請透過通知的螢幕截圖和記錄與我聯絡。</string>
@@ -987,6 +988,6 @@ GlucoDataHandler 只會將血糖數據寫入健康連結，除非您明確授予
     <string name="transfer_to_nightscout">Nightscout 上傳</string>
     <string name="label_profile">個人資料</string>
     <string name="pref_watchfaces_cx_summary">Creative eXtreme 錶盤也支援 GlucoDataHandler 併發症。\n您需要使用 Facer 錶盤應用程式來使用這些錶盤。\n點擊此處開啟 Creative eXtreme 錶盤的 Facer 頁面。</string>
-    <string name="notification_reader_interval_summary">將此設定為符合您感測器的更新速率，以避免處理多餘的通知。\n如果來源應用程式僅在有新的血糖值時才更新（如 CamAPS FX），請設定為 0。</string>
+    <string name="notification_reader_interval_summary">將此設定為符合您感測器的更新速率，以避免處理多餘的通知。</string>
 
 </resources>

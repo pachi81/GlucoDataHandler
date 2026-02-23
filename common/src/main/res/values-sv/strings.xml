@@ -759,7 +759,8 @@
     <string name="notification_reader_enabled">Aktivera</string>
     <string name="no_receiver">Ingen applikation</string>
     <string name="notification_reader_app_regex">Regex-filter</string>
-    <string name="notification_reader_app_regex_summary">Regex för att analysera värdet från texten i meddelandet.\nÄndra endast om du vet vad du gör eller om du får en uppmaning från utvecklaren.</string>
+    <string name="notification_reader_app_regex_summary">Regex för att analysera värdet från texten i meddelandet.</string>
+    <string name="advanced_settings_developer_summary">Ändra endast om du vet vad du gör eller om du får en uppmaning från utvecklaren.</string>
     <string name="notification_reader_five_minute_interval">5-minutersintervall</string>
     <string name="notification_reader_five_minute_interval_summary">Vissa appar, som Dexcom, uppdaterar sina meddelanden ganska ofta. För att ignorera dessa uppdateringar med samma värde, aktivera 5-minutersintervallet.\nOm aktiverat finns det bara ett nytt värde var 5:e minut eller när värdet i meddelandet har ändrats.</string>
     <string name="pref_source_notification_info_summary">För att ta emot värden från meddelanden från andra appar krävs en behörighet för åtkomst till meddelanden!\nMeddelandet måste innehålla antingen blodsockervärdet eller IOB/COB som en sträng.\nEftersom varje meddelande har en annan layout kanske det inte fungerar med varje app. Vid problem, kontakta mig med en skärmdump av meddelandet och loggarna.</string>
@@ -986,6 +987,6 @@ Du kan hantera dessa behörigheter när som helst i Health Connect-appens instä
     <string name="transfer_to_nightscout">Nightscout-uppladdning</string>
     <string name="label_profile">Profil</string>
     <string name="pref_watchfaces_cx_summary">Creative eXtreme-urtavlor stöder också GlucoDataHandler-komplikationer.\nDu måste använda Facer-urtavelsappen för att använda dessa urtavlor.\nTryck här för att öppna Facer-sidan för Creative eXtreme-urtavlor.</string>
-    <string name="notification_reader_interval_summary">Ställ in detta för att matcha din sensors uppdateringsfrekvens för att undvika att bearbeta överflödiga aviseringar.\nStäll in på 0 om källappen bara uppdateras för nya glukosvärden (som CamAPS FX gör).</string>
+    <string name="notification_reader_interval_summary">Ställ in detta för att matcha din sensors uppdateringsfrekvens för att undvika att bearbeta överflödiga aviseringar.</string>
 
 </resources>

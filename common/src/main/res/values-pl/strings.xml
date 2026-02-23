@@ -768,7 +768,8 @@
     <string name="notification_reader_enabled">Włącz czytnik powiadomień</string>
     <string name="no_receiver">Brak aplikacji</string>
     <string name="notification_reader_app_regex">Filtr wartości Regex</string>
-    <string name="notification_reader_app_regex_summary">Regex do analizowania wartości z tekstu w powiadomieniu.\nZmień tylko, jeśli wiesz, co robisz lub jeśli otrzymasz poradę od programisty.</string>
+    <string name="notification_reader_app_regex_summary">Regex do analizowania wartości z tekstu w powiadomieniu.</string>
+    <string name="advanced_settings_developer_summary">Zmień tylko, jeśli wiesz, co robisz lub jeśli otrzymasz poradę od programisty.</string>
     <string name="notification_reader_five_minute_interval">5-minutowy interwał</string>
     <string name="notification_reader_five_minute_interval_summary">Niektóre aplikacje, takie jak Dexcom, aktualizują swoje powiadomienia dość często. Aby zignorować te aktualizacje z tą samą wartością, włącz 5-minutowy interwał.\nJeśli opcja ta jest włączona, nowa wartość będzie pojawiać się co 5 minut lub jeśli wartość w powiadomieniu uległa zmianie.</string>.
     <string name="pref_source_notification_info_summary">Aby otrzymywać wartości z powiadomień innych aplikacji, potrzebne jest uprawnienie dostępu do powiadomień! Powiadomienie musi zawierać wartość glukozy lub IOB/COB jako ciąg znaków.\nPonieważ każde powiadomienie ma inny układ, może nie działać z każdą aplikacją. W przypadku problemów, proszę o kontakt ze zrzutem ekranu powiadomienia i logami.</string>
@@ -994,5 +995,5 @@
     <string name="transfer_to_nightscout">Prześlij do Nightscout</string>
     <string name="label_profile">Profil</string>
     <string name="pref_watchfaces_cx_summary">Kreatywne tarcze zegarka eXtreme obsługują również komplikacje GlucoDataHandler.\nAby korzystać z tych tarcz, należy użyć aplikacji Facer watch face.\nNaciśnij tutaj, aby otworzyć stronę Facer i utworzyć tarcze zegarka eXtreme.</string>
-    <string name="notification_reader_interval_summary">Ustaw tę opcję zgodnie z częstotliwością aktualizacji używanego sensora, aby uniknąć przetwarzania zbędnych powiadomień.\nUstaw wartość 0, jeśli aplikacja źródłowa aktualizuje tylko nowe wartości glukozy (tak jak robi to CampAPS FX).</string>
+    <string name="notification_reader_interval_summary">Ustaw tę opcję zgodnie z częstotliwością aktualizacji używanego sensora, aby uniknąć przetwarzania zbędnych powiadomień.</string>
 </resources>

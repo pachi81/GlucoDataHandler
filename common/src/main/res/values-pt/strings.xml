@@ -760,7 +760,8 @@
     <string name="notification_reader_enabled">Habilitar leitor de notificações</string>
     <string name="no_receiver">Nenhum aplicativo</string>
     <string name="notification_reader_app_regex">Filtro de valor Regex</string>
-    <string name="notification_reader_app_regex_summary">Regex para analisar o valor do texto na notificação.\nPor favor, altere apenas se souber o que está fazendo ou se receber um conselho do desenvolvedor.</string>
+    <string name="notification_reader_app_regex_summary">Regex para analisar o valor do texto na notificação.</string>
+    <string name="advanced_settings_developer_summary">Por favor, altere apenas se souber o que está fazendo ou se receber um conselho do desenvolvedor.</string>
     <string name="notification_reader_five_minute_interval">Intervalo de 5 minutos</string>
     <string name="notification_reader_five_minute_interval_summary">Alguns aplicativos, como o Dexcom, atualizam suas notificações com bastante frequência. Para ignorar essas atualizações com o mesmo valor, habilite o intervalo de 5 minutos.\nSe habilitado, haverá apenas um novo valor a cada 5 minutos ou se o valor na notificação tiver mudado.</string>
     <string name="pref_source_notification_info_summary">Para receber valores de notificações de outros aplicativos, é necessária uma permissão para acessar as notificações!\nA notificação deve incluir o valor de glicose ou IOB/COB como string.\nComo cada notificação tem um layout diferente, pode não funcionar com todos os aplicativos. Em caso de problemas, entre em contato comigo com uma captura de tela da notificação e os logs.</string>
@@ -987,6 +988,6 @@ Pode gerir estas permissões a qualquer momento nas definições da aplicação 
     <string name="transfer_to_nightscout">Upload Nightscout</string>
     <string name="label_profile">Perfil</string>
     <string name="pref_watchfaces_cx_summary">Os mostradores Creative eXtreme também suportam complicações do GlucoDataHandler.\nVocê precisa usar o app Facer para usar esses mostradores.\nToque aqui para abrir a página do Facer para os mostradores Creative eXtreme.</string>
-    <string name="notification_reader_interval_summary">Defina isso para corresponder à taxa de atualização dos seus sensores para evitar o processamento de notificações redundantes.\nDefina como 0 se o aplicativo de origem atualizar apenas para novos valores de glicose (como o CamAPS FX faz).</string>
+    <string name="notification_reader_interval_summary">Defina isso para corresponder à taxa de atualização dos seus sensores para evitar o processamento de notificações redundantes.</string>
 
 </resources>

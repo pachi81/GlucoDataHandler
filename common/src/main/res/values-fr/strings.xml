@@ -765,7 +765,8 @@
     <string name="notification_reader_enabled">Activer le lecteur de notifications</string>
     <string name="no_receiver">Aucune application</string>
     <string name="notification_reader_app_regex">Filtre de valeur Regex</string>
-    <string name="notification_reader_app_regex_summary">Regex pour analyser la valeur du texte dans la notification.\nVeuillez modifier uniquement si vous savez ce que vous faites ou si vous obtenez un conseil du développeur.</string>
+    <string name="notification_reader_app_regex_summary">Regex pour analyser la valeur du texte dans la notification.</string>
+    <string name="advanced_settings_developer_summary">Veuillez modifier uniquement si vous savez ce que vous faites ou si vous obtenez un conseil du développeur.</string>
     <string name="notification_reader_five_minute_interval">Intervalle de 5 minutes</string>
     <string name="notification_reader_five_minute_interval_summary">Certaines applications, comme Dexcom, mettent à jour leurs notifications assez souvent. Pour ignorer ces mises à jour avec la même valeur, activez l\'intervalle de 5 minutes.\nSi activé, il n\'y aura une nouvelle valeur que toutes les 5 minutes ou si la valeur dans la notification a changé.</string>
     <string name="pref_source_notification_info_summary">Pour recevoir des valeurs des notifications d\'autres applications, une autorisation d\'accès aux notifications est nécessaire !\nLa notification doit inclure la valeur de glucose ou l\'IOB/COB sous forme de chaîne.\nComme chaque notification a une mise en page différente, elle peut ne pas fonctionner avec toutes les applications. En cas de problème, veuillez me contacter avec une capture d\'écran de la notification et les journaux.</string>
@@ -992,6 +993,6 @@ Vous pouvez gérer ces autorisations à tout moment dans les paramètres de l\'a
     <string name="transfer_to_nightscout">Téléversement Nightscout</string>
     <string name="label_profile">Profil</string>
     <string name="pref_watchfaces_cx_summary">Les cadrans Creative eXtreme prennent également en charge les complications GlucoDataHandler.\nVous devez utiliser l\'application Facer pour utiliser ces cadrans.\nAppuyez ici pour ouvrir la page Facer des cadrans Create eXtreme.</string>
-    <string name="notification_reader_interval_summary">Réglez ce paramètre pour qu\'il corresponde à la fréquence de mise à jour de votre capteur afin d\'éviter de traiter des notifications redondantes.\nRéglez sur 0 si l\'application source ne se met à jour que pour les nouvelles valeurs de glycémie (comme le fait CamAPS FX).</string>
+    <string name="notification_reader_interval_summary">Réglez ce paramètre pour qu\'il corresponde à la fréquence de mise à jour de votre capteur afin d\'éviter de traiter des notifications redondantes.</string>
 
 </resources>

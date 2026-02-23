@@ -755,7 +755,8 @@
     <string name="notification_reader_enabled">Abilita lettore di notifiche</string>
     <string name="no_receiver">Nessuna applicazione</string>
     <string name="notification_reader_app_regex">Filtro valore Regex</string>
-    <string name="notification_reader_app_regex_summary">Regex per analizzare il valore dal testo nella notifica.\nModifica solo se sai cosa stai facendo o se ricevi un consiglio dallo sviluppatore.</string>
+    <string name="notification_reader_app_regex_summary">Regex per analizzare il valore dal testo nella notifica.</string>
+    <string name="advanced_settings_developer_summary">Modifica solo se sai cosa stai facendo o se ricevi un consiglio dallo sviluppatore.</string>
     <string name="notification_reader_five_minute_interval">Intervallo di 5 minuti</string>
     <string name="notification_reader_five_minute_interval_summary">Alcune app, come Dexcom, aggiornano le loro notifiche abbastanza spesso. Per ignorare questi aggiornamenti con lo stesso valore, abilita l\'intervallo di 5 minuti.\nSe abilitato, ci sarà un nuovo valore solo ogni 5 minuti o se il valore nella notifica è cambiato.</string>
     <string name="pref_source_notification_info_summary">Per ricevere valori dalle notifiche di altre app, è necessaria l\'autorizzazione per accedere alle notifiche!\nLa notifica deve includere il valore del glucosio o l\'IOB/COB come stringa.\nPoiché ogni notifica ha un layout diverso, potrebbe non funzionare con tutte le app. In caso di problemi, contattami con uno screenshot della notifica e i log.</string>
@@ -983,6 +984,6 @@ Puoi gestire queste autorizzazioni in qualsiasi momento nelle impostazioni dell\
     <string name="transfer_to_nightscout">Caricamento Nightscout</string>
     <string name="label_profile">Profilo</string>
     <string name="pref_watchfaces_cx_summary">I quadranti Creative eXtreme supportano anche le complicazioni GlucoDataHandler.\nÈ necessario utilizzare l\'app Facer per usare questi quadranti.\nInquadra qui per aprire la pagina Facer per i quadranti Create eXtreme.</string>
-    <string name="notification_reader_interval_summary">Imposta questo valore in modo che corrisponda alla frequenza di aggiornamento dei sensori per evitare di elaborare notifiche ridondanti.\nImposta a 0 se l\'app sorgente si aggiorna solo per i nuovi valori di glicemia (come fa CamAPS FX).</string>
+    <string name="notification_reader_interval_summary">Imposta questo valore in modo che corrisponda alla frequenza di aggiornamento dei sensori per evitare di elaborare notifiche ridondanti.</string>
 
 </resources>

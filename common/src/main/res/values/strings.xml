@@ -833,7 +833,8 @@
     <string name="notification_reader_enabled">Enable notification reader</string>
     <string name="no_receiver">No application</string>
     <string name="notification_reader_app_regex">Regex value filter</string>
-    <string name="notification_reader_app_regex_summary">Regex to parse the value from text in notification.\nPlease only change, if you know, what you are doing or if you get an advice from the developer.</string>
+    <string name="notification_reader_app_regex_summary">Regex to parse the value from text in notification.</string>
+    <string name="advanced_settings_developer_summary">Please only change, if you know, what you are doing or if you get advice from the developer.</string>
     <string name="notification_reader_five_minute_interval">5 minute interval</string>
     <string name="notification_reader_five_minute_interval_summary">Some apps, like Dexcom updates their notifications quite often. To ignore these updates with the same value, enable the 5 minute interval.\nIf enabled, there will be only a new value every 5 minutes or if the value in the notification has changed.</string>
     <string name="pref_source_notification_info_summary">To receive values from notifications of other apps, a permission to access the notifications is needed!\nThe notifcation must include either the glucose value or IOB/COB as string.\nAs each notification has a different layout, it may not work with every app. In case of problems, please contact me with a screenshot of the notification and the logs.</string>
@@ -1059,7 +1060,7 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="transfer_to_nightscout">Nightscout Upload</string>
     <string name="label_profile">Profile</string>
     <string name="pref_watchfaces_cx_summary">Creative eXtreme watch faces also supports GlucoDataHandler complications.\nYou need to use Facer watch face app to use these watch faces.\nTap here to open Facer page for Create eXtreme watch faces.</string>
-    <string name="notification_reader_interval_summary">Set this to match your sensors update rate to avoid processing redundant notifications.\nSet to 0 if the source app only updates for new glucose values (like CampAPS FX is doing).</string>
+    <string name="notification_reader_interval_summary">Set this to match your sensors update rate to avoid processing redundant notifications.</string>
 </resources>
 
 

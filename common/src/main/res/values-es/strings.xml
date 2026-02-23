@@ -764,7 +764,8 @@
     <string name="notification_reader_enabled">Habilitar lector de notificaciones</string>
     <string name="no_receiver">Ninguna aplicación</string>
     <string name="notification_reader_app_regex">Filtro de valor Regex</string>
-    <string name="notification_reader_app_regex_summary">Regex para analizar el valor del texto en la notificación.\nPor favor, solo cambia esto si sabes lo que estás haciendo o si recibes un consejo del desarrollador.</string>
+    <string name="notification_reader_app_regex_summary">Regex para analizar el valor del texto en la notificación.</string>
+    <string name="advanced_settings_developer_summary">Por favor, solo cambia esto si sabes lo que estás haciendo o si recibes un consejo del desarrollador.</string>
     <string name="notification_reader_five_minute_interval">Intervalo de 5 minutos</string>
     <string name="notification_reader_five_minute_interval_summary">Algunas aplicaciones, como Dexcom, actualizan sus notificaciones con bastante frecuencia. Para ignorar estas actualizaciones con el mismo valor, habilita el intervalo de 5 minutos.\nSi está habilitado, solo habrá un nuevo valor cada 5 minutos o si el valor en la notificación ha cambiado.</string>
     <string name="pref_source_notification_info_summary">Para recibir valores de notificaciones de otras aplicaciones, ¡se necesita un permiso para acceder a las notificaciones!\nLa notificación debe incluir el valor de glucosa o IOB/COB como cadena.\nComo cada notificación tiene un diseño diferente, es posible que no funcione con todas las aplicaciones. En caso de problemas, por favor contáctame con una captura de pantalla de la notificación y los registros.</string>
@@ -992,6 +993,6 @@ Puedes gestionar estos permisos en cualquier momento en la configuración de la 
     <string name="transfer_to_nightscout">Carga a Nightscout</string>
     <string name="label_profile">Perfil</string>
     <string name="pref_watchfaces_cx_summary">Las esferas de reloj Creative eXtreme también son compatibles con las complicaciones de GlucoDataHandler.\nDebes usar la aplicación Facer para usar estas esferas.\nToca aquí para abrir la página de Facer de las esferas Creative eXtreme.</string>
-    <string name="notification_reader_interval_summary">Ajústalo para que coincida con la tasa de actualización de tus sensores para evitar procesar notificaciones redundantes.\nEstablécelo en 0 si la aplicación de origen solo se actualiza para nuevos valores de glucosa (como hace CamAPS FX).</string>
+    <string name="notification_reader_interval_summary">Ajústalo para que coincida con la tasa de actualización de tus sensores para evitar procesar notificaciones redundantes.</string>
 
 </resources>
