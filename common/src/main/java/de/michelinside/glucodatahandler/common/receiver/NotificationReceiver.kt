@@ -230,6 +230,12 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             return true
         if(packageName.lowercase().startsWith("com.signos."))  // Signos (uses Dexcom Sensor)
             return true
+        if(PackageUtils.isDexcomApp(packageName))
+            return false
+        if(packageName.lowercase().startsWith("com.sinocare.ican.health"))
+            return false
+        if(packageName.lowercase().startsWith("com.microtech.aidexx.diaexport."))
+            return false
         return sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_VALUE_WITH_UNIT, false)
     }
 
