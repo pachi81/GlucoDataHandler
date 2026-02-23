@@ -20,7 +20,9 @@
         android:autoSizeTextType="uniform"
         android:maxLines="1"
         android:layout_marginHorizontal="10dp"
-        android:textColor="@color/transparent_widget_textcolor" />
+        android:textColor="@color/transparent_widget_textcolor"
+        android:visibility="gone"
+        tools:ignore="HardcodedText" />
     <TextView
         android:id="@+id/glucose"
         android:layout_weight="4"
@@ -32,7 +34,7 @@
         android:autoSizeMinTextSize="1sp"
         android:autoSizeStepGranularity="1sp"
         android:autoSizeTextType="uniform"
-        android:text="135"
+        android:text="Other"
         android:maxLines="1"
         tools:ignore="HardcodedText,NestedWeights" />
     <TextView
@@ -46,7 +48,7 @@
         android:layout_marginEnd="6dp"
         android:maxLines="1"
         android:gravity="center"
-        android:text="mg/dl"
+        android:text="Unit"
         android:textColor="@color/transparent_widget_textcolor"
         tools:ignore="HardcodedText"
         android:autoSizeTextType="uniform"
