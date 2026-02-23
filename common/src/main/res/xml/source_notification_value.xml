@@ -8,19 +8,23 @@
         android:summary="@string/notification_reader_app_summary"
         app:description="@string/notification_reader_app_summary"
         app:iconSpaceReserved="false" />
+    <androidx.preference.SeekBarPreference
+        android:defaultValue="5"
+        app:showSeekBarValue="true"
+        app:seekBarIncrement="1"
+        app:min="0"
+        android:max="5"
+        android:key="notification_reader_interval"
+        android:title="@string/source_interval"
+        android:summary="@string/notification_reader_interval_summary"
+        app:iconSpaceReserved="false" />
     <PreferenceCategory
         android:title="@string/advanced_settings"
-        android:summary="@string/advanced_settings_developer_summary"
-        app:iconSpaceReserved="false">
-        <androidx.preference.SeekBarPreference
-            android:defaultValue="5"
-            app:showSeekBarValue="true"
-            app:seekBarIncrement="1"
-            app:min="0"
-            android:max="5"
-            android:key="notification_reader_interval"
-            android:title="@string/source_interval"
-            android:summary="@string/notification_reader_interval_summary"
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="1">
+        <Preference
+            android:key="advanced_settings_developer_summary"
+            android:summary="@string/advanced_settings_developer_summary"
             app:iconSpaceReserved="false" />
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
