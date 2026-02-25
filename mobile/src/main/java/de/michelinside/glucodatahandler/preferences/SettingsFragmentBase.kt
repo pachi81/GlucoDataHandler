@@ -533,6 +533,8 @@ class GDASettingsFragment: SettingsFragmentBase(R.xml.pref_gda) {
             val sendPrefToGDA = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_SEND_PREF_TO_GLUCODATAAUTO)
             PreferenceHelper.replaceSecondSummary(sendPrefToGDA)
             sendPrefToGDA!!.isVisible = true
+            val noAlarm = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED)
+            noAlarm!!.isVisible = true
         } else {
             val no_gda_info = findPreference<Preference>(Constants.SHARED_PREF_NO_GLUCODATAAUTO)
             if (no_gda_info != null) {
