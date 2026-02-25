@@ -629,7 +629,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
 
             if(isUpgrade && sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX)) {
                 val oldRegex = sharedPrefs.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX, "")
-                if(oldRegex.isNullOrEmpty() || NotificationReceiver.oldGlucoseRegexes.contains(oldRegex)) {
+                if(oldRegex == null || NotificationReceiver.oldGlucoseRegexes.contains(oldRegex)) {
                     Log.i(LOG_ID, "Remove old notification regex $oldRegex")
                     sharedPrefs.edit {
                         putString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX, "")
@@ -639,7 +639,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
 
             if(isUpgrade && sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX)) {
                 val oldRegex = sharedPrefs.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX, "")
-                if(oldRegex.isNullOrEmpty() || NotificationReceiver.oldIobRegexes.contains(oldRegex)) {
+                if(oldRegex == null || NotificationReceiver.oldIobRegexes.contains(oldRegex)) {
                     Log.i(LOG_ID, "Remove old IOB notification regex from $oldRegex")
                     sharedPrefs.edit {
                         putString(
@@ -652,7 +652,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
 
             if(isUpgrade && sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_COB_APP_REGEX)) {
                 val oldRegex = sharedPrefs.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_COB_APP_REGEX, "")
-                if(oldRegex.isNullOrEmpty() || NotificationReceiver.oldCobRegexes.contains(oldRegex)) {
+                if(oldRegex == null || NotificationReceiver.oldCobRegexes.contains(oldRegex)) {
                     Log.i(LOG_ID, "Remove old COB notification regex from $oldRegex")
                     sharedPrefs.edit {
                         putString(

@@ -46,13 +46,16 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             "(\\d*\\.?\\d+)",
             "(?:^|\\s)(\\d*\\.?\\d+)(?=\\s|\$)",
             "(?:^|\\s)(\\d{1,3}(?:\\.\\d{1,3})?)(?=\\s|${'$'})",
-            """(?:^|\s)(\d+(\.\d)?)(?=\s|\p{S}|$)"""
+            """(?:^|\s)(\d+(\.\d)?)(?=\s|\p{S}|$)""",
+            """(?:^|\s)(\d*\.?\d+)(?=\s|\p{S}|$)""",
+            """(?:^|\s)(\d*\.?\d+)(?=\s|\p{S}|$) (mg|mmol)"""  // workaround for medtronic before version 2.3
         )
         val oldIobRegexes = mutableSetOf(
             "IOB: (\\d*\\.?\\d+) U",
             "(\\d*\\.?\\d+) U",
             "(\\d*\\.?\\d+)\\s?[Uu]",
-            """(\d*\.?\d+)\s?[a-fh-z]\b"""
+            """(\d*\.?\d+)\s?[a-fh-z]\b""",
+            """(\d*\.?\d+)\s?[UuE]"""     // workaround for medtronic before version 2.3
         )
         val oldCobRegexes = mutableSetOf(
             "(\\d+)\\s?[Gg]",
