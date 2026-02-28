@@ -1061,7 +1061,7 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="label_profile">Profile</string>
     <string name="pref_watchfaces_cx_summary">Creative eXtreme watch faces also supports GlucoDataHandler complications.\nYou need to use Facer watch face app to use these watch faces.\nTap here to open Facer page for Create eXtreme watch faces.</string>
     <string name="notification_reader_interval_summary">Set this to match your sensors update rate to avoid processing redundant notifications.</string>
+    <string name="pref_transfer_to_local_apps">Local applications</string>
+
+
 </resources>
-
-
-

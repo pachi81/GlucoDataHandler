@@ -989,5 +989,6 @@ GlucoDataHandler 只會將血糖數據寫入健康連結，除非您明確授予
     <string name="label_profile">個人資料</string>
     <string name="pref_watchfaces_cx_summary">Creative eXtreme 錶盤也支援 GlucoDataHandler 併發症。\n您需要使用 Facer 錶盤應用程式來使用這些錶盤。\n點擊此處開啟 Creative eXtreme 錶盤的 Facer 頁面。</string>
     <string name="notification_reader_interval_summary">將此設定為符合您感測器的更新速率，以避免處理多餘的通知。</string>
+    <string name="pref_transfer_to_local_apps">本機程式</string>
 
 </resources>

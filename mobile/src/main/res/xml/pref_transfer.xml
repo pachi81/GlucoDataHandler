@@ -9,7 +9,7 @@
         app:iconSpaceReserved="false" />
     <Preference
         android:key="transfer_localapps"
-        android:title="@string/pref_source_offline"
+        android:title="@string/pref_transfer_to_local_apps"
         android:summary="@string/pref_transfer_to_local_apps_summary"
         app:fragment="de.michelinside.glucodatahandler.preferences.TransferBroadcastFragement"
         app:iconSpaceReserved="false" />

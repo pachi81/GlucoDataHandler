@@ -997,5 +997,6 @@ U kunt deze toestemmingen op elk moment beheren in de instellingen van de Health
     <string name="label_profile">Profiel</string>
     <string name="pref_watchfaces_cx_summary">Creative eXtreme wijzerplaten ondersteunen ook GlucoDataHandler-complicaties.\nJe moet de Facer wijzerplaat-app gebruiken om deze wijzerplaten te gebruiken.\nTik hier om de Facer-pagina voor Creative eXtreme wijzerplaten te openen.</string>
     <string name="notification_reader_interval_summary">Stel dit in op de updatefrequentie van je sensor om dubbele meldingen te voorkomen.</string>
+    <string name="pref_transfer_to_local_apps">Lokale applicaties</string>
 
 </resources>

@@ -996,4 +996,5 @@
     <string name="label_profile">Profil</string>
     <string name="pref_watchfaces_cx_summary">Kreatywne tarcze zegarka eXtreme obsługują również komplikacje GlucoDataHandler.\nAby korzystać z tych tarcz, należy użyć aplikacji Facer watch face.\nNaciśnij tutaj, aby otworzyć stronę Facer i utworzyć tarcze zegarka eXtreme.</string>
     <string name="notification_reader_interval_summary">Ustaw tę opcję zgodnie z częstotliwością aktualizacji używanego sensora, aby uniknąć przetwarzania zbędnych powiadomień.</string>
+    <string name="pref_transfer_to_local_apps">Aplikacje lokalne</string>
 </resources>

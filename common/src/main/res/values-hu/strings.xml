@@ -1060,5 +1060,6 @@ Ezeket az engedélyeket bármikor kezelheti a Health Connect alkalmazás beáll�
     <string name="label_profile">Profil</string>
     <string name="pref_watchfaces_cx_summary">A Creative eXtreme óraszámlapok szintén támogatják a GlucoDataHandler komplikációkat.\nA Facer óraszámlap alkalmazást kell használnia ezen óraszámlapok használatához.\nKoppintson ide a Facer oldal megnyitásához a Creative eXtreme óraszámlapokhoz.</string>
     <string name="notification_reader_interval_summary">Állítsa be ezt az érzékelő frissítési gyakoriságának megfelelően a felesleges értesítések feldolgozásának elkerülése érdekében.</string>
+    <string name="pref_transfer_to_local_apps">Helyi alkalmazások</string>
 
 </resources>

@@ -988,5 +988,6 @@ Sie können diese Berechtigungen jederzeit in den Health Connect App-Einstellung
     <string name="label_profile">Profil</string>
     <string name="pref_watchfaces_cx_summary">Creative eXtreme Zifferblätter unterstützen auch GlucoDataHandler-Komplikationen.\nDu musst die Facer-App verwenden, um diese Zifferblätter zu nutzen.\nHier tippen, um die Facer-Seite für Creative eXtreme Zifferblätter zu öffnen.</string>
     <string name="notification_reader_interval_summary">Stelle das Intervall in Minuten passend zur Aktualisierungsrate deines Sensors ein, um doppelte Benachrichtigungen zu ignorieren.</string>
+    <string name="pref_transfer_to_local_apps">Lokale Apps</string>
 
 </resources>

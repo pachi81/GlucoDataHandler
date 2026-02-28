@@ -994,5 +994,6 @@ Puedes gestionar estos permisos en cualquier momento en la configuración de la 
     <string name="label_profile">Perfil</string>
     <string name="pref_watchfaces_cx_summary">Las esferas de reloj Creative eXtreme también son compatibles con las complicaciones de GlucoDataHandler.\nDebes usar la aplicación Facer para usar estas esferas.\nToca aquí para abrir la página de Facer de las esferas Creative eXtreme.</string>
     <string name="notification_reader_interval_summary">Ajústalo para que coincida con la tasa de actualización de tus sensores para evitar procesar notificaciones redundantes.</string>
+    <string name="pref_transfer_to_local_apps">Aplicaciones locales</string>
 
 </resources>

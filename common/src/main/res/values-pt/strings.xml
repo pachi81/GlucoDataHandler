@@ -989,5 +989,6 @@ Pode gerir estas permissões a qualquer momento nas definições da aplicação 
     <string name="label_profile">Perfil</string>
     <string name="pref_watchfaces_cx_summary">Os mostradores Creative eXtreme também suportam complicações do GlucoDataHandler.\nVocê precisa usar o app Facer para usar esses mostradores.\nToque aqui para abrir a página do Facer para os mostradores Creative eXtreme.</string>
     <string name="notification_reader_interval_summary">Defina isso para corresponder à taxa de atualização dos seus sensores para evitar o processamento de notificações redundantes.</string>
+    <string name="pref_transfer_to_local_apps">Aplicações locais</string>
 
 </resources>

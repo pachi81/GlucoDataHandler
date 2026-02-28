@@ -985,5 +985,6 @@ Puoi gestire queste autorizzazioni in qualsiasi momento nelle impostazioni dell\
     <string name="label_profile">Profilo</string>
     <string name="pref_watchfaces_cx_summary">I quadranti Creative eXtreme supportano anche le complicazioni GlucoDataHandler.\nÈ necessario utilizzare l\'app Facer per usare questi quadranti.\nInquadra qui per aprire la pagina Facer per i quadranti Create eXtreme.</string>
     <string name="notification_reader_interval_summary">Imposta questo valore in modo che corrisponda alla frequenza di aggiornamento dei sensori per evitare di elaborare notifiche ridondanti.</string>
+    <string name="pref_transfer_to_local_apps">Applicazioni locali</string>
 
 </resources>

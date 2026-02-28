@@ -988,5 +988,6 @@ Du kan hantera dessa behörigheter när som helst i Health Connect-appens instä
     <string name="label_profile">Profil</string>
     <string name="pref_watchfaces_cx_summary">Creative eXtreme-urtavlor stöder också GlucoDataHandler-komplikationer.\nDu måste använda Facer-urtavelsappen för att använda dessa urtavlor.\nTryck här för att öppna Facer-sidan för Creative eXtreme-urtavlor.</string>
     <string name="notification_reader_interval_summary">Ställ in detta för att matcha din sensors uppdateringsfrekvens för att undvika att bearbeta överflödiga aviseringar.</string>
+    <string name="pref_transfer_to_local_apps">Lokala appar</string>
 
 </resources>
