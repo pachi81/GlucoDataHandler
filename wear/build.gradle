@@ -3,7 +3,22 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+Properties properties = new Properties()
+if (project.rootProject.file('local.properties').exists()) {
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+}
+
 android {
+    signingConfigs {
+        release {
+            if (properties.containsKey('keystore.file')) {
+                storeFile file(properties.getProperty('keystore.file'))
+                storePassword properties.getProperty('keystore.password')
+                keyAlias properties.getProperty('keystore.alias')
+                keyPassword properties.getProperty('keystore.key.password')
+            }
+        }
+    }
     namespace 'de.michelinside.glucodatahandler'
     compileSdk rootProject.compileSdk
 
@@ -25,12 +40,14 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "GlucoDataHandler"
+            signingConfig signingConfigs.release
         }
         dev_release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             versionNameSuffix '-dev.' + rootProject.versionCode
             resValue "string", "app_name", "GlucoDataHandler"
+            signingConfig signingConfigs.release
         }
         debug {
             minifyEnabled false
@@ -42,6 +59,7 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "GDH Second"
+            signingConfig signingConfigs.release
         }
         applicationVariants.all {
             variant ->
@@ -84,49 +102,42 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }
 
-afterEvaluate {
-    def bundleRelease = tasks.getByPath(':wear:bundleRelease')
-    def copyAndroidBundlePostBuild = tasks.register('copyAndroidBundlePostBuild', Copy) {
-        dependsOn bundleRelease
-        from "${projectDir}/release"
-        include '**/*.aab'
-        into rootProject.releasePath + "/Playstore" + "/" + versionCode.toString()
-    }
-    bundleRelease.finalizedBy(copyAndroidBundlePostBuild)
+def registerPostBuildCopy(String taskName, String triggerTaskName, String buildSubPath, String localDest, boolean isAab) {
+    def buildDir = layout.buildDirectory.dir(buildSubPath)
+    def localDir = file(localDest)
+    def globalPath = rootProject.releasePath.toString()
+    def vCode = rootProject.versionCode.toString()
+    def pattern = isAab ? "**/*.aab" : "**/*.apk"
 
-    def bundleDev_release = tasks.getByPath(':wear:bundleDev_release')
-    def copyAndroidBundleDevPostBuild = tasks.register('copyAndroidBundleDevPostBuild', Copy) {
-        dependsOn bundleDev_release
-        from "${projectDir}/dev_release"
-        include '**/*.aab'
-        into rootProject.releasePath + "/Playstore" + "/" + versionCode.toString()
+    def localTask = tasks.register(taskName, Copy) {
+        from buildDir
+        include pattern
+        into localDir
     }
-    bundleDev_release.finalizedBy(copyAndroidBundleDevPostBuild)
 
-    def assembleRelease = tasks.getByPath(':wear:assembleRelease')
-    def copyAndroidApksPostBuild = tasks.register('copyAndroidApksPostBuild', Copy) {
-        dependsOn assembleRelease
-        from "${projectDir}/release"
-        include '**/*.apk'
-        into rootProject.releasePath
+    def globalTask = tasks.register("${taskName}Global", Copy) {
+        from buildDir
+        include pattern
+        into isAab ? new File(globalPath, "Playstore/$vCode") : new File(globalPath)
     }
-    assembleRelease.finalizedBy(copyAndroidApksPostBuild)
 
-    def assembleDevRelease = tasks.getByPath(':wear:assembleDev_release')
-    def copyAndroidDevApksPostBuild = tasks.register('copyAndroidDevApksPostBuild', Copy) {
-        dependsOn assembleDevRelease
-        from "${projectDir}/dev_release"
-        include '**/*.apk'
-        into rootProject.releasePath
+    tasks.matching { it.name == triggerTaskName }.configureEach {
+        finalizedBy localTask, globalTask
     }
-    assembleDevRelease.finalizedBy(copyAndroidDevApksPostBuild)
+}
 
-    def assembleSecond = tasks.getByPath(':wear:assembleSecond')
-    def copyAndroidSecondApksPostBuild = tasks.register('copyAndroidSecondApksPostBuild', Copy) {
-        dependsOn assembleSecond
-        from "${projectDir}/second"
-        include '**/*.apk'
-        into rootProject.releasePath
-    }
-    assembleSecond.finalizedBy(copyAndroidSecondApksPostBuild)
+registerPostBuildCopy('copyAndroidBundlePostBuild', 'bundleRelease', 'outputs/bundle/release', 'release', true)
+registerPostBuildCopy('copyAndroidBundleDevPostBuild', 'bundleDev_release', 'outputs/bundle/dev_release', 'dev_release', true)
+registerPostBuildCopy('copyAndroidApksPostBuild', 'assembleRelease', 'outputs/apk/release', 'release', false)
+registerPostBuildCopy('copyAndroidDevApksPostBuild', 'assembleDev_release', 'outputs/apk/dev_release', 'dev_release', false)
+registerPostBuildCopy('copyAndroidSecondApksPostBuild', 'assembleSecond', 'outputs/apk/second', 'second', false)
+
+tasks.matching { it.name == 'createReleaseApkListingFileRedirect' }.configureEach {
+    mustRunAfter 'copyAndroidApksPostBuild'
+}
+tasks.matching { it.name == 'createDev_releaseApkListingFileRedirect' }.configureEach {
+    mustRunAfter 'copyAndroidDevApksPostBuild'
+}
+tasks.matching { it.name == 'createSecondApkListingFileRedirect' }.configureEach {
+    mustRunAfter 'copyAndroidSecondApksPostBuild'
 }
