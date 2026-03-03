@@ -38,6 +38,13 @@ class SourceOfflineFragment : PreferenceFragmentCompatBase() {
         }
     }
 
+    private fun getDefaultEnableState(key: String): Boolean {
+        return when(key) {
+            Constants.SHARED_PREF_XDRIP_BROADCAST_SERVICE_API -> false
+            else -> true
+        }
+    }
+
     private fun updateEnableStates() {
         try {
             val prefSources = findPreference<PreferenceCategory>("pref_cat_sources")
@@ -46,7 +53,7 @@ class SourceOfflineFragment : PreferenceFragmentCompatBase() {
                 for (i in 0 until prefSources.preferenceCount) {
                     val pref: Preference = prefSources.getPreference(i)
                     if(!pref.key.isNullOrEmpty()) {
-                        if(preferenceManager.sharedPreferences!!.getBoolean(pref.key, false)) {
+                        if(preferenceManager.sharedPreferences!!.getBoolean(pref.key, getDefaultEnableState(pref.key!!))) {
                             pref.icon = ContextCompat.getDrawable(requireContext(), R.drawable.switch_on)
                         } else {
                             pref.icon = ContextCompat.getDrawable(requireContext(), R.drawable.switch_off)
