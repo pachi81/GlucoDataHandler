@@ -126,18 +126,112 @@ def registerPostBuildCopy(String taskName, String triggerTaskName, String buildS
     }
 }
 
-registerPostBuildCopy('copyAndroidBundlePostBuild', 'bundleRelease', 'outputs/bundle/release', 'release', true)
-registerPostBuildCopy('copyAndroidBundleDevPostBuild', 'bundleDev_release', 'outputs/bundle/dev_release', 'dev_release', true)
-registerPostBuildCopy('copyAndroidApksPostBuild', 'assembleRelease', 'outputs/apk/release', 'release', false)
-registerPostBuildCopy('copyAndroidDevApksPostBuild', 'assembleDev_release', 'outputs/apk/dev_release', 'dev_release', false)
-registerPostBuildCopy('copyAndroidSecondApksPostBuild', 'assembleSecond', 'outputs/apk/second', 'second', false)
+def registerPostBuildCopyInt(String taskName, String triggerTaskName, String localSource, boolean isAab) {
+    def globalPath = rootProject.releasePath.toString()
+    def vCode = rootProject.versionCode.toString()
+    def pattern = isAab ? "**/*.aab" : "**/*.apk"
 
-tasks.matching { it.name == 'createReleaseApkListingFileRedirect' }.configureEach {
-    mustRunAfter 'copyAndroidApksPostBuild'
+    def intTask = tasks.register(taskName, Copy) {
+        from "${projectDir}/${localSource}"
+        include pattern
+        into isAab ? new File(globalPath, "Playstore/$vCode") : new File(globalPath)
+    }
+
+    tasks.matching { it.name == triggerTaskName }.configureEach {
+        finalizedBy intTask
+    }
 }
-tasks.matching { it.name == 'createDev_releaseApkListingFileRedirect' }.configureEach {
-    mustRunAfter 'copyAndroidDevApksPostBuild'
+
+// --- Dynamic Post-Build Copy Logic (Groovy Version - Configuration Cache Compatible) ---
+
+// Pre-calculate global values to avoid project state access in closures
+def globalReleasePath = rootProject.ext.releasePath.toString()
+def globalVersionCode = rootProject.versionCode.toString()
+def wearProjectDir = projectDir
+def wearBuildDir = project.layout.buildDirectory
+
+android.applicationVariants.configureEach { variant ->
+    def vName = variant.name // e.g., "release", "dev_release", "second"
+    def vNameCap = vName.capitalize()
+
+    // Capture the output directory now, so we don't need the 'variant' object inside tasks
+    def apkSourceFolder = variant.outputs.collect { it.outputFile.parentFile }
+
+    // 1. Register a Clean Task to clear old files before the build starts
+    def cleanTaskName = "cleanOutputsForWear${vNameCap}"
+    tasks.register(cleanTaskName) {
+        group = "delivery"
+        doLast {
+            def foldersToClean = [
+                    new File(wearProjectDir, vName),
+                    new File(wearBuildDir.asFile.get(), "outputs/apk/${vName}"),
+                    new File(wearBuildDir.asFile.get(), "outputs/bundle/${vName}")
+            ]
+            foldersToClean.each { folder ->
+                if (folder.exists()) {
+                    println "DEBUG: Cleaning old Wear outputs in ${folder.absolutePath}"
+                    folder.deleteDir()
+                    folder.mkdirs()
+                }
+            }
+        }
+    }
+
+    // 2. Register APK Copy Task
+    def copyApkTaskName = "copyWear${vNameCap}ApkToGlobal"
+    tasks.register(copyApkTaskName, Copy) {
+        group = "delivery"
+        description = "Copies the generated Wear APK for $vName to the global release path."
+
+        from apkSourceFolder
+        include "*.apk"
+        into file(globalReleasePath)
+
+        // Flatten structure: put .apk directly into target
+        eachFile { details -> details.path = details.name }
+    }
+
+    // 3. Register Bundle (AAB) Copy Task
+    def copyBundleTaskName = "copyWear${vNameCap}AabToGlobal"
+    tasks.register(copyBundleTaskName, Copy) {
+        group = "delivery"
+        description = "Copies the generated Wear Bundle for $vName to the Playstore folder."
+
+        from({
+            // Check both IDE path (projectDir/variant) and CLI path (build/outputs/bundle/variant)
+            def paths = [
+                    new File(wearProjectDir, vName),
+                    new File(wearBuildDir.asFile.get(), "outputs/bundle/${vName}")
+            ]
+            return paths.findAll { it.exists() }
+        })
+        include "*.aab"
+        into file("${globalReleasePath}/Playstore/${globalVersionCode}")
+
+        eachFile { details -> details.path = details.name }
+    }
+
+    // 4. Task Wiring (Safe and Specific)
+    // We target only the main assemble and bundle tasks for the specific variant
+    tasks.named("assemble${vNameCap}").configure {
+        dependsOn cleanTaskName
+        finalizedBy copyApkTaskName
+    }
+
+    // Bundles are usually only relevant for release/second/dev_release
+    try {
+        tasks.named("bundle${vNameCap}").configure {
+            dependsOn cleanTaskName
+            finalizedBy copyBundleTaskName
+        }
+    } catch (Exception ignored) {
+        // Task might not exist for some variants (like debug)
+    }
 }
-tasks.matching { it.name == 'createSecondApkListingFileRedirect' }.configureEach {
-    mustRunAfter 'copyAndroidSecondApksPostBuild'
+
+// 5. Fix for internal metadata tasks to avoid race conditions
+tasks.configureEach { task ->
+    if (task.name.contains('ApkListingFileRedirect')) {
+        task.mustRunAfter tasks.matching { it.name.startsWith('copyWear') }
+    }
 }

@@ -10,8 +10,11 @@ rem call gradlew.bat help
 
 rem Step 3: Build and explicitly trigger copy tasks from afterEvaluate
 echo Starting build process for Release (AABs, APKs and Second APKs)...
-call gradlew.bat clean :mobile:bundleRelease :wear:bundleRelease :mobile:assembleRelease :wear:assembleRelease :mobile:assembleSecond :wear:assembleSecond
- rem :mobile:copyAndroidBundlePostBuild :wear:copyAndroidBundlePostBuild :mobile:copyAndroidApksPostBuild :wear:copyAndroidApksPostBuild :mobile:copyAndroidSecondApksPostBuild :wear:copyAndroidSecondApksPostBuild
+call gradlew.bat clean :mobile:bundleRelease :wear:bundleRelease 
+if %ERRORLEVEL% EQU 0 (
+	call gradlew.bat clean :mobile:assembleRelease :wear:assembleRelease :mobile:assembleSecond :wear:assembleSecond
+)
+
 
 if %ERRORLEVEL% EQU 0 (
     echo.

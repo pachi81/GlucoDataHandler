@@ -118,42 +118,88 @@ dependencies {
 
 }
 
-def registerPostBuildCopy(String taskName, String triggerTaskName, String buildSubPath, String localDest, boolean isAab) {
-    def buildDir = layout.buildDirectory.dir(buildSubPath)
-    def localDir = file(localDest)
-    def globalPath = rootProject.releasePath.toString()
-    def vCode = rootProject.versionCode.toString()
-    def pattern = isAab ? "**/*.aab" : "**/*.apk"
+// --- Dynamic Post-Build Copy Logic (Groovy Version - Configuration Cache Compatible) ---
 
-    def localTask = tasks.register(taskName, Copy) {
-        from buildDir
-        include pattern
-        into localDir
+// Pre-calculate global values to avoid project state access in closures
+def globalReleasePath = rootProject.ext.releasePath.toString()
+def globalVersionCode = rootProject.versionCode.toString()
+def mobileProjectDir = projectDir
+def mobileBuildDir = project.layout.buildDirectory
+
+android.applicationVariants.configureEach { variant ->
+    def vName = variant.name // e.g., "dev_release"
+    def vNameCap = vName.capitalize()
+
+    // Capture the output directory now, so we don't need the 'variant' object later
+    def apkSourceFolder = variant.outputs.collect { it.outputFile.parentFile }
+
+    // 1. Register a Clean Task to clear old files before the build starts
+    def cleanTaskName = "cleanOutputsFor${vNameCap}"
+    tasks.register(cleanTaskName) {
+        group = "delivery"
+        doLast {
+            def foldersToClean = [
+                    new File(mobileProjectDir, vName),
+                    new File(mobileBuildDir.asFile.get(), "outputs/apk/${vName}"),
+                    new File(mobileBuildDir.asFile.get(), "outputs/bundle/${vName}")
+            ]
+            foldersToClean.each { folder ->
+                if (folder.exists()) {
+                    println "DEBUG: Cleaning old outputs in ${folder.absolutePath}"
+                    folder.deleteDir()
+                    folder.mkdirs()
+                }
+            }
+        }
     }
 
-    def globalTask = tasks.register("${taskName}Global", Copy) {
-        from buildDir
-        include pattern
-        into isAab ? new File(globalPath, "Playstore/$vCode") : new File(globalPath)
+    // 2. Register APK Copy Task
+    def copyApkTaskName = "copy${vNameCap}ApkToGlobal"
+    tasks.register(copyApkTaskName, Copy) {
+        group = "delivery"
+        from apkSourceFolder
+        include "*.apk"
+        into file(globalReleasePath)
+        eachFile { details -> details.path = details.name }
     }
 
-    tasks.matching { it.name == triggerTaskName }.configureEach {
-        finalizedBy localTask, globalTask
+    // 3. Register Bundle (AAB) Copy Task
+    def copyBundleTaskName = "copy${vNameCap}AabToGlobal"
+    tasks.register(copyBundleTaskName, Copy) {
+        group = "delivery"
+        from({
+            def paths = [
+                    new File(mobileProjectDir, vName),
+                    new File(mobileBuildDir.asFile.get(), "outputs/bundle/${vName}")
+            ]
+            return paths.findAll { it.exists() }
+        })
+        include "*.aab"
+        into file("${globalReleasePath}/Playstore/${globalVersionCode}")
+        eachFile { details -> details.path = details.name }
+    }
+
+    // 4. Task Wiring (Safe and Specific)
+    // We target only the main assemble and bundle tasks for the specific variant
+    tasks.named("assemble${vNameCap}").configure {
+        dependsOn cleanTaskName
+        finalizedBy copyApkTaskName
+    }
+
+    // AAB tasks are only created if the variant is not a debug build usually
+    try {
+        tasks.named("bundle${vNameCap}").configure {
+            dependsOn cleanTaskName
+            finalizedBy copyBundleTaskName
+        }
+    } catch (Exception ignored) {
+        // Task might not exist for this variant (e.g. debug)
     }
 }
 
-registerPostBuildCopy('copyAndroidBundlePostBuild', 'bundleRelease', 'outputs/bundle/release', 'release', true)
-registerPostBuildCopy('copyAndroidBundleDevPostBuild', 'bundleDev_release', 'outputs/bundle/dev_release', 'dev_release', true)
-registerPostBuildCopy('copyAndroidApksPostBuild', 'assembleRelease', 'outputs/apk/release', 'release', false)
-registerPostBuildCopy('copyAndroidDevApksPostBuild', 'assembleDev_release', 'outputs/apk/dev_release', 'dev_release', false)
-registerPostBuildCopy('copyAndroidSecondApksPostBuild', 'assembleSecond', 'outputs/apk/second', 'second', false)
-
-tasks.matching { it.name == 'createReleaseApkListingFileRedirect' }.configureEach {
-    mustRunAfter 'copyAndroidApksPostBuild'
-}
-tasks.matching { it.name == 'createDev_releaseApkListingFileRedirect' }.configureEach {
-    mustRunAfter 'copyAndroidDevApksPostBuild'
-}
-tasks.matching { it.name == 'createSecondApkListingFileRedirect' }.configureEach {
-    mustRunAfter 'copyAndroidSecondApksPostBuild'
+// 5. Fix for internal metadata tasks to avoid race conditions
+tasks.configureEach { task ->
+    if (task.name.contains('ApkListingFileRedirect')) {
+        task.mustRunAfter tasks.matching { it.name.startsWith('copy') }
+    }
 }
