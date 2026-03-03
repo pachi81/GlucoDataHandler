@@ -304,7 +304,7 @@ object HealthConnectManager: NotifierInterface {
             val sdkStatus = HealthConnectClient.getSdkStatus(context)
             if (sdkStatus == HealthConnectClient.SDK_AVAILABLE) {
                 val intent = Intent(HealthConnectClient.ACTION_HEALTH_CONNECT_SETTINGS)
-                //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 context.startActivity(intent)
             } else {
                 openHealthConnectPlaystore(context)
