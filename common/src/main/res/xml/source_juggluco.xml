@@ -14,6 +14,13 @@
         android:title="@string/src_webserver"
         android:summary="@string/src_juggluco_webserver_summary"
         app:iconSpaceReserved="false" />
+    <androidx.preference.EditTextPreference
+        android:defaultValue=""
+        android:key="source_juggluco_webserver_api_secret"
+        android:title="@string/src_ns_secret"
+        android:summary="@string/src_ns_secret_summary"
+        android:inputType="textPassword"
+        app:iconSpaceReserved="false" />
     <androidx.preference.SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="source_juggluco_webserver_iob_support"

@@ -179,6 +179,7 @@ object Constants {
     const val SHARED_PREF_SOURCE_GDH_ENABLED="source_gdh_enabled"
     const val SHARED_PREF_SOURCE_JUGGLUCO_ENABLED="source_juggluco_enabled"
     const val SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_ENABLED="source_juggluco_webserver_enabled"
+    const val SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_API_SECRET="source_juggluco_webserver_api_secret"
     const val SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_IOB_SUPPORT="source_juggluco_webserver_iob_support"
     const val SHARED_PREF_SOURCE_XDRIP_ENABLED="source_xdrip_enabled"
     const val SHARED_PREF_SOURCE_AAPS_ENABLED="source_aaps_enabled"

@@ -120,7 +120,7 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
             url = sharedPreferences.getString(Constants.SHARED_PREF_NIGHTSCOUT_URL, "")!!.trim().trimEnd('/')
             if(BuildConfig.DEBUG && url.isEmpty())
                 url = BuildConfig.NIGHTSCOUT_DEBUG_SERVER
-            secret = Utils.encryptSHA1(sharedPreferences.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, "")!!)
+            secret = Utils.encryptSHA1(sharedPreferences.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, ""))
             token = sharedPreferences.getString(Constants.SHARED_PREF_NIGHTSCOUT_TOKEN, "")!!
             iob_cob_support = sharedPreferences.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, true)
             result = true
@@ -131,7 +131,7 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
                     result = true
                 }
                 Constants.SHARED_PREF_NIGHTSCOUT_SECRET -> {
-                    secret = Utils.encryptSHA1(sharedPreferences.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, "")!!)
+                    secret = Utils.encryptSHA1(sharedPreferences.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, ""))
                     result = true
                 }
                 Constants.SHARED_PREF_NIGHTSCOUT_TOKEN -> {
