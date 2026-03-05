@@ -34,7 +34,6 @@
     <string name="playstore_pujie_watchfaces" translatable="false">https://play.google.com/store/apps/dev?id=7780011900367662392</string>
     <string name="cx_watchfaces" translatable="false">https://beta.facer.io/u/CXWatchFaces</string>
     <string name="garmin_watchfaces" translatable="false">https://apps.garmin.com/search?keywords=xdrip</string>
-    <string name="pebble_watchfaces" translatable="false">https://apps.rebble.io/en_US/search/watchfaces/1?native=false&amp;query=xdrip</string>
     <string name="glance_watchfaces" translatable="false">https://glancewatchface.com</string>
     <string name="medtrum_easy_view_url" translatable="false">https://easyview.medtrum.eu/</string>
 
@@ -1062,6 +1061,8 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="pref_watchfaces_cx_summary">Creative eXtreme watch faces also supports GlucoDataHandler complications.\nYou need to use Facer watch face app to use these watch faces.\nTap here to open Facer page for Create eXtreme watch faces.</string>
     <string name="notification_reader_interval_summary">Set this to match your sensors update rate to avoid processing redundant notifications.</string>
     <string name="pref_transfer_to_local_apps">Local applications</string>
+    <string name="xdrip_open_server_api_secret_summary">Optional API secret used to protect the service. When configured, this secret must be included in every API request.</string>
+    <string name="pref_xdrip_server_summary">Provides a local web server on port 17580 that emulates xDrip+ web service, which can be used by various external services, watchfaces, and apps.</string>
 
 
 </resources>

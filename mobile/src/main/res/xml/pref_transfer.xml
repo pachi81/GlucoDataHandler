@@ -19,4 +19,10 @@
         android:summary="@string/pref_transfer_to_nightscout_summary"
         app:fragment="de.michelinside.glucodatahandler.preferences.TransferNightscoutFragment"
         app:iconSpaceReserved="false" />
+    <Preference
+        android:key="local_webservice"
+        android:title="@string/pref_switch_xdrip_server"
+        android:summary="@string/pref_xdrip_server_summary"
+        app:fragment="de.michelinside.glucodatahandler.preferences.WatchWebserviceFragment"
+        app:iconSpaceReserved="false" />
 </PreferenceScreen>

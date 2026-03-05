@@ -53,6 +53,11 @@ class TransferSettingsFragment: SettingsFragmentBase(R.xml.pref_transfer) {
                 val enabled = preferenceManager.sharedPreferences!!.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_UPLOAD_ENABLED, false)
                 setEnableState(prefNsUpload, enabled)
             }
+            val prefLocalWebsrv = findPreference<Preference>("local_webservice")
+            if(prefLocalWebsrv != null ) {
+                val enabled = preferenceManager.sharedPreferences!!.getBoolean(Constants.SHARED_PREF_XDRIP_SERVER, false)
+                setEnableState(prefLocalWebsrv, enabled)
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())
         }

@@ -506,7 +506,11 @@ class WatchWebserviceFragment: SettingsFragmentBase(R.xml.pref_watch_webservice)
         Log.v(LOG_ID, "initPreferences called")
         PreferenceHelper.setLinkOnClick(findPreference("open_garmin_link"), CR.string.garmin_watchfaces, requireContext())
         PreferenceHelper.setLinkOnClick(findPreference("open_fitbit_link"), CR.string.glance_watchfaces, requireContext())
-        PreferenceHelper.setLinkOnClick(findPreference("open_pebble_link"), CR.string.pebble_watchfaces, requireContext())
+
+        val apiSecretPref = findPreference<EditTextPreference>(Constants.SHARED_PREF_XDRIP_SERVER_API_SECRET)
+        apiSecretPref?.setOnBindEditTextListener {editText ->
+            editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        }
     }
 }
 

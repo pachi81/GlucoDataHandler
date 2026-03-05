@@ -84,6 +84,7 @@ object Constants {
     const val SHARED_PREF_XDRIP_BROADCAST_SERVICE_API = "xdrip_broadcast_service_api"
     const val SHARED_PREF_XDRIP_SERVER = "xdrip_server"
     const val SHARED_PREF_XDRIP_OPEN_SERVER = "xdrip_open_server"
+    const val SHARED_PREF_XDRIP_SERVER_API_SECRET = "xdrip_server_api_secret"
     const val SHARED_PREF_XDRIP_SERVER_REDUCE_DATA = "xdrip_server_reduce_data"
     const val SHARED_PREF_XDRIP_SERVER_1_MINUTE_INTERVAL = "xdrip_server_1_minute_interval"
     const val SHARED_PREF_SEND_TO_HEALTH_CONNECT = "send_to_health_connect"
