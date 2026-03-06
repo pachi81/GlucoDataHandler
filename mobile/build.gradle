@@ -167,16 +167,28 @@ android.applicationVariants.configureEach { variant ->
     def copyBundleTaskName = "copy${vNameCap}AabToGlobal"
     tasks.register(copyBundleTaskName, Copy) {
         group = "delivery"
+
+        // We use a closure to defer evaluation until execution time
         from({
-            def paths = [
+            // Return both paths. Gradle will skip them automatically if they are empty
+            // at the moment the copy starts, without failing the whole task.
+            return [
                     new File(mobileProjectDir, vName),
                     new File(mobileBuildDir.asFile.get(), "outputs/bundle/${vName}")
             ]
-            return paths.findAll { it.exists() }
         })
+
+        // This prevents Gradle from failing if one of the source folders is missing
+        includeEmptyDirs = false
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+
         include "*.aab"
         into file("${globalReleasePath}/Playstore/${globalVersionCode}")
-        eachFile { details -> details.path = details.name }
+
+        eachFile { details ->
+            details.path = details.name // Flatten: put .aab directly into the target folder
+            println("DEBUG: Copying AAB: ${details.file.absolutePath}")
+        }
     }
 
     // 4. Task Wiring (Safe and Specific)

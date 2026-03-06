@@ -189,6 +189,10 @@ android.applicationVariants.configureEach { variant ->
 
         // Flatten structure: put .apk directly into target
         eachFile { details -> details.path = details.name }
+
+        doLast {
+            println "DEBUG: Wear APK copy finished for ${vNameCap} to ${globalReleasePath}"
+        }
     }
 
     // 3. Register Bundle (AAB) Copy Task
@@ -197,28 +201,35 @@ android.applicationVariants.configureEach { variant ->
         group = "delivery"
         description = "Copies the generated Wear Bundle for $vName to the Playstore folder."
 
+        // Use a closure to defer evaluation until execution time
         from({
-            // Check both IDE path (projectDir/variant) and CLI path (build/outputs/bundle/variant)
             def paths = [
                     new File(wearProjectDir, vName),
                     new File(wearBuildDir.asFile.get(), "outputs/bundle/${vName}")
             ]
-            return paths.findAll { it.exists() }
+            return paths
         })
+
         include "*.aab"
         into file("${globalReleasePath}/Playstore/${globalVersionCode}")
 
-        eachFile { details -> details.path = details.name }
+        // Flatten structure
+        eachFile { details ->
+            details.path = details.name
+            println "DEBUG: Copying Wear AAB: ${details.file.absolutePath}"
+        }
+
+        // Prevent task failure if one source is missing (e.g. IDE path vs CLI path)
+        includeEmptyDirs = false
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
 
     // 4. Task Wiring (Safe and Specific)
-    // We target only the main assemble and bundle tasks for the specific variant
     tasks.named("assemble${vNameCap}").configure {
         dependsOn cleanTaskName
         finalizedBy copyApkTaskName
     }
 
-    // Bundles are usually only relevant for release/second/dev_release
     try {
         tasks.named("bundle${vNameCap}").configure {
             dependsOn cleanTaskName
