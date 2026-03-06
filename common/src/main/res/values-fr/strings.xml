@@ -996,4 +996,6 @@ Vous pouvez gérer ces autorisations à tout moment dans les paramètres de l\'a
     <string name="notification_reader_interval_summary">Réglez ce paramètre pour qu\'il corresponde à la fréquence de mise à jour de votre capteur afin d\'éviter de traiter des notifications redondantes.</string>
     <string name="pref_transfer_to_local_apps">Applications locales</string>
 
+    <string name="xdrip_open_server_api_secret_summary">Secret d\'API optionnel pour protéger l\'accès. S\'il est configuré, le même secret doit être défini dans l\'application cliente pour accéder aux données.</string>
+    <string name="pref_xdrip_server_summary">Fournit un serveur web local sur le port 17580 qui émule le service web xDrip+, pouvant être utilisé par divers services externes, cadrans et applications.</string>
 </resources>

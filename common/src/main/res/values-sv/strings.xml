@@ -990,4 +990,6 @@ Du kan hantera dessa behörigheter när som helst i Health Connect-appens instä
     <string name="notification_reader_interval_summary">Ställ in detta för att matcha din sensors uppdateringsfrekvens för att undvika att bearbeta överflödiga aviseringar.</string>
     <string name="pref_transfer_to_local_apps">Lokala appar</string>
 
+    <string name="xdrip_open_server_api_secret_summary">Voliteľný API tajný kľúč na ochranu prístupu. Ak je nakonfigurovaný, rovnaký kľúč musí byť nastavený aj v klientskej aplikácii na prístup k údajom.</string>
+    <string name="pref_xdrip_server_summary">Poskytuje lokálny webový server na porte 17580, ktorý emuluje webovú službu xDrip+ a môže byť použitý rôznymi externými službami, ciferníkmi a aplikáciami.</string>
 </resources>

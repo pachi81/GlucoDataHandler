@@ -987,4 +987,6 @@ Puoi gestire queste autorizzazioni in qualsiasi momento nelle impostazioni dell\
     <string name="notification_reader_interval_summary">Imposta questo valore in modo che corrisponda alla frequenza di aggiornamento dei sensori per evitare di elaborare notifiche ridondanti.</string>
     <string name="pref_transfer_to_local_apps">Applicazioni locali</string>
 
+    <string name="xdrip_open_server_api_secret_summary">Secret di API opzionale per proteggere l\'accesso. Se configurato, lo stesso secret deve essere impostato nell\'app client per accedere ai dati.</string>
+    <string name="pref_xdrip_server_summary">Fornisce un server web locale sulla porta 17580 che emula il servizio web di xDrip+, che può essere utilizzato da vari servizi esterni, quadranti e app.</string>
 </resources>

@@ -999,4 +999,6 @@ U kunt deze toestemmingen op elk moment beheren in de instellingen van de Health
     <string name="notification_reader_interval_summary">Stel dit in op de updatefrequentie van je sensor om dubbele meldingen te voorkomen.</string>
     <string name="pref_transfer_to_local_apps">Lokale applicaties</string>
 
+    <string name="xdrip_open_server_api_secret_summary">Optioneel API-geheim om de toegang te beveiligen. Indien geconfigureerd, moet hetzelfde geheim worden ingesteld in de client-app om toegang te krijgen tot de gegevens.</string>
+    <string name="pref_xdrip_server_summary">Biedt een lokale webserver op poort 17580 die de xDrip+ webservice emuleert en kan worden gebruikt door verschillende externe services, watchfaces en apps.</string>
 </resources>

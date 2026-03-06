@@ -999,4 +999,6 @@ GlucoDataHandler само записва данни за кръвната зах
     <string name="notification_reader_interval_summary">Задайте това според скоростта на актуализиране на вашия сензор, за да избегнете обработката на излишни известия.</string>
     <string name="pref_transfer_to_local_apps">Локални приложения</string>
 
+    <string name="xdrip_open_server_api_secret_summary">Незадължителна API тайна за защита на достъпа. Ако е конфигурирана, същата тайна трябва да бъде зададена и в приложението на клиента за достъп до данните.</string>
+    <string name="pref_xdrip_server_summary">Предоставя локален уеб сървър на порт 17580, който емулира уеб услугата на xDrip+ и може да се използва от различни външни услуги, циферблати и приложения.</string>
 </resources>

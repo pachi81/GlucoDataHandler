@@ -991,4 +991,6 @@ GlucoDataHandler 只會將血糖數據寫入健康連結，除非您明確授予
     <string name="notification_reader_interval_summary">將此設定為符合您感測器的更新速率，以避免處理多餘的通知。</string>
     <string name="pref_transfer_to_local_apps">本機程式</string>
 
+    <string name="xdrip_open_server_api_secret_summary">用於保護存取的選填 API 密鑰。如果已設定，則必須在用戶端程式中設定相同的密鑰才能存取資料。</string>
+    <string name="pref_xdrip_server_summary">在連接埠 17580 提供模擬 xDrip+ 網頁服務的本機網頁伺服器，可供各種外部服務、錶盤和應用程式使用。</string>
 </resources>

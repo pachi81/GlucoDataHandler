@@ -1001,5 +1001,7 @@ Tieto povolenia môžete kedykoľvek spravovať v nastaveniach aplikácie Health
     <string name="notification_reader_interval_summary">Nastavte toto tak, aby zodpovedalo frekvencii aktualizácie vašich senzorov, aby ste predišli spracovaniu nadbytočných upozornení.</string>
     <string name="pref_transfer_to_local_apps">Lokálne aplikácie</string>
 
+    <string name="xdrip_open_server_api_secret_summary">Voliteľný API tajný kľúč na ochranu prístupu. Ak je nakonfigurovaný, rovnaký kľúč musí byť nastavený aj v klientskej aplikácii na prístup k údajom.</string>
+    <string name="pref_xdrip_server_summary">Poskytuje lokálny webový server na porte 17580, ktorý emuluje webovú službu xDrip+ a môže byť použitý rôznymi externými službami, ciferníkmi a aplikáciami.</string>
 </resources>
 

@@ -990,4 +990,6 @@ Sie können diese Berechtigungen jederzeit in den Health Connect App-Einstellung
     <string name="notification_reader_interval_summary">Stelle das Intervall in Minuten passend zur Aktualisierungsrate deines Sensors ein, um doppelte Benachrichtigungen zu ignorieren.</string>
     <string name="pref_transfer_to_local_apps">Lokale Apps</string>
 
+    <string name="xdrip_open_server_api_secret_summary">Optionales API-Secret zum Schutz der Zugriffe. Falls konfiguriert, muss dieses Secret auch beim Client für den Zugriff konfiguriert werden.</string>
+    <string name="pref_xdrip_server_summary">Stellt einen lokalen Webserver auf Port 17580 bereit, der den xDrip+-Webservice emuliert und von verschiedenen externen Diensten, Uhren und Apps genutzt werden kann.</string>
 </resources>
