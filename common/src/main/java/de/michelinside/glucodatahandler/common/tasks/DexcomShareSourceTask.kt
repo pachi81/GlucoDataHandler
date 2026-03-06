@@ -26,7 +26,7 @@ import java.net.HttpURLConnection
 
 class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_ENABLED, DataSource.DEXCOM_SHARE) {
     private val LOG_ID = "GDH.Task.Source.DexcomShareTask"
-    override var minInterval = 5L
+    override var minInterval = 5
     companion object {
         private var user = ""
         private var password = ""

@@ -103,6 +103,14 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             return null
         }
 
+        // used for login stuff (tokens, user-id, ...) or runtime values, which should not exported
+        val sharedExtraPref: SharedPreferences? get() {
+            if (context != null) {
+                return context!!.getSharedPreferences(Constants.SHARED_PREF_EXTRAS_TAG, MODE_PRIVATE)
+            }
+            return null
+        }
+
         fun start(source: AppSource, context: Context, cls: Class<*>) {
             Log.v(LOG_ID, "start called (running: $running - foreground: $foreground)")
             if (!running || !foreground) {
@@ -635,6 +643,15 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 sharedPrefs.edit {
                     putInt(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_INTERVAl, if(use5Min) 5 else 0)
                     remove(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_5_MINUTE_INTERVAl)
+                }
+            }
+
+            if(sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_INTERVAL_DEPRECATED)) {
+                val interval = (sharedPrefs.getString(Constants.SHARED_PREF_SOURCE_INTERVAL_DEPRECATED, "1")?: "1").toInt()
+                Log.i(LOG_ID, "Remove old interval array value: $interval")
+                sharedPrefs.edit {
+                    putInt(Constants.SHARED_PREF_SOURCE_INTERVAL, interval)
+                    remove(Constants.SHARED_PREF_SOURCE_INTERVAL_DEPRECATED)
                 }
             }
 

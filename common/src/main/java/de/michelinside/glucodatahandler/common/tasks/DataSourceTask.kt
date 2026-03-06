@@ -28,8 +28,8 @@ import kotlin.math.max
 
 abstract class DataSourceTask(private val enabledKey: String, protected val source: DataSource) : BackgroundTask() {
     private var enabled = false
-    private var prefInterval = 1L
-    protected open var minInterval = 1L
+    private var prefInterval = 1
+    protected open var minInterval = 1
     private var delaySec = 10L
     private var httpRequest = HttpRequest()
     protected var retry = false
@@ -37,7 +37,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     private var isFirstRequest = true  // first request after startup
     private var lastExecution = 0L
 
-    private val interval: Long get() {
+    private val interval: Int get() {
         return max(minInterval, prefInterval)
     }
 
@@ -71,7 +71,11 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             with(sharedPref.edit()) {
                 putInt(Constants.SHARED_PREF_SOURCE_DELAY, bundle.getInt(Constants.SHARED_PREF_SOURCE_DELAY, -1))
-                putString(Constants.SHARED_PREF_SOURCE_INTERVAL, bundle.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1"))
+                if(bundle.containsKey(Constants.SHARED_PREF_SOURCE_INTERVAL_DEPRECATED) && !bundle.containsKey(Constants.SHARED_PREF_SOURCE_INTERVAL)) {
+                    putInt(Constants.SHARED_PREF_SOURCE_INTERVAL, bundle.getString(Constants.SHARED_PREF_SOURCE_INTERVAL_DEPRECATED, "1").toInt())
+                } else {
+                    putInt(Constants.SHARED_PREF_SOURCE_INTERVAL, bundle.getInt(Constants.SHARED_PREF_SOURCE_INTERVAL, 1))
+                }
 
                 putString(Constants.SHARED_PREF_LIBRE_USER, bundle.getString(Constants.SHARED_PREF_LIBRE_USER, ""))
                 putString(Constants.SHARED_PREF_LIBRE_PASSWORD, bundle.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, ""))
@@ -103,7 +107,8 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         fun getSettingsBundle(sharedPref: SharedPreferences): Bundle {
             val bundle = Bundle()
             bundle.putInt(Constants.SHARED_PREF_SOURCE_DELAY, sharedPref.getInt(Constants.SHARED_PREF_SOURCE_DELAY, -1))
-            bundle.putString(Constants.SHARED_PREF_SOURCE_INTERVAL, sharedPref.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1"))
+            bundle.putString(Constants.SHARED_PREF_SOURCE_INTERVAL_DEPRECATED, sharedPref.getInt(Constants.SHARED_PREF_SOURCE_INTERVAL, 1).toString())
+            bundle.putInt(Constants.SHARED_PREF_SOURCE_INTERVAL, sharedPref.getInt(Constants.SHARED_PREF_SOURCE_INTERVAL, 1))
 
             bundle.putString(Constants.SHARED_PREF_LIBRE_USER, sharedPref.getString(Constants.SHARED_PREF_LIBRE_USER, ""))
             bundle.putString(Constants.SHARED_PREF_LIBRE_PASSWORD, sharedPref.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, ""))
@@ -131,7 +136,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             return bundle
         }
 
-        fun getFirstNeedGraphValueTime(interval: Long, isFirstRequest: Boolean = false): Long {
+        fun getFirstNeedGraphValueTime(interval: Int, isFirstRequest: Boolean = false): Long {
             val firstLastPair = dbAccess.getFirstLastTimestamp()
             val minTime = if(GlucoDataService.appSource == AppSource.AUTO_APP)
                 System.currentTimeMillis() - Constants.DB_MAX_DATA_GDA_TIME_MS     // only for delta calculation
@@ -414,14 +419,14 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     }
 
     override fun getIntervalMinute(): Long {
-        if (interval > 1L && isShortInterval()) {
+        if (interval > 1 && isShortInterval()) {
             Log.d(LOG_ID, "Use short interval of 1 minute.")
-            return 1   // retry after a minute
+            return 1L   // retry after a minute
         }
-        if (interval == 1L && isLongInterval()) {
-            return 5  // increase interval for case of "429: Too many requests"
+        if (interval == 1 && isLongInterval()) {
+            return 5L  // increase interval for case of "429: Too many requests"
         }
-        return interval
+        return interval.toLong()
     }
 
     override fun getDelayMs(): Long = delaySec * 1000L
@@ -438,6 +443,9 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         return false
     }
 
+    protected open fun disable() {}
+    protected open fun enable() {}
+
     private fun setEnabled(newEnabled: Boolean): Boolean {
         Log.v(LOG_ID, "Set enabled=$newEnabled (old: $enabled) for $source")
         var changed = false
@@ -445,6 +453,10 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             enabled = newEnabled
             Log.i(LOG_ID, "Set enabled=$enabled for $source")
             changed = true
+            if(enabled)
+                enable()
+            else
+                disable()
         }
         if (!enabled && source == SourceStateData.lastSource)
             setState(SourceState.NONE)
@@ -455,7 +467,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         Log.d(LOG_ID, "checkPreferenceChanged for $key")
         if(key == null) {
             setEnabled(sharedPreferences.getBoolean(enabledKey, false))
-            prefInterval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L
+            prefInterval = sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_INTERVAL, 1)
             delaySec = sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_DELAY, 30).toLong()
             if(GlucoDataService.appSource == AppSource.WEAR_APP)
                 delaySec += 5L  // add 5 seconds delay to receive by phone if connected
@@ -467,8 +479,8 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                     result = setEnabled(sharedPreferences.getBoolean(enabledKey, false))
                 }
                 Constants.SHARED_PREF_SOURCE_INTERVAL -> {
-                    if (prefInterval != (sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L)) {
-                        prefInterval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L
+                    if (prefInterval != (sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_INTERVAL, 1))) {
+                        prefInterval = sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_INTERVAL, 1)
                         result = true
                     }
                 }

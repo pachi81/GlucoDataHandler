@@ -795,14 +795,6 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 putBoolean(Constants.SHARED_PREF_FIVE_MINUTE_DELTA, true)
             }
         }
-        if(dataSource == DataSource.DEXCOM_SHARE && !sharedPref.contains(Constants.SHARED_PREF_SOURCE_INTERVAL)) {
-            sharedPref.edit {
-                putString(
-                    Constants.SHARED_PREF_SOURCE_INTERVAL,
-                    "5"
-                )  // use 5 min interval for dexcom share
-            }
-        }
     }
 
     fun changeIsMmol(newValue: Boolean, context: Context? = null) {
@@ -826,62 +818,20 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
 
     fun setSettings(sharedPref: SharedPreferences, bundle: Bundle) {
         sharedPref.edit {
-            putFloat(
-                Constants.SHARED_PREF_TARGET_MIN,
-                bundle.getFloat(Constants.SHARED_PREF_TARGET_MIN, targetMinValue)
-            )
-            putFloat(
-                Constants.SHARED_PREF_TARGET_MAX,
-                bundle.getFloat(Constants.SHARED_PREF_TARGET_MAX, targetMaxValue)
-            )
-            putFloat(
-                Constants.SHARED_PREF_LOW_GLUCOSE,
-                bundle.getFloat(Constants.SHARED_PREF_LOW_GLUCOSE, lowValue)
-            )
-            putFloat(
-                Constants.SHARED_PREF_HIGH_GLUCOSE,
-                bundle.getFloat(Constants.SHARED_PREF_HIGH_GLUCOSE, highValue)
-            )
-            putBoolean(
-                Constants.SHARED_PREF_USE_MMOL,
-                bundle.getBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol)
-            )
-            putBoolean(
-                Constants.SHARED_PREF_FIVE_MINUTE_DELTA,
-                bundle.getBoolean(Constants.SHARED_PREF_FIVE_MINUTE_DELTA, use5minDelta)
-            )
-            putInt(
-                Constants.SHARED_PREF_COLOR_OK,
-                bundle.getInt(Constants.SHARED_PREF_COLOR_OK, colorOK)
-            )
-            putInt(
-                Constants.SHARED_PREF_COLOR_OUT_OF_RANGE,
-                bundle.getInt(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE, colorOutOfRange)
-            )
-            putInt(
-                Constants.SHARED_PREF_COLOR_ALARM,
-                bundle.getInt(Constants.SHARED_PREF_COLOR_ALARM, colorAlarm)
-            )
-            putInt(
-                Constants.SHARED_PREF_COLOR_OBSOLETE,
-                bundle.getInt(Constants.SHARED_PREF_COLOR_OBSOLETE, colorObsolete)
-            )
-            putInt(
-                Constants.SHARED_PREF_OBSOLETE_TIME,
-                bundle.getInt(Constants.SHARED_PREF_OBSOLETE_TIME, obsoleteTimeMin)
-            )
-            putBoolean(
-                Constants.SHARED_PREF_USE_RATE_CALCULATION,
-                bundle.getBoolean(Constants.SHARED_PREF_USE_RATE_CALCULATION, useRateCalculation)
-            )
+            putFloat(Constants.SHARED_PREF_TARGET_MIN, bundle.getFloat(Constants.SHARED_PREF_TARGET_MIN, targetMinValue))
+            putFloat(Constants.SHARED_PREF_TARGET_MAX, bundle.getFloat(Constants.SHARED_PREF_TARGET_MAX, targetMaxValue))
+            putFloat(Constants.SHARED_PREF_LOW_GLUCOSE, bundle.getFloat(Constants.SHARED_PREF_LOW_GLUCOSE, lowValue))
+            putFloat(Constants.SHARED_PREF_HIGH_GLUCOSE, bundle.getFloat(Constants.SHARED_PREF_HIGH_GLUCOSE, highValue))
+            putBoolean(Constants.SHARED_PREF_USE_MMOL, bundle.getBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol))
+            putBoolean(Constants.SHARED_PREF_FIVE_MINUTE_DELTA, bundle.getBoolean(Constants.SHARED_PREF_FIVE_MINUTE_DELTA, use5minDelta))
+            putInt(Constants.SHARED_PREF_COLOR_OK, bundle.getInt(Constants.SHARED_PREF_COLOR_OK, colorOK))
+            putInt(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE, bundle.getInt(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE, colorOutOfRange))
+            putInt(Constants.SHARED_PREF_COLOR_ALARM, bundle.getInt(Constants.SHARED_PREF_COLOR_ALARM, colorAlarm))
+            putInt(Constants.SHARED_PREF_COLOR_OBSOLETE, bundle.getInt(Constants.SHARED_PREF_COLOR_OBSOLETE, colorObsolete))
+            putInt(Constants.SHARED_PREF_OBSOLETE_TIME, bundle.getInt(Constants.SHARED_PREF_OBSOLETE_TIME, obsoleteTimeMin))
+            putBoolean(Constants.SHARED_PREF_USE_RATE_CALCULATION, bundle.getBoolean(Constants.SHARED_PREF_USE_RATE_CALCULATION, useRateCalculation))
             if (bundle.containsKey(Constants.SHARED_PREF_RELATIVE_TIME)) {
-                putBoolean(
-                    Constants.SHARED_PREF_RELATIVE_TIME,
-                    bundle.getBoolean(
-                        Constants.SHARED_PREF_RELATIVE_TIME,
-                        ElapsedTimeTask.relativeTime
-                    )
-                )
+                putBoolean(Constants.SHARED_PREF_RELATIVE_TIME, bundle.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, ElapsedTimeTask.relativeTime))
             }
         }
         updateSettings(sharedPref)
@@ -929,8 +879,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private fun readTargets(context: Context) {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         sharedPref.registerOnSharedPreferenceChangeListener(this)
-        if(!sharedPref.contains(Constants.SHARED_PREF_USE_MMOL) && (sharedPref.contains(Constants.SHARED_PREF_TARGET_MIN) || sharedPref.contains(
-                Constants.SHARED_PREF_TARGET_MAX))) {
+        if(!sharedPref.contains(Constants.SHARED_PREF_USE_MMOL) && (sharedPref.contains(Constants.SHARED_PREF_TARGET_MIN) || sharedPref.contains(Constants.SHARED_PREF_TARGET_MAX))) {
             targetMinValue = sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MIN, targetMinValue)
             targetMaxValue = sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MAX, targetMaxValue)
             isMmolValue = GlucoDataUtils.isMmolValue(targetMinValue)

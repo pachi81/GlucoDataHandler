@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <androidx.preference.ListPreference
+    <androidx.preference.SeekBarPreference
         android:defaultValue="1"
-        android:entries="@array/source_request_interval_labels"
-        android:entryValues="@array/source_request_interval_values"
-        android:key="source_interval"
+        app:showSeekBarValue="true"
+        app:seekBarIncrement="1"
+        app:min="1"
+        android:max="15"
+        android:key="source_interval_int"
         android:title="@string/source_interval"
         android:summary="@string/source_interval_summary"
         app:iconSpaceReserved="false" />
@@ -38,6 +40,12 @@
             android:title="@string/src_cat_medtrum"
             android:summary="@string/src_medtrum_summary"
             app:fragment="de.michelinside.glucodatahandler.common.preferences.SourceMedtrum"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_yuwell_enabled"
+            android:title="@string/src_cat_yuwell"
+            android:summary="@string/src_yuwell_summary"
+            app:fragment="de.michelinside.glucodatahandler.common.preferences.SourceYuwell"
             app:iconSpaceReserved="false" />
         <Preference
             android:key="src_ns_enabled"

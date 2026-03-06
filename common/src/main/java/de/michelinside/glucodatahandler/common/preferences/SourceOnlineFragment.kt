@@ -17,6 +17,7 @@ import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
 import de.michelinside.glucodatahandler.common.tasks.DexcomShareSourceTask
 import de.michelinside.glucodatahandler.common.tasks.LibreLinkSourceTask
 import de.michelinside.glucodatahandler.common.tasks.MedtrumSourceTask
+import de.michelinside.glucodatahandler.common.tasks.YuwellSourceTask
 import de.michelinside.glucodatahandler.common.ui.Dialogs
 
 class SourceOnlineFragment : PreferenceFragmentCompatBase(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -44,28 +45,11 @@ class SourceOnlineFragment : PreferenceFragmentCompatBase(), SharedPreferences.O
         }
     }
 
-    private fun updateIntervalSummary() {
-        val listPref = findPreference<ListPreference>(Constants.SHARED_PREF_SOURCE_INTERVAL)
-        if(listPref != null) {
-            val curValue = preferenceManager.sharedPreferences?.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "")
-            if(!curValue.isNullOrEmpty()) {
-                Log.d(LOG_ID, "Update interval summary to $curValue")
-                listPref.value = curValue
-                setListSummary(Constants.SHARED_PREF_SOURCE_INTERVAL, R.string.source_interval_summary)
-            }
-        }
-    }
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
         try {
             if(DataSourceTask.preferencesToSend.contains(key))
                 settingsChanged = true
-
-            when(key) {
-                Constants.SHARED_PREF_SOURCE_INTERVAL -> {
-                    updateIntervalSummary()
-                }
-            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
         }
@@ -75,7 +59,6 @@ class SourceOnlineFragment : PreferenceFragmentCompatBase(), SharedPreferences.O
         try {
             super.onResume()
             preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
-            updateIntervalSummary()
             updateEnableStates()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.toString())
@@ -212,6 +195,8 @@ abstract class SourceOnlineFragmentBase(val preferenceResId: Int) : PreferenceFr
                 Constants.SHARED_PREF_MEDTRUM_USER,
                 Constants.SHARED_PREF_DEXCOM_SHARE_USER,
                 Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD,
+                Constants.SHARED_PREF_YUWELL_PASSWORD,
+                Constants.SHARED_PREF_YUWELL_USER,
                 Constants.SHARED_PREF_NIGHTSCOUT_URL -> {
                     updateEnableStates(sharedPreferences)
                     update()
@@ -220,12 +205,14 @@ abstract class SourceOnlineFragmentBase(val preferenceResId: Int) : PreferenceFr
                 Constants.SHARED_PREF_LIBRE_SERVER,
                 Constants.SHARED_PREF_DEXCOM_SHARE_SERVER,
                 Constants.SHARED_PREF_MEDTRUM_PATIENT_ID,
-                Constants.SHARED_PREF_MEDTRUM_SERVER -> {
+                Constants.SHARED_PREF_MEDTRUM_SERVER,
+                Constants.SHARED_PREF_YUWELL_PATIENT_ID -> {
                     update()
                 }
                 Constants.SHARED_PREF_DEXCOM_SHARE_ENABLED,
                 Constants.SHARED_PREF_LIBRE_ENABLED,
-                Constants.SHARED_PREF_MEDTRUM_ENABLED -> {
+                Constants.SHARED_PREF_MEDTRUM_ENABLED,
+                Constants.SHARED_PREF_YUWELL_ENABLED -> {
                     checkIntervalOnEnableChange(sharedPreferences, key)
                 }
             }
@@ -258,13 +245,14 @@ abstract class SourceOnlineFragmentBase(val preferenceResId: Int) : PreferenceFr
             val interval = when(key) {
                 Constants.SHARED_PREF_DEXCOM_SHARE_ENABLED -> 5
                 Constants.SHARED_PREF_MEDTRUM_ENABLED -> 2
+                Constants.SHARED_PREF_YUWELL_ENABLED -> 3
                 else -> 1
             }
-            val curInterval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L
+            val curInterval = sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_INTERVAL, 1)
             if(interval > curInterval) {
                 Log.i(LOG_ID, "Change interval from $curInterval to $interval for $key")
                 with(sharedPreferences.edit()) {
-                    putString(Constants.SHARED_PREF_SOURCE_INTERVAL, interval.toString())
+                    putInt(Constants.SHARED_PREF_SOURCE_INTERVAL, interval)
                     apply()
                 }
             }
@@ -306,6 +294,15 @@ abstract class SourceOnlineFragmentBase(val preferenceResId: Int) : PreferenceFr
                 switchMedtrumSource.isEnabled = user.isNotEmpty() && password.isNotEmpty()
                 if(!switchMedtrumSource.isEnabled)
                     switchMedtrumSource.isChecked = false
+            }
+
+            val switchYuwellSource = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_YUWELL_ENABLED)
+            if (switchYuwellSource != null) {
+                val user = sharedPreferences.getString(Constants.SHARED_PREF_YUWELL_USER, "")!!.trim()
+                val password = sharedPreferences.getString(Constants.SHARED_PREF_YUWELL_PASSWORD, "")!!.trim()
+                switchYuwellSource.isEnabled = user.isNotEmpty() && password.isNotEmpty()
+                if(!switchYuwellSource.isEnabled)
+                    switchYuwellSource.isChecked = false
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())
@@ -469,6 +466,56 @@ class SourceMedtrum: SourceOnlineFragmentBase(R.xml.source_medtrum) {
         }
     }
 }
+
+//**************************************************************************************************
+
+class SourceYuwell: SourceOnlineFragmentBase(R.xml.source_yuwell) {
+    override val patientIdKey = Constants.SHARED_PREF_YUWELL_PATIENT_ID
+    override fun getPasswordPref(): String = Constants.SHARED_PREF_YUWELL_PASSWORD
+
+    override fun update() {
+        setSummary(Constants.SHARED_PREF_YUWELL_USER, R.string.src_yuwell_user_summary)
+        setYuwellPatientSummary()
+    }
+
+    private fun setYuwellPatientSummary() {
+        Log.v(LOG_ID, "setYuwellPatientSummary called")
+        val listPreference = findPreference<ListPreference>(Constants.SHARED_PREF_YUWELL_PATIENT_ID)
+        if(listPreference != null && listPreference.isVisible) {
+            val pref = findPreference<Preference>(Constants.SHARED_PREF_YUWELL_PATIENT_ID)
+            if (pref != null) {
+                val value = preferenceManager.sharedPreferences!!.getString(
+                    Constants.SHARED_PREF_YUWELL_PATIENT_ID,
+                    ""
+                )!!.trim()
+                if (value.isEmpty() || !YuwellSourceTask.patientData.containsKey(value))
+                    pref.summary = resources.getString(R.string.src_yuwell_patient_summary)
+                else {
+                    pref.summary = YuwellSourceTask.patientData[value]
+                }
+            }
+        }
+    }
+
+    override fun setupPatientData() {
+        try {
+            val listPreference = findPreference<ListPreference>(Constants.SHARED_PREF_YUWELL_PATIENT_ID)
+            if(listPreference != null) {
+                Log.d(LOG_ID, "setupYuwellPatientData called for ${YuwellSourceTask.patientData.size} patients")
+                // force "global broadcast" to be the first entry
+                listPreference.entries = YuwellSourceTask.patientData.values.toTypedArray()
+                listPreference.entryValues = YuwellSourceTask.patientData.keys.toTypedArray()
+                listPreference.isVisible = YuwellSourceTask.patientData.size > 1
+                if(listPreference.isVisible)
+                    setYuwellPatientSummary()
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "setupYuwellPatientData exception: $exc\n${exc.stackTrace}")
+        }
+    }
+}
+
+//**************************************************************************************************
 
 class SourceNightscout : SourceOnlineFragmentBase(R.xml.source_nightscout) {
     override fun getPasswordPref(): String = Constants.SHARED_PREF_NIGHTSCOUT_SECRET

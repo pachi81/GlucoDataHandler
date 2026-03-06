@@ -27,7 +27,7 @@ import androidx.core.content.edit
 
 class MedtrumSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_MEDTRUM_ENABLED, DataSource.MEDTRUM) {
     override val LOG_ID = "GDH.Task.Source.Medtrum"
-    override var minInterval = 2L
+    override var minInterval = 2
     override val patientIdKey = Constants.SHARED_PREF_MEDTRUM_PATIENT_ID
     companion object {
         private var instance: MedtrumSourceTask? = null

@@ -21,7 +21,8 @@ enum class DataSource(val resId: Int, val interval5Min: Boolean = false) {
     LIBRE_PATCHED(R.string.source_libre_patched),
     NOTIFICATION(R.string.source_notification),
     NOTIFICATION_IOB(R.string.source_iob_notification),
-    AIDEX(R.string.source_aidex);
+    AIDEX(R.string.source_aidex),
+    YUWELL(R.string.source_yuwell);
 
     companion object {
         fun fromIndex(idx: Int): DataSource {
