@@ -11,7 +11,7 @@
     <androidx.preference.EditTextPreference
         android:defaultValue=""
         android:key="source_yuwell_user"
-        android:title="@string/src_medtrum_user"
+        android:title="@string/src_libre_user"
         android:summary="@string/src_yuwell_user_summary"
         app:iconSpaceReserved="false" />
     <androidx.preference.EditTextPreference

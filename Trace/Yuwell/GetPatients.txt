@@ -1,0 +1,21 @@
+Accept-Encoding: gzip
+Accept-Language: en-US
+Connection: Keep-Alive
+Content-Length: 140
+Content-Type: application/json; charset=UTF-8
+expectedGrantType: password
+Host: anyapi-de.yuwell-poctech.com
+token: ---
+User-Agent: okhttp/4.8.1
+X-Timezone: GMT
+
+id: 14
+
+{"userId":"---"}
+
+----------------- Response:
+
+{"code":202,"message":"No monitoring relationship found"}
+
+
+{"code":200,"message":"Binding relationship obtained successfully","data":[{"relationalId":13352,"wearingRecordId":"---","state":1,"time":1773147942983,"glucose":8.0,"gluMgValue":143,"nickName":"","email":"---","note":"Dzięki że pamiętałeś. ","sn":"---","trend":0,"errorCode":0,"bgCount":0,"bgICount":5160,"deviceCountInit":20,"userRelationalName":"","isSpecialFocus":false,"relationalGluWarnLimitLow":70,"relationalGluWarnLimitHigh":200}]}

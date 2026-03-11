@@ -288,12 +288,15 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             Log.d(LOG_ID, "handleResult for $source: ${Utils.dumpBundle(extras)}")
         if(!ReceiveData.hasNewValue(extras)) {
             if(extras.containsKey(ReceiveData.TIME)) {
-                setState(
-                    SourceState.NO_NEW_VALUE,
-                    GlucoDataService.context!!.resources.getString(R.string.last_value_on_server, Utils.getUiTimeStamp(extras.getLong(ReceiveData.TIME))),
-                    -1,
-                    getNoNewValueInfo(extras.getLong(ReceiveData.TIME))
-                )
+                val valueTime = extras.getLong(ReceiveData.TIME)
+                if(Utils.getElapsedTimeMinute(valueTime) >= minInterval) {
+                    setState(
+                        SourceState.NO_NEW_VALUE,
+                        GlucoDataService.context!!.resources.getString(R.string.last_value_on_server, Utils.getUiTimeStamp(extras.getLong(ReceiveData.TIME))),
+                        -1,
+                        getNoNewValueInfo(valueTime)
+                    )
+                }
             } else {
                 setState(SourceState.NO_NEW_VALUE)
             }

@@ -1,0 +1,29 @@
+HEADERS
+Accept-Encoding:
+gzip
+Accept-Language:
+en-US
+Connection:
+Keep-Alive
+Content-Length:
+166
+Content-Type:
+application/json; charset=UTF-8
+expectedGrantType:
+password
+Host:
+anyapi-de.yuwell-poctech.com
+token:
+f0274003367e4dee8a2e3ddd3d044e79
+User-Agent:
+okhttp/4.8.1
+X-Timezone:
+GMT
+
+id: 10
+
+{"role":1,"userId":"---"}
+
+-------
+
+{"code":200,"message":"Binding relationship obtained successfully","noticeList":[{"relationalId":13352,"userId":"---","userIdSubscribe":"---","email":"---","note":"Dzięki że pamiętałeś. ","state":3,"startTime":1773144535324,"userSubscribeType":0,"isSpecialFocus":false,"relationalGluWarnLimitLow":0,"relationalGluWarnLimitHigh":0}]}

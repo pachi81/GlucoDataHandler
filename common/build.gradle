@@ -18,6 +18,8 @@ android {
         buildConfigField("String", "DEXCOM_APPLICATION_ID", rootProject.DEXCOM_APPLICATION_ID)
         buildConfigField("String", "DEXCOM_APPLICATION_ID_APAC", rootProject.DEXCOM_APPLICATION_ID_APAC)
         buildConfigField("String", "NIGHTSCOUT_DEBUG_SERVER", rootProject.NIGHTSCOUT_DEBUG_SERVER)
+        buildConfigField("String", "YUWELL_CLIENT_ID", rootProject.YUWELL_CLIENT_ID)
+        buildConfigField("String", "YUWELL_CLIENT_SECRET", rootProject.YUWELL_CLIENT_SECRET)
         buildConfigField("int", "BASE_VERSION", rootProject.versionCode.toString())
     }
 
@@ -64,6 +66,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
     testImplementation 'org.mockito:mockito-core:5.21.0'
     testImplementation 'org.mockito.kotlin:mockito-kotlin:6.2.1'
+    testImplementation "org.json:json:20251224"
     implementation 'com.google.code.gson:gson:2.13.2'
     //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'
 

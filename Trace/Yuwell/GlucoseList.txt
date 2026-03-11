@@ -1,0 +1,48 @@
+HEADERS
+Accept-Encoding:
+gzip
+Accept-Language:
+en-US
+Connection:
+Keep-Alive
+Content-Length:
+230
+Content-Type:
+application/json; charset=UTF-8
+expectedGrantType:
+password
+Host:
+anyapi-de.yuwell-poctech.com
+token:
+f0274003367e4dee8a2e3ddd3d044e79
+User-Agent:
+okhttp/4.8.1
+X-Timezone:
+GMT
+
+id: 15
+
+{"glucoseId":0,"userId":"---","wearingRecordId":"---"}
+
+---------------------------
+
+{"code":200,"message":"Data obtained successfully","data":{"event":[],"glucoseData":[
+{"userId":"---","wearingRecordId":"null","glucoseId":5173,"glucoseDate":1773147042983,"glucoseIw":9.92,"glucoseIb":2.75,"glucoseT":29.39,"glucoseBgMg":0,"glucoseTrend":0,"glucoseErrorCode":0,"glucoseWarnCode":0,"glucoseValueMg":134,"glucoseValue":7.4,"glucoseStatusCalibration":1,"glucoseUploadNet":0,"bgCount":0,"bgICount":5155,"glucoseAlgorithm":"null","voltageWe":0,"voltageBe":0,"voltageRe":0,"voltageCe":0,"voltageB":0},
+{"userId":"---","wearingRecordId":"null","glucoseId":5174,"glucoseDate":1773147222983,"glucoseIw":10.01,"glucoseIb":2.73,"glucoseT":29.64,"glucoseBgMg":0,"glucoseTrend":0,"glucoseErrorCode":0,"glucoseWarnCode":0,"glucoseValueMg":135,"glucoseValue":7.5,"glucoseStatusCalibration":1,"glucoseUploadNet":0,"bgCount":0,"bgICount":5156,"glucoseAlgorithm":"null","voltageWe":0,"voltageBe":0,"voltageRe":0,"voltageCe":0,"voltageB":0},
+{"userId":"---","wearingRecordId":"null","glucoseId":5175,"glucoseDate":1773147402983,"glucoseIw":10.1,"glucoseIb":2.75,"glucoseT":29.88,"glucoseBgMg":0,"glucoseTrend":0,"glucoseErrorCode":0,"glucoseWarnCode":0,"glucoseValueMg":135,"glucoseValue":7.5,"glucoseStatusCalibration":1,"glucoseUploadNet":0,"bgCount":0,"bgICount":5157,"glucoseAlgorithm":"null","voltageWe":0,"voltageBe":0,"voltageRe":0,"voltageCe":0,"voltageB":0},
+{"userId":"---","wearingRecordId":"null","glucoseId":5176,"glucoseDate":1773147582983,"glucoseIw":10.22,"glucoseIb":2.76,"glucoseT":30.2,"glucoseBgMg":0,"glucoseTrend":0,"glucoseErrorCode":0,"glucoseWarnCode":0,"glucoseValueMg":133,"glucoseValue":7.4,"glucoseStatusCalibration":1,"glucoseUploadNet":0,"bgCount":0,"bgICount":5158,"glucoseAlgorithm":"null","voltageWe":0,"voltageBe":0,"voltageRe":0,"voltageCe":0,"voltageB":0},
+{"userId":"---","wearingRecordId":"null","glucoseId":5177,"glucoseDate":1773147762983,"glucoseIw":10.49,"glucoseIb":2.78,"glucoseT":29.92,"glucoseBgMg":0,"glucoseTrend":0,"glucoseErrorCode":0,"glucoseWarnCode":0,"glucoseValueMg":138,"glucoseValue":7.7,"glucoseStatusCalibration":1,"glucoseUploadNet":0,"bgCount":0,"bgICount":5159,"glucoseAlgorithm":"null","voltageWe":0,"voltageBe":0,"voltageRe":0,"voltageCe":0,"voltageB":0},
+{"userId":"---","wearingRecordId":"null","glucoseId":5178,"glucoseDate":1773147942983,"glucoseIw":10.86,"glucoseIb":2.77,"glucoseT":29.83,"glucoseBgMg":0,"glucoseTrend":0,"glucoseErrorCode":0,"glucoseWarnCode":0,"glucoseValueMg":143,"glucoseValue":8.0,"glucoseStatusCalibration":1,"glucoseUploadNet":0,"bgCount":0,"bgICount":5160,"glucoseAlgorithm":"null","voltageWe":0,"voltageBe":0,"voltageRe":0,"voltageCe":0,"voltageB":0}
+]}}
+
+
+
+--------
+#######
+--------
+
+{"glucoseId":5179,"userId":"---","wearingRecordId":"---"}
+
+---
+
+{"code":200,"message":"Data obtained successfully","data":{"event":[],"glucoseData":[]}}

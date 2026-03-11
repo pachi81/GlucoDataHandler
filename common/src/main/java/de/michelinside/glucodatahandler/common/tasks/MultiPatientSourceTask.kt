@@ -53,9 +53,9 @@ abstract class MultiPatientSourceTask(enabledKey: String, source: DataSource) : 
         return getPatientValue(patientId)
     }
 
-    private fun handlePatientData(newPatientData: MutableMap<String, String>?): Boolean {
+    protected fun handlePatientData(newPatientData: MutableMap<String, String>?): Boolean {
         Log.d(LOG_ID, "Handle patient data: $newPatientData")
-        if(newPatientData == null) {
+        if(newPatientData == null) {  // null is set in error case, so no error have to set here
             return false
         }
         if(newPatientData.isEmpty()) {

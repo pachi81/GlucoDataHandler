@@ -1065,12 +1065,13 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="src_cat_yuwell">Yuwell Anytime</string>
     <string name="src_yuwell_summary">Remotely follow Yuwell Anytime app.</string>
     <string name="pref_source_yuwell_info">Setup Yuwell Anytime Follow</string>
-    <string name="pref_source_yuwell_info_summary">- Install Anytime Follow app\n- Register a user\n- Invite user from Yuwell Anytime app\n- Accept invitation in Anytime Follow app\n- use user and password from Anytime Follow app</string>
+    <string name="pref_source_yuwell_info_summary"> - Install Anytime Follow app\n - Register a user\n - Invite the user from Yuwell Anytime app\n - Accept invitation in the \'Notifications\' tab\n - IMPORTANT: Log out of this user!</string>
     <string name="src_yuwell_patient_summary">Patient to follow.</string>
     <string name="src_yuwell_user_summary">Username for Anytime Follow account.</string>
     <string name="src_yuwell_password_summary">Password for Anytime Follow account.</string>
     <string name="src_yuwell_enabled_summary">Enable following Yuwell Anytime.</string>
     <string name="source_yuwell">Yuwell</string>
+    <string name="src_yuwell_logout_error">User was logged out!\nYuwell source is disabled!</string>
 
     <string name="gda_foreground_summary">Optional troubleshooting mode that stabilizes the Android Auto connection by preventing the app from being killed in the background. The service remains inactive without an active connection, and the notification can be easily swiped away starting with Android 14.</string>
 

@@ -1,0 +1,26 @@
+Login Request:
+
+METHOD: POST
+URL https://anyapi-de.yuwell-poctech.com/NonCETestHttpOverseas/PostHttpServlet
+HEADERS
+Accept-Encoding: gzip
+Accept-Language: en-US
+Connection: Keep-Alive
+Content-Length: 403
+Content-Type: application/json; charset=UTF-8
+Host: anyapi-de.yuwell-poctech.com
+User-Agent: okhttp/4.8.1
+X-Timezone: GMT
+
+id: 2
+
+{"clientId":"---","clientSecret":"---","email":"---","mac":"---","password":"---"}
+
+
+Response:
+
+{"code":205,"message":"This email address is not registered"}
+
+{"code":208,"message":"Account already logged in"}
+
+{"code":200,"message":"Login successful","data":{"deviceList":[],"accessToken":{"accessToken":"---","userUID":"---","expiresAt":1.773411449552E12,"refreshToken":"---","refreshExpiresAt":1.775398649552E12,"refreshExpiresAtEnd":1.775398649552E12,"createdAt":1.772806649552E12},"user":{"userId":"---","userEmail":"---","userState":1,"userAddress":"0","userGender":3,"userBirthday":0,"userHeight":0,"userWeight":0,"userDiabetes":-1,"userSource":2,"userIsFirstLogin":false,"userIsInfoConfirmed":0,"userIsEventConfirmed":0},"setting":{"userId":"---","userGluWarnLimitLowSwitch":1,"userGluWarnLimitHighSwitch":1,"userGluWarnLimitLow":70,"userGluWarnLimitHigh":200,"userWarnType":0,"userGluWarnLimitLowInterval":3,"userGluWarnLimitHighInterval":3,"userGluWarnLimitLowSevereInterval":3,"settingBleDisconnect":1,"settingBleDisconnectStart":3,"settingBleDisconnectInterval":10,"settingGluRiseRapidSwitch":0,"settingGluDropRapidSwitch":0,"settingGluForecastLowSwitch":1,"settingGluForecastHighSwitch":1,"settingDndSwitch":0,"settingGluUnit":2,"settingChangeDate":1772806311531,"dataUploadSwitch":1}}}
