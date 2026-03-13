@@ -439,6 +439,8 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
             if(data != null) {
                 if(data.has("graphData")) {
                     parseGraphData(data.optJSONArray("graphData"))
+                } else {
+                    Log.w(LOG_ID, "No graphData found in response: ${replaceSensitiveData(body!!)}")
                 }
                 if(data.has("connection")) {
                     val connection = data.optJSONObject("connection")
@@ -571,9 +573,9 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
                 handleResult(glucoExtras)
                 return true
             }
-        } else {
-            Log.e(LOG_ID, "No glucoseMeasurement found in response: ${replaceSensitiveData(data.toString())}")
         }
+        Log.e(LOG_ID, "No or invalid glucoseMeasurement found in response: ${replaceSensitiveData(data.toString())}")
+        setLastError(GlucoDataService.context!!.resources.getString(R.string.missing_data), -1, "Please restart your phone or the Libre app.")
         return false
     }
 
