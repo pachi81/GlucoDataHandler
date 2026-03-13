@@ -13,11 +13,13 @@ import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.utils.HttpRequest
 import de.michelinside.glucodatahandler.common.utils.Utils
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.engine.*
 import io.ktor.server.cio.*
+import io.ktor.server.request.host
 import io.ktor.server.request.uri
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -141,20 +143,24 @@ object XDripServer : SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     private suspend fun authenticate(call: RoutingCall): Boolean {
-        Log.v(LOG_ID, "authenticate called - apiSecret: ${apiSecret}")
-        if(apiSecret.isEmpty())
+        Log.v(LOG_ID, "authenticate called - apiSecret: ${apiSecret} - openServer: ${openServer}")
+        if(apiSecret.isEmpty() || !openServer)
             return true
 
+        if(!call.request.headers.contains("api-secret")) {
+            if(HttpRequest.isLocalHost(call.request.host()))
+                return true
+            Log.w(LOG_ID, "Missing api-secret in request!")
+            call.respondText("Missing api-secret", ContentType.Text.Plain, HttpStatusCode.Unauthorized)
+            return false
+        }
         val secretFromHeader = call.request.headers["api-secret"]
         Log.v(LOG_ID, "secretFromHeader: ${secretFromHeader}")
         if (secretFromHeader == apiSecret)
             return true
 
         Log.w(LOG_ID, "Invalid api-secret (set: ${!secretFromHeader.isNullOrEmpty()})")
-        if(secretFromHeader.isNullOrEmpty())
-            call.respondText("Missing api-secret", ContentType.Text.Plain, HttpStatusCode.Unauthorized)
-        else
-            call.respondText("Invalid api-secret", ContentType.Text.Plain, HttpStatusCode.Unauthorized)
+        call.respondText("Invalid api-secret", ContentType.Text.Plain, HttpStatusCode.Unauthorized)
         return false
     }
 
@@ -165,7 +171,7 @@ object XDripServer : SharedPreferences.OnSharedPreferenceChangeListener {
             server = embeddedServer(CIO, port = Port, host=if(openServer) "0.0.0.0" else "127.0.0.1") {
                 routing {
                     get("/sgv.json") {
-                        Log.i(LOG_ID, "Request: ${call.request.uri}")
+                        Log.i(LOG_ID, "Request: ${call.request.host()}${call.request.uri}")
                         if(!authenticate(call)) {
                             return@get
                         }
@@ -181,7 +187,7 @@ object XDripServer : SharedPreferences.OnSharedPreferenceChangeListener {
                         InternalNotifier.notifyAsync(GlucoDataService.context!!, NotifySource.UPDATE_MAIN, null)
                     }
                     get("/pebble") {
-                        Log.i(LOG_ID, "Request: ${call.request.uri} - apiSecret: ${apiSecret}")
+                        Log.i(LOG_ID, "Request: ${call.request.host()}${call.request.uri}")
                         if(!authenticate(call)) {
                             return@get
                         }
@@ -193,7 +199,7 @@ object XDripServer : SharedPreferences.OnSharedPreferenceChangeListener {
                         InternalNotifier.notifyAsync(GlucoDataService.context!!, NotifySource.UPDATE_MAIN, null)
                     }
                     get("/status.json") {
-                        Log.i(LOG_ID, "Request: ${call.request.uri}")
+                        Log.i(LOG_ID, "Request: ${call.request.host()}${call.request.uri}")
                         if(!authenticate(call)) {
                             return@get
                         }
