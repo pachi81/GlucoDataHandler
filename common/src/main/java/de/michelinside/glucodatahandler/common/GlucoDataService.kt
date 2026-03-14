@@ -10,6 +10,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.content.pm.ServiceInfo
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -47,6 +48,7 @@ import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import java.util.Locale
 import androidx.core.content.edit
+import de.michelinside.glucodatahandler.common.notification.AlarmType
 
 
 enum class AppSource {
@@ -562,6 +564,16 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 else false
                 sharedPrefs.edit {
                     putBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, useMmol)
+                }
+            }
+
+            if(oldVersion <= 176 && sharedPrefs.contains(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE)) {
+                val curColor = sharedPrefs.getInt(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE, ReceiveData.getAlarmTypeColor(AlarmType.LOW))
+                if(curColor == Color.YELLOW) {
+                    Log.i(LOG_ID, "Migrate color out of range from YELLOW to 0xFFDC00")
+                    sharedPrefs.edit {
+                        putInt(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE, 0xFFFFDC00.toInt())
+                    }
                 }
             }
 

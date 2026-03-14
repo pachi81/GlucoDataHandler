@@ -175,7 +175,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     val isMmol get() = isMmolValue
     var use5minDelta = false
     private var colorAlarm: Int = Color.RED
-    private var colorOutOfRange: Int = Color.YELLOW
+    private var colorOutOfRange: Int = 0xFFFFDC00.toInt()
     private var colorOK: Int = Color.GREEN
     private var colorObsolete: Int = Color.GRAY
     private var obsoleteTimeMin: Int = 6
