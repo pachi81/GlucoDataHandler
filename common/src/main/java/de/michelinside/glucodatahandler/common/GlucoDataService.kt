@@ -78,7 +78,6 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
         val running get() = isRunning
         private var created = false
         var patientName: String? = null
-            private set
 
         @SuppressLint("StaticFieldLeak")
         var service: GlucoDataService? = null

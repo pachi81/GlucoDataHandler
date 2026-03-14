@@ -2,11 +2,14 @@ package de.michelinside.glucodataauto.android_auto
 
 import de.michelinside.glucodataauto.R
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.ServiceInfo
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Paint
 import android.media.session.PlaybackState
+import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.support.v4.media.MediaBrowserCompat
@@ -33,8 +36,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import de.michelinside.glucodataauto.GlucoDataServiceAuto.Companion.NOTIFICATION_ID
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.chart.ChartBitmapHandler
 import de.michelinside.glucodatahandler.common.utils.BitmapPool
+import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.R as CR
 
 
@@ -135,6 +141,21 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.i(LOG_ID, "onStartCommand called with intent ${Utils.dumpBundle(intent?.extras)}, flags $flags and startId $startId")
+        try {
+            Log.i(LOG_ID, "Starting service in foreground!")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+                startForeground(NOTIFICATION_ID, GlucoDataServiceAuto.getNotification(this), ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
+            else
+                startForeground(NOTIFICATION_ID, GlucoDataServiceAuto.getNotification(this))
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Error starting foreground in onStartCommand: ${exc.message}")
+        }
+
+        return super.onStartCommand(intent, flags, startId)
     }
 
     override fun onDestroy() {
@@ -353,8 +374,8 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                 title = title.trim()
             }
             var subtitle = ""
-            if(!GlucoDataServiceAuto.patientName.isNullOrEmpty())
-                subtitle += GlucoDataServiceAuto.patientName + " - "
+            if(!GlucoDataService.patientName.isNullOrEmpty())
+                subtitle += GlucoDataService.patientName + " - "
             subtitle += "🕒 " + ReceiveData.getElapsedTimeMinuteAsString(this)
 
             session.setMetadata(

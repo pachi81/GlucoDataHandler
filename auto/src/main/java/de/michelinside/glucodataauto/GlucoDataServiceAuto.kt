@@ -43,6 +43,7 @@ import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
 import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
+import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.R as CR
 
 class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -121,12 +122,35 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
             }
         }
 
+        fun getNotification(context: Context): Notification {
+            Channels.createNotificationChannel(context, ChannelType.ANDROID_AUTO_FOREGROUND)
+
+            val pendingIntent = PackageUtils.getAppIntent(context, MainActivity::class.java, 11)
+
+            val notificationBuilder =  Notification.Builder(context, ChannelType.ANDROID_AUTO_FOREGROUND.channelId)
+                .setContentTitle(context.resources.getString(CR.string.gda_foreground_info))
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentIntent(pendingIntent)
+                .setOngoing(true)
+                .setOnlyAlertOnce(true)
+                .setAutoCancel(false)
+                .setCategory(Notification.CATEGORY_STATUS)
+                .setVisibility(Notification.VISIBILITY_PUBLIC)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                notificationBuilder.setForegroundServiceBehavior(Notification.FOREGROUND_SERVICE_IMMEDIATE) // Recommended for Android 14
+            }
+
+            return notificationBuilder.build()
+        }
+
         private fun startService(context: Context, foreground: Boolean) {
             try {
                 val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 val isForeground = foreground || sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, false)
                 val serviceIntent = Intent(context, GlucoDataServiceAuto::class.java)
                 serviceIntent.putExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, isForeground)
+                Log.i(LOG_ID, "Starting service for foreground: $isForeground")
                 if (isForeground)
                     context.startForegroundService(serviceIntent)
                 else
@@ -412,28 +436,29 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         try {
-            Log.d(LOG_ID, "onStartCommand called")
+            Log.i(LOG_ID, "onStartCommand called with intent ${Utils.dumpBundle(intent?.extras)}, flags $flags and startId $startId")
             GdhUncaughtExecptionHandler.init()
-            super.onStartCommand(intent, flags, startId)
-            GlucoDataService.context = applicationContext
-            ReceiveData.initData(applicationContext)
-            CarNotification.initNotification(this)
-            TextToSpeechUtils.initTextToSpeech(this)
             val sharedPref = getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-            sharedPref.registerOnSharedPreferenceChangeListener(this)
             val isForeground = (if(intent != null) intent.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, false) else false) || sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, false)
             if (isForeground && !isForegroundService) {
                 Log.i(LOG_ID, "Starting service in foreground!")
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
-                    startForeground(NOTIFICATION_ID, getNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
+                    startForeground(NOTIFICATION_ID, getNotification(this), ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
                 else
-                    startForeground(NOTIFICATION_ID, getNotification())
+                    startForeground(NOTIFICATION_ID, getNotification(this))
                 isForegroundService = true
             } else if ( isForegroundService && !isForeground ) {
                 isForegroundService = false
                 Log.i(LOG_ID, "Stopping service in foreground!")
                 stopForeground(STOP_FOREGROUND_REMOVE)
             }
+            super.onStartCommand(intent, flags, startId)
+            GlucoDataService.context = applicationContext
+            ReceiveData.initData(applicationContext)
+            CarNotification.initNotification(this)
+            TextToSpeechUtils.initTextToSpeech(this)
+            sharedPref.registerOnSharedPreferenceChangeListener(this)
+            GlucoDataService.patientName = GlucoDataService.Companion.sharedPref!!.getString(Constants.PATIENT_NAME, "")
             CarConnection(applicationContext).type.observeForever(GlucoDataServiceAuto::onConnectionStateUpdated)
             InternalNotifier.notify(this, NotifySource.SERVICE_STARTED, null)
             if(dataSyncCount > 0)
@@ -459,23 +484,6 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
         return null
     }
 
-    private fun getNotification(): Notification {
-        Channels.createNotificationChannel(this, ChannelType.ANDROID_AUTO_FOREGROUND)
-
-        val pendingIntent = PackageUtils.getAppIntent(this, MainActivity::class.java, 11)
-
-        return Notification.Builder(this, ChannelType.ANDROID_AUTO_FOREGROUND.channelId)
-            .setContentTitle(getString(CR.string.gda_foreground_info))
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentIntent(pendingIntent)
-            .setOngoing(true)
-            .setOnlyAlertOnce(true)
-            .setAutoCancel(false)
-            .setCategory(Notification.CATEGORY_STATUS)
-            .setVisibility(Notification.VISIBILITY_PUBLIC)
-            .build()
-    }
-
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         try {
             Log.d(LOG_ID, "onSharedPreferenceChanged called with key $key - dataSyncCount = $dataSyncCount")
@@ -492,6 +500,9 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                     } else if(key == Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED && sharedPreferences.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)) {
                         checkNotificationReceiverPermission(this, true)
                     }
+                }
+                Constants.PATIENT_NAME -> {
+                    GlucoDataService.patientName = sharedPreferences.getString(Constants.PATIENT_NAME, "")
                 }
             }
         } catch (exc: Exception) {

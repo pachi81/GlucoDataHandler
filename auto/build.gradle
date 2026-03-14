@@ -5,7 +5,7 @@ plugins {
 
 project.ext.set("versionCode", 1032)
 project.ext.set("devVersion", 1)
-project.ext.set("versionName", "2.0.2")
+project.ext.set("versionName", "2.0.3")
 
 android {
     namespace 'de.michelinside.glucodataauto'

@@ -9,8 +9,8 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import de.michelinside.glucodatahandler.common.utils.Log
-import de.michelinside.glucodataauto.GlucoDataServiceAuto
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notification.AlarmType
@@ -152,8 +152,8 @@ object CarMediaPlayer: NotifierInterface {
             var requestAudioFocus = false
             if(!playSilent) {
                 var text = ReceiveData.getAsText(context, true, false)
-                if(!GlucoDataServiceAuto.patientName.isNullOrEmpty()) {
-                    text = "${GlucoDataServiceAuto.patientName}, $text"
+                if(!GlucoDataService.patientName.isNullOrEmpty()) {
+                    text = "${GlucoDataService.patientName}, $text"
                 }
                 file = TextToSpeechUtils.getAsFile(text, context)
                 if(file != null) {
