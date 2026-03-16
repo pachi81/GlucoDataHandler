@@ -101,7 +101,10 @@ class MedtrumSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_MEDTRUM
             }
         }
         if (cookie.isEmpty()) {
-            val data = "apptype=Follow&user_type=M&platform=google&user_name=$user&password=$password"
+            Log.i(LOG_ID, "Authenticate with Medtrum")
+            val encodedUser = java.net.URLEncoder.encode(user, "UTF-8")
+            val encodedPass = java.net.URLEncoder.encode(password, "UTF-8")
+            val data = "apptype=Follow&user_type=M&platform=google&user_name=$encodedUser&password=$encodedPass"
             /*json.put("user_name", user)
             json.put("password", password)
             json.put("platform", "google")
@@ -111,7 +114,9 @@ class MedtrumSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_MEDTRUM
             json.put("bundleID", "com.medtrum.easyfollowforandroidmg")
             json.put("device_name", Build.MODEL)*/
             //json.put("deviceToken", Firebase token...)
-            if(!handleLoginResponse(httpPost(getUrl(LOGIN_ENDPOINT), getHeader(), data)))
+            val loginHeaders = getHeader()
+            loginHeaders["Content-Type"] = "application/x-www-form-urlencoded"
+            if(!handleLoginResponse(httpPost(getUrl(LOGIN_ENDPOINT), loginHeaders, data)))
                 return false
         }
         return true
