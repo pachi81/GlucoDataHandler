@@ -73,7 +73,7 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
                 }
             }
         } catch (exc: Exception) {
-            Log.e(LOG_ID, "onCreatePreferences exception: " + exc.toString())
+            Log.e(LOG_ID, "onCreatePreferences exception: $exc\n${exc.stackTraceToString()}")
         }
     }
 
@@ -449,36 +449,17 @@ class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen)  {
     }
 }
 
-class NotificaitonSettingsFragment: SettingsFragmentBase(R.xml.pref_notification) {
+class NotificationSettingsFragment: SettingsFragmentBase(R.xml.pref_notification) {
     override fun initPreferences() {
         Log.v(LOG_ID, "initPreferences called")
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
             val prefApi36Info = findPreference<Preference>(Constants.SHARED_PREF_API_36_NOTIFICATION_INFO)
             prefApi36Info?.isVisible = true
         }
-
-        PreferenceHelper.setLinkOnClick(findPreference(Constants.SHARED_PREF_OPEN_WATCH_DRIP_LINK), CR.string.watchdrip_link, requireContext())
     }
 }
 
-class WatchSettingsFragment: SettingsFragmentBase(R.xml.pref_watch) {
-    override fun initPreferences() {
-        Log.v(LOG_ID, "initPreferences called")
-        val prefCheckWearOS = findPreference<Preference>(Constants.SHARED_PREF_CHECK_WEAR_OS_CONNECTION)
-        prefCheckWearOS!!.setOnPreferenceClickListener {
-            GlucoDataService.checkForConnectedNodes()
-            true
-        }
-
-        val prefResetWearOS = findPreference<Preference>(Constants.SHARED_PREF_RESET_WEAR_OS_CONNECTION)
-        prefResetWearOS!!.setOnPreferenceClickListener {
-            GlucoDataService.resetWearPhoneConnection()
-            true
-        }
-
-        PreferenceHelper.setLinkOnClick(findPreference(Constants.SHARED_PREF_OPEN_WATCH_DRIP_LINK), CR.string.watchdrip_link, requireContext())
-    }
-}
+class WatchSettingsFragment: SettingsFragmentBase(R.xml.pref_watch) {}
 
 class WatchWearOsFragment: SettingsFragmentBase(R.xml.pref_watch_wearos) {
     override fun initPreferences() {
