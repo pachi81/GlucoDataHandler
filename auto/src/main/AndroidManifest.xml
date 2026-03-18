@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
@@ -217,7 +218,9 @@
 
         <service
             android:name=".android_auto.CarMediaBrowserService"
+            android:enabled="true"
             android:exported="true"
+            android:foregroundServiceType="mediaPlayback"
             tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />

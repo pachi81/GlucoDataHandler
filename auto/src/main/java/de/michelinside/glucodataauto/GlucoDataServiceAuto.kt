@@ -66,7 +66,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
         private val broadcastServiceAPI = BroadcastServiceAPI()
         private var librePatchedReceiver: LibrePatchedReceiver?  = null
 
-        val connected: Boolean get() = car_connected || CarMediaBrowserService.active
+        val connected: Boolean get() = car_connected
 
         fun init(context: Context) {
             Log.v(LOG_ID, "init called: init=$init")
@@ -76,7 +76,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                 Log.init(context)
                 migrateSettings(context)
                 CarNotification.initNotification(context)
-                startService(context, false)
+                startService(context, false, true)
                 init = true
             }
         }
@@ -144,17 +144,21 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
             return notificationBuilder.build()
         }
 
-        private fun startService(context: Context, foreground: Boolean) {
+        private fun startService(context: Context, foreground: Boolean, startup: Boolean = false) {
             try {
+                Log.d(LOG_ID, "Starting service for foreground: $foreground - isForegroundService: $isForegroundService")
                 val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 val isForeground = foreground || sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, false)
-                val serviceIntent = Intent(context, GlucoDataServiceAuto::class.java)
-                serviceIntent.putExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, isForeground)
-                Log.i(LOG_ID, "Starting service for foreground: $isForeground")
-                if (isForeground)
-                    context.startForegroundService(serviceIntent)
-                else
-                    context.startService(serviceIntent)
+                if(startup || isForeground != isForegroundService) {
+                    Log.i(LOG_ID, "Starting service for foreground: $isForeground - isForegroundService: $isForegroundService")
+                    val serviceIntent = Intent(context, GlucoDataServiceAuto::class.java)
+                    serviceIntent.putExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, isForeground)
+                    if (isForeground)
+                        context.startForegroundService(serviceIntent)
+                    else
+                        context.startService(serviceIntent)
+                }
+                CarMediaBrowserService.setForeground(context, isForeground)
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "startService exception: " + exc.message.toString() + "\n" + exc.stackTraceToString())
             }
@@ -162,7 +166,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
 
         fun setForeground(context: Context, foreground: Boolean) {
             try {
-                Log.v(LOG_ID, "setForeground called " + foreground)
+                Log.i(LOG_ID, "setForeground called " + foreground)
                 if (isForegroundService != foreground) {
                     startService(context, foreground)
                 }

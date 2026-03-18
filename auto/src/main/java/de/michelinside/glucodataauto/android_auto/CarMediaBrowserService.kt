@@ -45,7 +45,7 @@ import de.michelinside.glucodatahandler.common.R as CR
 
 
 class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
-    private val LOG_ID = "GDH.AA.CarMediaBrowserService"
+
     private val MEDIA_ROOT_ID = "root"
     private val MEDIA_GLUCOSE_ID = "glucose_value"
     private val MEDIA_NOTIFICATION_TOGGLE_ID = "toggle_notification"
@@ -59,12 +59,42 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     private var curBitmap: Bitmap? = null
 
     companion object {
+        private var isForegroundService = false
         var active = false
+        private val LOG_ID = "GDH.AA.CarMediaBrowserService"
+
+        fun setForeground(context: Context, foreground: Boolean) {
+            try {
+                Log.d(LOG_ID, "setForeground called with foreground=$foreground - isForegroundService=$isForegroundService")
+                if(foreground != isForegroundService) {
+                    val mediaIntent = Intent(context, CarMediaBrowserService::class.java)
+                    if (foreground) {
+                        Log.i(LOG_ID, "Starting CarMediaBrowserService in foreground")
+                        ContextCompat.startForegroundService(context, mediaIntent)
+                    } else {
+                        Log.i(LOG_ID, "Stopping CarMediaBrowserService")
+                        context.stopService(mediaIntent)
+                        isForegroundService = false
+                    }
+                }
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "setForeground exception: " + exc.message.toString() )
+            }
+        }
     }
 
     override fun onCreate() {
         Log.d(LOG_ID, "onCreate")
         try {
+            if(!isForegroundService) {
+                val notification = GlucoDataServiceAuto.getNotification(this)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+                    startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
+                else
+                    startForeground(NOTIFICATION_ID, notification)
+                isForegroundService = true
+            }
+
             super.onCreate()
             active = true
             GlucoDataServiceAuto.init(this)
@@ -146,11 +176,14 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.i(LOG_ID, "onStartCommand called with intent ${Utils.dumpBundle(intent?.extras)}, flags $flags and startId $startId")
         try {
-            Log.i(LOG_ID, "Starting service in foreground!")
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
-                startForeground(NOTIFICATION_ID, GlucoDataServiceAuto.getNotification(this), ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
-            else
-                startForeground(NOTIFICATION_ID, GlucoDataServiceAuto.getNotification(this))
+            if(!isForegroundService) {
+                Log.i(LOG_ID, "Starting service in foreground!")
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+                    startForeground(NOTIFICATION_ID, GlucoDataServiceAuto.getNotification(this), ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
+                else
+                    startForeground(NOTIFICATION_ID, GlucoDataServiceAuto.getNotification(this))
+                isForegroundService = true
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Error starting foreground in onStartCommand: ${exc.message}")
         }
@@ -162,6 +195,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         Log.d(LOG_ID, "onDestroy")
         try {
             active = false
+            isForegroundService = false
             CarMediaPlayer.setCallback(null)
             InternalNotifier.remNotifier(this, this)
             sharedPref.unregisterOnSharedPreferenceChangeListener(this)
