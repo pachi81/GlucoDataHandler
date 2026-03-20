@@ -60,51 +60,49 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
 
     companion object {
         private var isForegroundService = false
-        var active = false
         private val LOG_ID = "GDH.AA.CarMediaBrowserService"
+        private var service: CarMediaBrowserService? = null
+        val active: Boolean get() = service != null
 
         fun setForeground(context: Context, foreground: Boolean) {
             try {
-                Log.d(LOG_ID, "setForeground called with foreground=$foreground - isForegroundService=$isForegroundService")
-                if(foreground != isForegroundService) {
-                    val mediaIntent = Intent(context, CarMediaBrowserService::class.java)
-                    if (foreground) {
-                        Log.i(LOG_ID, "Starting CarMediaBrowserService in foreground")
-                        ContextCompat.startForegroundService(context, mediaIntent)
-                    } else {
-                        Log.i(LOG_ID, "Stopping CarMediaBrowserService")
-                        context.stopService(mediaIntent)
-                        isForegroundService = false
-                    }
+                Log.i(LOG_ID, "setForeground called with foreground=$foreground - isForegroundService=$isForegroundService - active=$active")
+                if(!active || foreground != isForegroundService) {
+                    val serviceIntent = Intent(context, CarMediaBrowserService::class.java)
+                    serviceIntent.putExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, foreground)
+                    if (foreground)
+                        context.startForegroundService(serviceIntent)
+                    else
+                        context.startService(serviceIntent)
                 }
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "setForeground exception: " + exc.message.toString() )
             }
         }
+
+        fun enable() {
+            Log.d(LOG_ID, "enable")
+            service?.enable()
+        }
+
+        fun disable() {
+            Log.d(LOG_ID, "disable")
+            service?.disable()
+        }
     }
 
     override fun onCreate() {
-        Log.d(LOG_ID, "onCreate")
+        Log.i(LOG_ID, "onCreate")
         try {
-            if(!isForegroundService) {
-                val notification = GlucoDataServiceAuto.getNotification(this)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
-                    startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
-                else
-                    startForeground(NOTIFICATION_ID, notification)
-                isForegroundService = true
-            }
-
             super.onCreate()
-            active = true
             GlucoDataServiceAuto.init(this)
-            GlucoDataServiceAuto.start(this)
             CarMediaPlayer.enable(this)
             ChartBitmapHandler.register(this, this.javaClass.simpleName)
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             sharedPref.registerOnSharedPreferenceChangeListener(this)
 
             session = MediaSessionCompat(this, "MyMusicService")
+
             // Callbacks to handle events from the user (play, pause, search)
             session.setCallback(object : MediaSessionCompat.Callback() {
                 override fun onPlayFromMediaId(mediaId: String, extras: Bundle?) {
@@ -162,12 +160,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             sessionToken = session.sessionToken
             mediaController = MediaControllerCompat(this, session.sessionToken)
             TextToSpeechUtils.initTextToSpeech(this)
-            InternalNotifier.addNotifier(this, this, mutableSetOf(
-                NotifySource.BROADCAST,
-                NotifySource.MESSAGECLIENT,
-                NotifySource.SETTINGS,
-                NotifySource.TIME_VALUE,
-                NotifySource.GRAPH_CHANGED))
+            service = this
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
@@ -176,25 +169,33 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.i(LOG_ID, "onStartCommand called with intent ${Utils.dumpBundle(intent?.extras)}, flags $flags and startId $startId")
         try {
-            if(!isForegroundService) {
+            val isForeground = intent?.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, false)?: true  // true as default for started from extern!
+            Log.d(LOG_ID, "onStartCommand isForeground: $isForeground - isForegroundService: $isForegroundService")
+            if (isForeground && !isForegroundService) {
                 Log.i(LOG_ID, "Starting service in foreground!")
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
                     startForeground(NOTIFICATION_ID, GlucoDataServiceAuto.getNotification(this), ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
                 else
                     startForeground(NOTIFICATION_ID, GlucoDataServiceAuto.getNotification(this))
                 isForegroundService = true
+            } else if ( isForegroundService && !isForeground ) {
+                isForegroundService = false
+                Log.i(LOG_ID, "Stopping service in foreground!")
+                stopForeground(STOP_FOREGROUND_REMOVE)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Error starting foreground in onStartCommand: ${exc.message}")
         }
 
-        return super.onStartCommand(intent, flags, startId)
+        super.onStartCommand(intent, flags, startId)
+
+        return START_STICKY  // keep alive
     }
 
     override fun onDestroy() {
-        Log.d(LOG_ID, "onDestroy")
+        Log.w(LOG_ID, "onDestroy")
         try {
-            active = false
+            service = null
             isForegroundService = false
             CarMediaPlayer.setCallback(null)
             InternalNotifier.remNotifier(this, this)
@@ -207,6 +208,22 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.message.toString() )
         }
+    }
+
+    private fun enable() {
+        Log.i(LOG_ID, "enable")
+        InternalNotifier.addNotifier(this, this, mutableSetOf(
+            NotifySource.BROADCAST,
+            NotifySource.MESSAGECLIENT,
+            NotifySource.SETTINGS,
+            NotifySource.TIME_VALUE,
+            NotifySource.GRAPH_CHANGED))
+    }
+
+    private fun disable() {
+        Log.i(LOG_ID, "disable")
+        InternalNotifier.remNotifier(this, this)
+        session.setPlaybackState(buildState(PlaybackState.STATE_STOPPED))
     }
 
     override fun onGetRoot(

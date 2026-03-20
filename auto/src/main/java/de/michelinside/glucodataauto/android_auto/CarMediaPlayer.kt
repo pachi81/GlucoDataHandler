@@ -195,7 +195,7 @@ object CarMediaPlayer: NotifierInterface {
     }
 
     private fun stopMedia() {
-        Log.i(LOG_ID, "stopMedia called playing: ${player.isPlaying}")
+        Log.i(LOG_ID, "stopMedia called playing: ${player.isPlaying} - has callback: ${hasCallback()}")
         try {
             if(player.isPlaying) {
                 player.stop()

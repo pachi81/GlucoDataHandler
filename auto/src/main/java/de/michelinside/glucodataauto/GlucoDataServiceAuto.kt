@@ -148,7 +148,8 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
             try {
                 Log.d(LOG_ID, "Starting service for foreground: $foreground - isForegroundService: $isForegroundService")
                 val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-                val isForeground = foreground || sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, false)
+                val foregroundConfig = sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, false)
+                val isForeground = foreground || foregroundConfig
                 if(startup || isForeground != isForegroundService) {
                     Log.i(LOG_ID, "Starting service for foreground: $isForeground - isForegroundService: $isForegroundService")
                     val serviceIntent = Intent(context, GlucoDataServiceAuto::class.java)
@@ -158,7 +159,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                     else
                         context.startService(serviceIntent)
                 }
-                CarMediaBrowserService.setForeground(context, isForeground)
+                CarMediaBrowserService.setForeground(context, foregroundConfig)
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "startService exception: " + exc.message.toString() + "\n" + exc.stackTraceToString())
             }
@@ -180,6 +181,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                 if(!running) {
                     init(context)
                     Log.i(LOG_ID, "starting")
+                    CarMediaBrowserService.enable()
                     CarMediaPlayer.enable(context)
                     CarNotification.enable(context)
                     startDataSync()
@@ -195,6 +197,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
             try {
                 if(!connected && running) {
                     Log.i(LOG_ID, "stopping")
+                    CarMediaBrowserService.disable()
                     CarMediaPlayer.disable(context)
                     CarNotification.disable(context)
                     stopDataSync(context)
