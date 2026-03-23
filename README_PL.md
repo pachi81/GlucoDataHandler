@@ -91,6 +91,8 @@ Dwóch użytkowników tworzy jednak tarcze zegarka specjalnie dla komplikacji Gl
 
 @[rgodha24](https://github.com/rgodha24): Czytnik powiadomień
 
+@[rileyg98](https://github.com/rileyg98): AiDEX broadcast support
+
 # Szczególne podziękowania
 
 @[lostboy86](https://github.com/lostboy86) za testy, motywację i informacje zwrotne

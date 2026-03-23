@@ -79,9 +79,11 @@ But there are two users creating watchfaces especially for the complications of 
 - [watchfaces](https://play.google.com/store/apps/dev?id=7197840107055554214) provided by Graham
 
 # Contributing Developers
-@[RobertoW-UK](https://github.com/RobertoW-UK): AOD, Battery Widget
+@[RobertoW-UK](https://github.com/RobertoW-UK): AOD, Battery Widget, Local Webservice
 
 @[rgodha24](https://github.com/rgodha24): Notification Reader
+
+@[rileyg98](https://github.com/rileyg98): AiDEX broadcast support
 
 # Special thanks
 @[lostboy86](https://github.com/lostboy86) for testing, motivation and feedback
