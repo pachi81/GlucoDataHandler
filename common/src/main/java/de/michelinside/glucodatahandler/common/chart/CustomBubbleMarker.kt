@@ -21,7 +21,7 @@ import java.time.Duration
 import java.util.Date
 
 @SuppressLint("ViewConstructor")
-class CustomBubbleMarker(context: Context, private val showDate: Boolean = false) : MarkerView(context, R.layout.marker_layout) {
+class CustomBubbleMarker(context: Context, private val showDate: Boolean, private val showDelta: Boolean) : MarkerView(context, R.layout.marker_layout) {
     private val LOG_ID = "GDH.Chart.BubbleMarker"
     private val arrowSize = 35
     private val arrowCircleOffset = 0f
@@ -45,7 +45,7 @@ class CustomBubbleMarker(context: Context, private val showDate: Boolean = false
                     time.text = DateFormat.getTimeInstance(DateFormat.DEFAULT).format(dateValue)
                     glucose.text = GlucoseFormatter.getValueAsString(e.y)
                     val timeDiff = Duration.ofMillis(ReceiveData.time - timeValue)
-                    if(timeDiff.toMinutes() > 0) {
+                    if(showDelta && timeDiff.toMinutes() > 0) {
                         delta.visibility = VISIBLE
                         "Δ ${GlucoseFormatter.getValueAsString(ReceiveData.rawValue - e.y)} (${resources.getString(R.string.elapsed_time, timeDiff.toMinutes())})".also { delta.text = it }
                     } else {
