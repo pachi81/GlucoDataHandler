@@ -27,6 +27,7 @@ import de.michelinside.glucodatahandler.common.tasks.ElapsedTimeTask
 import de.michelinside.glucodatahandler.common.utils.Utils
 import java.text.DateFormat
 import java.util.*
+import androidx.core.content.edit
 
 @SuppressLint("StaticFieldLeak")
 object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -109,10 +110,10 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         }
     }
 
-    fun initNotification(context: Context) {
+    private fun initNotification(context: Context) {
         try {
             if(!init) {
-                Log.v(LOG_ID, "initNotification called")
+                Log.d(LOG_ID, "initNotification called")
                 val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 migrateSettings(sharedPref)
                 sharedPref.registerOnSharedPreferenceChangeListener(this)
@@ -130,13 +131,12 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         if (sharedPref.contains(Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL)) {
             val old_interval = sharedPref.getString(Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL, "-1")!!.toInt()
             Log.i(LOG_ID, "Migrate old interval " + old_interval + " to new settings")
-            with(sharedPref.edit()) {
-                putBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY, old_interval==-1)
+            sharedPref.edit {
+                putBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY, old_interval == -1)
                 if (old_interval > 0) {
                     putInt(Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL_NUM, old_interval)
                 }
                 remove(Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL)
-                apply()
             }
         }
     }
@@ -290,11 +290,10 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
             .setImportant(true)
             .build()
         val messagingStyle = NotificationCompat.MessagingStyle(person)
-        var title = ""
-        if (isObsolete)
-            title = context.getString(CR.string.no_new_value, ReceiveData.getElapsedTimeMinute())
-        else
-            title = getAlarmText(context) + ReceiveData.getGlucoseAsString()  + " (Δ " + ReceiveData.getDeltaAsString()
+        var title = if (isObsolete)
+                context.getString(CR.string.no_new_value, ReceiveData.getElapsedTimeMinute())
+            else
+                getAlarmText(context) + ReceiveData.getGlucoseAsString()  + " (Δ " + ReceiveData.getDeltaAsString()
 
         if (show_iob_cob && !ReceiveData.isIobCobObsolete()) {
             if(!ReceiveData.iob.isNaN()) {
@@ -376,10 +375,9 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
             // use own tag to prevent trigger onChange event at every time!
             val sharedAutoPref =
                 context.getSharedPreferences(Constants.SHARED_PREF_AUTO_TAG, Context.MODE_PRIVATE)
-            with(sharedAutoPref.edit()) {
+            sharedAutoPref.edit {
                 putLong(LAST_NOTIFCATION_TIME, last_notification_time)
                 putBoolean(FORCE_NEXT_NOTIFY, forceNextNotify)
-                apply()
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Saving extras exception: " + exc.toString() + "\n" + exc.stackTraceToString() )

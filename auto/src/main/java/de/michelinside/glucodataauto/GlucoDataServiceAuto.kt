@@ -45,6 +45,7 @@ import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.R as CR
+import androidx.core.content.edit
 
 class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -69,13 +70,14 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
         val connected: Boolean get() = car_connected
 
         fun init(context: Context) {
-            Log.v(LOG_ID, "init called: init=$init")
+            Log.d(LOG_ID, "init called: init=$init")
             if(!init) {
+                Log.i(LOG_ID, "init called")
                 GlucoDataService.appSource = AppSource.AUTO_APP
                 GlucoDataService.context = context.applicationContext
+                ReceiveData.initData(context.applicationContext, false)
                 Log.init(context)
                 migrateSettings(context)
-                CarNotification.initNotification(context)
                 startService(context, false, true)
                 init = true
             }
@@ -84,11 +86,10 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
         private fun migrateSettings(context: Context) {
             Log.v(LOG_ID, "migrateSettings called")
             GlucoDataService.migrateSettings(context)
-            val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
             if(!sharedPref.contains(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB)) {
-                with(sharedPref.edit()) {
+                sharedPref.edit {
                     putBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, false)
-                    apply()
                 }
             }
 
@@ -103,21 +104,26 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                     && sharedPref.getString(Constants.SHARED_PREF_NIGHTSCOUT_TOKEN, "").isNullOrEmpty()
                     && sharedPref.getString(Constants.SHARED_PREF_NIGHTSCOUT_URL, "")!!.trim().trimEnd('/') == GlucoseDataReceiver.JUGGLUCO_WEBSERVER
                 ) {
-                    val sharedGlucosePref = context.getSharedPreferences(Constants.GLUCODATA_BROADCAST_ACTION, Context.MODE_PRIVATE)
+                    val sharedGlucosePref = context.getSharedPreferences(Constants.GLUCODATA_BROADCAST_ACTION, MODE_PRIVATE)
                     if(DataSource.fromIndex(sharedGlucosePref.getInt(Constants.EXTRA_SOURCE_INDEX, DataSource.NONE.ordinal)) == DataSource.JUGGLUCO) {
                         webServer = true
                         apiSecret = sharedPref.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, "")?:""
                     }
                 }
                 Log.i(LOG_ID, "Using Juggluco webserver: $webServer")
-                with(sharedPref.edit()) {
+                sharedPref.edit {
                     putBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_ENABLED, webServer)
-                    putBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_IOB_SUPPORT, webServer)
-                    if(webServer) {
-                        putString(Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_API_SECRET, apiSecret)
+                    putBoolean(
+                        Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_IOB_SUPPORT,
+                        webServer
+                    )
+                    if (webServer) {
+                        putString(
+                            Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_API_SECRET,
+                            apiSecret
+                        )
                         putBoolean(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED, false)
                     }
-                    apply()
                 }
             }
         }
@@ -147,7 +153,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
         private fun startService(context: Context, foreground: Boolean, startup: Boolean = false) {
             try {
                 Log.d(LOG_ID, "Starting service for foreground: $foreground - isForegroundService: $isForegroundService")
-                val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+                val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
                 val foregroundConfig = sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, false)
                 val isForeground = foreground || foregroundConfig
                 if(startup || isForeground != isForegroundService) {
@@ -279,13 +285,14 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
 
         private fun sendStateBroadcast(context: Context, enabled: Boolean) {
             try {
-                Log.i(LOG_ID, "Sending state broadcast for state: $enabled - to ${Constants.PACKAGE_GLUCODATAHANDLER}")
+                val duration = if(enabled) GlucoDataService.sharedPref?.getInt(Constants.SHARED_PREF_GRAPH_BITMAP_DURATION, 2)?:2 else 0
+                Log.i(LOG_ID, "Sending state broadcast for state: $enabled (duration: $duration) - to ${Constants.PACKAGE_GLUCODATAHANDLER}")
                 val intent = Intent(Constants.GLUCODATAAUTO_STATE_ACTION)
                 intent.setPackage(Constants.PACKAGE_GLUCODATAHANDLER)
                 intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
                 intent.putExtra(Constants.GLUCODATAAUTO_STATE_EXTRA, enabled)
                 if(enabled)
-                    intent.putExtra(Constants.EXTRA_GRAPH_DURATION_HOURS, 4)
+                    intent.putExtra(Constants.EXTRA_GRAPH_DURATION_HOURS, duration)
                 context.sendBroadcast(intent)
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "sendStateBroadcast exception: " + exc.toString())
@@ -295,7 +302,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
         fun updateSourceReceiver(context: Context, key: String? = null) {
             Log.d(LOG_ID, "Register receiver for $key")
             try {
-                val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+                val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
                 if(key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED) {
                     if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED, true)) {
                         if(glucoDataReceiver == null) {
@@ -445,7 +452,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
         try {
             Log.i(LOG_ID, "onStartCommand called with intent ${Utils.dumpBundle(intent?.extras)}, flags $flags and startId $startId")
             GdhUncaughtExecptionHandler.init()
-            val sharedPref = getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            val sharedPref = getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
             val isForeground = (if(intent != null) intent.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, false) else false) || sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, false)
             if (isForeground && !isForegroundService) {
                 Log.i(LOG_ID, "Starting service in foreground!")
@@ -461,15 +468,16 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
             }
             super.onStartCommand(intent, flags, startId)
             GlucoDataService.context = applicationContext
-            ReceiveData.initData(applicationContext)
-            CarNotification.initNotification(this)
+            ReceiveData.initData(applicationContext, false)
             TextToSpeechUtils.initTextToSpeech(this)
             sharedPref.registerOnSharedPreferenceChangeListener(this)
-            GlucoDataService.patientName = GlucoDataService.Companion.sharedPref!!.getString(Constants.PATIENT_NAME, "")
+            GlucoDataService.patientName = GlucoDataService.sharedPref!!.getString(Constants.PATIENT_NAME, "")
             CarConnection(applicationContext).type.observeForever(GlucoDataServiceAuto::onConnectionStateUpdated)
             InternalNotifier.notify(this, NotifySource.SERVICE_STARTED, null)
             if(dataSyncCount > 0)
                 startDataSync(true)
+            else
+                BackgroundWorker.stopAllWork(this)  // stop all running threads, if datasync is not active
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onStartCommand exception: " + exc.message.toString() + "\n" + exc.stackTraceToString())
         }
@@ -479,7 +487,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
 
     override fun onDestroy() {
         Log.v(LOG_ID, "onDestroy called")
-        val sharedPref = getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+        val sharedPref = getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
         sharedPref.unregisterOnSharedPreferenceChangeListener(this)
         TextToSpeechUtils.destroyTextToSpeech(this)
         Log.close(this)

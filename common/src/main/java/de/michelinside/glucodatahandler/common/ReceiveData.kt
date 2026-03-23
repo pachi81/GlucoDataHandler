@@ -22,6 +22,7 @@ import de.michelinside.glucodatahandler.common.utils.WakeLockHelper
 import java.math.RoundingMode
 import java.text.DateFormat
 import java.util.*
+import androidx.core.content.edit
 
 object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private const val LOG_ID = "GDH.ReceiveData"
@@ -191,7 +192,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         Log.v(LOG_ID, "init called")
     }
 
-    fun initData(context: Context) {
+    fun initData(context: Context, startTimeTask: Boolean = true) {
         try {
             if (!initialized) {
                 Log.v(LOG_ID, "initData called")
@@ -202,7 +203,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 AlarmHandler.initData(context)
                 readTargets(context)
                 loadExtras(context)
-                TimeTaskService.run(context)
+                if(startTimeTask)
+                    TimeTaskService.run(context)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "initData exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
@@ -789,15 +791,16 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         if(!sharedPref.contains(Constants.SHARED_PREF_FIVE_MINUTE_DELTA) && dataSource.interval5Min) {
             Log.i(LOG_ID, "Change delta to 5 min")
             use5minDelta = true
-            with(sharedPref.edit()) {
+            sharedPref.edit {
                 putBoolean(Constants.SHARED_PREF_FIVE_MINUTE_DELTA, true)
-                apply()
             }
         }
         if(dataSource == DataSource.DEXCOM_SHARE && !sharedPref.contains(Constants.SHARED_PREF_SOURCE_INTERVAL)) {
-            with(sharedPref.edit()) {
-                putString(Constants.SHARED_PREF_SOURCE_INTERVAL, "5")  // use 5 min interval for dexcom share
-                apply()
+            sharedPref.edit {
+                putString(
+                    Constants.SHARED_PREF_SOURCE_INTERVAL,
+                    "5"
+                )  // use 5 min interval for dexcom share
             }
         }
     }
@@ -814,32 +817,72 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             Log.i(LOG_ID, "Unit changed to " + glucose + if(isMmolValue) " mmol/l" else " mg/dl")
             if (context != null) {
                 val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-                with(sharedPref.edit()) {
+                sharedPref.edit {
                     putBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol)
-                    apply()
                 }
             }
         }
     }
 
     fun setSettings(sharedPref: SharedPreferences, bundle: Bundle) {
-        with(sharedPref.edit()) {
-            putFloat(Constants.SHARED_PREF_TARGET_MIN, bundle.getFloat(Constants.SHARED_PREF_TARGET_MIN, targetMinValue))
-            putFloat(Constants.SHARED_PREF_TARGET_MAX, bundle.getFloat(Constants.SHARED_PREF_TARGET_MAX, targetMaxValue))
-            putFloat(Constants.SHARED_PREF_LOW_GLUCOSE, bundle.getFloat(Constants.SHARED_PREF_LOW_GLUCOSE, lowValue))
-            putFloat(Constants.SHARED_PREF_HIGH_GLUCOSE, bundle.getFloat(Constants.SHARED_PREF_HIGH_GLUCOSE, highValue))
-            putBoolean(Constants.SHARED_PREF_USE_MMOL, bundle.getBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol))
-            putBoolean(Constants.SHARED_PREF_FIVE_MINUTE_DELTA, bundle.getBoolean(Constants.SHARED_PREF_FIVE_MINUTE_DELTA, use5minDelta))
-            putInt(Constants.SHARED_PREF_COLOR_OK, bundle.getInt(Constants.SHARED_PREF_COLOR_OK, colorOK))
-            putInt(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE, bundle.getInt(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE, colorOutOfRange))
-            putInt(Constants.SHARED_PREF_COLOR_ALARM, bundle.getInt(Constants.SHARED_PREF_COLOR_ALARM, colorAlarm))
-            putInt(Constants.SHARED_PREF_COLOR_OBSOLETE, bundle.getInt(Constants.SHARED_PREF_COLOR_OBSOLETE, colorObsolete))
-            putInt(Constants.SHARED_PREF_OBSOLETE_TIME, bundle.getInt(Constants.SHARED_PREF_OBSOLETE_TIME, obsoleteTimeMin))
-            putBoolean(Constants.SHARED_PREF_USE_RATE_CALCULATION, bundle.getBoolean(Constants.SHARED_PREF_USE_RATE_CALCULATION, useRateCalculation))
+        sharedPref.edit {
+            putFloat(
+                Constants.SHARED_PREF_TARGET_MIN,
+                bundle.getFloat(Constants.SHARED_PREF_TARGET_MIN, targetMinValue)
+            )
+            putFloat(
+                Constants.SHARED_PREF_TARGET_MAX,
+                bundle.getFloat(Constants.SHARED_PREF_TARGET_MAX, targetMaxValue)
+            )
+            putFloat(
+                Constants.SHARED_PREF_LOW_GLUCOSE,
+                bundle.getFloat(Constants.SHARED_PREF_LOW_GLUCOSE, lowValue)
+            )
+            putFloat(
+                Constants.SHARED_PREF_HIGH_GLUCOSE,
+                bundle.getFloat(Constants.SHARED_PREF_HIGH_GLUCOSE, highValue)
+            )
+            putBoolean(
+                Constants.SHARED_PREF_USE_MMOL,
+                bundle.getBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol)
+            )
+            putBoolean(
+                Constants.SHARED_PREF_FIVE_MINUTE_DELTA,
+                bundle.getBoolean(Constants.SHARED_PREF_FIVE_MINUTE_DELTA, use5minDelta)
+            )
+            putInt(
+                Constants.SHARED_PREF_COLOR_OK,
+                bundle.getInt(Constants.SHARED_PREF_COLOR_OK, colorOK)
+            )
+            putInt(
+                Constants.SHARED_PREF_COLOR_OUT_OF_RANGE,
+                bundle.getInt(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE, colorOutOfRange)
+            )
+            putInt(
+                Constants.SHARED_PREF_COLOR_ALARM,
+                bundle.getInt(Constants.SHARED_PREF_COLOR_ALARM, colorAlarm)
+            )
+            putInt(
+                Constants.SHARED_PREF_COLOR_OBSOLETE,
+                bundle.getInt(Constants.SHARED_PREF_COLOR_OBSOLETE, colorObsolete)
+            )
+            putInt(
+                Constants.SHARED_PREF_OBSOLETE_TIME,
+                bundle.getInt(Constants.SHARED_PREF_OBSOLETE_TIME, obsoleteTimeMin)
+            )
+            putBoolean(
+                Constants.SHARED_PREF_USE_RATE_CALCULATION,
+                bundle.getBoolean(Constants.SHARED_PREF_USE_RATE_CALCULATION, useRateCalculation)
+            )
             if (bundle.containsKey(Constants.SHARED_PREF_RELATIVE_TIME)) {
-                putBoolean(Constants.SHARED_PREF_RELATIVE_TIME, bundle.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, ElapsedTimeTask.relativeTime))
+                putBoolean(
+                    Constants.SHARED_PREF_RELATIVE_TIME,
+                    bundle.getBoolean(
+                        Constants.SHARED_PREF_RELATIVE_TIME,
+                        ElapsedTimeTask.relativeTime
+                    )
+                )
             }
-            apply()
         }
         updateSettings(sharedPref)
     }
@@ -886,7 +929,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private fun readTargets(context: Context) {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         sharedPref.registerOnSharedPreferenceChangeListener(this)
-        if(!sharedPref.contains(Constants.SHARED_PREF_USE_MMOL) && (sharedPref.contains(Constants.SHARED_PREF_TARGET_MIN) || sharedPref.contains(Constants.SHARED_PREF_TARGET_MAX))) {
+        if(!sharedPref.contains(Constants.SHARED_PREF_USE_MMOL) && (sharedPref.contains(Constants.SHARED_PREF_TARGET_MIN) || sharedPref.contains(
+                Constants.SHARED_PREF_TARGET_MAX))) {
             targetMinValue = sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MIN, targetMinValue)
             targetMaxValue = sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MAX, targetMaxValue)
             isMmolValue = GlucoDataUtils.isMmolValue(targetMinValue)
@@ -894,9 +938,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 Log.i(LOG_ID, "Upgrade to new mmol handling!")
                 writeTarget(context, true, targetMinValue)
                 writeTarget(context, false, targetMaxValue)
-                with(sharedPref.edit()) {
+                sharedPref.edit {
                     putBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol)
-                    apply()
                 }
             }
         }
@@ -910,7 +953,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             mgdlValue = GlucoDataUtils.mmolToMg(value)
         }
         Log.i(LOG_ID, "New target" + (if (min) "Min" else "Max") + " value: " + mgdlValue.toString())
-        with(sharedPref.edit()) {
+        sharedPref.edit {
             if (min) {
                 putFloat(Constants.SHARED_PREF_TARGET_MIN, mgdlValue.toString().toFloat())
                 targetMinValue = mgdlValue
@@ -918,7 +961,6 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 putFloat(Constants.SHARED_PREF_TARGET_MAX, mgdlValue.toString().toFloat())
                 targetMaxValue = mgdlValue
             }
-            apply()
         }
     }
 
@@ -975,7 +1017,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             Log.v(LOG_ID, "Saving extras")
             // use own tag to prevent trigger onChange event at every time!
             val sharedGlucosePref = context.getSharedPreferences(Constants.GLUCODATA_BROADCAST_ACTION, Context.MODE_PRIVATE)
-            with(sharedGlucosePref.edit()) {
+            sharedGlucosePref.edit {
                 putLong(TIME, time)
                 putFloat(GLUCOSECUSTOM, glucose)
                 putInt(MGDL, rawValue)
@@ -990,7 +1032,6 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 putInt(DELTA_FALLING_COUNT, deltaFallingCount)
                 putInt(DELTA_RISING_COUNT, deltaRisingCount)
                 putInt(Constants.EXTRA_SOURCE_INDEX, source.ordinal)
-                apply()
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Saving extras exception: " + exc.toString() + "\n" + exc.stackTraceToString() )

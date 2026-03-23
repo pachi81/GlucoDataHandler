@@ -1,5 +1,6 @@
 package de.michelinside.glucodataauto.android_auto
 
+import android.annotation.SuppressLint
 import de.michelinside.glucodataauto.R
 import android.content.Context
 import android.content.Intent
@@ -42,6 +43,7 @@ import de.michelinside.glucodatahandler.common.chart.ChartBitmapHandler
 import de.michelinside.glucodatahandler.common.utils.BitmapPool
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.R as CR
+import androidx.core.content.edit
 
 
 class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -96,9 +98,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         try {
             super.onCreate()
             GlucoDataServiceAuto.init(this)
-            CarMediaPlayer.enable(this)
-            ChartBitmapHandler.register(this, this.javaClass.simpleName)
-            sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
             sharedPref.registerOnSharedPreferenceChangeListener(this)
 
             session = MediaSessionCompat(this, "MyMusicService")
@@ -122,15 +122,22 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                                 session.setPlaybackState(buildState(PlaybackState.STATE_PLAYING))
                         } else if(curMediaItem == MEDIA_NOTIFICATION_TOGGLE_ID) {
                             Log.d(LOG_ID, "Toggle notification")
-                            with(sharedPref.edit()) {
-                                putBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, !CarNotification.enable_notification)
-                                apply()
+                            sharedPref.edit {
+                                putBoolean(
+                                    Constants.SHARED_PREF_CAR_NOTIFICATION,
+                                    !CarNotification.enable_notification
+                                )
                             }
                         } else if(curMediaItem == MEDIA_SPEAK_TOGGLE_ID) {
                             Log.d(LOG_ID, "Toggle speak")
-                            with(sharedPref.edit()) {
-                                putBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE, !sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE, false))
-                                apply()
+                            sharedPref.edit {
+                                putBoolean(
+                                    Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE,
+                                    !sharedPref.getBoolean(
+                                        Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE,
+                                        false
+                                    )
+                                )
                             }
                         }
                     } catch (exc: Exception) {
@@ -195,15 +202,13 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     override fun onDestroy() {
         Log.w(LOG_ID, "onDestroy")
         try {
+            disable()
             service = null
             isForegroundService = false
             CarMediaPlayer.setCallback(null)
             InternalNotifier.remNotifier(this, this)
             sharedPref.unregisterOnSharedPreferenceChangeListener(this)
             session.release()
-            GlucoDataServiceAuto.stop(this)
-            ChartBitmapHandler.unregister(this.javaClass.simpleName)
-            BitmapPool.returnBitmap(curBitmap)
             super.onDestroy()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.message.toString() )
@@ -218,11 +223,15 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             NotifySource.SETTINGS,
             NotifySource.TIME_VALUE,
             NotifySource.GRAPH_CHANGED))
+        ChartBitmapHandler.register(this, this.javaClass.simpleName)
     }
 
     private fun disable() {
         Log.i(LOG_ID, "disable")
         InternalNotifier.remNotifier(this, this)
+        ChartBitmapHandler.unregister(this.javaClass.simpleName)
+        BitmapPool.returnBitmap(curBitmap)
+        curBitmap = null
         session.setPlaybackState(buildState(PlaybackState.STATE_STOPPED))
     }
 
@@ -333,6 +342,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         }
     }
 
+    @SuppressLint("InflateParams")
     private fun getBackgroundImage(): Bitmap? {
         val coloredCover = sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_COLORED, true)
         try {
@@ -391,18 +401,22 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                 MEDIA_NOTIFICATION_TOGGLE_ID -> {
                     curMediaItem = MEDIA_GLUCOSE_ID
                     Log.d(LOG_ID, "Toggle notification")
-                    with(sharedPref.edit()) {
-                        putBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, !CarNotification.enable_notification)
-                        apply()
+                    sharedPref.edit {
+                        putBoolean(
+                            Constants.SHARED_PREF_CAR_NOTIFICATION,
+                            !CarNotification.enable_notification
+                        )
                     }
                 }
                MEDIA_SPEAK_TOGGLE_ID -> {
                    curMediaItem = MEDIA_GLUCOSE_ID
                     Log.d(LOG_ID, "Toggle speak")
-                    with(sharedPref.edit()) {
-                        putBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE, !sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE, false))
-                        apply()
-                    }
+                   sharedPref.edit {
+                       putBoolean(
+                           Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE,
+                           !sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE, false)
+                       )
+                   }
                 }
             }
         } catch (exc: Exception) {
@@ -531,7 +545,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             val position = if(state==PlaybackState.STATE_PLAYING) getPosition() else 0L
             Log.d(LOG_ID, "buildState called for state $state - pos: ${position}/${duration}")
             playBackState = state
-            val bundleWithDuration = if (duration == 0L) null else Bundle().apply {
+            val bundleWithDuration = Bundle().apply {
                 putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration) // duration in Millisekunden
             }
             return PlaybackStateCompat.Builder().setActions(
