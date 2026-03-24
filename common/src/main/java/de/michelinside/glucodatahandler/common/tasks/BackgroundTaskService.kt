@@ -73,7 +73,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                         + " - elapsedAlarmTime=" + Utils.getElapsedTimeMinute(alarmTime)
                         + " - elapsedIobCobTimeMinute=" + Utils.getElapsedTimeMinute(task.getLastIobCobTime(), RoundingMode.HALF_UP)
                         + " - interval=" + task.getIntervalMinute())
-                if (elapsedTimeMinute != 0L) {
+                if (elapsedTimeMinute != 0L && elapsedTimeMinute != lastElapsedMinute) {
                     if (lastElapsedMinute < 0 && initialExecution) {
                         Log.i(LOG_ID, "Trigger initial task execution")
                         return true   // trigger initial execution

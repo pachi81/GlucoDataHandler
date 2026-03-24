@@ -237,13 +237,13 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     open fun needsInternet(): Boolean = true
 
     override fun execute(context: Context) {
-        if (enabled) {
+        if (canExecute()) {
             if (needsInternet() && !HttpRequest.isConnected(context)) {
                 Log.w(LOG_ID, "No internet connection")
                 setState(SourceState.NO_CONNECTION)
                 return
             }
-            Log.d(LOG_ID, "Execute request for $source")
+            Log.d(LOG_ID, "Execute request for $source - lastExecution: ${Utils.getUiTimeStamp(lastExecution)}")
             try {
                 lastExecution = System.currentTimeMillis()
                 executeRequest()
@@ -437,6 +437,16 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     override fun active(elapsetTimeMinute: Long): Boolean {
         return enabled
     }
+
+    private fun canExecute(): Boolean {
+        if(enabled && (lastExecution == 0L || Utils.getElapsedTimeMinute(lastExecution, RoundingMode.HALF_UP) >= 1))
+            return true
+        else if(enabled) {
+            Log.d(LOG_ID, "Skip execution - lastExecution: ${Utils.getUiTimeStamp(lastExecution)}")
+        }
+        return false
+    }
+
 
     override fun forceExecution(): Boolean {
         if(enabled && (lastExecution == 0L || Utils.getElapsedTimeMinute(lastExecution) >= getIntervalMinute())) {
