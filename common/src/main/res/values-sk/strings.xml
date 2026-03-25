@@ -666,7 +666,7 @@
     <string name="pref_send_battery_level_to_watch_summary">Odoslať úroveň nabitia batérie do hodiniek, aby sa zobrazila v komplikácii a na hlavnej obrazovke.</string>
     <string name="pref_battery_level">Zobraziť úroveň batérie</string>
     <string name="forward_to_watch_interval_summary">Nastavte minimálny čas (v minútach) medzi meraniami glukózy pred odoslaním novej aktualizácie do hodiniek.\nAlarmy a veľmi nízke hodnoty merania sa odosielajú vždy.</string>
-    <string name="forward_to_values_summary">Nastavte minimálny čas (v minútach) medzi meraniami glukózy pred odoslaním novej aktualizácie do prijímačov (nie pre Health Connect).</string>
+    <string name="forward_to_values_summary">Nastavte minimálny čas (v minútach) medzi meraniami glukózy pred odoslaním novej aktualizácie do prijímačov.</string>
     <string name="alarm_repeat_summary">Alarm bude opakovane zvoniť a vibrovať, kým nezrušíte upozornenie alebo nedosiahne nastavenú maximálnu dĺžku trvania alarmu.</string>
     <string name="alarm_repeat_time">Maximálna dĺžka alarmu</string>
     <string name="alarm_repeat_time_summary">Určite maximálny čas (v minútach), počas ktorého bude alarm zvoniť a vibrovať. Hodnota 0 znamená, že alarm sa bude opakovať donekonečna.</string>
@@ -687,8 +687,7 @@
     <string name="pref_watchfaces_default">Štandardné</string>
     <string name="pref_watchfaces_default_summary">Väčšina výrobcov hodiniek už poskytuje ciferníky, ktoré sa dajú použiť s komplikáciou GlucoDataHandler.\nNapríklad väčšina ciferníkov Samsung \„Info\“ je kompatibilná.</string>
     <string name="pref_watchfaces_pujie">Pujie</string>
-    <string name="pref_watchfaces_pujie_summary">Pujie je aplikácia na tvorbu ciferníkov s cloudovou knižnicou. Ak chcete nájsť kompatibilné ciferníky, vyhľadajte v knižnici ciferníky začínajúce na \„GDH_\“.\nPoznámka: Pujie nie je kompatibilná so zariadeniami Wear OS 5.\nŤuknutím sem otvoríte aplikáciu v obchode Play Store.</string>
-    <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>
+    <string name="pref_watchfaces_pujie_summary">Pujie je aplikácia na tvorbu ciferníkov s cloudovou knižnicou. Ak chcete nájsť kompatibilné ciferníky, vyhľadajte v knižnici ciferníky začínajúce na \„GDH_\“.\nŤuknutím sem otvoríte aplikáciu v obchode Play Store.</string>
     <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man vytvára ciferníky tretích strán, ktoré sú špeciálne navrhnuté pre použitie s aplikáciou GlucoDataHandler.\nŤuknutím sem otvoríte jeho stránku v obchode Play Store.</string>
     <string name="pref_watchfaces_gdc">GDC ciferníky</string>
     <string name="pref_watchfaces_gdc_summary">Ciferníky GDC sú určené na použitie s aplikáciou GlucoDataHandler.\nŤuknutím sem otvoríte obchod Play Store.</string>
@@ -768,7 +767,8 @@
     <string name="notification_reader_enabled">Povoliť čítačku upozornení</string>
     <string name="no_receiver">Žiadna aplikácia</string>
     <string name="notification_reader_app_regex">Filter Regex hodnôt</string>
-    <string name="notification_reader_app_regex_summary">Regex na spracovanie hodnoty z textu v upozornení.\nZmeňte len v prípade, ak viete, čo robíte, alebo ak máte odporúčanie od vývojára.</string>
+    <string name="notification_reader_app_regex_summary">Regex na spracovanie hodnoty z textu v upozornení.</string>
+    <string name="advanced_settings_developer_summary">Zmeňte len v prípade, ak viete, čo robíte, alebo ak máte odporúčanie od vývojára.</string>
     <string name="notification_reader_five_minute_interval">5 minútový interval</string>
     <string name="notification_reader_five_minute_interval_summary">Niektoré aplikácie, ako napríklad Dexcom, aktualizujú svoje upozornenia pomerne často. Ak chcete ignorovať tieto aktualizácie s rovnakou hodnotou, povoľte 5-minútový interval.\nAk je táto funkcia povolená, nová hodnota sa zobrazí len každých 5 minút alebo v prípade, že sa hodnota v upozornení zmenila.</string>
     <string name="pref_source_notification_info_summary">Na prijímanie hodnôt z upozornení iných aplikácií je potrebné povolenie na prístup k upozorneniam!\nUpozornenie musí obsahovať buď hodnotu glukózy, alebo IOB/COB ako reťazec.\nKeďže každé upozornenie má iné rozloženie, nemusí fungovať s každou aplikáciou. V prípade problémov prosím ma kontaktujte so snímkou obrazovky s upozornenia a záznamami.</string>
@@ -903,7 +903,7 @@ Tieto povolenia môžete kedykoľvek spravovať v nastaveniach aplikácie Health
     <string name="pref_switch_xdrip_server_reduce_data_summary">Tým sa zníži množstvo poskytovaných údajov na minimum, aby sa predišlo problémom s pamäťou na niektorých hodinkách Garmin.\nSkontrolujte prosím kompatibilitu s ciferníkom vašich hodiniek.</string>
     <string name="error_port_in_use">Port sa používa!\nZastavte ostatné webové servery bežiace na tomto porte a reštartujte lokálny webový server.</string>
     <string name="state_active">aktívny</string>
-    <string name="pref_garmin_info_summary">Pre Garmin alebo Pebble neexistuje žiadna špeciálna aplikácia, len lokálny webový server, ktorý sa používa pre ciferníky s podporou xDrip+.\nStačí vyhľadať takéto ciferníky v obchode Connect IQ Store a nastaviť zdroj xDrip+ pre tieto ciferníky.\nDÔLEŽITÉ: ak používate aj xDrip+ alebo Juggluco, lokálny webový server môžete aktivovať len v jednej aplikácii, pretože používajú rovnaký port (17580)!</string>
+    <string name="pref_garmin_info_summary">Pre Garmin alebo Fitbit neexistuje žiadna špeciálna aplikácia, len lokálny webový server, ktorý sa používa pre ciferníky s podporou xDrip+.\nStačí vyhľadať takéto ciferníky v obchode Connect IQ Store a nastaviť zdroj xDrip+ pre tieto ciferníky.\nDÔLEŽITÉ: ak používate aj xDrip+ alebo Juggluco, lokálny webový server môžete aktivovať len v jednej aplikácii, pretože používajú rovnaký port (17580)!</string>
     <string name="remaining">Zostáva</string>
     <string name="pref_switch_xdrip_open_server">Otvoriť webový server</string>
     <string name="pref_switch_xdrip_open_server_summary">Sprístupniť webový server pre ostatné zariadenia v sieti.\nMôže to spôsobiť bezpečnostné problémy, preto túto možnosť povoľte, len ak naozaj potrebujete pristupovať k údajom webového servera zo siete.\nCiferníky Garmin si vyžadujú údaje priamo v telefóne, takže otvorený server nie je potrebný!</string>
@@ -932,14 +932,12 @@ Tieto povolenia môžete kedykoľvek spravovať v nastaveniach aplikácie Health
     <string name="src_ns_summary">Vzdialene sledovať webovú službu Nightscout.</string>
     <string name="pref_cat_wear_os_summary">Pre hodinky s Wear OS, napr. všetky hodinky Google Pixel, hodinky Samsung Galaxy Watch 4 a novšie a mnohé ďalšie.</string>
     <string name="pref_cat_watchdrip_summary">Pre hodinky podporované externou aplikáciou WatchDrip+, ako napríklad väčšina modelov Mi Band, Xiaomi Smart Band a Amazfit.</string>
-    <string name="pref_cat_garminpebble">Hodinky Garmin, Fitbit a Pebble</string>
-    <string name="pref_cat_garminpebble_summary">Pre zariadenia a aplikácie, ktoré môžu prijímať údaje o glykémii z webovej služby xDrip+, ako sú hodinky Garmin, Pebble a niektoré hodinky Fitbit.</string>
+    <string name="pref_cat_garminpebble">Hodinky Garmin a Fitbit</string>
+    <string name="pref_cat_garminpebble_summary">Pre zariadenia a aplikácie, ktoré môžu prijímať údaje o glykémii z webovej služby xDrip+, ako sú hodinky Garmin a niektoré hodinky Fitbit.</string>
     <string name="pref_garmin_watchfaces_summary">Stlačte tu pre otvorenie obchodu Connect IQ pre ciferníky xDrip+.\nAk ciferníky podporujú xDrip+, mali by byť kompatibilné aj s touto aplikáciou.</string>
     <string name="pref_garmin_watchfaces">Garmin</string>
     <string name="pref_fitbit_watchfaces">Fitbit</string>
     <string name="pref_fitbit_watchfaces_summary">Stlačte tu pre otvorenie webovej stránky Glance, ktorá podporuje webové služby xDrip+.</string>
-    <string name="pref_pebble_watchfaces">Pebble</string>
-    <string name="pref_pebble_watchfaces_summary">Stlačte tu pre otvorenie ciferníkov Pebble navrhnutých pre xDrip+, ktoré by mali byť tiež kompatibilné s touto aplikáciou.</string>
     <string name="gmi">GMI</string>
     <string name="pref_lockscreen_x_pos">Horizontálna poloha</string>
     <string name="pref_lockscreen_x_pos_summary">Horizontálna poloha obrázka:\n0 je ľavá strana displeja\n40 je pravá strana displeja</string>
@@ -975,5 +973,35 @@ Tieto povolenia môžete kedykoľvek spravovať v nastaveniach aplikácie Health
     </plurals>
 
     <string name="dexcom_server_down_error">Zdá sa, že server Dexcom nefunguje!\nŤuknutím sem skontrolujete stav servera.\nAk je aplikácia Dexcom na rovnakom telefóne, môžete namiesto toho použiť Čítačku upozornení (Notification Reader).</string>
+
+    <!-- v2.3 -->
+
+    <string name="medtrum_wrong_user_type_info">Sú povolené iba účty sledujúcich.\nStlačte tu pre vytvorenie nového účtu sledujúceho a pozvite samého seba.</string>
+    <string name="notification_reader_value_with_unit">Hodnota s jednotkou</string>
+    <string name="notification_reader_value_with_unit_summary">Ak je jednotka (mmol alebo mg) súčasťou hodnoty v upozornení, povoľte toto, aby sa ignorovali všetky polia bez jednotky.</string>
+
+    <string name="button_yes">Áno</string>
+    <string name="button_no">Nie</string>
+    <string name="patient_changed">Pacient zmenený</string>
+    <string name="patient_changed_reset_db">Zmenili ste pacienta.\nChcete resetovať databázu, aby ste odstránili údaje o starom pacientovi?</string>
+    <string name="update">Aktualizovať</string>
+    <string name="pref_transfer_to_healthconnect_summary">Zdieľanie hodnôt glykémie so službou Health Connect.</string>
+    <string name="pref_transfer_to_local_apps_summary">Odosielanie broadcastu do iných lokálnych aplikácií na tomto zariadení.</string>
+    <string name="source_aidex_summary">Povoliť prijímač broadcastu AiDEX. Vyžaduje verziu aplikácie AiDEX 1.0.17 alebo nižšiu.</string>
+    <string name="pref_source_aidex_summary">Prijíma broadcasty z aplikácie AiDEX. Vyžaduje verziu aplikácie AiDEX 1.0.17 alebo nižšiu.</string>
+
+    <string name="transfer_values_interval_summary">Interval pre odosielanie hodnôt glykémie.\nZahrnuté budú všetky hodnoty zaznamenané od posledného prenosu.</string>
+    <string name="health_connect_settings">Otvoriť Health Connect</string>
+    <string name="health_connect_settings_summary">Spravovať povolenia a prístup k údajom pre Health Connect.</string>
+    <string name="health_connect_not_supported_version">Health Connect vyžaduje aspoň Android 9.</string>
+    <string name="pref_transfer_to_nightscout_summary">Nahrávanie hodnôt glykémie do Nightscoutu.</string>
+    <string name="transfer_to_nightscout">Nahrávanie do Nightscoutu</string>
+    <string name="label_profile">Profil</string>
+    <string name="pref_watchfaces_cx_summary">Ciferníky Creative eXtreme tiež podporujú GlucoDataHandler komplikácie.\nNa používanie týchto ciferníkov potrebujete aplikáciu Facer.\nŤuknite sem pre otvorenie stránky Facer pre ciferníky Creative eXtreme.</string>
+    <string name="notification_reader_interval_summary">Nastavte toto tak, aby zodpovedalo frekvencii aktualizácie vašich senzorov, aby ste predišli spracovaniu nadbytočných upozornení.</string>
+    <string name="pref_transfer_to_local_apps">Lokálne aplikácie</string>
+
+    <string name="xdrip_open_server_api_secret_summary">Voliteľný API tajný kľúč na ochranu prístupu. Ak je nakonfigurovaný, rovnaký kľúč musí byť nastavený aj v klientskej aplikácii na prístup k údajom.</string>
+    <string name="pref_xdrip_server_summary">Poskytuje lokálny webový server na porte 17580, ktorý emuluje webovú službu xDrip+ a môže byť použitý rôznymi externými službami, ciferníkmi a aplikáciami.</string>
 </resources>
 

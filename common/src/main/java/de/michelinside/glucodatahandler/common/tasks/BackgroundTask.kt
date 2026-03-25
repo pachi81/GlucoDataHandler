@@ -13,4 +13,5 @@ abstract class BackgroundTask {
     open fun hasIobCobSupport() : Boolean = false
     open fun getLastIobCobTime(): Long = if(hasIobCobSupport()) ReceiveData.getElapsedIobCobTimeMinute() else 0L
     open fun interrupt() {}
+    open fun forceExecution(): Boolean = false
 }

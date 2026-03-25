@@ -2,7 +2,9 @@ package de.michelinside.glucodatahandler.common.preferences
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.text.InputType
 import androidx.core.content.ContextCompat
+import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.SwitchPreferenceCompat
@@ -38,6 +40,13 @@ class SourceOfflineFragment : PreferenceFragmentCompatBase() {
         }
     }
 
+    private fun getDefaultEnableState(key: String): Boolean {
+        return when(key) {
+            Constants.SHARED_PREF_XDRIP_BROADCAST_SERVICE_API -> false
+            else -> true
+        }
+    }
+
     private fun updateEnableStates() {
         try {
             val prefSources = findPreference<PreferenceCategory>("pref_cat_sources")
@@ -46,7 +55,7 @@ class SourceOfflineFragment : PreferenceFragmentCompatBase() {
                 for (i in 0 until prefSources.preferenceCount) {
                     val pref: Preference = prefSources.getPreference(i)
                     if(!pref.key.isNullOrEmpty()) {
-                        if(preferenceManager.sharedPreferences!!.getBoolean(pref.key, false)) {
+                        if(preferenceManager.sharedPreferences!!.getBoolean(pref.key, getDefaultEnableState(pref.key!!))) {
                             pref.icon = ContextCompat.getDrawable(requireContext(), R.drawable.switch_on)
                         } else {
                             pref.icon = ContextCompat.getDrawable(requireContext(), R.drawable.switch_off)
@@ -82,6 +91,13 @@ abstract class SourceOfflineFragmentBase(val preferenceResId: Int) : PreferenceF
     }
 
     protected open fun initPreferences() {}
+
+    protected fun setPasswordPref(prefName: String) {
+        val pwdPref = findPreference<EditTextPreference>(prefName)
+        pwdPref?.setOnBindEditTextListener {editText ->
+            editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        }
+    }
 
     override fun onResume() {
         Log.d(LOG_ID, "onResume called")
@@ -171,6 +187,7 @@ class SourceJuggluco: SourceOfflineFragmentBase(R.xml.source_juggluco) {
     override fun initPreferences() {
         super.initPreferences()
         PreferenceHelper.setLinkOnClick(findPreference("source_juggluco_video"), R.string.video_tutorial_juggluco, requireContext())
+        setPasswordPref(Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_API_SECRET)
     }
 
     override fun update() {
@@ -182,6 +199,7 @@ class SourceJuggluco: SourceOfflineFragmentBase(R.xml.source_juggluco) {
         try {
             Log.d(LOG_ID, "updateEnableStates called")
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_ENABLED, Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED)
+            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_API_SECRET, Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED)
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_IOB_SUPPORT, Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_ENABLED, Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())
@@ -206,3 +224,4 @@ class SourceEversense: SourceOfflineFragmentBase(R.xml.source_eversense) {
 class SourceDiabox: SourceOfflineFragmentBase(R.xml.source_diabox)
 class SourceLibrePatched: SourceOfflineFragmentBase(R.xml.source_libre_patched)
 class SourceDexcomByodaAaps: SourceOfflineFragmentBase(R.xml.source_dexcom_byoda_aaps)
+class SourceAidex: SourceOfflineFragmentBase(R.xml.source_aidex)

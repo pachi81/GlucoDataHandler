@@ -63,6 +63,8 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     protected open val touchEnabled = true
     protected open var graphDays = 0
     protected open val showAverage = true
+    protected open val showDateOnBubble = true
+    protected open val showDeltaOnBubble = true
     private var graphStartTime = 0L
     private var recreateThread: Thread? = null
     private var averageLine: LimitLine? = null
@@ -359,7 +361,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         chart.isScaleYEnabled = false
         chart.setExtraOffsets(4F, 4F, 4F, if(chart.xAxis.isEnabled) 8F else 4F)
         if(touchEnabled) {
-            val mMarker = CustomBubbleMarker(context, true)
+            val mMarker = CustomBubbleMarker(context, showDateOnBubble, showDeltaOnBubble)
             mMarker.chartView = chart
             chart.marker = mMarker
             chart.setOnChartValueSelectedListener(object: OnChartValueSelectedListener {

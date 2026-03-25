@@ -21,4 +21,12 @@
             android:title="@string/pref_send_pref_to_glucodataauto"
             android:summary="@string/pref_send_pref_to_glucodataauto_summary"
             app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="alarm_no_notification_auto_connected"
+            android:title="@string/alarm_no_notification_auto_connected"
+            android:summaryOn="@string/alarm_no_notification_auto_connected_summary_on"
+            android:summaryOff="@string/alarm_no_notification_auto_connected_summary_off"
+            app:isPreferenceVisible="false"
+            app:iconSpaceReserved="false" />
 </PreferenceScreen>

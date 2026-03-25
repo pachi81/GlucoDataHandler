@@ -13,11 +13,13 @@ import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.utils.HttpRequest
 import de.michelinside.glucodatahandler.common.utils.Utils
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.engine.*
 import io.ktor.server.cio.*
+import io.ktor.server.request.host
 import io.ktor.server.request.uri
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -41,9 +43,14 @@ object XDripServer : SharedPreferences.OnSharedPreferenceChangeListener {
     private var server: EmbeddedServer<*, *>? = null
     private val Port = 17580
     private val NumRecords = 24
+    @Volatile
     private var reducedData = true
+    @Volatile
     private var openServer = false
+    @Volatile
     private var oneMinuteInterval = false
+    @Volatile
+    private var apiSecret = ""
     private val json = Json { prettyPrint = BuildConfig.DEBUG }  // pretty print only for debugging
 
     var lastError: String? = null
@@ -135,6 +142,28 @@ object XDripServer : SharedPreferences.OnSharedPreferenceChangeListener {
         return server != null
     }
 
+    private suspend fun authenticate(call: RoutingCall): Boolean {
+        Log.v(LOG_ID, "authenticate called - apiSecret: ${apiSecret} - openServer: ${openServer}")
+        if(apiSecret.isEmpty() || !openServer)
+            return true
+
+        if(!call.request.headers.contains("api-secret")) {
+            if(HttpRequest.isLocalHost(call.request.host()))
+                return true
+            Log.w(LOG_ID, "Missing api-secret in request!")
+            call.respondText("Missing api-secret", ContentType.Text.Plain, HttpStatusCode.Unauthorized)
+            return false
+        }
+        val secretFromHeader = call.request.headers["api-secret"]
+        Log.v(LOG_ID, "secretFromHeader: ${secretFromHeader}")
+        if (secretFromHeader == apiSecret)
+            return true
+
+        Log.w(LOG_ID, "Invalid api-secret (set: ${!secretFromHeader.isNullOrEmpty()})")
+        call.respondText("Invalid api-secret", ContentType.Text.Plain, HttpStatusCode.Unauthorized)
+        return false
+    }
+
     private fun start(): Boolean {
         var started = false
 
@@ -142,7 +171,10 @@ object XDripServer : SharedPreferences.OnSharedPreferenceChangeListener {
             server = embeddedServer(CIO, port = Port, host=if(openServer) "0.0.0.0" else "127.0.0.1") {
                 routing {
                     get("/sgv.json") {
-                        Log.i(LOG_ID, "Request: ${call.request.uri}")
+                        Log.i(LOG_ID, "Request: ${call.request.host()}${call.request.uri}")
+                        if(!authenticate(call)) {
+                            return@get
+                        }
                         lastRequest = System.currentTimeMillis()
                         val brief = call.request.queryParameters.contains("brief_mode")
                         val count: Int = call.request.queryParameters["count"]?.toIntOrNull() ?: NumRecords
@@ -155,7 +187,10 @@ object XDripServer : SharedPreferences.OnSharedPreferenceChangeListener {
                         InternalNotifier.notifyAsync(GlucoDataService.context!!, NotifySource.UPDATE_MAIN, null)
                     }
                     get("/pebble") {
-                        Log.i(LOG_ID, "Request: ${call.request.uri}")
+                        Log.i(LOG_ID, "Request: ${call.request.host()}${call.request.uri}")
+                        if(!authenticate(call)) {
+                            return@get
+                        }
                         lastRequest = System.currentTimeMillis()
                         val values = getGlucoseValues(false, 1)
                         val response = values.createPebbleResponse()
@@ -164,7 +199,10 @@ object XDripServer : SharedPreferences.OnSharedPreferenceChangeListener {
                         InternalNotifier.notifyAsync(GlucoDataService.context!!, NotifySource.UPDATE_MAIN, null)
                     }
                     get("/status.json") {
-                        Log.i(LOG_ID, "Request: ${call.request.uri}")
+                        Log.i(LOG_ID, "Request: ${call.request.host()}${call.request.uri}")
+                        if(!authenticate(call)) {
+                            return@get
+                        }
                         lastRequest = System.currentTimeMillis()
                         val response = createStatusResponse()
                         Log.d(LOG_ID, "Response: ${response.take(500)}")
@@ -379,7 +417,9 @@ object XDripServer : SharedPreferences.OnSharedPreferenceChangeListener {
                 Log.i(LOG_ID, "Using 1 minute interval: ${oneMinuteInterval}")
             }
         }
-
-
+        if(key == null || key == Constants.SHARED_PREF_XDRIP_SERVER_API_SECRET) {
+            apiSecret = Utils.encryptSHA1(sharedPreferences.getString(Constants.SHARED_PREF_XDRIP_SERVER_API_SECRET, ""))
+            Log.i(LOG_ID, "API Secret has changed (set: ${!apiSecret.isEmpty()})")
+        }
     }
 }

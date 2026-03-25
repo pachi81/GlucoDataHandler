@@ -19,7 +19,9 @@
         android:autoSizeTextType="uniform"
         android:maxLines="1"
         android:layout_marginHorizontal="10dp"
-        android:textColor="@color/transparent_widget_textcolor" />
+        android:textColor="@color/transparent_widget_textcolor"
+        android:visibility="gone"
+        tools:ignore="HardcodedText" />
     <TextView
         android:id="@+id/glucose"
         android:layout_margin="6dp"

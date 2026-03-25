@@ -342,6 +342,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             nodeBatteryLevel[nodeId] = level
             val extra = Bundle()
             extra.putInt(BatteryReceiver.LEVEL, level)
+            extra.putString(Constants.EXTRA_NODE_ID, nodeId)
             InternalNotifier.notify(context, NotifySource.NODE_BATTERY_LEVEL, extra)
         }
     }
@@ -725,7 +726,10 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     }
                 }
                 Command.DB_SYNC -> dbSync.sendData(context, nodeId)
-                Command.CLEAN_UP_DB -> GlucoDataService.resetDB()
+                Command.CLEAN_UP_DB -> {
+                    if (GlucoDataService.appSource != AppSource.PHONE_APP)
+                        GlucoDataService.resetDB()
+                }
                 Command.REQUEST_DB_SYNC -> dbSync.requestDbSync(context)
             }
 

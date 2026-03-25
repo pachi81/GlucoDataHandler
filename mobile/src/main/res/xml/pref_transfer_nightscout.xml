@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <androidx.preference.SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="nightscout_upload_enabled"
+        android:title="@string/src_ns_enabled"
+        android:summary="@string/pref_transfer_to_nightscout_summary"
+        app:iconSpaceReserved="false" />
+    <androidx.preference.EditTextPreference
+        android:defaultValue=""
+        android:key="nightscout_upload_url"
+        android:title="@string/src_ns_url"
+        android:summary="@string/src_ns_url_summary"
+        app:iconSpaceReserved="false" />
+    <androidx.preference.EditTextPreference
+        android:defaultValue=""
+        android:key="nightscout_upload_secret"
+        android:title="@string/src_ns_secret"
+        android:summary="@string/src_ns_secret_summary"
+        android:inputType="textPassword"
+        app:iconSpaceReserved="false" />
+    <androidx.preference.EditTextPreference
+        android:defaultValue=""
+        android:key="nightscout_upload_token"
+        android:title="@string/src_ns_token"
+        android:summary="@string/src_ns_token_summary"
+        app:iconSpaceReserved="false" />
+    <PreferenceCategory
+        android:title="@string/advanced_settings"
+        app:iconSpaceReserved="false">
+        <androidx.preference.SeekBarPreference
+            app:showSeekBarValue="true"
+            app:seekBarIncrement="1"
+            app:min="1"
+            android:max="30"
+            android:defaultValue="5"
+            android:key="nightscout_upload_interval"
+            android:title="@string/alarm_interval"
+            android:summary="@string/transfer_values_interval_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+</PreferenceScreen>

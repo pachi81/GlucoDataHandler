@@ -25,6 +25,11 @@
             android:summary="@string/pref_watchfaces_gdc_summary"
             app:iconSpaceReserved="false" />
         <Preference
+            android:key="pref_watchfaces_cx"
+            android:title="@string/pref_watchfaces_cx"
+            android:summary="@string/pref_watchfaces_cx_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
             android:key="pref_watchfaces_pujie"
             android:title="@string/pref_watchfaces_pujie"
             android:summary="@string/pref_watchfaces_pujie_summary"

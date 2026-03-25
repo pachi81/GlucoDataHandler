@@ -36,6 +36,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
     private var alarmManager: AlarmManager? = null
     private var lastElapsedMinute = 0L
     private var runningThread: Thread? = null
+    private var lastAlarmTime = 0L
     private var currentAlarmTime = 0L
     protected var hasExactAlarmPermission = false
     private val elapsedTimeMinute: Long
@@ -64,21 +65,25 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
         }
     }
 
-    fun checkExecution(task: BackgroundTask? = null): Boolean {
+    fun checkExecution(task: BackgroundTask? = null, alarmTime: Long = 0L): Boolean {
         if(task != null) {
-            Log.d(LOG_ID, "checkExecution for " + task.javaClass.simpleName + ": elapsedTimeMinute=" + elapsedTimeMinute
-                    + " - lastElapsedMinute=" + lastElapsedMinute
-                    + " - elapsedIobCobTimeMinute=" + Utils.getElapsedTimeMinute(task.getLastIobCobTime(), RoundingMode.HALF_UP)
-                    + " - interval=" + task.getIntervalMinute()
-                    + " - active=" + task.active(elapsedTimeMinute))
             if(task.active(elapsedTimeMinute)) {
+                Log.i(LOG_ID, "checkExecution for " + task.javaClass.simpleName + ": elapsedTimeMinute=" + elapsedTimeMinute
+                        + " - lastElapsedMinute=" + lastElapsedMinute
+                        + " - elapsedAlarmTime=" + Utils.getElapsedTimeMinute(alarmTime)
+                        + " - elapsedIobCobTimeMinute=" + Utils.getElapsedTimeMinute(task.getLastIobCobTime(), RoundingMode.HALF_UP)
+                        + " - interval=" + task.getIntervalMinute())
                 if (elapsedTimeMinute != 0L) {
                     if (lastElapsedMinute < 0 && initialExecution) {
-                        Log.d(LOG_ID, "Trigger initial task execution")
+                        Log.i(LOG_ID, "Trigger initial task execution")
                         return true   // trigger initial execution
                     }
-                    if (elapsedTimeMinute.mod(task.getIntervalMinute()) == 0L) {
-                        Log.d(LOG_ID, "Trigger "+ task.javaClass.simpleName + " execution after " + elapsedTimeMinute + " min")
+                    if(alarmTime > 0L && Utils.getElapsedTimeMinute(alarmTime) >= task.getIntervalMinute() && elapsedTimeMinute >= task.getIntervalMinute()) {
+                        Log.i(LOG_ID, "Time trigger " + task.javaClass.simpleName + " execution after " + elapsedTimeMinute + " min")
+                        return true   // interval expired for active task
+                    }
+                    if (elapsedTimeMinute.mod(task.getIntervalMinute()) == 0L || task.forceExecution()) {
+                        Log.i(LOG_ID, "Trigger " + task.javaClass.simpleName + " execution after " + elapsedTimeMinute + " min")
                         return true   // interval expired for active task
                     }
                 }
@@ -88,8 +93,14 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                         return true   // IOB/COB interval expired for active task
                     }
                 }
+                Log.i(LOG_ID, "Nothing to execute for " + task.javaClass.simpleName + ": elapsedTimeMinute=" + elapsedTimeMinute
+                        + " - lastElapsedMinute=" + lastElapsedMinute
+                        + " - elapsedIobCobTimeMinute=" + Utils.getElapsedTimeMinute(task.getLastIobCobTime(), RoundingMode.HALF_UP)
+                        + " - interval=" + task.getIntervalMinute()
+                        + " - active=" + task.active(elapsedTimeMinute))
+            } else {
+                Log.d(LOG_ID, "Task " + task.javaClass.simpleName + " is not active")
             }
-            Log.d(LOG_ID, "nothing to execute for " + task.javaClass.simpleName)
         } else {
             Log.v(LOG_ID,"checkExecution: " + "elapsedTimeMinute=" + elapsedTimeMinute
                     + " - lastElapsedMinute=" + lastElapsedMinute
@@ -102,7 +113,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                 Log.d(LOG_ID, "Check IOB/COB task execution after " + elapsedIobCobTimeMinute + " min")
                 return true // check each task for additional IOB COB data
             }
-            Log.d(LOG_ID, "nothing to execute: " + "elapsedTimeMinute=" + elapsedTimeMinute
+            Log.i(LOG_ID, "nothing to execute: " + "elapsedTimeMinute=" + elapsedTimeMinute
                     + " - lastElapsedMinute=" + lastElapsedMinute
                     + " - elapsedIobCobTimeMinute=" + elapsedIobCobTimeMinute)
         }
@@ -118,18 +129,20 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
     }
 
     private fun executeTasks(force: Boolean = false) {
-        Log.v(LOG_ID, "executeTasks called with force: " + force)
+        Log.v(LOG_ID, "executeTasks called with force: $force - lastAlarmTime: ${Utils.getUiTimeStamp(lastAlarmTime)}")
         try {
             if (force || checkExecution()) {
                 if(isRunning()) {
                     Log.w(LOG_ID, "Thread still active! Kill it!")
                     runningThread!!.interrupt()
                 }
+                val alarmTime = lastAlarmTime
+                lastAlarmTime = currentAlarmTime
                 runningThread = Thread {
                     WakeLockHelper(context!!).use {
                         try {
                             backgroundTaskList.forEach {
-                                if ((force && it.active(elapsedTimeMinute)) || checkExecution(it)) {
+                                if ((force && it.active(elapsedTimeMinute)) || checkExecution(it, alarmTime)) {
                                     try {
                                         Log.i(
                                             LOG_ID,
@@ -284,8 +297,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                     }
                 }
 
-                Log.v(LOG_ID, "Cur time $currentAlarmTime - next time ${nextAlarm.timeInMillis} - diff ${abs(currentAlarmTime-nextAlarm.timeInMillis)} - elapsedTimeMinute $elapsedTimeMinute")
-
+                Log.v(LOG_ID, "Cur time ${Utils.getUiTimeStamp(currentAlarmTime)} - next time ${Utils.getUiTimeStamp(nextAlarm.timeInMillis)} - diff ${abs(currentAlarmTime-nextAlarm.timeInMillis)} - elapsedTimeMinute $elapsedTimeMinute")
                 if (abs(currentAlarmTime-nextAlarm.timeInMillis) > 3000) {
                     if (hasExactAlarmPermission) {
                         alarmManager!!.setExactAndAllowWhileIdle(
@@ -301,13 +313,11 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                         )
                     }
                     BackgroundWorker.triggerDelay(context!!, taskServiceClass, (nextAlarm.timeInMillis+3000 - System.currentTimeMillis())/1000)
-                    currentAlarmTime = nextAlarm.timeInMillis
-                    lastElapsedMinute = elapsedTimeMinute
                 } else {
                     Log.d(LOG_ID, "Ignore next alarm as it is already active")
-                    currentAlarmTime = nextAlarm.timeInMillis
-                    lastElapsedMinute = elapsedTimeMinute
                 }
+                currentAlarmTime = nextAlarm.timeInMillis
+                lastElapsedMinute = elapsedTimeMinute
                 return
             }
         }
@@ -409,6 +419,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
 
     fun checkRunning(): Boolean {
         // timer must run, if there is something to do
+        Log.d(LOG_ID, "checkRunning: active=${active()} - elapsedTimeMinute $elapsedTimeMinute - task-active ${active(elapsedTimeMinute)} - currenetAlarmTime ${Utils.getUiTimeStamp(currentAlarmTime)}")
         if (active(elapsedTimeMinute)) {
             if(!active()) {
                 Log.e(LOG_ID, "Still tasks active, but timer not running!")

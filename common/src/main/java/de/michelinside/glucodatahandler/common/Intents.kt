@@ -10,4 +10,5 @@ object Intents {
     const val DEXCOM_G7_BROADCAST_ACTION = "com.dexcom.g7.EXTERNAL_BROADCAST"
     const val NS_EMULATOR_BROADCAST_ACTION = "com.eveningoutpost.dexdrip.NS_EMULATOR"
     const val DIABOX_BROADCAST_ACTION = "com.outshineiot.diabox.BgEstimate"
+    const val AIDEX_BROADCAST_ACTION = "com.microtechmd.cgms.NOTIFICATION"
 }

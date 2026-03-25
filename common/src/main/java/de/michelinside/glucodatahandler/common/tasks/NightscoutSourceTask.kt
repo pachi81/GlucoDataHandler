@@ -11,6 +11,7 @@ import de.michelinside.glucodatahandler.common.database.GlucoseValue
 import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.utils.HttpRequest
 import de.michelinside.glucodatahandler.common.utils.JsonUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import org.json.JSONArray
@@ -67,7 +68,7 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
     }
 
     override fun needsInternet(): Boolean {
-        if(url.contains("127.0.0.1") || url.lowercase().contains("localhost")) {
+        if(HttpRequest.isLocalHost(url)) {
             Log.v(LOG_ID, "Localhost detected!")
             return false
         }
@@ -119,7 +120,7 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
             url = sharedPreferences.getString(Constants.SHARED_PREF_NIGHTSCOUT_URL, "")!!.trim().trimEnd('/')
             if(BuildConfig.DEBUG && url.isEmpty())
                 url = BuildConfig.NIGHTSCOUT_DEBUG_SERVER
-            secret = Utils.encryptSHA1(sharedPreferences.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, "")!!)
+            secret = Utils.encryptSHA1(sharedPreferences.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, ""))
             token = sharedPreferences.getString(Constants.SHARED_PREF_NIGHTSCOUT_TOKEN, "")!!
             iob_cob_support = sharedPreferences.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, true)
             result = true
@@ -130,7 +131,7 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
                     result = true
                 }
                 Constants.SHARED_PREF_NIGHTSCOUT_SECRET -> {
-                    secret = Utils.encryptSHA1(sharedPreferences.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, "")!!)
+                    secret = Utils.encryptSHA1(sharedPreferences.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, ""))
                     result = true
                 }
                 Constants.SHARED_PREF_NIGHTSCOUT_TOKEN -> {

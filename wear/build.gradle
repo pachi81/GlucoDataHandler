@@ -3,7 +3,22 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+Properties properties = new Properties()
+if (project.rootProject.file('local.properties').exists()) {
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+}
+
 android {
+    signingConfigs {
+        release {
+            if (properties.containsKey('keystore.file')) {
+                storeFile file(properties.getProperty('keystore.file'))
+                storePassword properties.getProperty('keystore.password')
+                keyAlias properties.getProperty('keystore.alias')
+                keyPassword properties.getProperty('keystore.key.password')
+            }
+        }
+    }
     namespace 'de.michelinside.glucodatahandler'
     compileSdk rootProject.compileSdk
 
@@ -15,17 +30,24 @@ android {
         versionName rootProject.versionName
     }
 
+    buildFeatures {
+        buildConfig = true
+        viewBinding true
+    }
+
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "GlucoDataHandler"
+            signingConfig signingConfigs.release
         }
         dev_release {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-dev-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             versionNameSuffix '-dev.' + rootProject.versionCode
             resValue "string", "app_name", "GlucoDataHandler"
+            signingConfig signingConfigs.release
         }
         debug {
             minifyEnabled false
@@ -37,6 +59,7 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "GDH Second"
+            signingConfig signingConfigs.release
         }
         applicationVariants.all {
             variant ->
@@ -53,9 +76,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
-    }
-    buildFeatures {
-        viewBinding true
     }
     dependenciesInfo {
         includeInApk = false
@@ -82,49 +102,147 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }
 
-afterEvaluate {
-    def bundleRelease = tasks.getByPath(':wear:bundleRelease')
-    def copyAndroidBundlePostBuild = tasks.register('copyAndroidBundlePostBuild', Copy) {
-        dependsOn bundleRelease
-        from "${projectDir}/release"
-        include '**/*.aab'
-        into rootProject.releasePath + "/Playstore" + "/" + versionCode.toString()
-    }
-    bundleRelease.finalizedBy(copyAndroidBundlePostBuild)
+def registerPostBuildCopy(String taskName, String triggerTaskName, String buildSubPath, String localDest, boolean isAab) {
+    def buildDir = layout.buildDirectory.dir(buildSubPath)
+    def localDir = file(localDest)
+    def globalPath = rootProject.releasePath.toString()
+    def vCode = rootProject.versionCode.toString()
+    def pattern = isAab ? "**/*.aab" : "**/*.apk"
 
-    def bundleDev_release = tasks.getByPath(':wear:bundleDev_release')
-    def copyAndroidBundleDevPostBuild = tasks.register('copyAndroidBundleDevPostBuild', Copy) {
-        dependsOn bundleDev_release
-        from "${projectDir}/dev_release"
-        include '**/*.aab'
-        into rootProject.releasePath + "/Playstore" + "/" + versionCode.toString()
+    def localTask = tasks.register(taskName, Copy) {
+        from buildDir
+        include pattern
+        into localDir
     }
-    bundleDev_release.finalizedBy(copyAndroidBundleDevPostBuild)
 
-    def assembleRelease = tasks.getByPath(':wear:assembleRelease')
-    def copyAndroidApksPostBuild = tasks.register('copyAndroidApksPostBuild', Copy) {
-        dependsOn assembleRelease
-        from "${projectDir}/release"
-        include '**/*.apk'
-        into rootProject.releasePath
+    def globalTask = tasks.register("${taskName}Global", Copy) {
+        from buildDir
+        include pattern
+        into isAab ? new File(globalPath, "Playstore/$vCode") : new File(globalPath)
     }
-    assembleRelease.finalizedBy(copyAndroidApksPostBuild)
 
-    def assembleDevRelease = tasks.getByPath(':wear:assembleDev_release')
-    def copyAndroidDevApksPostBuild = tasks.register('copyAndroidDevApksPostBuild', Copy) {
-        dependsOn assembleDevRelease
-        from "${projectDir}/dev_release"
-        include '**/*.apk'
-        into rootProject.releasePath
+    tasks.matching { it.name == triggerTaskName }.configureEach {
+        finalizedBy localTask, globalTask
     }
-    assembleDevRelease.finalizedBy(copyAndroidDevApksPostBuild)
+}
 
-    def assembleSecond = tasks.getByPath(':wear:assembleSecond')
-    def copyAndroidSecondApksPostBuild = tasks.register('copyAndroidSecondApksPostBuild', Copy) {
-        dependsOn assembleSecond
-        from "${projectDir}/second"
-        include '**/*.apk'
-        into rootProject.releasePath
+def registerPostBuildCopyInt(String taskName, String triggerTaskName, String localSource, boolean isAab) {
+    def globalPath = rootProject.releasePath.toString()
+    def vCode = rootProject.versionCode.toString()
+    def pattern = isAab ? "**/*.aab" : "**/*.apk"
+
+    def intTask = tasks.register(taskName, Copy) {
+        from "${projectDir}/${localSource}"
+        include pattern
+        into isAab ? new File(globalPath, "Playstore/$vCode") : new File(globalPath)
     }
-    assembleSecond.finalizedBy(copyAndroidSecondApksPostBuild)
+
+    tasks.matching { it.name == triggerTaskName }.configureEach {
+        finalizedBy intTask
+    }
+}
+
+// --- Dynamic Post-Build Copy Logic (Groovy Version - Configuration Cache Compatible) ---
+
+// Pre-calculate global values to avoid project state access in closures
+def globalReleasePath = rootProject.ext.releasePath.toString()
+def globalVersionCode = rootProject.versionCode.toString()
+def wearProjectDir = projectDir
+def wearBuildDir = project.layout.buildDirectory
+
+android.applicationVariants.configureEach { variant ->
+    def vName = variant.name // e.g., "release", "dev_release", "second"
+    def vNameCap = vName.capitalize()
+
+    // Capture the output directory now, so we don't need the 'variant' object inside tasks
+    def apkSourceFolder = variant.outputs.collect { it.outputFile.parentFile }
+
+    // 1. Register a Clean Task to clear old files before the build starts
+    def cleanTaskName = "cleanOutputsForWear${vNameCap}"
+    tasks.register(cleanTaskName) {
+        group = "delivery"
+        doLast {
+            def foldersToClean = [
+                    new File(wearProjectDir, vName),
+                    new File(wearBuildDir.asFile.get(), "outputs/apk/${vName}"),
+                    new File(wearBuildDir.asFile.get(), "outputs/bundle/${vName}")
+            ]
+            foldersToClean.each { folder ->
+                if (folder.exists()) {
+                    println "DEBUG: Cleaning old Wear outputs in ${folder.absolutePath}"
+                    folder.deleteDir()
+                    folder.mkdirs()
+                }
+            }
+        }
+    }
+
+    // 2. Register APK Copy Task
+    def copyApkTaskName = "copyWear${vNameCap}ApkToGlobal"
+    tasks.register(copyApkTaskName, Copy) {
+        group = "delivery"
+        description = "Copies the generated Wear APK for $vName to the global release path."
+
+        from apkSourceFolder
+        include "*.apk"
+        into file(globalReleasePath)
+
+        // Flatten structure: put .apk directly into target
+        eachFile { details -> details.path = details.name }
+
+        doLast {
+            println "DEBUG: Wear APK copy finished for ${vNameCap} to ${globalReleasePath}"
+        }
+    }
+
+    // 3. Register Bundle (AAB) Copy Task
+    def copyBundleTaskName = "copyWear${vNameCap}AabToGlobal"
+    tasks.register(copyBundleTaskName, Copy) {
+        group = "delivery"
+        description = "Copies the generated Wear Bundle for $vName to the Playstore folder."
+
+        // Use a closure to defer evaluation until execution time
+        from({
+            def paths = [
+                    new File(wearProjectDir, vName),
+                    new File(wearBuildDir.asFile.get(), "outputs/bundle/${vName}")
+            ]
+            return paths
+        })
+
+        include "*.aab"
+        into file("${globalReleasePath}/Playstore/${globalVersionCode}")
+
+        // Flatten structure
+        eachFile { details ->
+            details.path = details.name
+            println "DEBUG: Copying Wear AAB: ${details.file.absolutePath}"
+        }
+
+        // Prevent task failure if one source is missing (e.g. IDE path vs CLI path)
+        includeEmptyDirs = false
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    }
+
+    // 4. Task Wiring (Safe and Specific)
+    tasks.named("assemble${vNameCap}").configure {
+        dependsOn cleanTaskName
+        finalizedBy copyApkTaskName
+    }
+
+    try {
+        tasks.named("bundle${vNameCap}").configure {
+            dependsOn cleanTaskName
+            finalizedBy copyBundleTaskName
+        }
+    } catch (Exception ignored) {
+        // Task might not exist for some variants (like debug)
+    }
+}
+
+// 5. Fix for internal metadata tasks to avoid race conditions
+tasks.configureEach { task ->
+    if (task.name.contains('ApkListingFileRedirect')) {
+        task.mustRunAfter tasks.matching { it.name.startsWith('copyWear') }
+    }
 }

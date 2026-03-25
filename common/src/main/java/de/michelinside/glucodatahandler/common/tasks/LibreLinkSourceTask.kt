@@ -23,6 +23,7 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 import androidx.core.content.edit
+import java.net.HttpURLConnection
 
 
 // API docu: https://libreview-unofficial.stoplight.io/
@@ -45,8 +46,10 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
         val patientData: MutableMap<String, String> get() {
             if(instance == null)
                 return mutableMapOf<String, String>()
-            return instance!!.getPatientData()
+            return instance!!.patientData
         }
+        var version = "4.17.0"
+            private set
         const val server = "https://api.libreview.%s"
         const val region_server = "https://api-%s.libreview.%s"
         const val LOGIN_ENDPOINT = "/llu/auth/login"
@@ -71,7 +74,7 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
     private fun getHeader(): MutableMap<String, String> {
         val result = mutableMapOf(
             "product" to "llu.android",
-            "version" to "4.17.0",
+            "version" to version,
             "Accept" to "application/json",
             "Content-Type" to "application/json",
             "cache-control" to "no-cache",
@@ -224,6 +227,28 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
         return "Error"
     }
 
+    override fun checkErrorResponse(code: Int, message: String?, errorResponse: String?) {
+        // check for version issue: 403 - Forbidden - {"data":{"minimumVersion":"4.16.0"},"status":920}
+        if(code == HttpURLConnection.HTTP_FORBIDDEN && errorResponse != null) {
+            val jsonObj = JSONObject(errorResponse)
+            if(jsonObj.has("data")) {
+                val dataObj = jsonObj.optJSONObject("data")
+                if(dataObj?.has("minimumVersion") == true) {
+                    version = dataObj.optString("minimumVersion", version)
+                    Log.w(LOG_ID, "Using new version: $version from response $errorResponse")
+                    retry = true
+                    if(GlucoDataService.sharedPref != null) {
+                        GlucoDataService.sharedPref!!.edit {
+                            putString(Constants.SHARED_PREF_LIBRE_VERSION, version)
+                        }
+                    }
+                    return
+                }
+            }
+        }
+        super.checkErrorResponse(code, message, errorResponse)
+    }
+
     private fun checkResponse(body: String?, lastError4Type: String = ""): JSONObject? {
         if (body.isNullOrEmpty()) {
             return null
@@ -374,7 +399,7 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
         return true
     }
 
-    override fun getPatientData(): MutableMap<String, String> {
+    override fun getPatients(): MutableMap<String, String>? {
         return handleConnectionResponse(httpGet(getUrl(CONNECTION_ENDPOINT), getHeader()))
     }
 
@@ -414,6 +439,8 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
             if(data != null) {
                 if(data.has("graphData")) {
                     parseGraphData(data.optJSONArray("graphData"))
+                } else {
+                    Log.w(LOG_ID, "No graphData found in response: ${replaceSensitiveData(body!!)}")
                 }
                 if(data.has("connection")) {
                     val connection = data.optJSONObject("connection")
@@ -459,7 +486,7 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
         }
     }
 
-    private fun handleConnectionResponse(body: String?): MutableMap<String, String> {
+    private fun handleConnectionResponse(body: String?): MutableMap<String, String>? {
         /*  used for getting patient id
             {
               "status": 0,
@@ -487,6 +514,8 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
               ]
             }
         */
+        if(body == null)
+            return null
         val jsonObject = checkResponse(body)
         if (jsonObject != null) {
             val array = jsonObject.optJSONArray("data")
@@ -509,7 +538,7 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
                 retry = true
             }
         }
-        return mutableMapOf()
+        return null
     }
 
     private fun parseGlucoseData(data: JSONObject): Boolean {
@@ -544,9 +573,9 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
                 handleResult(glucoExtras)
                 return true
             }
-        } else {
-            Log.e(LOG_ID, "No glucoseMeasurement found in response: ${replaceSensitiveData(data.toString())}")
         }
+        Log.e(LOG_ID, "No or invalid glucoseMeasurement found in response: ${replaceSensitiveData(data.toString())}")
+        setLastError(GlucoDataService.context!!.resources.getString(R.string.missing_data), -1, "Please restart your phone or the Libre app.")
         return false
     }
 
@@ -595,6 +624,8 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
             region = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_REGION, "")!!
             autoAcceptTOU = sharedPreferences.getBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, true)
             topLevelDomain = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_SERVER, "io")?: "io"
+            version = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_VERSION, version)?: version
+            Log.i(LOG_ID, "Using version: $version")
             InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
             trigger = true
         } else {

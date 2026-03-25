@@ -169,7 +169,7 @@ Ha az \"Újraindítás\" aktív, az értesítés csak akkor záródik be, ha a r
     <string name="falling_fast_alarm_notification_name">Gyorsan eső riasztás</string>
     <string name="falling_fast_alarm_text">Gyorsan esik!</string>
     <string name="forground_notification_descr">Adatfeldolgozás a komplikációkhoz</string>
-    <string name="forward_to_values_summary">Állítsa be a minimális időt (percben) a vércukormérések között, mielőtt új frissítést küld a címzetteknek (nem a Health Connecthez).</string>
+    <string name="forward_to_values_summary">Állítsa be a minimális időt (percben) a vércukormérések között, mielőtt új frissítést küld a címzetteknek.</string>
     <string name="forward_to_watch_interval_summary">Állítsa be a minimális időt (percben) a vércukormérések között, mielőtt új frissítést küld az okosórára.
 A riasztások és a nagyon alacsony értékek mindig elküldésre kerülnek.</string>
     <string name="battery_optimization_disabled">Az akkumulátor optimalizálás aktív!
@@ -567,7 +567,6 @@ Az összes támogatott óra listájához és a beállítási információkért k
     <string name="pref_watchfaces_default">Alapértelmezett</string>
     <string name="pref_watchfaces_default_summary">A legtöbb okosóra gyártó már kínál számlapokat, amelyek kompatibilisek a GlucoDataHandler komplikációival.
 Például a legtöbb Samsung \"Info\" számlap kompatibilis.</string>
-    <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>
     <string name="pref_watchfaces_dmm_summary">A Diabetic Masked Man harmadik féltől származó számlapokat készít, amelyek kifejezetten a GlucoDataHandler használatára lettek tervezve.
 Kattintson ide a Play Store oldalának megnyitásához.</string>
     <string name="pref_watchfaces_gdc">GDC számlapok</string>
@@ -577,7 +576,6 @@ Kattintson ide a Play Store oldalának megnyitásához.</string>
     <string name="pref_watchfaces_pujie">Pujie</string>
     <string name="pref_watchfaces_pujie_summary">A Pujie egy alkalmazás számlapok létrehozására felhőalapú könyvtárral.
 Kompatibilis számlapok kereséséhez keressen a könyvtárban \"GDH_\"-vel kezdődő számlapokat.
-Megjegyzés: A Pujie nem kompatibilis a Wear OS 5 eszközökkel.
 Kattintson ide az alkalmazás megnyitásához a Play Store-ban.</string>
     <string name="pref_wear_notification">Okosóra: Rezgés</string>
     <string name="pref_wear_os_check_connection">Kapcsolat ellenőrzése</string>
@@ -727,7 +725,7 @@ Kérjük, állítsa a beállítást \"Extrém zajos\" értékre!</string>
     <string name="tasker_target_range_state">Vércukor tartomány változás</string>
     <string name="tasker_wear_connection_state">Okosóra kapcsolat</string>
     <string name="temp_disabled">Ideiglenesen letiltva</string>
-    <string name="temp_disabled_until">Ideiglenesen letiltva %1$s-ig</string>
+    <string name="temp_disabled_until">Ideiglenesen letiltva</string>
     <string name="test_alarm">Teszt riasztás!</string>
     <string name="test_neg_range">Teszt Range komplikáció negatív értékekkel (trendkör támogatáshoz)</string>
     <string name="timestamp">A vércukorérték időbélyege</string>
@@ -821,7 +819,8 @@ Mielőtt engedélyezné ezt a beállítást, először engedélyezze az \"Adás 
     <string name="notification_reader_enabled">Értesítés olvasó engedélyezése</string>
     <string name="no_receiver">Nincs alkalmazás</string>
     <string name="notification_reader_app_regex">Regex érték szűrő</string>
-    <string name="notification_reader_app_regex_summary">Regex az érték elemzéséhez az értesítés szövegéből.\nKérjük, csak akkor módosítsa, ha tudja, mit csinál, vagy ha erre javaslatot kap a fejlesztőtől.</string>
+    <string name="notification_reader_app_regex_summary">Regex az érték elemzéséhez az értesítés szövegéből.</string>
+    <string name="advanced_settings_developer_summary">Kérjük, csak akkor módosítsa, ha tudja, mit csinál, vagy ha erre javaslatot kap a fejlesztőtől.</string>
     <string name="notification_reader_five_minute_interval">5 perces intervallum</string>
     <string name="notification_reader_five_minute_interval_summary">Néhány alkalmazás, mint például a Dexcom, elég gyakran frissíti az értesítéseit. Az azonos értékű frissítések figyelmen kívül hagyásához engedélyezze az 5 perces intervallumot.\nHa engedélyezve van, csak 5 percenként lesz új érték, vagy ha az értesítésben lévő érték megváltozott.</string>
     <string name="pref_source_notification_info_summary">Más alkalmazások értesítéseiből származó értékek fogadásához engedély szükséges az értesítések eléréséhez!\nAz értesítésnek tartalmaznia kell a vércukorértéket vagy az IOB/COB-t karakterláncként.\nMivel minden értesítésnek más az elrendezése, előfordulhat, hogy nem működik minden alkalmazással. Probléma esetén kérem, vegye fel velem a kapcsolatot az értesítés képernyőképével és a naplófájlokkal.</string>
@@ -971,7 +970,7 @@ Ezeket az engedélyeket bármikor kezelheti a Health Connect alkalmazás beáll�
     <string name="pref_switch_xdrip_server_reduce_data_summary">Ez a minimumra csökkenti a szolgáltatott adatokat, hogy megelőzze a memóriaproblémákat néhány Garmin órán.\nKérjük, ellenőrizze a kompatibilitást az óraszámlapjával.</string>
     <string name="error_port_in_use">A port használatban van!\nKérjük, állítsa le az ezen a porton futó többi webszervert, és indítsa újra a helyi webszervert.</string>
     <string name="state_active">aktív</string>
-    <string name="pref_garmin_info_summary">Nincs külön alkalmazás a Garmin, Fitbit vagy Pebble számára, csak egy helyi webszerver, amelyet az xDrip+ támogatással rendelkező óraszámlapok használnak.\nKeressen ilyen óraszámlapokat a Connect IQ Store-ban, és állítsa be az xDrip+ forrást ezekhez.\nFONTOS: ha Ön is használja az xDrip+-t vagy a Juggluco-t, a helyi webszervert csak egy alkalmazásban engedélyezheti, mivel ugyanazt a portot (17580) használják!</string>
+    <string name="pref_garmin_info_summary">Nincs külön alkalmazás a Garmin vagy Fitbit számára, csak egy helyi webszerver, amelyet az xDrip+ támogatással rendelkező óraszámlapok használnak.\nKeressen ilyen óraszámlapokat a Connect IQ Store-ban, és állítsa be az xDrip+ forrást ezekhez.\nFONTOS: ha Ön is használja az xDrip+-t vagy a Juggluco-t, a helyi webszervert csak egy alkalmazásban engedélyezheti, mivel ugyanazt a portot (17580) használják!</string>
     <string name="remaining">Fennmaradó</string>
     <string name="pref_switch_xdrip_open_server">Webszerver megnyitása</string>
     <string name="pref_switch_xdrip_open_server_summary">Tegye a webszervert nyitottá a hálózat többi eszköze számára.\nEz biztonsági problémákat okozhat, ezért csak akkor engedélyezze, ha valóban szüksége van a webszerver adatainak hálózati elérésére.\nA Garmin óraszámlapok közvetlenül a telefonon kérik le az adatokat, így nincs szükség nyitott szerverre!</string>
@@ -1000,14 +999,12 @@ Ezeket az engedélyeket bármikor kezelheti a Health Connect alkalmazás beáll�
     <string name="src_ns_summary">Nightscout webszolgáltatás távoli követése.</string>
     <string name="pref_cat_wear_os_summary">Wear OS órákhoz, pl. az összes Google Pixel Watch, Samsung Galaxy Watch 4 és újabb, és sok más.</string>
     <string name="pref_cat_watchdrip_summary">A külső WatchDrip+ alkalmazás által támogatott órákhoz, mint például a legtöbb Mi Band, Xiaomi Smart Band és Amazfit modell.</string>
-    <string name="pref_cat_garminpebble">Garmin, Fitbit és Pebble okosórák</string>
-    <string name="pref_cat_garminpebble_summary">Olyan eszközökhöz és alkalmazásokhoz, amelyek glükózadatokat tudnak fogadni az xDrip+ webszolgáltatásból, mint például a Garmin, Pebble és néhány Fitbit óra.</string>
+    <string name="pref_cat_garminpebble">Garmin és Fitbit okosórák</string>
+    <string name="pref_cat_garminpebble_summary">Olyan eszközökhöz és alkalmazásokhoz, amelyek glükózadatokat tudnak fogadni az xDrip+ webszolgáltatásból, mint például a Garmin és néhány Fitbit óra.</string>
     <string name="pref_garmin_watchfaces_summary">Nyomja meg itt a Connect IQ áruház megnyitásához az xDrip+ óraszámlapokhoz.\nHa az óraszámlapok támogatják az xDrip+-t, akkor kompatibilisnek kell lenniük ezzel az alkalmazással is.</string>
     <string name="pref_garmin_watchfaces">Garmin</string>
     <string name="pref_fitbit_watchfaces">Fitbit</string>
     <string name="pref_fitbit_watchfaces_summary">Nyomja meg itt a Glance weboldal megnyitásához, amely támogatja az xDrip+ webszolgáltatásokat.</string>
-    <string name="pref_pebble_watchfaces">Pebble</string>
-    <string name="pref_pebble_watchfaces_summary">Nyomja meg itt az xDrip+-hoz tervezett Pebble óraszámlapok megnyitásához, amelyeknek kompatibilisnek kell lenniük ezzel az alkalmazással is.</string>
     <string name="gmi">GMI</string>
     <string name="pref_lockscreen_x_pos">Vízszintes pozíció</string>
     <string name="pref_lockscreen_x_pos_summary">A kép vízszintes pozíciója:\n0 a kijelző bal széle\n40 a kijelző jobb széle</string>
@@ -1037,4 +1034,34 @@ Ezeket az engedélyeket bármikor kezelheti a Health Connect alkalmazás beáll�
     </plurals>
 
     <string name="dexcom_server_down_error">Úgy tűnik, a Dexcom szerver leállt!\nNyomja meg itt a szerver állapotának ellenőrzéséhez.\nHa a Dexcom alkalmazás ugyanazon a telefonon van, használhatja helyette az Értesítésolvasót (Notification Reader).</string>
+
+    <!-- v2.3 -->
+
+    <string name="medtrum_wrong_user_type_info">Csak követői fiókok engedélyezettek.\nNyomja meg itt egy új követői fiók létrehozásához és saját maga meghívásához.</string>
+    <string name="notification_reader_value_with_unit">Érték mértékegységgel</string>
+    <string name="notification_reader_value_with_unit_summary">Ha a mértékegység (mmol vagy mg) része az értéknek az értesítésben, engedélyezze ezt, hogy figyelmen kívül hagyja az összes mértékegység nélküli mezőt.</string>
+
+    <string name="button_yes">Igen</string>
+    <string name="button_no">Nem</string>
+    <string name="patient_changed">Beteg megváltozott</string>
+    <string name="patient_changed_reset_db">Megváltoztatta a beteget.\nSzeretné alaphelyzetbe állítani az adatbázist a régi betegadatok eltávolításához?</string>
+    <string name="update">Frissítés</string>
+    <string name="pref_transfer_to_healthconnect_summary">Glükózértékek megosztása a Health Connect szolgáltatással.</string>
+    <string name="pref_transfer_to_local_apps_summary">Broadcast küldése más helyi alkalmazásoknak ezen az eszközön.</string>
+    <string name="source_aidex_summary">AiDEX broadcast vevő engedélyezése. AiDEX alkalmazás 1.0.17-es vagy annál korábbi verziója szükséges.</string>
+    <string name="pref_source_aidex_summary">Broadcastokat fogad az AiDEX alkalmazásból. AiDEX alkalmazás 1.0.17-es vagy annál korábbi verziója szükséges.</string>
+
+    <string name="transfer_values_interval_summary">Intervallum a glükózértékek küldéséhez.\nAz utolsó átvitel óta rögzített összes érték bele lesz foglalva.</string>
+    <string name="health_connect_settings">Health Connect megnyitása</string>
+    <string name="health_connect_settings_summary">Engedélyek és adathozzáférés kezelése a Health Connect számára.</string>
+    <string name="health_connect_not_supported_version">A Health Connect legalább Android 9-et igényel.</string>
+    <string name="pref_transfer_to_nightscout_summary">Glükózértékek feltöltése a Nightscoutba.</string>
+    <string name="transfer_to_nightscout">Nightscout feltöltés</string>
+    <string name="label_profile">Profil</string>
+    <string name="pref_watchfaces_cx_summary">A Creative eXtreme óraszámlapok szintén támogatják a GlucoDataHandler komplikációkat.\nA Facer óraszámlap alkalmazást kell használnia ezen óraszámlapok használatához.\nKoppintson ide a Facer oldal megnyitásához a Creative eXtreme óraszámlapokhoz.</string>
+    <string name="notification_reader_interval_summary">Állítsa be ezt az érzékelő frissítési gyakoriságának megfelelően a felesleges értesítések feldolgozásának elkerülése érdekében.</string>
+    <string name="pref_transfer_to_local_apps">Helyi alkalmazások</string>
+
+    <string name="xdrip_open_server_api_secret_summary">Opcionális API-titok a hozzáférés védelme érdekében. Ha be van állítva, ugyanazt a titkot kell megadni a kliens alkalmazásban is az adatok eléréséhez.</string>
+    <string name="pref_xdrip_server_summary">Helyi webszervert biztosít a 17580-as porton, amely emulálja az xDrip+ webszolgáltatást, így különféle külső szolgáltatások, óraszámlapok és alkalmazások használhatják.</string>
 </resources>

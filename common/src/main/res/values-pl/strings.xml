@@ -666,7 +666,7 @@
     <string name="pref_send_battery_level_to_watch_summary">Prześlij informację o poziomie naładowania baterii do zegarka, aby wyświetlić ją w komplikacjach i na ekranie głównym.</string>
     <string name="pref_battery_level">Pokaż poziom baterii</string>
     <string name="forward_to_watch_interval_summary">Ustaw minimalny czas (w minutach) między pomiarami poziomu glukozy przed wysłaniem nowej aktualizacji do zegarka. Alarmy i wartości bardzo niskie będą zawsze wysyłane.</string>
-    <string name="forward_to_values_summary">Ustaw minimalny czas (w minutach) między pomiarami poziomu glukozy przed wysłaniem nowej aktualizacji do odbiorców (nie dla Health Connect).</string>
+    <string name="forward_to_values_summary">Ustaw minimalny czas (w minutach) między pomiarami poziomu glukozy przed wysłaniem nowej aktualizacji do odbiorców.</string>
     <string name="alarm_repeat_summary">Alarm będzie emitował dźwięk i wibracje do momentu odrzucenia powiadomienia lub osiągnięcia ustawionego maksymalnego czasu trwania alarmu.</string>
     <string name="alarm_repeat_time">Maksymalny czas trwania alarmu</string>
     <string name="alarm_repeat_time_summary">Określ maksymalny czas (w minutach), przez jaki alarm będzie emitował dźwięk i wibracje. Wartość 0 oznacza, że alarm będzie powtarzany w nieskończoność.</string>
@@ -687,8 +687,7 @@
     <string name="pref_watchfaces_default">Standardowe</string>
     <string name="pref_watchfaces_default_summary">Większość producentów zegarków dostarcza już tarcze zegarków, które mogą być używane z komplikacją z GlucoDataHandler. Na przykład większość tarcz zegarków Samsung \"Info\"\ daje taką możliwość.</string>
     <string name="pref_watchfaces_pujie">Pujie</string>
-    <string name="pref_watchfaces_pujie_summary">Pujie to aplikacja do tworzenia tarcz zegarka z biblioteką chmurową.\nAby znaleźć kompatybilne tarcze zegarka, wyszukaj w bibliotece tarcze zegarka zaczynające się od \"GDH_\".\nUwaga: Aplikacja Pujie nie jest kompatybilna z urządzeniami z systemem Wear OS 5.\nStuknij tutaj, aby otworzyć aplikację w Sklepie Play.</string>
-    <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>
+    <string name="pref_watchfaces_pujie_summary">Pujie to aplikacja do tworzenia tarcz zegarka z biblioteką chmurową.\nAby znaleźć kompatybilne tarcze zegarka, wyszukaj w bibliotece tarcze zegarka zaczynające się od \"GDH_\".\nStuknij tutaj, aby otworzyć aplikację w Sklepie Play.</string>
     <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man tworzy oddzielne tarcze zegarków zaprojektowane specjalnie do użytku z GlucoDataHandler.\nStuknij tutaj, aby otworzyć jego stronę w Sklepie Play.</string>
     <string name="pref_watchfaces_gdc">Tarcze zegarka GDC</string>
     <string name="pref_watchfaces_gdc_summary">Tarcze zegarka GDC są przeznaczone do użytku z aplikacją GlucoDataHandler.\nStuknij tutaj, aby otworzyć stronę Sklepu Play.</string>
@@ -769,7 +768,8 @@
     <string name="notification_reader_enabled">Włącz czytnik powiadomień</string>
     <string name="no_receiver">Brak aplikacji</string>
     <string name="notification_reader_app_regex">Filtr wartości Regex</string>
-    <string name="notification_reader_app_regex_summary">Regex do analizowania wartości z tekstu w powiadomieniu.\nZmień tylko, jeśli wiesz, co robisz lub jeśli otrzymasz poradę od programisty.</string>
+    <string name="notification_reader_app_regex_summary">Regex do analizowania wartości z tekstu w powiadomieniu.</string>
+    <string name="advanced_settings_developer_summary">Zmień tylko, jeśli wiesz, co robisz lub jeśli otrzymasz poradę od programisty.</string>
     <string name="notification_reader_five_minute_interval">5-minutowy interwał</string>
     <string name="notification_reader_five_minute_interval_summary">Niektóre aplikacje, takie jak Dexcom, aktualizują swoje powiadomienia dość często. Aby zignorować te aktualizacje z tą samą wartością, włącz 5-minutowy interwał.\nJeśli opcja ta jest włączona, nowa wartość będzie pojawiać się co 5 minut lub jeśli wartość w powiadomieniu uległa zmianie.</string>.
     <string name="pref_source_notification_info_summary">Aby otrzymywać wartości z powiadomień innych aplikacji, potrzebne jest uprawnienie dostępu do powiadomień! Powiadomienie musi zawierać wartość glukozy lub IOB/COB jako ciąg znaków.\nPonieważ każde powiadomienie ma inny układ, może nie działać z każdą aplikacją. W przypadku problemów, proszę o kontakt ze zrzutem ekranu powiadomienia i logami.</string>
@@ -900,7 +900,7 @@
     <string name="pref_switch_xdrip_server_reduce_data_summary">Spowoduje to ograniczenie dostarczanych danych do minimum, aby zapobiec problemom z pamięcią w niektórych zegarkach Garmin.\nNależy sprawdzić kompatybilność ze swoją tarczą zegarka.</string>
     <string name="error_port_in_use">Port jest używany!\nNależy zatrzymać inny serwer sieciowy działający na tym porcie i ponowne uruchomić lokalny serwer sieciowy.</string>
     <string name="state_active">aktywny</string>
-    <string name="pref_garmin_info_summary">Nie ma dedykowanej aplikacji dla Garmin, Fitbit lub Pebble, tylko lokalny serwer sieciowy, który jest używany przez tarcze zegarków obsługujące przesył danych z xDrip+.\nWystarczy wyszukać takie tarcze w Connect IQ Store i skonfigurować źródło xDrip+ dla tych tarczy.\nWAŻNE: jeśli używasz również xDrip+ lub Juggluco, możesz włączyć lokalny serwer sieciowy tylko w jednej aplikacji, ponieważ używają one tego samego portu (17580)!</string>
+    <string name="pref_garmin_info_summary">Nie ma dedykowanej aplikacji dla Garmin lub Fitbit, tylko lokalny serwer sieciowy, który jest używany przez tarcze zegarków obsługujące przesył danych z xDrip+.\nWystarczy wyszukać takie tarcze w Connect IQ Store i skonfigurować źródło xDrip+ dla tych tarczy.\nWAŻNE: jeśli używasz również xDrip+ lub Juggluco, możesz włączyć lokalny serwer sieciowy tylko w jednej aplikacji, ponieważ używają one tego samego portu (17580)!</string>
     <string name="remaining">Pozostało</string>
     <string name="pref_switch_xdrip_open_server">Otwórz serwer sieciowy</string>
     <string name="pref_switch_xdrip_open_server_summary">Otwórz serwer internetowy dla innych urządzeń w sieci.\nMoże to spowodować problemy z bezpieczeństwem, więc włącz tę funkcję tylko wtedy, gdy naprawdę potrzebujesz dostępu do danych serwera z sieci.\nTarcze zegarków Garmin żądają danych bezpośrednio w telefonie, więc nie jest potrzebny otwarty serwer!</string>
@@ -929,13 +929,11 @@
     <string name="src_ns_summary">Zdalne śledzenie usługi internetowej Nightscout.</string>
     <string name="pref_cat_wear_os_summary">Dla zegarków z systemem Wear OS, np. wszystkich zegarków Google Pixel, Samsung Galaxy Watch 4 i nowszych oraz wielu innych.</string>
     <string name="pref_cat_watchdrip_summary">Dla zegarków obsługiwanych przez zewnętrzną aplikację WatchDrip+, takich jak większość modeli Mi Band, Xiaomi Smart Band i Amazfit.</string>
-    <string name="pref_cat_garminpebble_summary">Dla urządzeń i aplikacji, które mogą odbierać dane glukozy z usługi sieciowej xDrip+, takich jak zegarki Garmin, Pebble i niektóre zegarki Fitbit.</string>
+    <string name="pref_cat_garminpebble_summary">Dla urządzeń i aplikacji, które mogą odbierać dane glukozy z usługi sieciowej xDrip+, takich jak zegarki Garmin i niektóre zegarki Fitbit.</string>
     <string name="pref_garmin_watchfaces_summary">Naciśnij tutaj, aby otworzyć sklep Connect IQ dla tarcz zegarka xDrip+.\nJeśli tarcza zegarka obsługuje xDrip+, powinna być również kompatybilna z tą aplikacją.</string>
     <string name="pref_garmin_watchfaces">Garmin</string>
     <string name="pref_fitbit_watchfaces">Fitbit</string>
     <string name="pref_fitbit_watchfaces_summary">Naciśnij tutaj, aby otworzyć stronę Glance, która obsługuje usługi sieciowe xDrip+.</string>
-    <string name="pref_pebble_watchfaces">Pebble</string>
-    <string name="pref_pebble_watchfaces_summary">Naciśnij tutaj, aby otworzyć tarcze zegarka Pebble zaprojektowane dla xDrip+, które powinny być również kompatybilne z tą aplikacją.</string>
     <string name="gmi">Wskaźnik GMI</string>
     <string name="pref_lockscreen_x_pos">Pozycja pozioma</string>
     <string name="pref_lockscreen_x_pos_summary">Pozioma pozycja obrazu: \n0 oznacza lewą stronę wyświetlacza \n40 oznacza prawą stronę wyświetlacza</string>
@@ -950,7 +948,7 @@
     <string name="alarm_ignore_snooze_for_obsolete_summary">Ten alarm powiadomi Cię nawet wtedy, gdy aktywna jest drzemka lub trwa ogólna cicha godzina dla wszystkich alarmów, gwarantując, że zostaniesz powiadomiony o braku nowej wartości glukozy.</string>
     <string name="alarm_inactive_auto_reenable">Automatyczne ponowne włączenie</string>
     <string name="alarm_inactive_auto_reenable_summary">Po wyłączeniu cichej godziny zostanie ona ponownie włączona o godzinie zakończenia.</string>
-    <string name="pref_cat_garminpebble">Zegarki Garmin, Fitbit i Pebble</string>
+    <string name="pref_cat_garminpebble">Zegarki Garmin i Fitbit</string>
 
     <plurals name="minutes_long">
         <item quantity="one">%d minuta</item>
@@ -972,4 +970,34 @@
     </plurals>
 
     <string name="dexcom_server_down_error">Serwer Dexcom najwyraźniej nie działa!\nNaciśnij tutaj, aby sprawdzić status serwera.\nJeśli aplikacja Dexcom znajduje się na tym samym telefonie, możesz zamiast tego użyć opcji Czytnik powiadomień.</string>
+
+    <!-- v2.3 -->
+
+    <string name="medtrum_wrong_user_type_info">Tylko użytkownicy będący obserwatorami mogą posiadać konto.\nNaciśnij tutaj, aby utworzyć nowe konto obserwatora i zaprosić siebie.</string>
+    <string name="notification_reader_value_with_unit">Wartość z jednostką</string>
+    <string name="notification_reader_value_with_unit_summary">Jeśli jednostka (mmol lub mg) jest częścią wartości w powiadomieniu, włącz tę opcję, aby zignorować wszystkie pola bez jednostki.</string>
+
+    <string name="button_yes">Tak</string>
+    <string name="button_no">Nie</string>
+    <string name="patient_changed">Zmieniono pacjenta</string>
+    <string name="patient_changed_reset_db">Zmieniono pacjenta.\nCzy chcesz zresetować bazę danych, aby usunąć stare dane pacjenta?</string>
+    <string name="update">Aktualizacja</string>
+    <string name="pref_transfer_to_healthconnect_summary">Udostępnianie wartości glukozy w Health Connect.</string>
+    <string name="pref_transfer_to_local_apps_summary">Wysyłanie transmisji do innych lokalnych aplikacji na tym urządzeniu.</string>
+    <string name="source_aidex_summary">Włącz odbiornik transmisji AiDEX. Wymaga aplikacji AiDEX w wersji 1.0.17 lub starszej.</string>
+    <string name="pref_source_aidex_summary">Odbiera transmisje z aplikacji AiDEX. Wymaga aplikacji AiDEX w wersji 1.0.17 lub starszej.</string>
+
+    <string name="transfer_values_interval_summary">Interwał wysyłania wartości glukozy.\nZostaną uwzględnione wszystkie wartości zarejestrowane od ostatniej transmisji.</string>
+    <string name="health_connect_settings">Otwórz Health Connect</string>
+    <string name="health_connect_settings_summary">Zarządzaj uprawnieniami i dostępem do danych dla Health Connect.</string>
+    <string name="health_connect_not_supported_version">Health Connect wymaga co najmniej systemu Android 9.</string>
+    <string name="pref_transfer_to_nightscout_summary">Prześlij wartości glukozy do Nightscout.</string>
+    <string name="transfer_to_nightscout">Prześlij do Nightscout</string>
+    <string name="label_profile">Profil</string>
+    <string name="pref_watchfaces_cx_summary">Kreatywne tarcze zegarka eXtreme obsługują również komplikacje GlucoDataHandler.\nAby korzystać z tych tarcz, należy użyć aplikacji Facer watch face.\nNaciśnij tutaj, aby otworzyć stronę Facer i utworzyć tarcze zegarka eXtreme.</string>
+    <string name="notification_reader_interval_summary">Ustaw tę opcję zgodnie z częstotliwością aktualizacji używanego sensora, aby uniknąć przetwarzania zbędnych powiadomień.</string>
+    <string name="pref_transfer_to_local_apps">Aplikacje lokalne</string>
+
+    <string name="xdrip_open_server_api_secret_summary">Opcjonalny klucz API secret używany do ochrony. Kiedy zostanie ustawiony, należy go uwzględniać w każdym zapytaniu do API.</string>
+    <string name="pref_xdrip_server_summary">Zapewnia lokalny serwer sieciowy na porcie 17580, który działa taknsamo jak usługa sieciowa xDrip+, z której mogą korzystać różne usługi zewnętrzne, tarcze zegarków i aplikacje.</string>
 </resources>

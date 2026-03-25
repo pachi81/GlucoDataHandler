@@ -95,16 +95,17 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
             if(!sharedPref.contains(Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_ENABLED) || !sharedPref.contains(Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_IOB_SUPPORT)) {
                 // check current source for Juggluco and if Nightscout is enabled for local requests supporting IOB
                 var webServer = false
+                var apiSecret = ""
                 if(sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED, true)
                     && sharedPref.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED, false)
                     && sharedPref.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, false)
                     && sharedPref.getString(Constants.SHARED_PREF_NIGHTSCOUT_TOKEN, "").isNullOrEmpty()
-                    && sharedPref.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, "").isNullOrEmpty()
                     && sharedPref.getString(Constants.SHARED_PREF_NIGHTSCOUT_URL, "")!!.trim().trimEnd('/') == GlucoseDataReceiver.JUGGLUCO_WEBSERVER
                 ) {
                     val sharedGlucosePref = context.getSharedPreferences(Constants.GLUCODATA_BROADCAST_ACTION, Context.MODE_PRIVATE)
                     if(DataSource.fromIndex(sharedGlucosePref.getInt(Constants.EXTRA_SOURCE_INDEX, DataSource.NONE.ordinal)) == DataSource.JUGGLUCO) {
                         webServer = true
+                        apiSecret = sharedPref.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, "")?:""
                     }
                 }
                 Log.i(LOG_ID, "Using Juggluco webserver: $webServer")
@@ -112,6 +113,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                     putBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_ENABLED, webServer)
                     putBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_IOB_SUPPORT, webServer)
                     if(webServer) {
+                        putString(Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_API_SECRET, apiSecret)
                         putBoolean(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED, false)
                     }
                     apply()

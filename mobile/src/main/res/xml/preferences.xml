@@ -42,7 +42,7 @@
             android:key="pref_cat_notification"
             android:title="@string/pref_cat_notification"
             android:summary="@string/pref_cat_notification_summary"
-            app:fragment="de.michelinside.glucodatahandler.preferences.NotificaitonSettingsFragment"
+            app:fragment="de.michelinside.glucodatahandler.preferences.NotificationSettingsFragment"
             app:iconSpaceReserved="false" />
         <Preference
             android:key="pref_cat_locksreen_wallpaper"

@@ -107,6 +107,20 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
             return true
         }
 
+        private fun requestWebserver(endpoint: String): String? {
+            val httpRequest = HttpRequest()
+            var header: MutableMap<String, String>? = null
+            val secret = Utils.encryptSHA1(GlucoDataService.sharedPref?.getString(Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_API_SECRET, ""))
+            if(!secret.isEmpty()) {
+                header = mutableMapOf("api-secret" to secret)
+            }
+            val responseCode = httpRequest.get(JUGGLUCO_WEBSERVER + endpoint, header)
+            if (!checkResponse(responseCode, httpRequest)) {
+                return null
+            }
+            return httpRequest.response
+        }
+
         private fun requestWebserverData(context: Context, handleNewValue: Boolean = false) {
             val maxTime = if(handleNewValue) System.currentTimeMillis() else ReceiveData.time
             if(webServerJob?.isActive != true && (interval <= 0 || abs(Utils.getTimeDiffMinute(lastServerTime, maxTime)) > interval || (ReceiveData.sensorStartTime == 0L && !ReceiveData.sensorID.isNullOrEmpty()))) {
@@ -134,14 +148,10 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
                             // if the sensor start time is not set, get at least 10 minutes to be able to calculate the interval
                             val seconds = max(if(interval <= 0L) 600 else 120, if(firstValueTime > 0) (Utils.getElapsedTimeMinute(firstValueTime)+1) * 60 else 3600)
                             Log.i(LOG_ID, "${retry}. request webserver data for $seconds seconds with firstNeededValue=${Utils.getUiTimeStamp(firstValueTime)}, interval=$interval and sensorStartTime=${Utils.getUiTimeStamp(ReceiveData.sensorStartTime)} and sensorID=${ReceiveData.sensorID} - last server time ${Utils.getUiTimeStamp( lastServerTime)}")
-                            val httpRequest = HttpRequest()
-                            val responseCode = httpRequest.get(JUGGLUCO_WEBSERVER + STREAM_DATA_ENDPOINT.format(seconds))
-                            if (!checkResponse(responseCode, httpRequest)) {
-                                return@launch
-                            }
-                            val result = httpRequest.response
+                            val result = requestWebserver(STREAM_DATA_ENDPOINT.format(seconds))
+                                ?: return@launch
                             Log.d(LOG_ID, "Webserver result: ${result?.take(1000)}")
-                            if(!result.isNullOrEmpty()) {
+                            if(!result.isEmpty()) {
                                 val lines = result.lines()
                                 var lastAge = 0L
                                 var lastTime = 0L
@@ -258,14 +268,10 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
                 iobJob = scope.launch {
                     try {
                         Log.i(LOG_ID, "Request IOB data")
-                        val httpRequest = HttpRequest()
-                        val responseCode = httpRequest.get(JUGGLUCO_WEBSERVER + NightscoutSourceTask.PEBBLE_ENDPOINT)
-                        if (!checkResponse(responseCode, httpRequest)) {
-                            return@launch
-                        }
-                        val result = httpRequest.response
-                        Log.d(LOG_ID, "IOB result: ${result?.take(1000)}")
-                        if(result.isNullOrEmpty()) {
+                        val result = requestWebserver(NightscoutSourceTask.PEBBLE_ENDPOINT)
+                            ?: return@launch
+                        Log.d(LOG_ID, "IOB result: ${result.take(1000)}")
+                        if(result.isEmpty()) {
                             return@launch
                         }
                         val bundle = Bundle()

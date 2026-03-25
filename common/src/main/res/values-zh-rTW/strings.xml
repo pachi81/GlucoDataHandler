@@ -661,7 +661,7 @@
     <string name="pref_send_battery_level_to_watch_summary">將電池電量傳送到手錶以便在小工具和主畫面上顯示</string>
     <string name="pref_battery_level">顯示電池電量</string>
     <string name="forward_to_watch_interval_summary">設定血糖測量最小間隔多久 (分鐘) 會傳送更新到手錶\n警報和非常低的血糖值會立即傳送</string>
-    <string name="forward_to_values_summary">設定血糖測量最小間隔多久 (分鐘) 會傳送更新到接收程式 (不適用於 Health Connect)</string>
+    <string name="forward_to_values_summary">設定血糖測量最小間隔多久 (分鐘) 會傳送更新到接收程式</string>
     <string name="alarm_repeat_summary">警報會重複發出聲音和震動，直到您關閉通知或達到所設定的最大警報持續時間為止</string>
     <string name="alarm_repeat_time">最大警報持續時間</string>
     <string name="alarm_repeat_time_summary">設定警報發出聲音和震動的最大持續時間 (分鐘)。設為 0 表示警報會一直重複</string>
@@ -682,8 +682,7 @@
     <string name="pref_watchfaces_default">標準</string>
     <string name="pref_watchfaces_default_summary">多數手錶製造商都提供可以與 GlucoDataHandler 小工具一起使用的錶面\n如大多數 Samsung 的「資訊」錶面都可相容</string>
     <string name="pref_watchfaces_pujie">Pujie</string>
-    <string name="pref_watchfaces_pujie_summary">Pujie 是一個有雲端資料庫的錶面設計程式\n若要尋找相容錶面，請在資料庫中搜尋以「GDH_」開頭的錶面\n注意: Pujie 與 Wear OS 5 裝置不相容\n按這裡開啟 Play 商店的程式</string>
-    <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>
+    <string name="pref_watchfaces_pujie_summary">Pujie 是一個有雲端資料庫的錶面設計程式\n若要尋找相容錶面，請在資料庫中搜尋以「GDH_」開頭的錶面\n按這裡開啟 Play 商店的程式</string>
     <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man 專門設計可與 GlucoDataHandler 搭配使用的第三方錶面\n按這裡開啟他的 Play 商店頁面</string>
     <string name="pref_watchfaces_gdc">GDC 錶面</string>
     <string name="pref_watchfaces_gdc_summary">GDC 錶面專門設計與 GlucoDataHandler 搭配使用\n按這裡開啟 Play 商店頁面</string>
@@ -764,7 +763,8 @@
     <string name="notification_reader_enabled">啟用通知讀取器</string>
     <string name="no_receiver">沒有應用程式</string>
     <string name="notification_reader_app_regex">Regex 數值篩選器</string>
-    <string name="notification_reader_app_regex_summary">用於分析通知中文字數值的 Regex。\n請僅在您知道自己在做什麼或收到開發人員的建議時才進行變更。</string>
+    <string name="notification_reader_app_regex_summary">用於分析通知中文字數值的 Regex。</string>
+    <string name="advanced_settings_developer_summary">請僅在您知道自己在做什麼或收到開發人員的建議時才進行變更。</string>
     <string name="notification_reader_five_minute_interval">5 分鐘間隔</string>
     <string name="notification_reader_five_minute_interval_summary">某些應用程式（例如 Dexcom）會相當頻繁地更新其通知。若要忽略具有相同數值的更新，請啟用 5 分鐘間隔。\n如果已啟用，則只會每 5 分鐘出現一個新數值，或當通知中的數值已變更時。</string>
     <string name="pref_source_notification_info_summary">若要從其他應用程式的通知接收數值，需要有存取通知的權限！\n通知必須包含字串形式的血糖值、IOB 或 COB。\n由於每個通知都有不同的版面配置，因此可能無法與所有應用程式搭配使用。如果發生問題，請透過通知的螢幕截圖和記錄與我聯絡。</string>
@@ -902,7 +902,7 @@ GlucoDataHandler 只會將血糖數據寫入健康連結，除非您明確授予
     <string name="pref_switch_xdrip_server_reduce_data_summary">這會將提供的數據減至最少，以防止某些 Garmin 手錶上出現記憶體問題。\n請檢查與您的錶盤的相容性。</string>
     <string name="error_port_in_use">連接埠正在使用中！\n請停止在此連接埠上運行的其他網頁伺服器，然後重新啟動本機網頁伺服器。</string>
     <string name="state_active">啟用中</string>
-    <string name="pref_garmin_info_summary">Garmin、Fitbit 或 Pebble 沒有專用應用程式，只有一個本機網頁伺服器，供支援 xDrip+ 的錶盤使用。\n只需在 Connect IQ 商店中搜尋此類錶盤，並為其設定 xDrip+ 來源即可。\n重要提示：如果您也使用 xDrip+ 或 Juggluco，您只能在一個應用程式中啟用本機網頁伺服器，因為它們使用相同的連接埠 (17580)！</string>
+    <string name="pref_garmin_info_summary">Garmin 或 Fitbit 沒有專用應用程式，只有一個本機網頁伺服器，供支援 xDrip+ 的錶盤使用。\n只需在 Connect IQ 商店中搜尋此類錶盤，並為其設定 xDrip+ 來源即可。\n重要提示：如果您也使用 xDrip+ 或 Juggluco，您只能在一個應用程式中啟用本機網頁伺服器，因為它們使用相同的連接埠 (17580)！</string>
     <string name="remaining">剩餘</string>
     <string name="pref_switch_xdrip_open_server">開放網頁伺服器</string>
     <string name="pref_switch_xdrip_open_server_summary">讓網頁伺服器對網路中的其他裝置開放。\n這可能會導致安全問題，因此只有在您確實需要從網路存取網頁伺服器數據時才啟用它。\nGarmin 錶盤直接從手機請求數據，因此不需要開放伺服器！</string>
@@ -931,14 +931,12 @@ GlucoDataHandler 只會將血糖數據寫入健康連結，除非您明確授予
     <string name="src_ns_summary">遠端追蹤 Nightscout 網頁服務。</string>
     <string name="pref_cat_wear_os_summary">適用於 Wear OS 手錶，例如所有 Google Pixel Watch、Samsung Galaxy Watch 4 及更新版本，以及許多其他手錶。</string>
     <string name="pref_cat_watchdrip_summary">適用於外部 WatchDrip+ 應用程式支援的手錶，例如大多數小米手環 (Xiaomi Smart Band) 和 Amazfit 型號。</string>
-    <string name="pref_cat_garminpebble">Garmin、Fitbit 和 Pebble 手錶</string>
-    <string name="pref_cat_garminpebble_summary">適用於可從 xDrip+ 網頁服務接收血糖數據的裝置和應用程式，例如 Garmin、Pebble 和一些 Fitbit 手錶。</string>
+    <string name="pref_cat_garminpebble">Garmin 和 Fitbit 手錶</string>
+    <string name="pref_cat_garminpebble_summary">適用於可從 xDrip+ 網頁服務接收血糖數據的裝置和應用程式，例如 Garmin 和一些 Fitbit 手錶。</string>
     <string name="pref_garmin_watchfaces_summary">按此處打開 Connect IQ 商店以尋找 xDrip+ 錶盤。\n如果錶盤支援 xDrip+，它們也應該與此應用程式相容。</string>
     <string name="pref_garmin_watchfaces">Garmin</string>
     <string name="pref_fitbit_watchfaces">Fitbit</string>
     <string name="pref_fitbit_watchfaces_summary">按此處打開支援 xDrip+ 網頁服務的 Glance 網頁。</string>
-    <string name="pref_pebble_watchfaces">Pebble</string>
-    <string name="pref_pebble_watchfaces_summary">按此處打開專為 xDrip+ 設計的 Pebble 錶盤，它們也應該與此應用程式相容。</string>
     <string name="gmi">GMI</string>
     <string name="pref_lockscreen_x_pos">水平位置</string>
     <string name="pref_lockscreen_x_pos_summary">影像的水平位置：\n0 是顯示器的左側\n40 是顯示器的右側</string>
@@ -965,4 +963,34 @@ GlucoDataHandler 只會將血糖數據寫入健康連結，除非您明確授予
     </plurals>
 
     <string name="dexcom_server_down_error">Dexcom 伺服器似乎已關閉！\n按此處檢查伺服器狀態。\n如果 Dexcom 應用程式在同一支手機上，您可以改用通知讀取器 (Notification Reader)。</string>
+
+    <!-- v2.3 -->
+
+    <string name="medtrum_wrong_user_type_info">僅允許追蹤者帳戶。\n請點擊此處建立新的追蹤者帳戶並邀請您自己。</string>
+    <string name="notification_reader_value_with_unit">帶有單位的值</string>
+    <string name="notification_reader_value_with_unit_summary">如果單位（mmol 或 mg）是通知中值的一部分，請啟用此選項以忽略所有沒有單位的欄位。</string>
+
+    <string name="button_yes">是</string>
+    <string name="button_no">否</string>
+    <string name="patient_changed">病患已變更</string>
+    <string name="patient_changed_reset_db">您已變更病患。\n您是否要重設資料庫以移除舊病患的資料？</string>
+    <string name="update">更新</string>
+    <string name="pref_transfer_to_healthconnect_summary">與 Health Connect 分享血糖值。</string>
+    <string name="pref_transfer_to_local_apps_summary">向此裝置上的其他本機應用程式傳送廣播。</string>
+    <string name="source_aidex_summary">啟用 AiDEX 廣播接收器。需要 AiDEX 應用程式版本 1.0.17 或更低版本。</string>
+    <string name="pref_source_aidex_summary">從 AiDEX 應用程式接收廣播。需要 AiDEX 應用程式版本 1.0.17 或更低版本。</string>
+
+    <string name="transfer_values_interval_summary">傳送血糖值的間隔。\n將包含自上次傳輸以來記錄的所有值。</string>
+    <string name="health_connect_settings">開啟 Health Connect</string>
+    <string name="health_connect_settings_summary">管理 Health Connect 的權限和資料存取。</string>
+    <string name="health_connect_not_supported_version">Health Connect 至少需要 Android 9。</string>
+    <string name="pref_transfer_to_nightscout_summary">將血糖值上傳到 Nightscout。</string>
+    <string name="transfer_to_nightscout">Nightscout 上傳</string>
+    <string name="label_profile">個人資料</string>
+    <string name="pref_watchfaces_cx_summary">Creative eXtreme 錶盤也支援 GlucoDataHandler 併發症。\n您需要使用 Facer 錶盤應用程式來使用這些錶盤。\n點擊此處開啟 Creative eXtreme 錶盤的 Facer 頁面。</string>
+    <string name="notification_reader_interval_summary">將此設定為符合您感測器的更新速率，以避免處理多餘的通知。</string>
+    <string name="pref_transfer_to_local_apps">本機程式</string>
+
+    <string name="xdrip_open_server_api_secret_summary">用於保護存取的選填 API 密鑰。如果已設定，則必須在用戶端程式中設定相同的密鑰才能存取資料。</string>
+    <string name="pref_xdrip_server_summary">在連接埠 17580 提供模擬 xDrip+ 網頁服務的本機網頁伺服器，可供各種外部服務、錶盤和應用程式使用。</string>
 </resources>

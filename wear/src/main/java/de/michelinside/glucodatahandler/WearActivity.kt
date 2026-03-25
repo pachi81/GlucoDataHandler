@@ -149,6 +149,18 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                     Log.e(LOG_ID, "Chart Image exception: " + exc.message.toString() )
                 }
             }
+            txtBgValue.setOnClickListener {
+                try {
+                    if(!chartBitmap.visible) {
+                        Log.v(LOG_ID, "value clicked!")
+                        val intent = Intent(this, GraphActivity::class.java)
+                        startActivity(intent)
+                    }
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Value exception: " + exc.message.toString() )
+                }
+            }
+
 
             findViewById<Button>(R.id.btnWatchfaces)?.setOnClickListener {
                 try {
@@ -259,6 +271,9 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 txtBgValue.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
             } else {
                 txtBgValue.paintFlags = 0
+            }
+            if(chartBitmap.imageView.isEnabled) {
+
             }
             viewIcon.setImageIcon(BitmapUtils.getRateAsIcon("main_trend"))
             viewIcon.contentDescription = ReceiveData.getRateAsText(this)

@@ -8,17 +8,33 @@
         android:summary="@string/notification_reader_app_summary"
         app:description="@string/notification_reader_app_summary"
         app:iconSpaceReserved="false" />
+    <androidx.preference.SeekBarPreference
+        android:defaultValue="5"
+        app:showSeekBarValue="true"
+        app:seekBarIncrement="1"
+        app:min="0"
+        android:max="5"
+        android:key="notification_reader_interval"
+        android:title="@string/source_interval"
+        android:summary="@string/notification_reader_interval_summary"
+        app:iconSpaceReserved="false" />
     <PreferenceCategory
         android:title="@string/advanced_settings"
-        app:iconSpaceReserved="false">
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="1">
+        <Preference
+            android:key="advanced_settings_developer_summary"
+            android:summary="@string/advanced_settings_developer_summary"
+            app:iconSpaceReserved="false" />
         <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="notification_reader_five_minute_interval"
-            android:title="@string/notification_reader_five_minute_interval"
-            android:summary="@string/notification_reader_five_minute_interval_summary"
+            android:defaultValue="false"
+            android:key="notification_reader_value_with_unit"
+            android:title="@string/notification_reader_value_with_unit"
+            android:summary="@string/notification_reader_value_with_unit_summary"
             app:iconSpaceReserved="false" />
         <androidx.preference.EditTextPreference
             android:key="notification_reader_app_regex"
+            android:defaultValue=""
             android:title="@string/notification_reader_app_regex"
             android:summary="@string/notification_reader_app_regex_summary"
             app:iconSpaceReserved="false" />

@@ -596,8 +596,8 @@
     <string name="src_offline_enabled_summary_on">Mensagens internas desta fonte serão tratadas.</string>
     <string name="src_offline_enabled_summary_off">Mensagens internas desta fonte serão ignoradas.</string>
     <string name="temp_disabled">Desativado temporariamente</string>
-    <string name="snooze_until">Em soneca até %1$s</string>
-    <string name="temp_disabled_until">Desativados temporariamente até %1$s</string>
+    <string name="snooze_until">Em soneca até</string>
+    <string name="temp_disabled_until">Desativados temporariamente até</string>
 
     <!-- Talkback -->
     <string name="trend">Tendência</string>
@@ -657,7 +657,7 @@
     <string name="pref_send_battery_level_to_watch_summary">Enviar nível da bateria para o relógio para mostrar na complicação e na tela principal.</string>
     <string name="pref_battery_level">Mostrar nível da bateria</string>
     <string name="forward_to_watch_interval_summary">Defina o tempo mínimo (em minutos) entre as medições de glicose antes de enviar uma nova atualização para o relógio.\nAlarmes e medições muito baixas sempre serão enviados.</string>
-    <string name="forward_to_values_summary">Defina o tempo mínimo (em minutos) entre as medições de glicose antes de enviar uma nova atualização para os receptores (não para Health Connect).</string>
+    <string name="forward_to_values_summary">Defina o tempo mínimo (em minutos) entre as medições de glicose antes de enviar uma nova atualização para os receptores.</string>
     <string name="alarm_repeat_summary">O alarme tocará e vibrará repetidamente até que você descarte a notificação ou a duração máxima definida do alarme seja atingida.</string>
     <string name="alarm_repeat_time">Duração máxima do alarme</string>
     <string name="alarm_repeat_time_summary">Especifique o tempo máximo (em minutos) que o alarme tocará e vibrará. Um valor de 0 significa que o alarme será repetido indefinidamente.</string>
@@ -679,8 +679,7 @@
     <string name="pref_watchfaces_default">Padrão</string>
     <string name="pref_watchfaces_default_summary">A maioria dos fabricantes de relógios já fornece mostradores que podem ser usados com a complicação GlucoDataHandler.\nPor exemplo, a maioria dos mostradores \"Info\" da Samsung são compatíveis.</string>
     <string name="pref_watchfaces_pujie">Pujie</string>
-    <string name="pref_watchfaces_pujie_summary">Pujie é um aplicativo criador de mostradores com uma biblioteca na nuvem.\nPara encontrar mostradores compatíveis, pesquise na biblioteca por mostradores que começam com \"GDH_\".\nObservação: Pujie não é compatível com dispositivos Wear OS 5.\nToque aqui para abrir o aplicativo na Play Store.</string>
-    <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>
+    <string name="pref_watchfaces_pujie_summary">Pujie é um aplicativo criador de mostradores com uma biblioteca na nuvem.\nPara encontrar mostradores compatíveis, pesquise na biblioteca por mostradores que começam com \"GDH_\".\nToque aqui para abrir o aplicativo na Play Store.</string>
     <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man cria mostradores de terceiros projetados especificamente para uso com GlucoDataHandler.\nToque aqui para abrir sua página da Play Store.</string>
     <string name="pref_watchfaces_gdc">Mostradores GDC</string>
     <string name="pref_watchfaces_gdc_summary">Os mostradores GDC são projetados para uso com GlucoDataHandler.\nToque aqui para abrir a página da Play Store.</string>
@@ -761,7 +760,8 @@
     <string name="notification_reader_enabled">Habilitar leitor de notificações</string>
     <string name="no_receiver">Nenhum aplicativo</string>
     <string name="notification_reader_app_regex">Filtro de valor Regex</string>
-    <string name="notification_reader_app_regex_summary">Regex para analisar o valor do texto na notificação.\nPor favor, altere apenas se souber o que está fazendo ou se receber um conselho do desenvolvedor.</string>
+    <string name="notification_reader_app_regex_summary">Regex para analisar o valor do texto na notificação.</string>
+    <string name="advanced_settings_developer_summary">Por favor, altere apenas se souber o que está fazendo ou se receber um conselho do desenvolvedor.</string>
     <string name="notification_reader_five_minute_interval">Intervalo de 5 minutos</string>
     <string name="notification_reader_five_minute_interval_summary">Alguns aplicativos, como o Dexcom, atualizam suas notificações com bastante frequência. Para ignorar essas atualizações com o mesmo valor, habilite o intervalo de 5 minutos.\nSe habilitado, haverá apenas um novo valor a cada 5 minutos ou se o valor na notificação tiver mudado.</string>
     <string name="pref_source_notification_info_summary">Para receber valores de notificações de outros aplicativos, é necessária uma permissão para acessar as notificações!\nA notificação deve incluir o valor de glicose ou IOB/COB como string.\nComo cada notificação tem um layout diferente, pode não funcionar com todos os aplicativos. Em caso de problemas, entre em contato comigo com uma captura de tela da notificação e os logs.</string>
@@ -899,7 +899,7 @@ Pode gerir estas permissões a qualquer momento nas definições da aplicação 
     <string name="pref_switch_xdrip_server_reduce_data_summary">Isto irá reduzir os dados fornecidos ao mínimo para evitar problemas de memória em alguns relógios Garmin.\nPor favor, verifique a compatibilidade com o seu mostrador.</string>
     <string name="error_port_in_use">A porta está em uso!\nPor favor, pare outro servidor web em execução nesta porta e reinicie o servidor web local.</string>
     <string name="state_active">ativo</string>
-    <string name="pref_garmin_info_summary">Não existe uma aplicação dedicada para Garmin, Fitbit ou Pebble, apenas um servidor web local, que é utilizado por mostradores de relógio com suporte para xDrip+.\nBasta procurar esses mostradores na Connect IQ Store e configurar a fonte xDrip+ para eles.\nIMPORTANTE: se também utilizar o xDrip+ ou o Juggluco, só pode ativar o servidor web local numa única aplicação, uma vez que utilizam a mesma porta (17580)!</string>
+    <string name="pref_garmin_info_summary">Não existe uma aplicação dedicada para Garmin ou Fitbit, apenas um servidor web local, que é utilizado por mostradores de relógio com suporte para xDrip+.\nBasta procurar esses mostradores na Connect IQ Store e configurar a fonte xDrip+ para eles.\nIMPORTANTE: se também utilizar o xDrip+ ou o Juggluco, só pode ativar o servidor web local numa única aplicação, uma vez que utilizam a mesma porta (17580)!</string>
     <string name="remaining">Restante</string>
     <string name="pref_switch_xdrip_open_server">Abrir servidor web</string>
     <string name="pref_switch_xdrip_open_server_summary">Tornar o servidor web aberto para outros dispositivos na rede.\nIsto pode causar problemas de segurança, por isso, ative-o apenas se precisar realmente de aceder aos dados do servidor web a partir da rede.\nOs mostradores de relógio Garmin solicitam os dados diretamente no telemóvel, pelo que não é necessário um servidor aberto!</string>
@@ -928,14 +928,12 @@ Pode gerir estas permissões a qualquer momento nas definições da aplicação 
     <string name="src_ns_summary">Seguir remotamente o serviço web Nightscout.</string>
     <string name="pref_cat_wear_os_summary">Para relógios Wear OS, por exemplo, todos os Google Pixel Watches, Samsung Galaxy Watch 4 e mais recentes, e muitos outros.</string>
     <string name="pref_cat_watchdrip_summary">Para relógios suportados pela aplicação externa WatchDrip+, como a maioria dos modelos Mi Band, Xiaomi Smart Band e Amazfit.</string>
-    <string name="pref_cat_garminpebble">Relógios Garmin, Fitbit e Pebble</string>
-    <string name="pref_cat_garminpebble_summary">Para dispositivos e aplicações que podem receber dados de glicose do serviço web do xDrip+, como Garmin, Pebble e alguns relógios Fitbit.</string>
+    <string name="pref_cat_garminpebble">Relógios Garmin e Fitbit</string>
+    <string name="pref_cat_garminpebble_summary">Para dispositivos e aplicações que podem receber dados de glicose do serviço web do xDrip+, como Garmin e alguns relógios Fitbit.</string>
     <string name="pref_garmin_watchfaces_summary">Prima aqui para abrir a loja Connect IQ para os mostradores de relógio do xDrip+.\nSe os mostradores suportarem o xDrip+, também deverão ser compatíveis com esta aplicação.</string>
     <string name="pref_garmin_watchfaces">Garmin</string>
     <string name="pref_fitbit_watchfaces">Fitbit</string>
     <string name="pref_fitbit_watchfaces_summary">Prima aqui para abrir a página web da Glance, que suporta os serviços web do xDrip+.</string>
-    <string name="pref_pebble_watchfaces">Pebble</string>
-    <string name="pref_pebble_watchfaces_summary">Prima aqui para abrir os mostradores de relógio Pebble concebidos para o xDrip+, que também deverão ser compatíveis com esta aplicação.</string>
     <string name="gmi">GMI</string>
     <string name="pref_lockscreen_x_pos">Posição horizontal</string>
     <string name="pref_lockscreen_x_pos_summary">Posição horizontal da imagem:\n0 é a esquerda do ecrã\n40 é a direita do ecrã</string>
@@ -965,4 +963,34 @@ Pode gerir estas permissões a qualquer momento nas definições da aplicação 
     </plurals>
 
     <string name="dexcom_server_down_error">O servidor Dexcom parece estar fora do ar!\nToque aqui para verificar o status do servidor.\nSe o aplicativo Dexcom estiver no mesmo telefone, você pode usar o Leitor de Notificações.</string>
+
+    <!-- v2.3 -->
+
+    <string name="medtrum_wrong_user_type_info">Apenas usuários seguidores são permitidos.\nPressione aqui para criar uma nova conta de seguidor e convidar a si mesmo.</string>
+    <string name="notification_reader_value_with_unit">Valor com unidade</string>
+    <string name="notification_reader_value_with_unit_summary">Se a unidade (mmol ou mg) fizer parte do valor na notificação, habilite isto para ignorar todos os campos sem unidade.</string>
+
+    <string name="button_yes">Sim</string>
+    <string name="button_no">Não</string>
+    <string name="patient_changed">Paciente alterado</string>
+    <string name="patient_changed_reset_db">Você alterou o paciente.\nDeseja redefinir o banco de dados para remover os dados do paciente antigo?</string>
+    <string name="update">Atualizar</string>
+    <string name="pref_transfer_to_healthconnect_summary">Compartilhando valores de glicose com o Health Connect.</string>
+    <string name="pref_transfer_to_local_apps_summary">Enviando broadcast para outras aplicações locais neste dispositivo.</string>
+    <string name="source_aidex_summary">Habilitar receptor de broadcast AiDEX. Requer versão do app AiDEX igual ou inferior a 1.0.17.</string>
+    <string name="pref_source_aidex_summary">Recebe broadcasts do app AiDEX. Requer versão do app AiDEX igual ou inferior a 1.0.17.</string>
+
+    <string name="transfer_values_interval_summary">Intervalo para envio dos valores de glicose.\nTodos os valores registrados desde a última transmissão serão incluídos.</string>
+    <string name="health_connect_settings">Abrir Health Connect</string>
+    <string name="health_connect_settings_summary">Gerenciar permissões e acesso a dados para o Health Connect.</string>
+    <string name="health_connect_not_supported_version">O Health Connect requer pelo menos o Android 9.</string>
+    <string name="pref_transfer_to_nightscout_summary">Fazer upload dos valores de glicose para o Nightscout.</string>
+    <string name="transfer_to_nightscout">Upload Nightscout</string>
+    <string name="label_profile">Perfil</string>
+    <string name="pref_watchfaces_cx_summary">Os mostradores Creative eXtreme também suportam complicações do GlucoDataHandler.\nVocê precisa usar o app Facer para usar esses mostradores.\nToque aqui para abrir a página do Facer para os mostradores Creative eXtreme.</string>
+    <string name="notification_reader_interval_summary">Defina isso para corresponder à taxa de atualização dos seus sensores para evitar o processamento de notificações redundantes.</string>
+    <string name="pref_transfer_to_local_apps">Aplicações locais</string>
+
+    <string name="xdrip_open_server_api_secret_summary">Segredo de API opcional para proteger o acesso. Se configurado, o mesmo segredo deve ser definido na aplicação cliente para aceder aos dados.</string>
+    <string name="pref_xdrip_server_summary">Disponibiliza um servidor web local na porta 17580 que emula o serviço web do xDrip+, que pode ser utilizado por vários serviços externos, mostradores de relógio e aplicações.</string>
 </resources>

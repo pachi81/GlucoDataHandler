@@ -79,6 +79,7 @@ class GlucodataObsoleteValues : GlucodataValues() {
 
 class GlucodataValuesChangedRunner : TaskerPluginRunnerConditionEvent<GlucodataValues, GlucodataValues, GlucodataValues>() {
     override fun getSatisfiedCondition(context: Context, input: TaskerInput<GlucodataValues>, update: GlucodataValues?): TaskerPluginResultCondition<GlucodataValues> {
+        Log.d(LOG_ID, "getSatisfiedCondition called with input: $input and values: $update")
         return TaskerPluginResultConditionSatisfied(context, update)
     }
 }
@@ -124,6 +125,7 @@ class GlucodataAlarmEvent : Activity(), TaskerPluginConfig<GlucodataValues> {
 
 class GlucodataOsoleteValuesChangedRunner : TaskerPluginRunnerConditionEvent<GlucodataObsoleteValues, GlucodataObsoleteValues, GlucodataObsoleteValues>() {
     override fun getSatisfiedCondition(context: Context, input: TaskerInput<GlucodataObsoleteValues>, update: GlucodataObsoleteValues?): TaskerPluginResultCondition<GlucodataObsoleteValues> {
+        Log.d(LOG_ID, "getSatisfiedCondition called with input: $input and values: $update")
         return TaskerPluginResultConditionSatisfied(context, update)
     }
 }

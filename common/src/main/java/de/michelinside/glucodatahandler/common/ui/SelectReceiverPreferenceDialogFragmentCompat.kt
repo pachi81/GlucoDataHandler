@@ -7,18 +7,22 @@ import android.provider.Settings
 import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceDialogFragmentCompat
 import de.michelinside.glucodatahandler.common.BuildConfig
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import de.michelinside.glucodatahandler.common.R
+import kotlinx.coroutines.launch
 
 
 class SelectReceiverPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat() {
@@ -33,8 +37,11 @@ class SelectReceiverPreferenceDialogFragmentCompat : PreferenceDialogFragmentCom
             return dialog
         }
 
-        private fun getReceivers(context: Context): HashMap<String, String> {
-            return PackageUtils.getPackages(context)
+        private fun getReceivers(context: Context, isTapAction: Boolean): HashMap<String, String> {
+            val receivers = PackageUtils.getPackages(context)
+            if(!isTapAction)
+                receivers.remove(context.packageName)
+            return receivers
         }
         private fun getActions(context: Context): HashMap<String, String> {
             val actions = HashMap<String, String>()
@@ -57,9 +64,16 @@ class SelectReceiverPreferenceDialogFragmentCompat : PreferenceDialogFragmentCom
                 if(actions.containsKey(value))
                     return actions[value].toString()
             }
-            val receivers = getReceivers(context)
+            val receivers = getReceivers(context, isTapAction)
             if(receivers.containsKey(value))
                 return receivers[value].toString()
+            if(value.isNotEmpty()) {
+                Log.w(LOG_ID, "Unknown receiver: $value")
+                val name = PackageUtils.checkPackageName(context, value)
+                if(name != null)
+                    return name
+                return "⚠ $value ⚠"
+            }
             return default
         }
 
@@ -95,6 +109,22 @@ class SelectReceiverPreferenceDialogFragmentCompat : PreferenceDialogFragmentCom
             showAllSwitch.setOnCheckedChangeListener { _, isChecked ->
                 updateReceiver(view, isChecked)
             }
+            val reloadImage = view.findViewById<ImageView>(R.id.reloadImage)
+            val updatingProgress = view.findViewById<ProgressBar>(R.id.updatingProgress)
+            
+            reloadImage.setOnClickListener {
+                PackageUtils.updatePackages(requireContext())
+            }
+
+            lifecycleScope.launch {
+                PackageUtils.isUpdating.collect { isUpdating ->
+                    reloadImage.visibility = if (isUpdating) View.INVISIBLE else View.VISIBLE
+                    updatingProgress.visibility = if (isUpdating) View.VISIBLE else View.GONE
+                    if (!isUpdating) {
+                        updateReceiver(view, showAllSwitch.isChecked)
+                    }
+                }
+            }
 
             if(selectReceiverPreference!!.description.isNotEmpty()) {
                 val summary = view.findViewById<TextView>(R.id.txtSummary)
@@ -125,6 +155,7 @@ class SelectReceiverPreferenceDialogFragmentCompat : PreferenceDialogFragmentCom
 
     private fun createRadioButtons(group: RadioGroup, list: HashMap<String, String>, all: Boolean, sort: Boolean): RadioButton? {
         var current: RadioButton? = null
+        Log.d(LOG_ID, "Create radio buttons for ${list.size} items - all: $all - sort: $sort - receiver: ${receiver}")
         val map = if(sort) {
             list.toList()
                 .sortedBy { (_, value) -> value.lowercase() }
@@ -134,20 +165,12 @@ class SelectReceiverPreferenceDialogFragmentCompat : PreferenceDialogFragmentCom
         }
 
         val filter = if(selectReceiverPreference!!.isTapAction) PackageUtils.getTapActionFilter(requireContext()) else PackageUtils.getReceiverFilter()
-
         for (item in map) {
-            if (all || PackageUtils.filterContains(filter, item.key)) {
-                val ch = RadioButton(requireContext())
-                ch.text = item.value
-                ch.hint = item.key
+            if (all || PackageUtils.filterContains(filter, item.key) || receiver == item.key ) {
+                val ch = createRadioButton(item.value, item.key)
+                Log.v(LOG_ID, "Add Radio Button for $item")
                 if (receiver == ch.hint) {
                     current = ch
-                }
-                ch.setOnCheckedChangeListener { buttonView, isChecked ->
-                    if (isChecked) {
-                        receiver = buttonView.hint.toString()
-                        Log.v(LOG_ID, "Set receiver: $receiver")
-                    }
                 }
                 group.addView(ch)
             }
@@ -155,10 +178,23 @@ class SelectReceiverPreferenceDialogFragmentCompat : PreferenceDialogFragmentCom
         return current
     }
 
+    private fun createRadioButton(text: String, hint: String): RadioButton {
+        val ch = RadioButton(requireContext())
+        ch.text = text
+        ch.hint = hint
+        ch.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                receiver = buttonView.hint.toString()
+                Log.v(LOG_ID, "Set receiver: $receiver")
+            }
+        }
+        return ch
+    }
+
     private fun updateReceiver(view: View, all: Boolean) {
         try {
             val receiverLayout = view.findViewById<LinearLayout>(R.id.receiverLayout)
-            val receivers = getReceivers(requireContext())
+            val receivers = getReceivers(requireContext(), selectReceiverPreference!!.isTapAction)
             Log.d(LOG_ID, receivers.size.toString() + " receivers found!")
             val receiverScrollView = view.findViewById<ScrollView>(R.id.receiverScrollView)
             receiverLayout.removeAllViews()
@@ -172,6 +208,10 @@ class SelectReceiverPreferenceDialogFragmentCompat : PreferenceDialogFragmentCom
                 val emptyReceiver = HashMap<String, String>()
                 emptyReceiver[""] = requireContext().resources.getString(R.string.no_receiver)
                 current = createRadioButtons(group, emptyReceiver, true, false)
+            }
+            if(receiver.isNotEmpty() && current == null && !receivers.containsKey(receiver)) {
+                Log.w(LOG_ID, "Receiver not found: $receiver - add manually")
+                receivers[receiver] = getSummary(requireContext(), receiver, receiver, selectReceiverPreference!!.isTapAction)
             }
             val curApp = createRadioButtons(group, receivers, all, true)
             if(current == null && curApp != null)

@@ -664,7 +664,7 @@
     <string name="pref_send_battery_level_to_watch_summary">Изпращане на ниво на батерията до часовника, за да се показва в усложнението и на главния екран.</string>
     <string name="pref_battery_level">Показване на ниво на батерията</string>
     <string name="forward_to_watch_interval_summary">Задайте минималното време (в минути) между измерванията на глюкозата, преди да изпратите нова актуализация до часовника.\nАлармите и много ниските измервания винаги ще бъдат изпращани.</string>
-    <string name="forward_to_values_summary">Задайте минималното време (в минути) между измерванията на глюкозата, преди да изпратите нова актуализация до приемниците (не за Health Connect).</string>
+    <string name="forward_to_values_summary">Задайте минималното време (в минути) между измерванията на глюкозата, преди да изпратите нова актуализация до приемниците.</string>
     <string name="alarm_repeat_summary">Алармата ще звучи и ще вибрира многократно, докато не отхвърлите известието или не се достигне зададената максимална продължителност на алармата.</string>
     <string name="alarm_repeat_time">Максимална продължителност на алармата</string>
     <string name="alarm_repeat_time_summary">Посочете максималното време (в минути), през което алармата ще звучи и ще вибрира. Стойност 0 означава, че алармата ще се повтаря безкрайно.</string>
@@ -685,8 +685,7 @@
     <string name="pref_watchfaces_default">Стандартни</string>
     <string name="pref_watchfaces_default_summary">Повечето производители на часовници вече предоставят циферблати за часовници, които могат да се използват с усложнението GlucoDataHandler.\nНапример, повечето циферблати за часовници \"Info\" на Samsung са съвместими.</string>
     <string name="pref_watchfaces_pujie">Pujie</string>
-    <string name="pref_watchfaces_pujie_summary">Pujie е приложение за създаване на циферблати за часовници с облачна библиотека.\nЗа да намерите съвместими циферблати за часовници, потърсете в библиотеката циферблати за часовници, започващи с \"GDH_\".\nЗабележка: Pujie не е съвместимо с устройства с Wear OS 5.\nДокоснете тук, за да отворите приложението в Play Store.</string>
-    <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>
+    <string name="pref_watchfaces_pujie_summary">Pujie е приложение за създаване на циферблати за часовници с облачна библиотека.\nЗа да намерите съвместими циферблати за часовници, потърсете в библиотеката циферблати за часовници, започващи с \"GDH_\".\nДокоснете тук, за да отворите приложението в Play Store.</string>
     <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man създава циферблати за часовници на трети страни, специално проектирани за използване с GlucoDataHandler.\nДокоснете тук, за да отворите неговата страница в Play Store.</string>
     <string name="pref_watchfaces_gdc">GDC Watch Faces</string>
     <string name="pref_watchfaces_gdc_summary">GDC Watch Faces са проектирани за използване с GlucoDataHandler.\nДокоснете тук, за да отворите страницата в Play Store.</string>
@@ -767,7 +766,8 @@
     <string name="notification_reader_enabled">Активиране на четеца на известия</string>
     <string name="no_receiver">Няма приложение</string>
     <string name="notification_reader_app_regex">Филтър за стойност с Regex</string>
-    <string name="notification_reader_app_regex_summary">Regex за анализиране на стойността от текста в известието.\nМоля, променяйте само ако знаете какво правите или ако получите съвет от разработчика.</string>
+    <string name="notification_reader_app_regex_summary">Regex за анализиране на стойността от текста в известието.</string>
+    <string name="advanced_settings_developer_summary">Моля, променяйте само ако знаете какво правите или ако получите съвет от разработчика.</string>
     <string name="notification_reader_five_minute_interval">Интервал от 5 минути</string>
     <string name="notification_reader_five_minute_interval_summary">Някои приложения, като Dexcom, актуализират известията си доста често. За да игнорирате тези актуализации със същата стойност, активирайте интервала от 5 минути.\nАко е активирано, ще има нова стойност само на всеки 5 минути или ако стойността в известието се е променила.</string>
     <string name="pref_source_notification_info_summary">За да получавате стойности от известия на други приложения, е необходимо разрешение за достъп до известията!\nИзвестието трябва да включва или стойността на глюкозата, или IOB/COB като низ.\nТъй като всяко известие има различно оформление, може да не работи с всяко приложение. В случай на проблеми, моля, свържете се с мен със снимка на известието и логовете.</string>
@@ -907,7 +907,7 @@ GlucoDataHandler само записва данни за кръвната зах
     <string name="pref_switch_xdrip_server_reduce_data_summary">Това ще намали предоставените данни до минимум, за да се предотвратят проблеми с паметта на някои часовници Garmin.\nМоля, проверете съвместимостта с вашия циферблат.</string>
     <string name="error_port_in_use">Портът е в употреба!\nМоля, спрете другия уеб сървър, работещ на този порт, и рестартирайте локалния уеб сървър отново.</string>
     <string name="state_active">активен</string>
-    <string name="pref_garmin_info_summary">Няма специално приложение за Garmin, Fitbit или Pebble, а само локален уеб сървър, който се използва от циферблати с поддръжка на xDrip+.\nПросто потърсете такива циферблати в Connect IQ Store и настройте източника на xDrip+ за тях.\nВАЖНО: ако използвате също xDrip+ или Juggluco, можете да активирате локалния уеб сървър само в едно приложение, тъй като те използват един и същ порт (17580)!</string>
+    <string name="pref_garmin_info_summary">Няма специално приложение за Garmin или Fitbit, а само локален уеб сървър, който се използва от циферблати с поддръжка на xDrip+.\nПросто потърсете такива циферблати в Connect IQ Store и настройте източника на xDrip+ за тях.\nВАЖНО: ако използвате също xDrip+ или Juggluco, можете да активирате локалния уеб сървър само в едно приложение, тъй като те използват един и същ порт (17580)!</string>
     <string name="remaining">Оставащи</string>
     <string name="pref_switch_xdrip_open_server">Отворен уеб сървър</string>
     <string name="pref_switch_xdrip_open_server_summary">Направете уеб сървъра отворен за други устройства в мрежата.\nТова може да причини проблеми със сигурността, така че го активирайте само ако наистина трябва да достъпвате данните на уеб сървъра от мрежата.\nЦиферблатите на Garmin изискват данни директно от телефона, така че не е необходим отворен сървър!</string>
@@ -936,14 +936,12 @@ GlucoDataHandler само записва данни за кръвната зах
     <string name="src_ns_summary">Отдалечено следване на уеб услугата Nightscout.</string>
     <string name="pref_cat_wear_os_summary">За часовници с Wear OS, например всички Google Pixel Watches, Samsung Galaxy Watch 4 и по-нови, и много други.</string>
     <string name="pref_cat_watchdrip_summary">За часовници, поддържани от външното приложение WatchDrip+, като повечето модели Mi Band, Xiaomi Smart Band и Amazfit.</string>
-    <string name="pref_cat_garminpebble">Часовници Garmin, Fitbit и Pebble</string>
-    <string name="pref_cat_garminpebble_summary">За устройства и приложения, които могат да получават данни за глюкозата от уеб услугата на xDrip+, като Garmin, Pebble и някои часовници Fitbit.</string>
+    <string name="pref_cat_garminpebble">Часовници Garmin и Fitbit</string>
+    <string name="pref_cat_garminpebble_summary">За устройства и приложения, които могат да получават данни за глюкозата от уеб услугата на xDrip+, като Garmin и някои часовници Fitbit.</string>
     <string name="pref_garmin_watchfaces_summary">Натиснете тук, за да отворите магазина Connect IQ за циферблати на xDrip+.\nАко циферблатите поддържат xDrip+, те трябва да са съвместими и с това приложение.</string>
     <string name="pref_garmin_watchfaces">Garmin</string>
     <string name="pref_fitbit_watchfaces">Fitbit</string>
     <string name="pref_fitbit_watchfaces_summary">Натиснете тук, за да отворите уеб страницата на Glance, която поддържа уеб услугите на xDrip+.</string>
-    <string name="pref_pebble_watchfaces">Pebble</string>
-    <string name="pref_pebble_watchfaces_summary">Натиснете тук, за да отворите циферблати на Pebble, предназначени за xDrip+, които също трябва да са съвместими с това приложение.</string>
     <string name="gmi">GMI</string>
     <string name="pref_lockscreen_x_pos">Хоризонтална позиция</string>
     <string name="pref_lockscreen_x_pos_summary">Хоризонтална позиция на изображението:\n0 е лявата част на дисплея\n40 е дясната част на дисплея</string>
@@ -974,5 +972,33 @@ GlucoDataHandler само записва данни за кръвната зах
 
     <string name="dexcom_server_down_error">Сървърът на Dexcom изглежда не работи!\nНатиснете тук, за да проверите състоянието на сървъра.\nАко приложението Dexcom е на същия телефон, можете да използвате Четеца на известия (Notification Reader).</string>
 
+    <!-- v2.3 -->
 
+    <string name="medtrum_wrong_user_type_info">Само акаунти на последователи са разрешени.\nНатиснете тук, за да създадете нов акаунт на последовател и да поканите себе си.</string>
+    <string name="notification_reader_value_with_unit">Стойност с мерна единица</string>
+    <string name="notification_reader_value_with_unit_summary">Ако мерната единица (mmol или mg) е част от стойността в известието, активирайте това, за да игнорирате всички полета без единица.</string>
+
+    <string name="button_yes">Да</string>
+    <string name="button_no">Не</string>
+    <string name="patient_changed">Пациентът е променен</string>
+    <string name="patient_changed_reset_db">Променихте пациента.\nИскате ли да нулирате базата данни, за да премахнете данните за стария пациент?</string>
+    <string name="update">Актуализация</string>
+    <string name="pref_transfer_to_healthconnect_summary">Споделяне на стойности на глюкоза с Health Connect.</string>
+    <string name="pref_transfer_to_local_apps_summary">Изпращане на излъчване (broadcast) към други локални приложения на това устройство.</string>
+    <string name="source_aidex_summary">Активиране на AiDEX broadcast приемник. Изисква версия на приложението AiDEX 1.0.17 или по-ниска.</string>
+    <string name="pref_source_aidex_summary">Получава broadcast съобщения от приложението AiDEX. Изисква версия на приложението AiDEX 1.0.17 или по-ниска.</string>
+
+    <string name="transfer_values_interval_summary">Интервал за изпращане на стойности на глюкоза.\nВсички стойности, записани от последното предаване, ще бъдат включени.</string>
+    <string name="health_connect_settings">Отворете Health Connect</string>
+    <string name="health_connect_settings_summary">Управление на разрешенията и достъпа до данни за Health Connect.</string>
+    <string name="health_connect_not_supported_version">Health Connect изисква поне Android 9.</string>
+    <string name="pref_transfer_to_nightscout_summary">Качване на стойности на глюкоза в Nightscout.</string>
+    <string name="transfer_to_nightscout">Nightscout качване</string>
+    <string name="label_profile">Профил</string>
+    <string name="pref_watchfaces_cx_summary">Циферблатите Creative eXtreme също поддържат GlucoDataHandler компликации.\nТрябва да използвате приложението Facer, за да използвате тези циферблати.\nДокоснете тук, за да отворите страницата на Facer за циферблати Creative eXtreme.</string>
+    <string name="notification_reader_interval_summary">Задайте това според скоростта на актуализиране на вашия сензор, за да избегнете обработката на излишни известия.</string>
+    <string name="pref_transfer_to_local_apps">Локални приложения</string>
+
+    <string name="xdrip_open_server_api_secret_summary">Незадължителна API тайна за защита на достъпа. Ако е конфигурирана, същата тайна трябва да бъде зададена и в приложението на клиента за достъп до данните.</string>
+    <string name="pref_xdrip_server_summary">Предоставя локален уеб сървър на порт 17580, който емулира уеб услугата на xDrip+ и може да се използва от различни външни услуги, циферблати и приложения.</string>
 </resources>

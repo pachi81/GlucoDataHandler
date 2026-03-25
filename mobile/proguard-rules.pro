@@ -29,7 +29,10 @@
 # --------------------------------------------------------------------
 # This prevents R8 from stripping away your core logic classes
 -keep class de.michelinside.glucodatahandler.common.** { *; }
-
+# ProGuard rule to preserve BleMessage for Java Serialization
+-keep class com.microtechmd.blecomm.entity.BleMessage { *; }
+# Broadcast service API
+-keep class com.eveningoutpost.dexdrip.services.broadcastservice.**
 # Also keep the mobile specific classes to ensure services and receivers
 # are not renamed, which would break Android system callbacks
 -keep class de.michelinside.glucodatahandler.** { *; }

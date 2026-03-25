@@ -25,6 +25,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtSummary" />
 
+    <ImageView
+        android:id="@+id/reloadImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_reload"
+        android:contentDescription="@string/update"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/showAllSwitch" />
+
+    <ProgressBar
+        android:id="@+id/updatingProgress"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/reloadImage"
+        app:layout_constraintEnd_toEndOf="@+id/reloadImage"
+        app:layout_constraintStart_toStartOf="@+id/reloadImage"
+        app:layout_constraintTop_toTopOf="@+id/reloadImage" />
+
     <ScrollView
         android:id="@+id/receiverScrollView"
         android:layout_width="match_parent"
@@ -33,7 +54,7 @@
         android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/showAllSwitch">
+        app:layout_constraintTop_toBottomOf="@+id/reloadImage">
 
         <LinearLayout
             android:id="@+id/receiverLayout"

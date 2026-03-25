@@ -19,6 +19,7 @@
         android:autoSizeTextType="uniform"
         android:maxLines="1"
         android:layout_marginHorizontal="10dp"
+        android:visibility="gone"
         android:textColor="@color/transparent_widget_textcolor" />
 
     <TextView
@@ -31,7 +32,7 @@
         android:autoSizeMinTextSize="1sp"
         android:autoSizeStepGranularity="1sp"
         android:autoSizeTextType="uniform"
-        android:text="135"
+        android:text="Other Unit"
         android:maxLines="1"
         tools:ignore="HardcodedText,NestedWeights" />
 
@@ -65,7 +66,7 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:text="mg/dl"
+            android:text="unit"
             android:maxLines="1"
             android:autoSizeMinTextSize="1sp"
             android:autoSizeMaxTextSize="24sp"

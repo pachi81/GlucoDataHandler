@@ -108,7 +108,7 @@ class TimeAxisRenderer(chart: LineChart) :
                 }
             }
 
-            mAxis.mEntryCount = n
+            mAxis.mEntryCount = minOf(n, 8)
 
             //Log.v(LOG_ID, "Compute nice axis values: $n - $first - $last - $interval")
 

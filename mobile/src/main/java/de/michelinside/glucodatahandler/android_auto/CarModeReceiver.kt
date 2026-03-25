@@ -22,7 +22,7 @@ object CarModeReceiver {
     private var init = false
     private var car_connected = false
     private var gda_enabled = false
-    private var graph_duration = 0
+    private var graph_duration = 4
     val connected: Boolean get() {  // connected to GlucoDataAuto
         if (!car_connected)
             return gda_enabled
@@ -41,11 +41,16 @@ object CarModeReceiver {
                 Log.i(LOG_ID, "GlucoDataAuto not available, but package received -> update packages")
                 PackageUtils.updatePackages(context)
             }
+            val curEnable = gda_enabled
+            val curDuration = graph_duration
             gda_enabled = intent.getBooleanExtra(Constants.GLUCODATAAUTO_STATE_EXTRA, false)
-            graph_duration = intent.getIntExtra(Constants.EXTRA_GRAPH_DURATION_HOURS, 0)
-            Log.i(LOG_ID, "gda_enabled: $gda_enabled - graph_duration: $graph_duration")
+            if(intent.hasExtra(Constants.EXTRA_GRAPH_DURATION_HOURS))
+                graph_duration  = intent.getIntExtra(Constants.EXTRA_GRAPH_DURATION_HOURS, 4)
+            Log.i(LOG_ID, "gda_enabled: $gda_enabled (old: $curEnable) - graph_duration: $graph_duration (old: $curDuration)")
             if(!car_connected && gda_enabled) {
                 InternalNotifier.notify(context, NotifySource.CAR_CONNECTION, null)
+            } else if(gda_enabled && (gda_enabled != curEnable || graph_duration != curDuration)) {
+                sendToGlucoDataAuto(context, false, (graph_duration != curDuration))
             }
         }
 
@@ -56,6 +61,7 @@ object CarModeReceiver {
     fun init(context: Context) {
         try {
             if(!init) {
+                init = true
                 Log.v(LOG_ID, "init called")
                 CarConnection(context).type.observeForever(CarModeReceiver::onConnectionStateUpdated)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -64,7 +70,6 @@ object CarModeReceiver {
                 } else {
                     GlucoDataService.context!!.registerReceiver(gdaReceiver, IntentFilter(Constants.GLUCODATAAUTO_STATE_ACTION))
                 }
-                init = true
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "init exception: " + exc.message.toString() )
@@ -118,7 +123,7 @@ object CarModeReceiver {
             if (connected && sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATAAUTO, true) && PackageUtils.isGlucoDataAutoAvailable(context)) {
                 val extras = ReceiveData.createExtras(false)
                 if(extras != null) {
-                    Log.i(LOG_ID, "send to ${Constants.PACKAGE_GLUCODATAAUTO}")
+                    Log.i(LOG_ID, "send to ${Constants.PACKAGE_GLUCODATAAUTO} - withSettings: $withSettings - withGraph: $withGraph (duration: $graph_duration)")
                     val intent = Intent(Intents.GLUCODATA_ACTION)
                     intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
                     if(withSettings) {

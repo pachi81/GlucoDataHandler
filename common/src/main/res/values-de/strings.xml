@@ -124,7 +124,7 @@
     <string name="pref_cat_notification">Benachrichtigung</string>
     <string name="pref_cat_widgets">Widgets</string>
     <string name="pref_cat_android_auto">Android Auto</string>
-    <string name="pref_cat_forward_broadcast">Glucosewerte weiterleiten</string>
+    <string name="pref_cat_forward_broadcast">Zuckerwerte weiterleiten</string>
     <string name="pref_cat_colors">Farben</string>
 
     <string name="pref_target_range">Zielbereich</string>
@@ -132,7 +132,7 @@
     <string name="pref_switch_car_notification">Android Auto Benachrichtigung</string>
     <string name="pref_switch_car_notification_summary">Benachrichtigung für Android Auto.</string>
     <string name="pref_switch_car_media">Fake Media Player</string>
-    <string name="pref_switch_car_media_summary">Stellt den Glucose Wert als aktuellen Song dar.</string>
+    <string name="pref_switch_car_media_summary">Stellt den Zuckerwert als aktuellen Songtitel dar.</string>
     <string name="pref_car_notification_interval">Benachrichtigungsintervall</string>
     <string name="pref_car_notification_interval_summary">Intervall, um die Benachrichtigungspopups in Android Auto für neue Werte anzuzeigen.\nAlarme werden unabhängig davon immer angezeigt.</string>
     <string name="pref_switch_car_notification_alarm_only">Nur für Alarme</string>
@@ -142,7 +142,7 @@
     <string name="pref_button_select_target">Glucodata Empfänger definieren</string>
     <string name="pref_button_select_target_summary">Empfänger auswählen, die den Glucodata Broadcast erhalten sollen. Ein globaler Broadcast kann von allen Apps empfangen werden, welche sich für diesen Broadcast intern registriert haben.</string>
     <string name="pref_switch_send_to_xdrip">Patched libre Broadcast senden</string>
-    <string name="pref_switch_send_to_xdrip_summary">Weiterleiten von Glucose Werten zu xDrip+.\nIn xDrip+ als Quelle \'Libre (patched app)\' einstellen.</string>
+    <string name="pref_switch_send_to_xdrip_summary">Weiterleiten von Zuckerwerten zu xDrip+.\nIn xDrip+ als Quelle \'Libre (patched app)\' einstellen.</string>
     <string name="pref_button_select_xdrip_target">Patched Libre Empfänger definieren</string>
     <string name="pref_button_select_xdrip_target_summary">Empfänger auswählen, an die der Patched Libre Broadcast gesendet wird. Ein globaler Broadcast kann von allen Apps empfangen werden, welche sich für diesen Broadcast intern registriert haben.</string>
     <string name="pref_switch_send_xdrip_broadcast">xDrip+ Broadcast senden</string>
@@ -449,7 +449,7 @@
     <string name="pref_cat_watch">Uhren</string>
     <string name="pref_cat_watch_summary">Einstellungen für die Anzeige auf den verbundenen Uhren.</string>
     <string name="pref_cat_transfer_summary">Einstellungen um die Zuckerwerte an andere Apps weiterzuleiten.</string>
-    <string name="pref_cat_transfer">Glucosewerte weiterleiten</string>
+    <string name="pref_cat_transfer">Zuckerwerte weiterleiten</string>
     <string name="pref_cat_visualisation">Visualisierung</string>
     <string name="pref_cat_banglejs">BangleJS Uhren</string>
     <string name="pref_wearos_info_summary" tools:ignore="Typos">Um GlucoDataHandler auf einer Wear OS Uhr zu verwenden, muss es aus dem Google Play Store auf der Uhr installiert werden.</string>
@@ -656,7 +656,7 @@
     <string name="pref_send_battery_level_to_watch_summary">Sende den Akkustand an die Uhr, um ihn in der Komplikation und auf dem Hauptbildschirm anzuzeigen.</string>
     <string name="pref_battery_level">Akkustand anzeigen</string>
     <string name="forward_to_watch_interval_summary">Lege die minimale Zeit (in Minuten) zwischen Glukosemessungen fest, bevor ein neues Update an die Uhr gesendet wird.\nAlarme und sehr tiefe Werte werden immer gesendet.</string>
-    <string name="forward_to_values_summary">Lege die minimale Zeit (in Minuten) zwischen Glukosemessungen fest, bevor ein neues Update an die Empfänger gesendet wird (nicht für Health Connect).</string>
+    <string name="forward_to_values_summary">Lege die minimale Zeit (in Minuten) zwischen Glukosemessungen fest, bevor ein neues Update an die Empfänger gesendet wird.</string>
     <string name="alarm_repeat_summary">Der Alarm ertönt und vibriert wiederholt, bis die Benachrichtigung geschlossen oder die eingestellte maximale Alarmdauer erreicht ist.</string>
     <string name="alarm_repeat_time">Maximale Alarmdauer</string>
     <string name="alarm_repeat_time_summary">Gib die maximale Zeit (in Minuten) an, die der Alarm ertönt und vibriert. Ein Wert von 0 bedeutet, dass der Alarm unbegrenzt wiederholt wird.</string>
@@ -678,8 +678,7 @@
     <string name="pref_watchfaces_default">Standard</string>
     <string name="pref_watchfaces_default_summary">Die meisten Hersteller von Smartwatches bieten bereits Ziffernblätter an, die mit den Komplikationen von GlucoDataHandler verwendet werden können.\nBeispielsweise sind die meisten Samsung \"Info\"-Ziffernblätter kompatibel.</string>
     <string name="pref_watchfaces_pujie">Pujie</string>
-    <string name="pref_watchfaces_pujie_summary">Pujie ist eine App zum Erstellen von Zifferblättern mit einer Cloud-Bibliothek.\nUm kompatible Ziffernblätter zu finden, suchen Sie in der Bibliothek nach Ziffernblättern, die mit \"GDH_\" beginnen.\nHinweis: Pujie ist nicht mit Wear OS 5-Geräten kompatibel.\nTippen Sie hier, um die App im Play Store zu öffnen.</string>
-    <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>
+    <string name="pref_watchfaces_pujie_summary">Pujie ist eine App zum Erstellen von Zifferblättern mit einer Cloud-Bibliothek.\nUm kompatible Ziffernblätter zu finden, suchen Sie in der Bibliothek nach Ziffernblättern, die mit \"GDH_\" beginnen.\nTippen Sie hier, um die App im Play Store zu öffnen.</string>
     <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man erstellt Ziffernblätter von Drittanbietern, die speziell für die Verwendung mit GlucoDataHandler entwickelt wurden.\nTippen Sie hier, um seine Play Store-Seite zu öffnen.</string>
     <string name="pref_watchfaces_gdc">GDC Ziffernblätter</string>
     <string name="pref_watchfaces_gdc_summary">GDC Ziffernblätter wurden für die Verwendung mit GlucoDataHandler entwickelt.\nTippen Sie hier, um die Play Store-Seite zu öffnen.</string>
@@ -760,7 +759,8 @@
     <string name="notification_reader_enabled">Aktivieren</string>
     <string name="no_receiver">Keine Anwendung</string>
     <string name="notification_reader_app_regex">Regex-Filter</string>
-    <string name="notification_reader_app_regex_summary">Regex zum Analysieren des Werts aus dem Text in der Benachrichtigung.\nBitte nur ändern, wenn Sie wissen, was Sie tun, oder wenn Sie eine Aufforderung vom Entwickler erhalten.</string>
+    <string name="notification_reader_app_regex_summary">Regex zum Analysieren des Werts aus dem Text in der Benachrichtigung.</string>
+    <string name="advanced_settings_developer_summary">Bitte nur ändern, wenn Sie wissen, was Sie tun, oder wenn Sie eine Aufforderung vom Entwickler erhalten.</string>
     <string name="notification_reader_five_minute_interval">5-Minuten-Intervall</string>
     <string name="notification_reader_five_minute_interval_summary">Einige Apps, wie Dexcom, aktualisieren ihre Benachrichtigungen recht häufig. Um diese Aktualisierungen mit dem gleichen Wert zu ignorieren, aktivieren Sie das 5-Minuten-Intervall.\nWenn aktiviert, gibt es nur alle 5 Minuten einen neuen Wert oder wenn sich der Wert in der Benachrichtigung geändert hat.</string>
     <string name="pref_source_notification_info_summary">Um Werte aus Benachrichtigungen anderer Apps zu empfangen, ist eine Berechtigung für den Zugriff auf die Benachrichtigungen erforderlich!\nDie Benachrichtigung muss entweder den Zuckerwert oder IOB/COB als String enthalten.\nDa jede Benachrichtigung ein anderes Layout hat, funktioniert es möglicherweise nicht mit jeder App. Bei Problemen kontaktieren Sie mich bitte mit einem Screenshot der Benachrichtigung und den Logs.</string>
@@ -898,7 +898,7 @@ Sie können diese Berechtigungen jederzeit in den Health Connect App-Einstellung
     <string name="pref_switch_xdrip_server_reduce_data_summary">Dies reduziert die bereitgestellten Daten auf ein Minimum, um Speicherprobleme bei einigen Garmin-Uhren zu vermeiden.\nDas funktioniert gegebenenfalls nicht mit jedem Zifferblatt.</string>
     <string name="error_port_in_use">Port wird bereits verwendet!\nBitte andere Webserver beenden, die auf diesem Port laufen, und danach den lokalen Webserver erneut starten.</string>
     <string name="state_active">aktiv</string>
-    <string name="pref_garmin_info_summary">Es gibt keine dedizierte App für Garmin, Fitbit oder Pebble, nur einen lokalen Webserver, der von Zifferblättern mit xDrip+-Unterstützung verwendet wird.\nEinfach im Connect IQ Store nach Zifferblättern für xDrip+ suchen und die xDrip+-Quelle einrichten.\nWICHTIG: Wenn auch xDrip+ oder Juggluco verwendet wird, kann der lokale Webserver nur in einer App aktiviert werden, da derselbe Port (17580) verwendet wird!</string>
+    <string name="pref_garmin_info_summary">Es gibt keine dedizierte App für Garmin oder Fitbit, nur einen lokalen Webserver, der von Zifferblättern mit xDrip+-Unterstützung verwendet wird.\nEinfach im Connect IQ Store nach Zifferblättern für xDrip+ suchen und die xDrip+-Quelle einrichten.\nWICHTIG: Wenn auch xDrip+ oder Juggluco verwendet wird, kann der lokale Webserver nur in einer App aktiviert werden, da derselbe Port (17580) verwendet wird!</string>
     <string name="remaining">Verbleibend</string>
     <string name="pref_switch_xdrip_open_server">Offener Webserver</string>
     <string name="pref_switch_xdrip_open_server_summary">Diese Einstellung macht den Webserver für andere Geräte im Netzwerk verfügbar.\nDies kann Sicherheitsprobleme verursachen, also nur aktivieren, wenn wirklich von einem anderen Gerät auf die Daten des Webservers zugegriffen werden muss.\nDie Garmin-Zifferblätter fordern Daten direkt auf dem Telefon an, daher ist kein offener Server erforderlich!</string>
@@ -927,14 +927,12 @@ Sie können diese Berechtigungen jederzeit in den Health Connect App-Einstellung
     <string name="src_ns_summary">Nightscout Webdienst aus der Ferne folgen.</string>
     <string name="pref_cat_wear_os_summary">Für Wear OS-Uhren, z. B. alle Google Pixel Watches, Samsung Galaxy Watch 4 und neuere sowie viele andere.</string>
     <string name="pref_cat_watchdrip_summary">Für Uhren, die von der externen WatchDrip+-App unterstützt werden, wie die meisten Mi Band, Xiaomi Smart Band- und Amazfit-Modelle.</string>
-    <string name="pref_cat_garminpebble">Garmin-, Fitbit- und Pebble-Uhren</string>
-    <string name="pref_cat_garminpebble_summary">Für Geräte und Apps, die Glukosedaten vom xDrip+-Webdienst empfangen können, wie Garmin-, Pebble- und einige Fitbit-Uhren.</string>
+    <string name="pref_cat_garminpebble">Garmin- und Fitbit-Uhren</string>
+    <string name="pref_cat_garminpebble_summary">Für Geräte und Apps, die Glukosedaten vom xDrip+-Webdienst empfangen können, wie Garmin- und einige Fitbit-Uhren.</string>
     <string name="pref_garmin_watchfaces_summary">Hier drücken, um den Connect IQ Store für xDrip+-Zifferblätter zu öffnen.\nWenn die Zifferblätter xDrip+ unterstützen, sollten sie auch mit dieser App kompatibel sein.</string>
     <string name="pref_garmin_watchfaces">Garmin</string>
     <string name="pref_fitbit_watchfaces">Fitbit</string>
     <string name="pref_fitbit_watchfaces_summary">Hier drücken, um die Glance-Webseite zu öffnen, die xDrip+-Webdienste unterstützt.</string>
-    <string name="pref_pebble_watchfaces">Pebble</string>
-    <string name="pref_pebble_watchfaces_summary">Hier drücken, um für xDrip+ entwickelte Pebble-Zifferblätter zu öffnen, die auch mit dieser App kompatibel sein sollten.</string>
     <string name="gmi">GMI</string>
     <string name="pref_lockscreen_x_pos">Horizontale Position</string>
     <string name="pref_lockscreen_x_pos_summary">Horizontale Position des Bildes:\n0 ist der linke Rand des Displays\n40 ist der rechte Rand des Displays</string>
@@ -964,4 +962,34 @@ Sie können diese Berechtigungen jederzeit in den Health Connect App-Einstellung
     </plurals>
 
     <string name="dexcom_server_down_error">Der Dexcom-Server scheint offline zu sein!\nHier drücken, um den Serverstatus zu prüfen.\nWenn die Dexcom-App auf demselben Gerät installiert ist, kannst du stattdessen den Notification Reader verwenden.</string>
+
+    <!-- v2.3 -->
+
+    <string name="medtrum_wrong_user_type_info">Nur Follower-Konten sind erlaubt.\nHier drücken, um ein neues Follower-Konto zu erstellen und sich selbst einzuladen.</string>
+    <string name="notification_reader_value_with_unit">Wert mit Einheit</string>
+    <string name="notification_reader_value_with_unit_summary">Wenn die Einheit (mmol oder mg) Teil des Wertes in der Benachrichtigung ist, aktiviere dies, um alle Felder ohne Einheit zu ignorieren.</string>
+
+    <string name="button_yes">Ja</string>
+    <string name="button_no">Nein</string>
+    <string name="patient_changed">Patient gewechselt</string>
+    <string name="patient_changed_reset_db">Du hast den Patienten gewechselt.\nMöchtest du die Datenbank zurücksetzen, um die alten Patientendaten zu entfernen?</string>
+    <string name="update">Aktualisierung</string>
+    <string name="pref_transfer_to_healthconnect_summary">Glukosewerte mit Health Connect teilen.</string>
+    <string name="pref_transfer_to_local_apps_summary">Sende einen Broadcast an andere lokale Apps auf diesem Gerät.</string>
+    <string name="source_aidex_summary">AiDEX Broadcast-Empfänger aktivieren. Erfordert AiDEX-App-Version 1.0.17 oder niedriger.</string>
+    <string name="pref_source_aidex_summary">Empfängt Broadcasts von der AiDEX-App. Erfordert AiDEX-App-Version 1.0.17 oder niedriger.</string>
+
+    <string name="transfer_values_interval_summary">Intervall zum Senden von Glukosewerten.\nAlle seit der letzten Übertragung erfassten Werte werden einbezogen.</string>
+    <string name="health_connect_settings">Health Connect öffnen</string>
+    <string name="health_connect_settings_summary">Berechtigungen und Datenzugriff für Health Connect verwalten.</string>
+    <string name="health_connect_not_supported_version">Health Connect erfordert mindestens Android 9.</string>
+    <string name="pref_transfer_to_nightscout_summary">Glukosewerte zu Nightscout hochladen.</string>
+    <string name="transfer_to_nightscout">Nightscout Upload</string>
+    <string name="label_profile">Profil</string>
+    <string name="pref_watchfaces_cx_summary">Creative eXtreme Zifferblätter unterstützen auch GlucoDataHandler-Komplikationen.\nDu musst die Facer-App verwenden, um diese Zifferblätter zu nutzen.\nHier tippen, um die Facer-Seite für Creative eXtreme Zifferblätter zu öffnen.</string>
+    <string name="notification_reader_interval_summary">Stelle das Intervall in Minuten passend zur Aktualisierungsrate deines Sensors ein, um doppelte Benachrichtigungen zu ignorieren.</string>
+    <string name="pref_transfer_to_local_apps">Lokale Apps</string>
+
+    <string name="xdrip_open_server_api_secret_summary">Optionales API-Secret zum Schutz der Zugriffe. Falls konfiguriert, muss dieses Secret auch beim Client für den Zugriff konfiguriert werden.</string>
+    <string name="pref_xdrip_server_summary">Stellt einen lokalen Webserver auf Port 17580 bereit, der den xDrip+-Webservice emuliert und von verschiedenen externen Diensten, Uhren und Apps genutzt werden kann.</string>
 </resources>

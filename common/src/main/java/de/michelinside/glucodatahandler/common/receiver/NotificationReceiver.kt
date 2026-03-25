@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.RemoteViews
 import android.widget.TextView
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
@@ -23,9 +24,9 @@ import java.math.RoundingMode
 import kotlin.math.abs
 
 class NotificationReceiver : NotificationListenerService(), NamedReceiver {
-    private val LOG_ID = "GDH.NotificationReceiver"
     private var parsedTextViews = mutableListOf<String>()
     private var lastValueNotificationTime = 0L
+    private var lastNewValueTime = 0L
     private var lastIobNotificationTime = 0L
     private var updateOnlyChangedValue = false
     private var lastValue = Float.NaN
@@ -35,11 +36,55 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     private var lastValueChanged = false
     private var waitForAdditionalIobNotification: Thread? = null
     private val trendRegex = "([→↗↑↘↓⇈⇊])".toRegex()
+    private val receivedNotifications = mutableListOf<StatusBarNotification>()
+    private val intervalCheckTimeSpan = 10 // seconds -> from interval-timespan until interval+timespan
+
 
     companion object {
-        const val defaultGlucoseRegex = "(?:^|\\s)(\\d*\\.?\\d+)(?=\\s|\\p{S}|\$)" // old: "(?:^|\\s)(\\d*\\.?\\d+)(?=\\s|\$)"  "(?:^|\s)(\d{1,3}(?:\.\d{1,3})?)(?=\s|${'$'})"
-        const val defaultIobRegex = "(\\d*\\.?\\d+)\\s?[Uu]"
-        const val defaultCobRegex = "(\\d+)\\s?[Gg]"
+        private val LOG_ID = "GDH.NotificationReceiver"
+        val oldGlucoseRegexes = mutableSetOf(
+            "(\\d*\\.?\\d+)",
+            "(?:^|\\s)(\\d*\\.?\\d+)(?=\\s|\$)",
+            "(?:^|\\s)(\\d{1,3}(?:\\.\\d{1,3})?)(?=\\s|${'$'})",
+            """(?:^|\s)(\d+(\.\d)?)(?=\s|\p{S}|$)""",
+            """(?:^|\s)(\d*\.?\d+)(?=\s|\p{S}|$)""",
+            """(?:^|\s)(\d*\.?\d+)(?=\s|\p{S}|$) (mg|mmol)"""  // workaround for medtronic before version 2.3
+        )
+        val oldIobRegexes = mutableSetOf(
+            "IOB: (\\d*\\.?\\d+) U",
+            "(\\d*\\.?\\d+) U",
+            "(\\d*\\.?\\d+)\\s?[Uu]",
+            """(\d*\.?\d+)\s?[a-fh-z]\b""",
+            """(\d*\.?\d+)\s?[UuE]"""     // workaround for medtronic before version 2.3
+        )
+        val oldCobRegexes = mutableSetOf(
+            "(\\d+)\\s?[Gg]",
+            """(\d+)\s?g\b"""
+        )
+
+        const val defaultGlucoseRegex = """(?:^|\s)(\d+(\.\d)?)(?=\s|\p{S}|$)"""
+        const val defaultIobRegex = """(\d*\.?\d+)\s?[a-fh-z]\b"""
+        const val defaultCobRegex = """(\d+)\s?g\b"""
+    }
+
+    private fun getRegex(key: String, defaultRegex: String): Regex {
+        val sharedPref = GlucoDataService.sharedPref?: applicationContext.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
+        val regex = sharedPref.getString(key, defaultRegex)
+        if(regex.isNullOrEmpty())
+            return defaultRegex.toRegex(RegexOption.IGNORE_CASE)
+        return regex.toRegex(RegexOption.IGNORE_CASE)
+    }
+
+    private val glucoseRegex: Regex get() {
+        return getRegex(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX, defaultGlucoseRegex)
+    }
+
+    private val iobRegex: Regex get() {
+        return getRegex(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX, defaultIobRegex)
+    }
+
+    private val cobRegex: Regex get() {
+        return getRegex(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_COB_APP_REGEX, defaultCobRegex)
     }
 
     override fun getName(): String {
@@ -52,20 +97,15 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
 
     private fun startWaitThread(sbn: StatusBarNotification, waitTime: Long = 3000) {
         stopWaitThread()
+        receivedNotifications.add(sbn)
         Log.i(LOG_ID, "Start wait thread for $waitTime ms")
         waitForAdditionalNotification = Thread {
             try {
                 Thread.sleep(waitTime)
                 // no additional notification, parse this one
                 Handler(applicationContext.mainLooper).post {
-                    val diffTime = (sbn.postTime - ReceiveData.time)/1000 // in seconds
-                    Log.i(LOG_ID, "Handle wait value notification - diff: $diffTime")
-                    if(diffTime > 50) {
-                        if(multiValueNotificationPackage == null)
-                            multiValueNotificationPackage = ""  // set to not receiving any additional notification for not trigger delay thread each time!
-                        updateOnlyChangedValue = diffTime < 250
-                        parseValue(sbn)
-                    }
+                    parseValueNotificationList(receivedNotifications)
+                    receivedNotifications.clear()
                 }
             } catch (_: InterruptedException) {
                 Log.d(LOG_ID, "Wait thread interrupted")
@@ -144,6 +184,8 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             return true
         if(packageName.lowercase().startsWith("com.gluroo."))  // Gluroo
             return true
+        if(packageName.lowercase().startsWith("com.microtech.aidexx.diaexport."))  // DiaExpert
+            return true
 
         if(onGoingNotificationPackage == packageName)
             return true
@@ -166,17 +208,38 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         return true
     }
 
-    private fun has5MinuteInterval(packageName: String, sharedPref: SharedPreferences): Boolean {
+    private fun getInterval(packageName: String, sharedPref: SharedPreferences): Int {
         if(hasRegularNotification(packageName))
-            return false
+            return 0
         if(PackageUtils.isDexcomApp(packageName))
-            return true
+            return 5
         if(packageName.lowercase().startsWith("com.senseonics."))  // Eversense 365 CGM has 5 min interval
-            return true
+            return 5
         if(packageName.lowercase().startsWith("com.medtronic."))  // MiniMed has 5 min interval
-            return true
+            return 5
+        if(packageName.lowercase().startsWith("com.microtechmd.cgms")) // Aidex has 5 minute interval
+            return 5
+        if(packageName.lowercase().startsWith("com.sinocare.ican.health"))  // iCan has 3 minute interval
+            return 3
+        if(packageName.lowercase().startsWith("com.microtech.aidexx.diaexport.")) { // DiaExpert has 1 minute interval (irregular)
+            return if(sharedPref.getInt(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_INTERVAl, 0) == 1) 1 else 0
+        }
         // else
-        return sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_5_MINUTE_INTERVAl, true)
+        return sharedPref.getInt(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_INTERVAl, 5)
+    }
+
+    private fun hasValueWithUnit(packageName: String, sharedPref: SharedPreferences): Boolean {
+        if(packageName.lowercase().startsWith("com.medtronic."))  // MiniMed shows the value in notification
+            return true
+        if(packageName.lowercase().startsWith("com.signos."))  // Signos (uses Dexcom Sensor)
+            return true
+        if(PackageUtils.isDexcomApp(packageName))
+            return false
+        if(packageName.lowercase().startsWith("com.sinocare.ican.health"))
+            return false
+        if(packageName.lowercase().startsWith("com.microtech.aidexx.diaexport."))
+            return false
+        return sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_VALUE_WITH_UNIT, false)
     }
 
 
@@ -186,6 +249,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             return true
         return false
     }
+
 
     private fun isSpecialNotification(sbn: StatusBarNotification): Boolean {
         // some apps also provides foreground notifications, which should be ignored...
@@ -233,7 +297,11 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     private fun validIobCobNotification(sbn: StatusBarNotification, sharedPref: SharedPreferences): Boolean {
         if (sbn.packageName == sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP, "") &&
             (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_ENABLED, true) || sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_COB_ENABLED, false))) {
-            Log.i(LOG_ID, "New IOB notification from ${sbn.packageName} - ongoing: ${sbn.isOngoing} (flags: ${sbn.notification?.flags}, prio: ${sbn.notification?.priority}) - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`})")
+            val diffValueTime = (sbn.postTime - ReceiveData.iobCobTime)/1000 // in seconds
+            val diffNotifyTime = (sbn.postTime - lastIobNotificationTime)/1000 // in seconds
+            Log.i(LOG_ID, "New IOB notification from ${sbn.packageName} - ongoing: ${sbn.isOngoing} (flags: ${sbn.notification?.flags}, prio: ${sbn.notification?.priority}) - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`}) - diff notify: $diffNotifyTime, diff recv value: $diffValueTime")
+            if(diffNotifyTime <= 0L)
+                return false
             if(sbn.isOngoing || !hasOngoingNotification(sbn.packageName)) {
                 stopIobWaitThread()
                 if(hasIrregularIobNotification(sbn.packageName)) {
@@ -253,14 +321,15 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             val diffValueTime = (sbn.postTime - ReceiveData.time)/1000 // in seconds
             val diffNotifyTime = (sbn.postTime - lastValueNotificationTime)/1000 // in seconds
             Log.i(LOG_ID, "New notification from ${sbn.packageName} - ongoing: ${sbn.isOngoing} (flags: ${sbn.notification?.flags}, prio: ${sbn.notification?.priority}) - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`}) - diff notify: $diffNotifyTime, diff recv value: $diffValueTime")
-            if(diffNotifyTime == 0L)
+            if(diffNotifyTime <= 0L)
                 return false
             if(!sbn.isOngoing && hasOngoingNotification(sbn.packageName))
                 return false
             if(isSpecialNotification(sbn))
                 return false
-            if(has5MinuteInterval(sbn.packageName, sharedPref)) {
-                Log.i(LOG_ID, "Handle 5 min notification - lastValueChanged: $lastValueChanged - diff: $diffValueTime")
+            val interval = getInterval(sbn.packageName, sharedPref)
+            if(interval > 1) {
+                Log.i(LOG_ID, "Handle $interval min notification - lastValueChanged: $lastValueChanged - diff: $diffValueTime")
                 stopWaitThread()
                 /*
                     - time to ignore notifications: 60s if the last value was not a new one and 180s if the last value was a new one
@@ -268,22 +337,35 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                     - after 250s wait until 315s for a newer notification if the value has not changed - if there is no new one, use this one
                     - after 310s use the value
                  */
-                val ignoreTime = if(lastValueChanged) 60 else 180
+                val intervalTimeSec = interval*60
+                val ignoreTime = if(lastValueChanged) (intervalTimeSec-60) else 60
                 if(diffValueTime<=ignoreTime) {
                     Log.i(LOG_ID, "Ignoring notification")
                     return false
                 }
-                if(diffValueTime<=250) {
+                if(diffValueTime<=(intervalTimeSec-intervalCheckTimeSpan)) {
                     Log.i(LOG_ID, "Check for changed value only")
                     updateOnlyChangedValue = true
                     return true
                 }
-                if(diffValueTime>=310)  // use this value
+                if(diffValueTime>=intervalTimeSec+intervalCheckTimeSpan)  // use this value
                     return true
-                Log.i(LOG_ID, "Check for changed value and wait for newer notification until 315s")
-                startWaitThread(sbn, (315-diffValueTime)*1000)   // wait for the case, the value is the same and there is no newer notification
+                // within the timespan wait for new notification to use the last one, which should contain the new value
+                val waitTime = intervalTimeSec+intervalCheckTimeSpan+5 // use 5s extra delay
+                Log.i(LOG_ID, "Check for changed value and wait for newer notification until $waitTime s")
+                startWaitThread(sbn, (waitTime-diffValueTime)*1000)   // wait for the case, the value is the same and there is no newer notification
                 updateOnlyChangedValue=true
                 return true
+            } else if(interval == 1) {
+                val diffLastValueTime = (sbn.postTime - lastNewValueTime)/1000 // in seconds
+                Log.i(LOG_ID, "Handle irregular one minute notification - diff last new value: $diffLastValueTime")
+                if(diffLastValueTime <= 1L)
+                    return false
+                if(diffLastValueTime < minDiff) {
+                    Log.i(LOG_ID, "Check for changed value only")
+                    updateOnlyChangedValue = true
+                    return true
+                }
             }
 
             if(diffValueTime < minDiff) {
@@ -299,6 +381,8 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         if (isRegistered()) {
             statusBarNotification?.let { sbn ->
                 Log.d(LOG_ID, "New notification posted from ${sbn.packageName} - ongoing: ${sbn.isOngoing} (flags: ${sbn.notification?.flags}, prio: ${sbn.notification?.priority}) - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`})")
+                if(sbn.packageName == applicationContext.packageName)
+                    return  // ignore notification from own app
                 val sharedPref = applicationContext.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
                 if (validGlucoseNotification(sbn, sharedPref)) {
                     parseValue(sbn)
@@ -337,20 +421,42 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         return extractTrendValue(text)
     }
 
-    private fun parseValue(sbn: StatusBarNotification) {
-        val sharedPref = applicationContext.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
-        val regex = sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX, defaultGlucoseRegex)!!.toRegex()
+    private fun parseValueNotificationList(list: MutableList<StatusBarNotification>) {
+        Log.i(LOG_ID, "parse ${list.size} value notifications")
+        list.asReversed().forEach { sbn ->
+            val diffTime = (sbn.postTime - ReceiveData.time)/1000 // in seconds
+            Log.i(LOG_ID, "Handle wait value notification - diff: $diffTime")
+            if(diffTime > 50) {
+                if(multiValueNotificationPackage == null)
+                    multiValueNotificationPackage = ""  // set to not receiving any additional notification for not trigger delay thread each time!
+                updateOnlyChangedValue = diffTime < 250
+                if(parseValue(sbn, sbn == list.first()))
+                    return
+            } else {
+                return // all other notifications are older
+            }
+        }
+    }
+
+    private fun parseValue(sbn: StatusBarNotification, setError: Boolean = true): Boolean {
+        val regex = glucoseRegex
         Log.i(LOG_ID, "using regex $regex")
         val value = parseValueFromNotification(sbn, false, regex)
         if(!value.isNaN()) {
             lastValueNotificationTime = sbn.postTime
             val rate = parseTrendValue(sbn)
             handleGlucoseValue(value, rate, sbn)
-        } else if(parsedTextViews.isNotEmpty()) {
-            SourceStateData.setError(DataSource.NOTIFICATION, applicationContext.resources.getString(R.string.source_no_valid_value) + "\n${parsedTextViews.distinct()}")
+            return true
+        } else if(setError) {
+            if(parsedTextViews.isNotEmpty()) {
+                SourceStateData.setError(DataSource.NOTIFICATION, applicationContext.resources.getString(R.string.source_no_valid_value) + "\n${parsedTextViews.distinct()}")
+            } else {
+                SourceStateData.setError(DataSource.NOTIFICATION, applicationContext.resources.getString(R.string.missing_data))
+            }
         } else {
-            SourceStateData.setError(DataSource.NOTIFICATION, applicationContext.resources.getString(R.string.missing_data))
+            Log.w(LOG_ID, "No valid value found in notification:\n${parsedTextViews.distinct()}")
         }
+        return false
     }
 
     private fun parseIobCobValue(sbn: StatusBarNotification) {
@@ -368,7 +474,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
 
     private fun parseIobValue(sbn: StatusBarNotification, sharedPref: SharedPreferences): Float {
         if(sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_ENABLED, true)) {
-            val regex = sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX, defaultIobRegex)!!.toRegex()
+            val regex = iobRegex
             Log.i(LOG_ID, "using IOB regex $regex")
             return parseValueFromNotification(sbn, true, regex)
 
@@ -378,17 +484,51 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
 
     private fun parseCobValue(sbn: StatusBarNotification, sharedPref: SharedPreferences): Float {
         if(sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_COB_ENABLED, true)) {
-            val regex = sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_COB_APP_REGEX, defaultCobRegex)!!.toRegex()
+            val regex = cobRegex
             Log.i(LOG_ID, "using COB regex $regex")
             return parseValueFromNotification(sbn, true, regex)
         }
         return Float.NaN
     }
 
+    private fun parseString(value: String?, regex: Regex, isIobCob: Boolean, needsUnit: Boolean): Float? {
+        try {
+            if(!value.isNullOrEmpty()) {
+                if(!isIobCob && needsUnit) {
+                    if(!value.lowercase().contains("mmol") && !value.lowercase().contains("mg")) {
+                        Log.d(LOG_ID, "Ignoring value $value without unit")
+                        return null
+                    }
+                }
+                Utils.parseRegexGroupValues(value, regex)?.get(1)?.toFloatOrNull()?.let {
+                    if(!isIobCob) {
+                        // check value not being a IOB or COB value
+                        if(Utils.parseRegexGroupValues(value, iobRegex) != null) {
+                            Log.d(LOG_ID, "Found IOB value: $it in $value - ignore for glucose value")
+                            return null
+                        }
+                        if(Utils.parseRegexGroupValues(value, cobRegex) != null) {
+                            Log.d(LOG_ID, "Found COB value: $it in $value - ignore for glucose value")
+                            return null
+                        }
+                    }
+                    if(isValidValue(it, isIobCob)) {
+                        Log.i(LOG_ID, "Found value: $it using regex in $value")
+                        return it
+                    }
+                }
+            }
+        } catch (ex: Exception) {
+            Log.e(LOG_ID, "Error parsing string '$value' with regex '$regex' (isIobCob: $isIobCob): ${ex.message}")
+        }
+        return null
+    }
+
     private fun isValidValue(value: Float, isIobCob: Boolean): Boolean {
         if(isIobCob)
             return !value.isNaN()
         // else check for valid glucose value
+        // first check, if it is no IOB or COB value:
         return GlucoDataUtils.isGlucoseValid(value)
     }
 
@@ -398,44 +538,38 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         // Extract data from notification extras as needed
         val title = extras?.getCharSequence("android.title")?.toString()
         val text = extras?.getCharSequence("android.text")?.toString()
-        Log.i(LOG_ID, "extracted title `$title` and text `$text`")
+        val needsUnit = if(isIobCob) false else hasValueWithUnit(sbn.packageName, GlucoDataService.sharedPref!!)
+        Log.i(LOG_ID, "extracted title `$title` and text `$text` check for unit: $needsUnit")
 
         if(!title.isNullOrEmpty()) {
-            regex.find(title.replace(",", ".").trim())?.groupValues?.get(1)?.toFloatOrNull()?.let {
-                if(isValidValue(it, isIobCob)) {
-                    return it
-                }
+            parseString(title, regex, isIobCob, needsUnit)?.let {
+                return it
             }
             parsedTextViews.add(title)
         }
         if(!text.isNullOrEmpty()) {
-            regex.find(text.replace(",", ".").trim())?.groupValues?.get(1)?.toFloatOrNull()?.let {
-                if(isValidValue(it, isIobCob)) {
-                    return it
-                }
+            parseString(text, regex, isIobCob, needsUnit)?.let {
+                return it
             }
             parsedTextViews.add(text)
         }
 
         // Try processing different RemoteViews
-        val glucoseValue = processRemoteViews(sbn.notification.contentView, isIobCob, regex)
+        val glucoseValue = processRemoteViews(sbn.notification.contentView, isIobCob, regex, needsUnit)
         if(!glucoseValue.isNaN() || !hasBigContentViewData(sbn.packageName))
             return glucoseValue
         Log.i(LOG_ID, "Could not find value in content view - check big content view")
-        return processRemoteViews(sbn.notification.bigContentView, isIobCob, regex)
+        return processRemoteViews(sbn.notification.bigContentView, isIobCob, regex, needsUnit)
     }
 
-    private fun parseTextView(textView: TextView, isIobCob: Boolean, regex: Regex?): Float {
+    private fun parseTextView(textView: TextView, isIobCob: Boolean, regex: Regex?, needsUnit: Boolean): Float {
         try {
             Log.v(LOG_ID, "Processing TextView: ${textView.text} - isIobCob: $isIobCob")
             if(!textView.text.isNullOrEmpty()) {
                 val text = textView.text.toString().replace(",", ".").trim()
                 if(regex!=null) {
-                    regex.find(text)?.groupValues?.get(1)?.toFloatOrNull()?.let {
-                        if(isValidValue(it, isIobCob)) {
-                            Log.i(LOG_ID, "Found value: $it using regex in $textView")
-                            return it
-                        }
+                    parseString(text, regex, isIobCob, needsUnit)?.let {
+                        return it
                     }
                 } else {
                     text.toFloatOrNull()?.let {
@@ -453,13 +587,13 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         return Float.NaN
     }
 
-    private fun parseTextViews(textViews: ArrayList<TextView>, isIobCob: Boolean): Float {
+    private fun parseTextViews(textViews: ArrayList<TextView>, isIobCob: Boolean, needsUnit: Boolean): Float {
         // Examine each TextView
         for (textView in textViews) {
             try {
                 Log.v(LOG_ID, "Processing TextView: ${textView.text} - isIobCob: $isIobCob")
                 if(!textView.text.isNullOrEmpty()) {
-                    val value = parseTextView(textView, isIobCob, null)  // check everything without regex
+                    val value = parseTextView(textView, isIobCob, null, needsUnit)  // check everything without regex
                     if(!value.isNaN())
                         return value
                 }
@@ -470,7 +604,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         return Float.NaN
     }
 
-    private fun processRemoteViews(remoteViews: RemoteViews?, isIobCob: Boolean, regex: Regex): Float {
+    private fun processRemoteViews(remoteViews: RemoteViews?, isIobCob: Boolean, regex: Regex, needsUnit: Boolean): Float {
         if (remoteViews == null) {
             Log.i(LOG_ID, "No RemoteViews found")
             return Float.NaN
@@ -485,15 +619,15 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             // Collect all TextViews
             val textViews = ArrayList<TextView>()
             val derivedTextViews = ArrayList<TextView>()
-            var glucoseValue = findTextViews(root, textViews, derivedTextViews, isIobCob, regex)
+            var glucoseValue = findTextViews(root, textViews, derivedTextViews, isIobCob, regex, needsUnit)
             if(!glucoseValue.isNaN() || isIobCob)  // IOB only with regex
                 return glucoseValue
 
             Log.i(LOG_ID, "Found ${textViews.size} text views: $textViews and ${derivedTextViews.size} derived text views: $derivedTextViews")
 
-            glucoseValue = parseTextViews(textViews, isIobCob)
+            glucoseValue = parseTextViews(textViews, isIobCob, needsUnit)
             if(glucoseValue.isNaN()) {
-                glucoseValue = parseTextViews(derivedTextViews, isIobCob)
+                glucoseValue = parseTextViews(derivedTextViews, isIobCob, needsUnit)
             }
             return glucoseValue
 
@@ -503,19 +637,19 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         return Float.NaN
     }
 
-    private fun findTextViews(view: View, textViews: MutableList<TextView>, derivedTextViews: MutableList<TextView>, isIobCob: Boolean, regex: Regex): Float {
+    private fun findTextViews(view: View, textViews: MutableList<TextView>, derivedTextViews: MutableList<TextView>, isIobCob: Boolean, regex: Regex, needsUnit: Boolean): Float {
         Log.v(LOG_ID, "findTextViews in view $view")
         when (view) {
             is TextView -> {
                 if(view.javaClass.name == TextView::class.java.name) {
                     Log.d(LOG_ID, "Found TextView: $view: '${view.text}'")
-                    val value = parseTextView(view, isIobCob, regex)
+                    val value = parseTextView(view, isIobCob, regex, needsUnit)
                     if(!value.isNaN())  // found
                         return value
                     textViews.add(view)
                 } else {
                     Log.d(LOG_ID, "Found derived TextView: ${view.javaClass.name} with value '${view.text}'")
-                    val value = parseTextView(view, isIobCob, regex)
+                    val value = parseTextView(view, isIobCob, regex, needsUnit)
                     if(!value.isNaN())  // found
                         return value
                     derivedTextViews.add(view)
@@ -523,7 +657,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             }
             is ViewGroup -> {
                 for (i in 0 until view.childCount) {
-                    val value = findTextViews(view.getChildAt(i), textViews, derivedTextViews, isIobCob, regex)
+                    val value = findTextViews(view.getChildAt(i), textViews, derivedTextViews, isIobCob, regex, needsUnit)
                     if(!value.isNaN())  // found
                         return value
                 }
@@ -554,7 +688,9 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             Log.i(LOG_ID, "Ignoring value notification with same value: $glucoseValue")
         } else if (validGlucoseValue(glucoseValue)) {
             stopWaitThread()
+            receivedNotifications.clear()
             lastValueChanged = lastValue != glucoseValue
+            lastNewValueTime = sbn.postTime
             lastValue = glucoseValue
             val glucoExtras = Bundle()
             glucoExtras.putString(ReceiveData.SERIAL, PackageUtils.getAppName(applicationContext, sbn.packageName))

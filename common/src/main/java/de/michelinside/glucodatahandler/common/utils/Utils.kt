@@ -242,8 +242,8 @@ object Utils {
         return hexStringBuffer.toString()
     }
 
-    fun encryptSHA1(value: String): String {
-        if (value.trim().isEmpty())
+    fun encryptSHA1(value: String?): String {
+        if (value.isNullOrEmpty() || value.trim().isEmpty())
             return ""
         try {
             val message: ByteArray = value.trim().toByteArray(Charsets.UTF_8)
@@ -698,6 +698,10 @@ object Utils {
         } else {
             parts.joinToString(", ")
         }
+    }
+
+    fun parseRegexGroupValues(valueToParse: String, regex: Regex): List<String>? {
+        return regex.find(valueToParse.replace(",", ".").trim().lowercase())?.groupValues
     }
 
 }

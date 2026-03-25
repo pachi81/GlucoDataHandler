@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="send_to_health_connect"
+            android:summary="@string/pref_healthconnect_summary"
+            android:title="@string/pref_healthconnect"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="samsung_health_info"
+            android:summary="@string/pref_samsunghealth_summary"
+            app:iconSpaceReserved="false"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/advanced_settings"
+        app:iconSpaceReserved="false">
+            <androidx.preference.SeekBarPreference
+                app:showSeekBarValue="true"
+                app:seekBarIncrement="1"
+                app:min="1"
+                android:max="30"
+                android:defaultValue="5"
+                android:key="send_to_health_connect_interval"
+                android:title="@string/alarm_interval"
+                android:summary="@string/transfer_values_interval_summary"
+                app:iconSpaceReserved="false" />
+        <Preference
+            android:key="health_connect_settings"
+            android:title="@string/health_connect_settings"
+            android:summary="@string/health_connect_settings_summary"
+            app:iconSpaceReserved="false"/>
+    </PreferenceCategory>
+</PreferenceScreen>

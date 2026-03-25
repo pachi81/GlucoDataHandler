@@ -6,13 +6,15 @@ import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.chart.ChartCreator
 import de.michelinside.glucodatahandler.common.chart.GlucoseChart
 
-class WearChartCreator(chart: GlucoseChart, context: Context, durationPref: String) : ChartCreator(chart, context, durationPref) {
+class WearChartCreator(chart: GlucoseChart, context: Context, durationPref: String, duration: Int = 2) : ChartCreator(chart, context, durationPref) {
     private val LOG_ID = "GDH.Chart.WearCreator"
 
     override val yAxisOffset = -100F
-    override var durationHours = 2
+    override var durationHours = duration
     override var graphDays = Constants.DB_MAX_DATA_WEAR_DAYS
     override val showAverage = false
+    override val showDateOnBubble = false
+    override val showDeltaOnBubble = false
 
     override fun initXaxis() {
         Log.v(LOG_ID, "initXaxis")

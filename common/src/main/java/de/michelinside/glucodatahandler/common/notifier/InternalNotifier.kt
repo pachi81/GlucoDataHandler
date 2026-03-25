@@ -6,7 +6,6 @@ import de.michelinside.glucodatahandler.common.utils.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.Collections
 
 object InternalNotifier {
@@ -53,6 +52,15 @@ object InternalNotifier {
 
     fun notify(context: Context, notifySource: NotifySource, extras: Bundle?)
     {
+        // Check if we are currently on the Main Thread
+        if (android.os.Looper.myLooper() != android.os.Looper.getMainLooper()) {
+            Log.d(LOG_ID, "Redirection notify for $notifySource to Main Thread")
+            android.os.Handler(android.os.Looper.getMainLooper()).post {
+                notify(context, notifySource, extras)
+            }
+            return
+        }
+
         Log.d(LOG_ID, "Sending new data from " + notifySource.toString() + " to " + getNotifierCount(notifySource) + " notifier(s).")
         val curNotifiers = getNotifiers()
         curNotifiers.forEach{
@@ -71,11 +79,7 @@ object InternalNotifier {
     {
         Log.d(LOG_ID, "Sending asynchronous new data from $notifySource")
         CoroutineScope(Dispatchers.Default).launch {
-            if(getNotifierCount(notifySource) >= 0) {
-                withContext(Dispatchers.Main) {
-                    notify(context, notifySource, extras)
-                }
-            }
+            notify(context, notifySource, extras)
         }
     }
 

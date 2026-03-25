@@ -41,7 +41,7 @@ This innovative app receives data from various sources and visualizes it clearly
     * **IMPORTANT NOTE:** GDH is not a standalone Wear OS app. The phone app is required for setup.
 
 * **WatchDrip+ Support:** Use GDH with specific Mi Band, Xiaomi Smart Band and Amazfit devices.
-* **Garmin, Fitbit and Pebble** support (providing web service in xDrip+ format)
+* **Garmin and Fitbit** support (providing web service in xDrip+ format)
 * **Health Connect** support
 
 * **Accessibility:** Full TalkBack support (Thanks to Alex for testing!).
@@ -79,9 +79,11 @@ But there are two users creating watchfaces especially for the complications of 
 - [watchfaces](https://play.google.com/store/apps/dev?id=7197840107055554214) provided by Graham
 
 # Contributing Developers
-@[RobertoW-UK](https://github.com/RobertoW-UK): AOD, Battery Widget
+@[RobertoW-UK](https://github.com/RobertoW-UK): AOD, Battery Widget, Local Webservice
 
 @[rgodha24](https://github.com/rgodha24): Notification Reader
+
+@[rileyg98](https://github.com/rileyg98): AiDEX broadcast support
 
 # Special thanks
 @[lostboy86](https://github.com/lostboy86) for testing, motivation and feedback

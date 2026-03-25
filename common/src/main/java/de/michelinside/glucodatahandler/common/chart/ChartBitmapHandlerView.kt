@@ -29,6 +29,10 @@ class ChartBitmapHandlerView(val imageView: ImageView, val context: Context): No
         imageView.visibility = if(ChartBitmapHandler.hasBitmap(widget)) View.VISIBLE else View.GONE
     }
 
+    val visible: Boolean get() {
+        return imageView.visibility == View.VISIBLE
+    }
+
     fun pause() {
         Log.v(LOG_ID, "pause")
         ChartBitmapHandler.pause(widget)

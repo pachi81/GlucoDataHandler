@@ -39,8 +39,8 @@ class MedtrumSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_MEDTRUM
         private var dataReceived = false   // mark this endpoint as already received data
         val patientData: MutableMap<String, String> get() {
             if(instance == null)
-                return mutableMapOf<String, String>()
-            return instance!!.getPatientData()
+                return mutableMapOf()
+            return instance!!.patientData
         }
         const val server = "https://easyview.medtrum.%s"
         const val LOGIN_ENDPOINT = "/mobile/ajax/login"
@@ -101,7 +101,10 @@ class MedtrumSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_MEDTRUM
             }
         }
         if (cookie.isEmpty()) {
-            val data = "apptype=Follow&user_type=M&platform=google&user_name=$user&password=$password"
+            Log.i(LOG_ID, "Authenticate with Medtrum")
+            val encodedUser = java.net.URLEncoder.encode(user, "UTF-8")
+            val encodedPass = java.net.URLEncoder.encode(password, "UTF-8")
+            val data = "apptype=Follow&user_type=M&platform=google&user_name=$encodedUser&password=$encodedPass"
             /*json.put("user_name", user)
             json.put("password", password)
             json.put("platform", "google")
@@ -111,13 +114,15 @@ class MedtrumSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_MEDTRUM
             json.put("bundleID", "com.medtrum.easyfollowforandroidmg")
             json.put("device_name", Build.MODEL)*/
             //json.put("deviceToken", Firebase token...)
-            if(!handleLoginResponse(httpPost(getUrl(LOGIN_ENDPOINT), getHeader(), data)))
+            val loginHeaders = getHeader()
+            loginHeaders["Content-Type"] = "application/x-www-form-urlencoded"
+            if(!handleLoginResponse(httpPost(getUrl(LOGIN_ENDPOINT), loginHeaders, data)))
                 return false
         }
         return true
     }
 
-    override fun getPatientData(): MutableMap<String, String> {
+    override fun getPatients(): MutableMap<String, String>? {
         return handleLoginDataResult(httpGet(getUrl(LOGINDATA_ENDPOINT), getHeader()))
     }
 
@@ -214,8 +219,10 @@ class MedtrumSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_MEDTRUM
         return false
     }
 
-    private fun handleLoginDataResult(body: String?): MutableMap<String, String> {
-        val jsonObject = checkResponse(body) ?: return mutableMapOf()
+    private fun handleLoginDataResult(body: String?): MutableMap<String, String>? {
+        if(body == null)
+            return null
+        val jsonObject = checkResponse(body) ?: return null
         val dataArray = jsonObject.optJSONArray("monitorlist")
         if(dataArray == null || dataArray.length() == 0) {
             setLastError(GlucoDataService.context!!.getString(R.string.source_no_patient))

@@ -42,6 +42,7 @@ class AlarmTypeFragment : SettingsFragmentCompatBase(), SharedPreferences.OnShar
     private var ringtoneSelecter: ActivityResultLauncher<Intent>? = null
     private var alarmType = AlarmType.NONE
     private var curAlarmLevel = -1
+    private var fallbackMode = false
 
     private fun getPrefKey(suffix: String): String {
         return alarmType.setting!!.getSettingName(suffix)
@@ -182,7 +183,13 @@ class AlarmTypeFragment : SettingsFragmentCompatBase(), SharedPreferences.OnShar
             val prefSelectRingtone = findPreference<Preference>(customSoundPref)
             val prefUseCustomRingtone = findPreference<SwitchPreferenceCompat>(useCustomSoundPref)
             prefSelectRingtone!!.isEnabled = prefUseCustomRingtone!!.isChecked
-            updateRingtoneSelectSummary()
+
+            if(!prefUseCustomRingtone.isChecked && fallbackMode) {
+                Log.i(LOG_ID, "Reset sound in fallback mode")
+                setRingtoneResult(customSoundPref, null)
+            } else {
+                updateRingtoneSelectSummary()
+            }
 
             val prefRepeat = findPreference<SwitchPreferenceCompat>(repeatPref)
             val prefRepeatTime = findPreference<SeekBarPreference>(repeatTimePref)
@@ -394,27 +401,45 @@ class AlarmTypeFragment : SettingsFragmentCompatBase(), SharedPreferences.OnShar
         if (pref != null) {
             if(ringtoneSelecter == null) {
                 ringtoneSelecter = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-                    Log.v(LOG_ID, "$alarmType result ${result.resultCode}: ${result.data}")
-                    if (result.resultCode == Activity.RESULT_OK) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                            setRingtoneResult(preference,  result.data!!.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI, Uri::class.java))
+                    Log.i(LOG_ID, "$alarmType result ${result.resultCode}: ${result.data}")
+                    if (result.resultCode == Activity.RESULT_OK && result.data != null) {
+                        // Check for RingtoneManager extra first, then fallback to standard data Uri
+                        val pickedUri: Uri? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            result.data!!.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI, Uri::class.java)
                         } else {
                             @Suppress("DEPRECATION")
-                            setRingtoneResult(preference,  result.data!!.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI))
-                        }
+                            result.data!!.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)
+                        } ?: result.data!!.data
+
+                        setRingtoneResult(preference, pickedUri)
                     }
                 }
             }
             pref.setOnPreferenceClickListener {
                 val ringtoneIntent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER)
-                ringtoneIntent.putExtra(
-                    RingtoneManager.EXTRA_RINGTONE_TYPE,
-                    RingtoneManager.TYPE_ALL
-                )
+                ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALL)
                 ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, true)
                 ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true)
                 ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, curUri)
-                ringtoneSelecter!!.launch(ringtoneIntent)
+
+                try {
+                    ringtoneSelecter!!.launch(ringtoneIntent)
+                    fallbackMode = false
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Standard ringtone picker failed: " + exc.message)
+                    // Fallback for Honor/Huawei devices where RINGTONE_PICKER is restricted
+                    try {
+                        val fallbackIntent = Intent(Intent.ACTION_GET_CONTENT)
+                        fallbackIntent.type = "audio/*"
+                        // Explizite Liste von Audio-Typen erzwingen
+                        fallbackIntent.putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("audio/*"))
+                        fallbackIntent.addCategory(Intent.CATEGORY_OPENABLE)
+                        ringtoneSelecter!!.launch(fallbackIntent)
+                        fallbackMode = true
+                    } catch (fallbackExc: Exception) {
+                        Log.e(LOG_ID, "Fallback picker failed too: " + fallbackExc.message)
+                    }
+                }
                 true
             }
         }

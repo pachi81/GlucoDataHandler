@@ -10,6 +10,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.content.pm.ServiceInfo
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -22,6 +23,7 @@ import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.receiver.AAPSReceiver
+import de.michelinside.glucodatahandler.common.receiver.AidexBroadcastReceiver
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 import de.michelinside.glucodatahandler.common.receiver.BroadcastServiceAPI
 import de.michelinside.glucodatahandler.common.receiver.DexcomBroadcastReceiver
@@ -35,6 +37,7 @@ import de.michelinside.glucodatahandler.common.receiver.NsEmulatorReceiver
 import de.michelinside.glucodatahandler.common.receiver.ScreenEventReceiver
 import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
 import de.michelinside.glucodatahandler.common.tasks.BackgroundWorker
+import de.michelinside.glucodatahandler.common.tasks.LibreLinkSourceTask
 import de.michelinside.glucodatahandler.common.tasks.SourceTaskService
 import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
@@ -44,6 +47,8 @@ import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import java.util.Locale
+import androidx.core.content.edit
+import de.michelinside.glucodatahandler.common.notification.AlarmType
 
 
 enum class AppSource {
@@ -120,14 +125,14 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                         true//sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)
                     )*/
                     //if (foreground) {
-                        context.startService(serviceIntent)
+                    context.startService(serviceIntent)
                     /*} else {
                         Log.i(LOG_ID, "start foreground service")
                         context.applicationContext.startForegroundService(serviceIntent)
                         stopTrigger()
                     }*/
                     isRunning = true
-                    if(!foreground && startServiceReceiver != null) {
+                    if (!foreground && startServiceReceiver != null) {
                         // trigger also foreground alarm
                         triggerStartService(context, startServiceReceiver!!)
                     }
@@ -265,7 +270,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 SourceStateData.reset()
                 GlucoseStatistics.reset()
                 ReceiveData.reset(context!!)
-                sendCommand(Command.CLEAN_UP_DB)
+                if (appSource == AppSource.PHONE_APP)
+                    sendCommand(Command.CLEAN_UP_DB)
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "resetDB exception: " + exc.message.toString())
             }
@@ -283,6 +289,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
         private var nsEmulatorReceiver: NsEmulatorReceiver? = null
         private var diaboxReceiver: DiaboxReceiver? = null
         private var notificationReceiver: NotificationReceiver? = null
+        private var aidexReceiver: AidexBroadcastReceiver? = null
         private val registeredReceivers = mutableSetOf<String>()
 
         @SuppressLint("UnspecifiedRegisterReceiverFlag")
@@ -418,6 +425,21 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                         librePatchedReceiver = null
                     }
                 }
+                if (key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_AIDEX_ENABLED) {
+                    if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_AIDEX_ENABLED, true)) {
+                        if (aidexReceiver == null) {
+                            aidexReceiver = AidexBroadcastReceiver()
+                            val filter = IntentFilter()
+                            filter.addAction(Intents.AIDEX_BROADCAST_ACTION)
+                            if (!registerReceiver(context, aidexReceiver!!, filter))
+                                aidexReceiver = null
+                        }
+                    } else if (aidexReceiver != null) {
+                        unregisterReceiver(context, aidexReceiver)
+                        aidexReceiver = null
+                    }
+
+                }
 
                 if (key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED) {
                     updateNotificationReceiver(sharedPref, context)
@@ -497,6 +519,10 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     unregisterReceiver(context, notificationReceiver)
                     notificationReceiver = null
                 }
+                if (aidexReceiver != null) {
+                    unregisterReceiver(context, aidexReceiver)
+                    aidexReceiver = null
+                }
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "unregisterSourceReceiver exception: " + exc.toString())
             }
@@ -510,9 +536,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             val isUpgrade = oldVersion < BuildConfig.BASE_VERSION
             if(oldVersion != BuildConfig.BASE_VERSION) {
                 Log.i(LOG_ID, "Migrate settings from version $oldVersion to ${BuildConfig.BASE_VERSION}")
-                with(sharedPrefs.edit()) {
+                sharedPrefs.edit {
                     putInt(Constants.SHARED_PREF_GDH_VERSION, BuildConfig.BASE_VERSION)
-                    apply()
                 }
             }
 
@@ -526,9 +551,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     }
                 }
                 Log.i(LOG_ID, "Migrate default obsolete time $obsoleteTime minutes")
-                with(sharedPrefs.edit()) {
+                sharedPrefs.edit {
                     putInt(Constants.SHARED_PREF_OBSOLETE_TIME, obsoleteTime)
-                    apply()
                 }
             }
 
@@ -538,9 +562,24 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 val useMmol = if(sharedPrefs.contains(Constants.SHARED_PREF_USE_MMOL))
                     sharedPrefs.getBoolean(Constants.SHARED_PREF_USE_MMOL, false)
                 else false
-                with(sharedPrefs.edit()) {
+                sharedPrefs.edit {
                     putBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, useMmol)
-                    apply()
+                }
+            }
+
+            if(oldVersion <= 176 && sharedPrefs.contains(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE)) {
+                val curColor = sharedPrefs.getInt(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE, ReceiveData.getAlarmTypeColor(AlarmType.LOW))
+                if(curColor == Color.YELLOW) {
+                    Log.i(LOG_ID, "Migrate color out of range from YELLOW to 0xFFDC00")
+                    sharedPrefs.edit {
+                        putInt(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE, 0xFFFFDC00.toInt())
+                    }
+                }
+            }
+
+            if(isUpgrade || !sharedPrefs.contains(Constants.SHARED_PREF_LIBRE_VERSION)) {
+                sharedPrefs.edit {
+                    putString(Constants.SHARED_PREF_LIBRE_VERSION, LibreLinkSourceTask.version)
                 }
             }
 
@@ -550,85 +589,95 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     val currentLocale = Locale.getDefault()
                     val countryCode = currentLocale.country
                     Log.i(LOG_ID, "Using country code $countryCode")
-                    with(sharedPrefs.edit()) {
+                    sharedPrefs.edit {
                         when (countryCode.lowercase()) {
                             "us" -> {
                                 putString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "us")
                             }
+
                             "jp" -> {
                                 putString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "jp")
                             }
+
                             else -> {
                                 putString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "eu")
                             }
                         }
-                        apply()
                     }
                 } else {
-                    with(sharedPrefs.edit()) {
-                        if(sharedPrefs.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, false))
+                    sharedPrefs.edit {
+                        if (sharedPrefs.getBoolean(
+                                Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL,
+                                false
+                            )
+                        )
                             putString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "us")
                         else
                             putString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "eu")
                         remove(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL)
-                        apply()
                     }
                 }
                 Log.i(LOG_ID, "Using dexcom server ${sharedPrefs.getString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "eu")}")
             }
 
             if(sharedPrefs.contains(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION) || !sharedPrefs.contains(Constants.SHARED_PREF_ALARM_SNOOZE_NOTIFICATION_BUTTONS) ) {
-                with(sharedPrefs.edit()) {
+                sharedPrefs.edit {
                     remove(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION)
-                    putStringSet(Constants.SHARED_PREF_ALARM_SNOOZE_NOTIFICATION_BUTTONS, mutableSetOf("60", "90", "120"))
-                    apply()
+                    putStringSet(
+                        Constants.SHARED_PREF_ALARM_SNOOZE_NOTIFICATION_BUTTONS,
+                        mutableSetOf("60", "90", "120")
+                    )
                 }
             }
 
+            if(sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_5_MINUTE_INTERVAl)) {
+                val use5Min = sharedPrefs.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_5_MINUTE_INTERVAl, false)
+                Log.i(LOG_ID, "Remove old notification interval (use 5 minutes: $use5Min)")
+                sharedPrefs.edit {
+                    putInt(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_INTERVAl, if(use5Min) 5 else 0)
+                    remove(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_5_MINUTE_INTERVAl)
+                }
+            }
 
             if(isUpgrade && sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX)) {
                 val oldRegex = sharedPrefs.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX, "")
-                if(oldRegex.isNullOrEmpty() || oldRegex == "(\\d*\\.?\\d+)" || oldRegex == "(?:^|\\s)(\\d*\\.?\\d+)(?=\\s|\$)") {
-                    Log.i(LOG_ID, "Change notification regex from $oldRegex to ${NotificationReceiver.defaultGlucoseRegex}")
-                    with(sharedPrefs.edit()) {
-                        putString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX, NotificationReceiver.defaultGlucoseRegex)
-                        apply()
+                if(oldRegex == null || NotificationReceiver.oldGlucoseRegexes.contains(oldRegex)) {
+                    Log.i(LOG_ID, "Remove old notification regex $oldRegex")
+                    sharedPrefs.edit {
+                        putString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX, "")
                     }
-                }
-            } else if(!sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX)) {
-                with(sharedPrefs.edit()) {
-                    putString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX, NotificationReceiver.defaultGlucoseRegex)
-                    apply()
                 }
             }
 
             if(isUpgrade && sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX)) {
                 val oldRegex = sharedPrefs.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX, "")
-                if(oldRegex.isNullOrEmpty() || oldRegex == "IOB: (\\d*\\.?\\d+) U" || oldRegex == "(\\d*\\.?\\d+) U") {
-                    Log.i(LOG_ID, "Change IOB notification regex from $oldRegex to ${NotificationReceiver.defaultIobRegex}")
-                    with(sharedPrefs.edit()) {
-                        putString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX, NotificationReceiver.defaultIobRegex)
-                        apply()
+                if(oldRegex == null || NotificationReceiver.oldIobRegexes.contains(oldRegex)) {
+                    Log.i(LOG_ID, "Remove old IOB notification regex from $oldRegex")
+                    sharedPrefs.edit {
+                        putString(
+                            Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX,
+                            ""
+                        )
                     }
-                }
-            } else if(!sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX)) {
-                with(sharedPrefs.edit()) {
-                    putString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX, NotificationReceiver.defaultIobRegex)
-                    apply()
                 }
             }
 
-            if(!sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_COB_APP_REGEX)) {
-                with(sharedPrefs.edit()) {
-                    putString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_COB_APP_REGEX, NotificationReceiver.defaultCobRegex)
-                    apply()
+            if(isUpgrade && sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_COB_APP_REGEX)) {
+                val oldRegex = sharedPrefs.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_COB_APP_REGEX, "")
+                if(oldRegex == null || NotificationReceiver.oldCobRegexes.contains(oldRegex)) {
+                    Log.i(LOG_ID, "Remove old COB notification regex from $oldRegex")
+                    sharedPrefs.edit {
+                        putString(
+                            Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_COB_APP_REGEX,
+                            ""
+                        )
+                    }
                 }
             }
 
             if(Constants.IS_SECOND && !sharedPrefs.contains(Constants.PATIENT_NAME)) {
-                with(sharedPrefs.edit()) {
+                sharedPrefs.edit {
                     putString(Constants.PATIENT_NAME, "SECOND")
-                    apply()
                 }
             }
 
@@ -636,9 +685,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 if(isUpgrade && oldVersion == 156) {
                     // for existing users use the old setting
                     if(!sharedPrefs.contains(Constants.SHARED_PREF_STANDARD_STATISTICS)) {
-                        with(sharedPrefs.edit()) {
+                        sharedPrefs.edit {
                             putBoolean(Constants.SHARED_PREF_STANDARD_STATISTICS, false)
-                            apply()
                         }
                     }
                 }
@@ -849,6 +897,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 Constants.SHARED_PREF_SOURCE_BYODA_ENABLED,
                 Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED,
                 Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED,
+                Constants.SHARED_PREF_SOURCE_AIDEX_ENABLED,
                 Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED -> {
                     updateSourceReceiver(this, key)
                     shareSettings = true

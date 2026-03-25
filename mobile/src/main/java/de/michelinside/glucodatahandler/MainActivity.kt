@@ -83,6 +83,8 @@ import java.util.Date
 import kotlin.math.min
 import kotlin.time.Duration.Companion.days
 import de.michelinside.glucodatahandler.common.R as CR
+import androidx.core.net.toUri
+import de.michelinside.glucodatahandler.transfer.NightscoutUploader
 
 
 class MainActivity : AppCompatActivity(), NotifierInterface {
@@ -847,6 +849,27 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     )
                 )
             }
+            if(SourceStateData.lastState == SourceState.ERROR && SourceStateData.lastSource == DataSource.MEDTRUM && msg == "User type wrong") {
+                // {"msg":"User type wrong","res":"ERR","resdetail":"MobResUserTypeWrong"}
+
+                val browserIntent = Intent(
+                    Intent.ACTION_VIEW,
+                    resources.getString(CR.string.medtrum_easy_view_url).toUri()
+                )
+                val onClickListener = OnClickListener {
+                    try {
+                        startActivity(browserIntent)
+                    } catch (exc: Exception) {
+                        Log.e(LOG_ID, "Medtrum browse exception: " + exc.message.toString() )
+                    }
+                }
+                tableConnections.addView(
+                    createRow(
+                        resources.getString(CR.string.medtrum_wrong_user_type_info),
+                        onClickListener
+                    )
+                )
+            }
             if(SourceStateData.lastErrorInfo.isNotEmpty()) {
                 // add error specific information in an own row
                 tableConnections.addView(createRow(SourceStateData.lastErrorInfo))
@@ -879,6 +902,12 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         }
         if(HealthConnectManager.enabled && HealthConnectManager.state.resId != 0) {
             tableConnections.addView(createRow(CR.string.pref_healthconnect, resources.getString(HealthConnectManager.state.resId)))
+        }
+        if(NightscoutUploader.state != SourceState.NONE) {
+            if(NightscoutUploader.state == SourceState.ERROR && NightscoutUploader.lastError.isNotEmpty())
+                tableConnections.addView(createRow(CR.string.transfer_to_nightscout, NightscoutUploader.lastError))
+            else
+                tableConnections.addView(createRow(CR.string.transfer_to_nightscout, resources.getString(NightscoutUploader.state.resId)))
         }
         if (CarModeReceiver.AA_connected) {
             tableConnections.addView(createRow(CR.string.pref_cat_android_auto, resources.getString(CR.string.connected_label)))
@@ -952,7 +981,10 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 tableDetails.addView(createRow(CR.string.info_label_iob_cob_timestamp, DateFormat.getTimeInstance(
                     DateFormat.DEFAULT).format(Date(ReceiveData.iobCobTime))))
             if (ReceiveData.sensorID?.isNotEmpty() == true) {
-                tableDetails.addView(createRow(CR.string.info_label_sensor_id, if(BuildConfig.DEBUG) "ABCDE12345" else ReceiveData.sensorID!!))
+                if(ReceiveData.source == DataSource.AAPS)
+                    tableDetails.addView(createRow(CR.string.label_profile, ReceiveData.sensorID!!))
+                else
+                    tableDetails.addView(createRow(CR.string.info_label_sensor_id, if(BuildConfig.DEBUG) "ABCDE12345" else ReceiveData.sensorID!!))
             }
             if(ReceiveData.sensorStartTime > 0) {
                 val duration = Duration.ofMillis(System.currentTimeMillis() - ReceiveData.sensorStartTime)

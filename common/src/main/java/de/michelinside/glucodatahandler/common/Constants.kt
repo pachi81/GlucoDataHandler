@@ -80,12 +80,15 @@ object Constants {
     const val SHARED_PREF_XDRIP_RECEIVERS = "xdrip_receivers"
     const val SHARED_PREF_SEND_XDRIP_BROADCAST = "send_xdrip_broadcast"
     const val SHARED_PREF_XDRIP_BROADCAST_RECEIVERS = "xdrip_broadcast_receivers"
+    const val SHARED_PREF_SOURCE_AIDEX_ENABLED = "source_aidex_enabled"
     const val SHARED_PREF_XDRIP_BROADCAST_SERVICE_API = "xdrip_broadcast_service_api"
     const val SHARED_PREF_XDRIP_SERVER = "xdrip_server"
     const val SHARED_PREF_XDRIP_OPEN_SERVER = "xdrip_open_server"
+    const val SHARED_PREF_XDRIP_SERVER_API_SECRET = "xdrip_server_api_secret"
     const val SHARED_PREF_XDRIP_SERVER_REDUCE_DATA = "xdrip_server_reduce_data"
     const val SHARED_PREF_XDRIP_SERVER_1_MINUTE_INTERVAL = "xdrip_server_1_minute_interval"
     const val SHARED_PREF_SEND_TO_HEALTH_CONNECT = "send_to_health_connect"
+    const val SHARED_PREF_SEND_TO_HEALTH_CONNECT_INTERVAL = "send_to_health_connect_interval"
     const val SHARED_PREF_HEALTH_CONNECT_LAST_VALUE_TIME = "health_connect_last_value_time"
     const val SHARED_PREF_TARGET_MIN = "target_min_value"
     const val SHARED_PREF_TARGET_MAX = "target_max_value"
@@ -148,6 +151,7 @@ object Constants {
     const val SHARED_PREF_WATCHFACES_PUJIE = "pref_watchfaces_pujie"
     const val SHARED_PREF_WATCHFACES_DMM = "pref_watchfaces_dmm"
     const val SHARED_PREF_WATCHFACES_GDC = "pref_watchfaces_gdc"
+    const val SHARED_PREF_WATCHFACES_CX = "pref_watchfaces_cx"
 
 
     // internal app preferences (not changed by settings) -> use separate tag for not trigger onChanged events
@@ -176,6 +180,7 @@ object Constants {
     const val SHARED_PREF_SOURCE_GDH_ENABLED="source_gdh_enabled"
     const val SHARED_PREF_SOURCE_JUGGLUCO_ENABLED="source_juggluco_enabled"
     const val SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_ENABLED="source_juggluco_webserver_enabled"
+    const val SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_API_SECRET="source_juggluco_webserver_api_secret"
     const val SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_IOB_SUPPORT="source_juggluco_webserver_iob_support"
     const val SHARED_PREF_SOURCE_XDRIP_ENABLED="source_xdrip_enabled"
     const val SHARED_PREF_SOURCE_AAPS_ENABLED="source_aaps_enabled"
@@ -188,6 +193,8 @@ object Constants {
     const val SHARED_PREF_SOURCE_NOTIFICATION_ENABLED="source_notification_enabled"
     const val SHARED_PREF_SOURCE_NOTIFICATION_READER_APP="notification_reader_app"
     const val SHARED_PREF_SOURCE_NOTIFICATION_READER_5_MINUTE_INTERVAl="notification_reader_five_minute_interval"
+    const val SHARED_PREF_SOURCE_NOTIFICATION_READER_INTERVAl="notification_reader_interval"
+    const val SHARED_PREF_SOURCE_NOTIFICATION_READER_VALUE_WITH_UNIT="notification_reader_value_with_unit"
     const val SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX="notification_reader_app_regex"
     const val SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP="notification_reader_iob_app"
     const val SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_ENABLED="source_notification_iob_enabled"
@@ -207,6 +214,7 @@ object Constants {
     const val SHARED_PREF_LIBRE_USER_ID="source_libre_user_id"
     const val SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU="source_libre_auto_accept_tou"
     const val SHARED_PREF_LIBRE_SERVER="source_libre_server"
+    const val SHARED_PREF_LIBRE_VERSION="source_libre_version"
 
     const val SHARED_PREF_DEXCOM_SHARE_ENABLED="source_dexcom_share_enabled"
     const val SHARED_PREF_DEXCOM_SHARE_USER="source_dexcom_share_user"
@@ -381,6 +389,13 @@ object Constants {
     const val SHARED_PREF_GRAPH_BITMAP_SHOW_AXIS = "graph_bitmap_show_axis"
     const val SHARED_PREF_GRAPH_BITMAP_CIRCLE_RADIUS = "graph_bitmap_circle_radius"
 
+    // Nightscout upload
+    const val SHARED_PREF_NIGHTSCOUT_UPLOAD_ENABLED = "nightscout_upload_enabled"
+    const val SHARED_PREF_NIGHTSCOUT_UPLOAD_URL = "nightscout_upload_url"
+    const val SHARED_PREF_NIGHTSCOUT_UPLOAD_SECRET = "nightscout_upload_secret"
+    const val SHARED_PREF_NIGHTSCOUT_UPLOAD_TOKEN = "nightscout_upload_token"
+    const val SHARED_PREF_NIGHTSCOUT_UPLOAD_INTERVAL = "nightscout_upload_interval"
+    const val SHARED_PREF_NIGHTSCOUT_UPLOAD_TIME = "nightscout_upload_time"
 
     // special version handling:
     const val SHARED_PREF_API_36_DISABLE_NOTIFICATION = "API_36_disable_notification"  // in API 36 notifications are grouped, so 2. and 3. should be disabled once

@@ -1,0 +1,357 @@
+
+09-27 13:56:10.004 12027 12027 D GDH.NotificationReceiver: New notification posted from com.hbwares.wordfeud.full - ongoing: false (flags: 16, prio: 0) - posted: 1:56:09 PM (1758995769762) - when 1:56:09 PM (1758995769731)
+09-27 13:56:16.003 12027 12027 D GDH.Task.BackgroundWorker: stopWork called for class TimeTaskWorker
+09-27 13:56:16.003 12027 12027 D GDH.Task.Time.TaskService: Check task execution after 2 min
+09-27 13:56:16.003 12027 12027 D GDH.Task.Time.TaskService: elapsed: 2 nextTrigger: 3 - interval: 1
+09-27 13:56:16.003 12027 17751 D GDH.Utils.WakeLockHelper: init called - count: 0
+09-27 13:56:16.004 12027 12027 I GDH.Task.Time.TaskService: Set next alarm after 3 minute(s) at 1:57:16 PM (received at 1:54:13 PM) with a delay of 3s
+09-27 13:56:16.005 12027 17751 I GDH.Utils.WakeLockHelper: wakelock acquired: true
+09-27 13:56:16.005 12027 12027 D GDH.Task.BackgroundWorker: stopWork called for class TimeTaskWorker
+09-27 13:56:16.005 12027 17751 D GDH.Task.Time.TaskService: checkExecution for ElapsedTimeTask: elapsedTimeMinute=2 - lastElapsedMinute=1 - elapsedIobCobTimeMinute=29316596 - interval=1 - active=true
+09-27 13:56:16.005 12027 17751 D GDH.Task.Time.TaskService: Trigger ElapsedTimeTask execution after 2 min
+09-27 13:56:16.005 12027 17751 I GDH.Task.Time.TaskService: execute after 2 min: ElapsedTimeTask
+09-27 13:56:16.005 12027 17751 D GDH.Task.Time.TaskService: checkExecution for ObsoleteTask: elapsedTimeMinute=2 - lastElapsedMinute=1 - elapsedIobCobTimeMinute=29316596 - interval=6 - active=true
+09-27 13:56:16.005 12027 17751 D GDH.Task.Time.TaskService: nothing to execute for ObsoleteTask
+09-27 13:56:16.005 12027 12027 D GDH.Task.BackgroundWorker: triggerDelay called for class TimeTaskWorker with delay 62s at 1:57:18 PM
+09-27 13:56:16.005 12027 17751 D GDH.Task.Time.TaskService: elapsed: 2 nextTrigger: 3 - interval: 1
+09-27 13:56:16.005 12027 17751 I GDH.Task.Time.TaskService: Set next alarm after 3 minute(s) at 1:57:16 PM (received at 1:54:13 PM) with a delay of 3s
+09-27 13:56:16.005 12027 12027 D GDH.Task.Time.ElapsedTask: send time notifier
+09-27 13:56:16.005 12027 12027 D GDH.InternalNotifier: getNotifiers
+09-27 13:56:16.005 12027 12027 D GDH.InternalNotifier: getNotifiers synchronized
+09-27 13:56:16.005 12027 12027 D GDH.InternalNotifier: Sending new data from TIME_VALUE to 1 notifier(s).
+09-27 13:56:16.005 12027 12027 D GDH.InternalNotifier: getNotifiers
+09-27 13:56:16.005 12027 12027 D GDH.InternalNotifier: getNotifiers synchronized
+09-27 13:56:16.005 12027 12027 D GDH.AlarmHandler: OnNotifyData called for TIME_VALUE
+09-27 13:56:16.005 12027 12027 D GDH.AlarmHandler: checkObsoleteAlarm: enabled=true - interval=20 - elapsed=2
+09-27 13:56:16.005 12027 17751 D GDH.Task.Time.TaskService: Ignore next alarm as it is already active
+09-27 13:56:16.005 12027 17751 D GDH.Utils.WakeLockHelper: release called - active: true count: 1
+09-27 13:56:16.005 12027 17751 I GDH.Utils.WakeLockHelper: wakelock release
+09-27 13:56:16.007 12027 12150 D WM-Processor: Processor cancelling 81f68c88-c12b-4ca0-bbac-65e5182a0af8
+09-27 13:56:16.007 12027 12150 D WM-Processor: WorkerWrapper could not be found for 81f68c88-c12b-4ca0-bbac-65e5182a0af8
+09-27 13:56:16.009 12027 12150 D WM-GreedyScheduler: Cancelling work ID 81f68c88-c12b-4ca0-bbac-65e5182a0af8
+09-27 13:56:16.019 12027 12150 D WM-SystemJobScheduler: Scheduling work ID 3f52eef3-d258-453b-9da1-2632002931daJob ID 1423
+09-27 13:56:33.836 12027 12027 D GDH.NotificationReceiver: New notification posted from com.instagram.android - ongoing: false (flags: 16, prio: 0) - posted: 1:56:33 PM (1758995793604) - when 1:56:33 PM (1758995793594)
+09-27 13:56:33.839 12027 12027 D GDH.NotificationReceiver: New notification posted from com.instagram.android - ongoing: false (flags: 512, prio: 0) - posted: 1:56:33 PM (1758995793607) - when 1:56:33 PM (1758995793598)
+09-27 13:57:16.005 12027 12027 D GDH.Task.BackgroundWorker: stopWork called for class TimeTaskWorker
+09-27 13:57:16.006 12027 12027 D GDH.Task.Time.TaskService: Check task execution after 3 min
+09-27 13:57:16.006 12027 12027 D GDH.Task.Time.TaskService: elapsed: 3 nextTrigger: 4 - interval: 1
+09-27 13:57:16.006 12027 18995 D GDH.Utils.WakeLockHelper: init called - count: 0
+09-27 13:57:16.007 12027 12027 I GDH.Task.Time.TaskService: Set next alarm after 4 minute(s) at 1:58:16 PM (received at 1:54:13 PM) with a delay of 3s
+09-27 13:57:16.008 12027 18995 I GDH.Utils.WakeLockHelper: wakelock acquired: true
+09-27 13:57:16.008 12027 18995 D GDH.Task.Time.TaskService: checkExecution for ElapsedTimeTask: elapsedTimeMinute=3 - lastElapsedMinute=2 - elapsedIobCobTimeMinute=29316596 - interval=1 - active=true
+09-27 13:57:16.008 12027 18995 D GDH.Task.Time.TaskService: Trigger ElapsedTimeTask execution after 3 min
+09-27 13:57:16.008 12027 18995 I GDH.Task.Time.TaskService: execute after 3 min: ElapsedTimeTask
+09-27 13:57:16.008 12027 18995 D GDH.Task.Time.TaskService: checkExecution for ObsoleteTask: elapsedTimeMinute=3 - lastElapsedMinute=2 - elapsedIobCobTimeMinute=29316596 - interval=6 - active=true
+09-27 13:57:16.008 12027 18995 D GDH.Task.Time.TaskService: nothing to execute for ObsoleteTask
+09-27 13:57:16.008 12027 18995 D GDH.Task.Time.TaskService: elapsed: 3 nextTrigger: 4 - interval: 1
+09-27 13:57:16.008 12027 18995 I GDH.Task.Time.TaskService: Set next alarm after 4 minute(s) at 1:58:16 PM (received at 1:54:13 PM) with a delay of 3s
+09-27 13:57:16.008 12027 12027 D GDH.Task.BackgroundWorker: stopWork called for class TimeTaskWorker
+09-27 13:57:16.009 12027 12027 D GDH.Task.BackgroundWorker: triggerDelay called for class TimeTaskWorker with delay 62s at 1:58:18 PM
+09-27 13:57:16.009 12027 18995 D GDH.Task.BackgroundWorker: stopWork called for class TimeTaskWorker
+09-27 13:57:16.009 12027 18995 D GDH.Task.BackgroundWorker: triggerDelay called for class TimeTaskWorker with delay 62s at 1:58:18 PM
+09-27 13:57:16.009 12027 12027 D GDH.Task.Time.ElapsedTask: send time notifier
+09-27 13:57:16.009 12027 12027 D GDH.InternalNotifier: getNotifiers
+09-27 13:57:16.009 12027 12027 D GDH.InternalNotifier: getNotifiers synchronized
+09-27 13:57:16.009 12027 12027 D GDH.InternalNotifier: Sending new data from TIME_VALUE to 1 notifier(s).
+09-27 13:57:16.009 12027 12027 D GDH.InternalNotifier: getNotifiers
+09-27 13:57:16.009 12027 12027 D GDH.InternalNotifier: getNotifiers synchronized
+09-27 13:57:16.009 12027 12027 D GDH.AlarmHandler: OnNotifyData called for TIME_VALUE
+09-27 13:57:16.010 12027 12027 D GDH.AlarmHandler: checkObsoleteAlarm: enabled=true - interval=20 - elapsed=3
+09-27 13:57:16.011 12027 18995 D GDH.Utils.WakeLockHelper: release called - active: true count: 1
+09-27 13:57:16.011 12027 18995 I GDH.Utils.WakeLockHelper: wakelock release
+09-27 13:57:16.013 12027 12246 D WM-Processor: Processor cancelling 3f52eef3-d258-453b-9da1-2632002931da
+09-27 13:57:16.013 12027 12246 D WM-Processor: WorkerWrapper could not be found for 3f52eef3-d258-453b-9da1-2632002931da
+09-27 13:57:16.015 12027 12246 D WM-GreedyScheduler: Cancelling work ID 3f52eef3-d258-453b-9da1-2632002931da
+09-27 13:57:16.027 12027 12246 D WM-SystemJobScheduler: Scheduling work ID 654460d5-1cd6-417c-aaf9-c9131cd8787dJob ID 1424
+09-27 13:57:16.031 12027 12246 D WM-Processor: Processor cancelling 654460d5-1cd6-417c-aaf9-c9131cd8787d
+09-27 13:57:16.031 12027 12246 D WM-Processor: WorkerWrapper could not be found for 654460d5-1cd6-417c-aaf9-c9131cd8787d
+09-27 13:57:16.032 12027 12246 D WM-GreedyScheduler: Cancelling work ID 654460d5-1cd6-417c-aaf9-c9131cd8787d
+09-27 13:57:16.040 12027 12246 D WM-SystemJobScheduler: Scheduling work ID 05aaa9fa-f1db-4ad2-a8ab-aff0f6254c70Job ID 1425
+09-27 13:57:19.381 12027 12027 D GDH.NotificationReceiver: New notification posted from com.signos.core - ongoing: true (flags: 106, prio: 0) - posted: 1:57:19 PM (1758995839173) - when 3:03:41 AM (1758956621129)
+09-27 13:57:19.381 12027 12027 I GDH.NotificationReceiver: New notification from com.signos.core - ongoing: true (flags: 106, prio: 0) - posted: 1:57:19 PM (1758995839173) - when 3:03:41 AM (1758956621129) - diff notify: 185, diff recv value: 186
+09-27 13:57:19.381 12027 12027 I GDH.NotificationReceiver: Signos notification with text 'Reconnecting ...' - ignore it!
+09-27 13:57:19.485 12027 12027 D GDH.NotificationReceiver: New notification posted from com.signos.core - ongoing: true (flags: 98, prio: 0) - posted: 1:57:19 PM (1758995839276) - when 1:57:19 PM (1758995839271)
+09-27 13:57:19.485 12027 12027 I GDH.NotificationReceiver: New notification from com.signos.core - ongoing: true (flags: 98, prio: 0) - posted: 1:57:19 PM (1758995839276) - when 1:57:19 PM (1758995839271) - diff notify: 185, diff recv value: 186
+09-27 13:57:19.486 12027 12027 I GDH.NotificationReceiver: using regex (?:^|\s)(\d*\.?\d+)(?=\s|$)
+09-27 13:57:19.486 12027 12027 I GDH.NotificationReceiver: extracted title `Signos` and text `110 mg/dL`
+09-27 13:57:19.486 12027 12027 I GDH.NotificationReceiver: Extracted glucose value: 110.0 from time: 1:57:19 PM
+09-27 13:57:19.486 12027 12027 D GDH.Utils.WakeLockHelper: init called - count: 0
+09-27 13:57:19.487 12027 12027 I GDH.Utils.WakeLockHelper: wakelock acquired: true
+09-27 13:57:19.487 12027 12027 D GDH.ReceiveData: Glucodata received from NOTIFICATION: Bundle[{glucodata.Minute.Alarm=0, glucodata.Minute.Rate=NaN, glucodata.Minute.Time=1758995839276, glucodata.Minute.mgdl=110, glucodata.Minute.SerialNumber=Signos}] - timestamp: Sep 27, 2025 1:57:19 PM - difference: 186000
+09-27 13:57:19.487 12027 12027 I GDH.ReceiveData: Glucodata received from NOTIFICATION: Bundle[{glucodata.Minute.Alarm=0, glucodata.Minute.Rate=NaN, glucodata.Minute.Time=1758995839276, glucodata.Minute.mgdl=110, glucodata.Minute.SerialNumber=Signos}] - timestamp: Sep 27, 2025 1:57:19 PM
+09-27 13:57:19.488 12027 12027 D GDH.ReceiveData: 1 Calculate 3 min delta - new_value 110, old_value 110, delta 0.0 
+09-27 13:57:19.488 12027 12027 D GDH.ReceiveData: 5 Calculate 5 min delta - new_value 110, old_value 111, delta -1.0 
+09-27 13:57:19.488 12027 12027 D GDH.ReceiveData: 15 Calculate 15 min delta - new_value 110, old_value 72, delta 38.0 
+09-27 13:57:19.488 12027 12027 D GDH.ReceiveData: Calculated rate for 7.0 values - sum 2.9333332: 0.23256907
+09-27 13:57:19.488 12027 12027 D GDH.AlarmHandler: Check delta alarm trigger: deltaFallingCount=0 - deltaRisingCount=0 - time=1:57 PM - snoozeTime=off - tempInactive=off - lastFallingAlarmTime=7:00 PM - lastRisingAlarmTime=7:00 PM - falling=>off - rising=>off
+09-27 13:57:19.488 12027 12027 D GDH.InternalNotifier: getNotifiers
+09-27 13:57:19.488 12027 12027 D GDH.InternalNotifier: getNotifiers synchronized
+09-27 13:57:19.488 12027 12027 D GDH.InternalNotifier: Sending new data from BROADCAST to 6 notifier(s).
+09-27 13:57:19.488 12027 12027 D GDH.InternalNotifier: getNotifiers
+09-27 13:57:19.488 12027 12027 D GDH.InternalNotifier: getNotifiers synchronized
+09-27 13:57:19.488 12027 12027 D GDH.Task.Time.TaskService: OnNotifyData for source BROADCAST
+09-27 13:57:19.488 12027 12195 D GDH.dbAccess: Add new value 110 at 1:57:19 PM (1758995839000)
+09-27 13:57:19.488 12027 12027 D GDH.Task.Time.TaskService: nothing to execute: elapsedTimeMinute=0 - lastElapsedMinute=3 - elapsedIobCobTimeMinute=29316596
+09-27 13:57:19.488 12027 12027 D GDH.Task.Time.TaskService: elapsed: 0 nextTrigger: 1 - interval: 1
+09-27 13:57:19.488 12027 12027 I GDH.Task.Time.TaskService: Set next alarm after 1 minute(s) at 1:58:22 PM (received at 1:57:19 PM) with a delay of 3s
+09-27 13:57:19.490 12027 12027 D GDH.Task.BackgroundWorker: stopWork called for class TimeTaskWorker
+09-27 13:57:19.490 12027 12027 D GDH.Task.BackgroundWorker: triggerDelay called for class TimeTaskWorker with delay 65s at 1:58:24 PM
+09-27 13:57:19.490 12027 12027 D GDH.Task.Source.TaskService: OnNotifyData for source BROADCAST
+09-27 13:57:19.490 12027 12027 D GDH.Task.Source.TaskService: Check IOB/COB task execution after 29316596 min
+09-27 13:57:19.490 12027 19146 D GDH.Utils.WakeLockHelper: init called - count: 1
+09-27 13:57:19.490 12027 12027 D GDH.Task.Source.TaskService: No next alarm set for current interval -1
+09-27 13:57:19.490 12027 19146 D GDH.Task.Source.TaskService: checkExecution for LibreLinkSourceTask: elapsedTimeMinute=0 - lastElapsedMinute=0 - elapsedIobCobTimeMinute=29316596 - interval=1 - active=false
+09-27 13:57:19.490 12027 12027 D GDH.WearPhoneConnection: OnNotifyData called for BROADCAST
+09-27 13:57:19.490 12027 19146 D GDH.Task.Source.TaskService: nothing to execute for LibreLinkSourceTask
+09-27 13:57:19.490 12027 19146 D GDH.Task.Source.TaskService: checkExecution for DexcomShareSourceTask: elapsedTimeMinute=0 - lastElapsedMinute=0 - elapsedIobCobTimeMinute=29316596 - interval=5 - active=false
+09-27 13:57:19.490 12027 19146 D GDH.Task.Source.TaskService: nothing to execute for DexcomShareSourceTask
+09-27 13:57:19.490 12027 19146 D GDH.Task.Source.TaskService: checkExecution for MedtrumSourceTask: elapsedTimeMinute=0 - lastElapsedMinute=0 - elapsedIobCobTimeMinute=29316596 - interval=2 - active=false
+09-27 13:57:19.490 12027 19146 D GDH.Task.Source.TaskService: nothing to execute for MedtrumSourceTask
+09-27 13:57:19.490 12027 12027 D GDH.WearPhoneConnection: OnNotifyData for source BROADCAST and extras Bundle[{glucodata.Minute.Alarm=0, glucodata.Minute.Delta=0.0, gdh.IOB_COB_time=0, glucodata.Minute.Rate=0.23256907, glucodata.Minute.Time=1758995839000, glucodata.Minute.mgdl=110, glucodata.Minute.COB=NaN, glucodata.Minute.IOB=NaN, gdh.delta_rising_count=0, glucodata.Minute.SerialNumber=Signos, gdh.delta_falling_count=0, gdh.bundle.calculated=Bundle[{gdh.rate.source=NaN, gdh.rate.calculated=0.23256907, gdh.delta.15min=38.0, gdh.delta.1min=0.0, gdh.delta.5min=-1.0}], gdh.sensor_start_time=0, glucodata.Minute.glucose=110.0}]
+09-27 13:57:19.490 12027 19146 D GDH.Task.Source.TaskService: checkExecution for NightscoutSourceTask: elapsedTimeMinute=0 - lastElapsedMinute=0 - elapsedIobCobTimeMinute=29316596 - interval=1 - active=false
+09-27 13:57:19.490 12027 19146 D GDH.Task.Source.TaskService: nothing to execute for NightscoutSourceTask
+09-27 13:57:19.490 12027 19146 D GDH.Task.Source.TaskService: No next alarm set for current interval -1
+09-27 13:57:19.490 12027 12027 D GDH.WearPhoneConnection: 1 nodes found for sending message for BROADCAST
+09-27 13:57:19.490 12027 19146 D GDH.Utils.WakeLockHelper: release called - active: true count: 2
+09-27 13:57:19.490 12027 12027 D GDH.GlucoDataServiceMobile: OnNotifyData called for source BROADCAST
+09-27 13:57:19.490 12027 12027 D GDH.GlucoDataServiceMobile: start called
+09-27 13:57:19.490 12027 12027 D GDH.PermanentNotification: OnNotifyData called for source BROADCAST with extras {
+09-27 13:57:19.490 12027 12027 D GDH.PermanentNotification:   glucodata.Minute.Alarm => Integer: 0
+09-27 13:57:19.490 12027 12027 D GDH.PermanentNotification:   glucodata.Minute.Delta => Float: 0.0
+09-27 13:57:19.490 12027 12027 D GDH.PermanentNotification:   gdh.IOB_COB_time => Long: 0
+09-27 13:57:19.490 12027 12027 D GDH.PermanentNotification:   glucodata.Minute.Rate => Float: 0.23256907
+09-27 13:57:19.490 12027 12027 D GDH.PermanentNotification:   glucodata.Minute.Time => Long: 1758995839000
+09-27 13:57:19.490 12027 12027 D GDH.PermanentNotification:   glucodata.Minute.mgdl => Integer: 110
+09-27 13:57:19.490 12027 12027 D GDH.PermanentNotification:   level => Integer: 83
+09-27 13:57:19.490 12027 12027 D GDH.PermanentNotification:   glucodata.Minute.COB => Float: NaN
+09-27 13:57:19.490 12027 12027 D GDH.PermanentNotification:   glucodata.Minute.IOB => Float: NaN
+09-27 13:57:19.490 12027 12027 D GDH.PermanentNotification:   gdh.delta_rising_count => Integer: 0
+09-27 13:57:19.490 12027 12027 D GDH.PermanentNotification:   glucodata.Minute.SerialNumber => String: Signos
+09-27 13:57:19.490 12027 12027 D GDH.PermanentNotification:   gdh.delta_falling_count => Integer: 0
+09-27 13:57:19.490 12027 12027 D GDH.PermanentNotification:   gdh.bundle.calculated => Bundle: {
+09-27 13:57:19.490 12027 12027 D GDH.PermanentNotification:     gdh.rate.source => Float: NaN
+09-27 13:57:19.490 12027 12027 D GDH.PermanentNotification:     gdh.rate.calculated => Float: 0.23256907
+09-27 13:57:19.490 12027 12027 D GDH.PermanentNotification:     gdh.delta.15min => Float: 38.0
+09-27 13:57:19.490 12027 12027 D GDH.PermanentNotification:     gdh.delta.1min => Float: 0.0
+09-27 13:57:19.490 12027 12027 D GDH.PermanentNotification:     gdh.delta.5min => Float: -1.0
+09-27 13:57:19.490 12027 12027 D GDH.PermanentNotification:   }
+09-27 13:57:19.490 12027 12027 D GDH.PermanentNotification:   gdh.version_code => Integer: 155
+09-27 13:57:19.490 12027 12027 D GDH.PermanentNotification:   gdh.sensor_start_time => Long: 0
+09-27 13:57:19.490 12027 12027 D GDH.PermanentNotification:   glucodata.Minute.glucose => Float: 110.0
+09-27 13:57:19.490 12027 12027 D GDH.PermanentNotification: } - graph-id null
+09-27 13:57:19.490 12027 12027 D GDH.PermanentNotification: showNotifications service running: true - onlySecond=false
+09-27 13:57:19.490 12027 12027 D GDH.PermanentNotification: showPrimaryNotification true
+09-27 13:57:19.490 12027 12027 D GDH.PermanentNotification: getNotification withContent=true - channel=MOBILE_FOREGROUND - customLayout=true
+09-27 13:57:19.490 12027 12027 D GDH.Utils.Packages: Get tap action de.michelinside.glucodatahandler
+09-27 13:57:19.491 12027 12027 D GDH.Utils.Packages: Create tap action intent for de.michelinside.glucodatahandler - code: 0 - broadcast: false
+09-27 13:57:19.491 12027 12027 D GDH.Utils.BitmapPool: Bitmap reused for dimensions: 100-100 (new size: 1)
+09-27 13:57:19.491 12027 12027 D GDH.Utils.Bitmap: Create 100 x 100 bitmap for ↑ (rate: 0.23256907) - text-size: 100.0 - degrees: 90 - color: -16711936 - shadow: true
+09-27 13:57:19.491 12027 12027 D GDH.Utils.Bitmap: Center 100x100 bitmap for ↑ - x: 19.0 - y: 85.5 - text-size: 100.0
+09-27 13:57:19.491 12027 12027 D GDH.Utils.BitmapPool: Bitmap reused for dimensions: 100-100 (new size: 0)
+09-27 13:57:19.492 12027 12027 D GDH.Utils.BitmapPool: Bitmap returned to pool for dimensions: 100-100 (new size: 1)
+09-27 13:57:19.492 12027 12027 D GDH.Utils.BitmapPool: Bitmap returned to pool for dimensions: 100-100 (new size: 2)
+09-27 13:57:19.492 12027 12250 D WM-Processor: Processor cancelling 05aaa9fa-f1db-4ad2-a8ab-aff0f6254c70
+09-27 13:57:19.492 12027 12250 D WM-Processor: WorkerWrapper could not be found for 05aaa9fa-f1db-4ad2-a8ab-aff0f6254c70
+09-27 13:57:19.492 12027 12027 I NotificationManager: de.michelinside.glucodatahandler: notify(1234, null, Notification(channel=GDH_foreground shortcut=null contentView=de.michelinside.glucodatahandler/0x7f0d008c vibrate=null sound=null defaults=0 flags=ONGOING_EVENT|ONLY_ALERT_ONCE|NO_CLEAR color=0x00000000 category=status groupKey=GDH_foreground vis=PUBLIC semFlags=0x0 semPriority=0 semMissedCount=0)) as user
+09-27 13:57:19.493 12027 12250 D WM-GreedyScheduler: Cancelling work ID 05aaa9fa-f1db-4ad2-a8ab-aff0f6254c70
+09-27 13:57:19.494 12027 12027 D GDH.Tasker.DataAction: sending new intent to tasker for source BROADCAST
+09-27 13:57:19.495 12027 12027 D GDH.Utils.WakeLockHelper: release called - active: true count: 1
+09-27 13:57:19.495 12027 12027 I GDH.Utils.WakeLockHelper: wakelock release
+09-27 13:57:19.495 12027 12027 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+09-27 13:57:19.496 12027 12027 I GDH.WearPhoneConnection: BROADCAST: 1087 bytes send with path /glucodata_intent_json to node Node{Galaxy Watch Ultra (ZWSM), id=a6f91f39, hops=1, isNearby=true}
+09-27 13:57:19.496 12027 12027 D GDH.InternalNotifier: getNotifiers
+09-27 13:57:19.496 12027 12027 D GDH.InternalNotifier: getNotifiers synchronized
+09-27 13:57:19.496 12027 12027 D GDH.InternalNotifier: Sending new data from SOURCE_STATE_CHANGE to 0 notifier(s).
+09-27 13:57:19.496 12027 12027 D GDH.InternalNotifier: getNotifiers
+09-27 13:57:19.496 12027 12027 D GDH.InternalNotifier: getNotifiers synchronized
+09-27 13:57:19.497 12027 12250 D WM-SystemJobScheduler: Scheduling work ID 1a213b08-567a-4839-a869-faa9bbca1e1bJob ID 1426
+09-27 13:57:19.701 12027 12027 D GDH.NotificationReceiver: New notification posted from de.michelinside.glucodatahandler - ongoing: true (flags: 106, prio: 0) - posted: 1:57:19 PM (1758995839493) - when 1:57:19 PM (1758995839000)
+09-27 13:58:22.003 12027 12027 D GDH.Task.BackgroundWorker: stopWork called for class TimeTaskWorker
+09-27 13:58:22.004 12027 12027 D GDH.Task.Time.TaskService: Check task execution after 1 min
+09-27 13:58:22.004 12027 12027 D GDH.Task.Time.TaskService: elapsed: 1 nextTrigger: 2 - interval: 1
+09-27 13:58:22.004 12027 12027 I GDH.Task.Time.TaskService: Set next alarm after 2 minute(s) at 1:59:22 PM (received at 1:57:19 PM) with a delay of 3s
+09-27 13:58:22.004 12027 20074 D GDH.Utils.WakeLockHelper: init called - count: 0
+09-27 13:58:22.006 12027 12027 D GDH.Task.BackgroundWorker: stopWork called for class TimeTaskWorker
+09-27 13:58:22.006 12027 12027 D GDH.Task.BackgroundWorker: triggerDelay called for class TimeTaskWorker with delay 62s at 1:59:24 PM
+09-27 13:58:22.008 12027 12246 D WM-Processor: Processor cancelling 1a213b08-567a-4839-a869-faa9bbca1e1b
+09-27 13:58:22.008 12027 12246 D WM-Processor: WorkerWrapper could not be found for 1a213b08-567a-4839-a869-faa9bbca1e1b
+09-27 13:58:22.009 12027 20074 I GDH.Utils.WakeLockHelper: wakelock acquired: true
+09-27 13:58:22.009 12027 20074 D GDH.Task.Time.TaskService: checkExecution for ElapsedTimeTask: elapsedTimeMinute=1 - lastElapsedMinute=1 - elapsedIobCobTimeMinute=29316598 - interval=1 - active=true
+09-27 13:58:22.009 12027 20074 D GDH.Task.Time.TaskService: Trigger ElapsedTimeTask execution after 1 min
+09-27 13:58:22.009 12027 20074 I GDH.Task.Time.TaskService: execute after 1 min: ElapsedTimeTask
+09-27 13:58:22.009 12027 20074 D GDH.Task.Time.TaskService: checkExecution for ObsoleteTask: elapsedTimeMinute=1 - lastElapsedMinute=1 - elapsedIobCobTimeMinute=29316598 - interval=6 - active=true
+09-27 13:58:22.009 12027 20074 D GDH.Task.Time.TaskService: nothing to execute for ObsoleteTask
+09-27 13:58:22.009 12027 12027 D GDH.Task.Time.ElapsedTask: send time notifier
+09-27 13:58:22.009 12027 20074 D GDH.Task.Time.TaskService: elapsed: 1 nextTrigger: 2 - interval: 1
+09-27 13:58:22.009 12027 12027 D GDH.InternalNotifier: getNotifiers
+09-27 13:58:22.009 12027 12027 D GDH.InternalNotifier: getNotifiers synchronized
+09-27 13:58:22.009 12027 12027 D GDH.InternalNotifier: Sending new data from TIME_VALUE to 1 notifier(s).
+09-27 13:58:22.009 12027 12027 D GDH.InternalNotifier: getNotifiers
+09-27 13:58:22.009 12027 12027 D GDH.InternalNotifier: getNotifiers synchronized
+09-27 13:58:22.010 12027 12027 D GDH.AlarmHandler: OnNotifyData called for TIME_VALUE
+09-27 13:58:22.010 12027 12027 D GDH.AlarmHandler: checkObsoleteAlarm: enabled=true - interval=20 - elapsed=1
+09-27 13:58:22.010 12027 20074 D GDH.Task.Time.TaskService: Ignore next alarm as it is already active
+09-27 13:58:22.010 12027 20074 D GDH.Utils.WakeLockHelper: release called - active: true count: 1
+09-27 13:58:22.010 12027 20074 I GDH.Utils.WakeLockHelper: wakelock release
+09-27 13:58:22.010 12027 12246 D WM-GreedyScheduler: Cancelling work ID 1a213b08-567a-4839-a869-faa9bbca1e1b
+09-27 13:58:22.020 12027 12246 D WM-SystemJobScheduler: Scheduling work ID 99604565-f781-4064-8b66-93ba40164510Job ID 1427
+09-27 13:59:22.004 12027 12027 D GDH.Task.BackgroundWorker: stopWork called for class TimeTaskWorker
+09-27 13:59:22.005 12027 12027 D GDH.Task.Time.TaskService: Check task execution after 2 min
+09-27 13:59:22.005 12027 12027 D GDH.Task.Time.TaskService: elapsed: 2 nextTrigger: 3 - interval: 1
+09-27 13:59:22.005 12027 20813 D GDH.Utils.WakeLockHelper: init called - count: 0
+09-27 13:59:22.005 12027 12027 I GDH.Task.Time.TaskService: Set next alarm after 3 minute(s) at 2:00:22 PM (received at 1:57:19 PM) with a delay of 3s
+09-27 13:59:22.006 12027 12027 D GDH.Task.BackgroundWorker: stopWork called for class TimeTaskWorker
+09-27 13:59:22.006 12027 12027 D GDH.Task.BackgroundWorker: triggerDelay called for class TimeTaskWorker with delay 62s at 2:00:24 PM
+09-27 13:59:22.006 12027 20813 I GDH.Utils.WakeLockHelper: wakelock acquired: true
+09-27 13:59:22.007 12027 20813 D GDH.Task.Time.TaskService: checkExecution for ElapsedTimeTask: elapsedTimeMinute=2 - lastElapsedMinute=2 - elapsedIobCobTimeMinute=29316598 - interval=1 - active=true
+09-27 13:59:22.007 12027 20813 D GDH.Task.Time.TaskService: Trigger ElapsedTimeTask execution after 2 min
+09-27 13:59:22.007 12027 20813 I GDH.Task.Time.TaskService: execute after 2 min: ElapsedTimeTask
+09-27 13:59:22.007 12027 20813 D GDH.Task.Time.TaskService: checkExecution for ObsoleteTask: elapsedTimeMinute=2 - lastElapsedMinute=2 - elapsedIobCobTimeMinute=29316598 - interval=6 - active=true
+09-27 13:59:22.007 12027 20813 D GDH.Task.Time.TaskService: nothing to execute for ObsoleteTask
+09-27 13:59:22.007 12027 20813 D GDH.Task.Time.TaskService: elapsed: 2 nextTrigger: 3 - interval: 1
+09-27 13:59:22.007 12027 12027 D GDH.Task.Time.ElapsedTask: send time notifier
+09-27 13:59:22.007 12027 12027 D GDH.InternalNotifier: getNotifiers
+09-27 13:59:22.007 12027 12027 D GDH.InternalNotifier: getNotifiers synchronized
+09-27 13:59:22.007 12027 12027 D GDH.InternalNotifier: Sending new data from TIME_VALUE to 1 notifier(s).
+09-27 13:59:22.007 12027 12027 D GDH.InternalNotifier: getNotifiers
+09-27 13:59:22.007 12027 12027 D GDH.InternalNotifier: getNotifiers synchronized
+09-27 13:59:22.007 12027 12027 D GDH.AlarmHandler: OnNotifyData called for TIME_VALUE
+09-27 13:59:22.007 12027 12027 D GDH.AlarmHandler: checkObsoleteAlarm: enabled=true - interval=20 - elapsed=2
+09-27 13:59:22.007 12027 20813 D GDH.Task.Time.TaskService: Ignore next alarm as it is already active
+09-27 13:59:22.007 12027 20813 D GDH.Utils.WakeLockHelper: release called - active: true count: 1
+09-27 13:59:22.007 12027 20813 I GDH.Utils.WakeLockHelper: wakelock release
+09-27 13:59:22.010 12027 12294 D WM-Processor: Processor cancelling 99604565-f781-4064-8b66-93ba40164510
+09-27 13:59:22.010 12027 12294 D WM-Processor: WorkerWrapper could not be found for 99604565-f781-4064-8b66-93ba40164510
+09-27 13:59:22.012 12027 12294 D WM-GreedyScheduler: Cancelling work ID 99604565-f781-4064-8b66-93ba40164510
+09-27 13:59:22.026 12027 12294 D WM-SystemJobScheduler: Scheduling work ID 4567839b-6b8f-4162-a1e2-1e3e278e4747Job ID 1428
+09-27 14:00:22.005 12027 12027 D GDH.Task.BackgroundWorker: stopWork called for class TimeTaskWorker
+09-27 14:00:22.005 12027 12027 D GDH.Task.Time.TaskService: Check task execution after 3 min
+09-27 14:00:22.006 12027 12027 D GDH.Task.Time.TaskService: elapsed: 3 nextTrigger: 4 - interval: 1
+09-27 14:00:22.006 12027 21500 D GDH.Utils.WakeLockHelper: init called - count: 0
+09-27 14:00:22.007 12027 12027 I GDH.Task.Time.TaskService: Set next alarm after 4 minute(s) at 2:01:22 PM (received at 1:57:19 PM) with a delay of 3s
+09-27 14:00:22.008 12027 21500 I GDH.Utils.WakeLockHelper: wakelock acquired: true
+09-27 14:00:22.008 12027 21500 D GDH.Task.Time.TaskService: checkExecution for ElapsedTimeTask: elapsedTimeMinute=3 - lastElapsedMinute=2 - elapsedIobCobTimeMinute=29316602 - interval=1 - active=true
+09-27 14:00:22.008 12027 21500 D GDH.Task.Time.TaskService: Trigger ElapsedTimeTask execution after 3 min
+09-27 14:00:22.008 12027 21500 I GDH.Task.Time.TaskService: execute after 3 min: ElapsedTimeTask
+09-27 14:00:22.008 12027 21500 D GDH.Task.Time.TaskService: checkExecution for ObsoleteTask: elapsedTimeMinute=3 - lastElapsedMinute=2 - elapsedIobCobTimeMinute=29316602 - interval=6 - active=true
+09-27 14:00:22.008 12027 21500 D GDH.Task.Time.TaskService: nothing to execute for ObsoleteTask
+09-27 14:00:22.008 12027 21500 D GDH.Task.Time.TaskService: elapsed: 3 nextTrigger: 4 - interval: 1
+09-27 14:00:22.008 12027 12027 D GDH.Task.BackgroundWorker: stopWork called for class TimeTaskWorker
+09-27 14:00:22.008 12027 21500 I GDH.Task.Time.TaskService: Set next alarm after 4 minute(s) at 2:01:22 PM (received at 1:57:19 PM) with a delay of 3s
+09-27 14:00:22.008 12027 12027 D GDH.Task.BackgroundWorker: triggerDelay called for class TimeTaskWorker with delay 62s at 2:01:24 PM
+09-27 14:00:22.008 12027 21500 D GDH.Task.Time.TaskService: Ignore next alarm as it is already active
+09-27 14:00:22.008 12027 21500 D GDH.Utils.WakeLockHelper: release called - active: true count: 1
+09-27 14:00:22.008 12027 21500 I GDH.Utils.WakeLockHelper: wakelock release
+09-27 14:00:22.009 12027 12027 D GDH.Task.Time.ElapsedTask: send time notifier
+09-27 14:00:22.009 12027 12027 D GDH.InternalNotifier: getNotifiers
+09-27 14:00:22.009 12027 12027 D GDH.InternalNotifier: getNotifiers synchronized
+09-27 14:00:22.009 12027 12027 D GDH.InternalNotifier: Sending new data from TIME_VALUE to 1 notifier(s).
+09-27 14:00:22.009 12027 12027 D GDH.InternalNotifier: getNotifiers
+09-27 14:00:22.009 12027 12027 D GDH.InternalNotifier: getNotifiers synchronized
+09-27 14:00:22.009 12027 12027 D GDH.AlarmHandler: OnNotifyData called for TIME_VALUE
+09-27 14:00:22.009 12027 12027 D GDH.AlarmHandler: checkObsoleteAlarm: enabled=true - interval=20 - elapsed=3
+09-27 14:00:22.014 12027 12150 D WM-Processor: Processor cancelling 4567839b-6b8f-4162-a1e2-1e3e278e4747
+09-27 14:00:22.014 12027 12150 D WM-Processor: WorkerWrapper could not be found for 4567839b-6b8f-4162-a1e2-1e3e278e4747
+09-27 14:00:22.015 12027 12150 D WM-GreedyScheduler: Cancelling work ID 4567839b-6b8f-4162-a1e2-1e3e278e4747
+09-27 14:00:22.026 12027 12150 D WM-SystemJobScheduler: Scheduling work ID 2a98e3c7-b17f-4cb1-9b5a-8a82d4d68730Job ID 1429
+09-27 14:00:40.062 12027 12027 D GDH.NotificationReceiver: New notification posted from com.signos.core - ongoing: true (flags: 106, prio: 0) - posted: 2:00:39 PM (1758996039855) - when 3:03:41 AM (1758956621129)
+09-27 14:00:40.063 12027 12027 I GDH.NotificationReceiver: New notification from com.signos.core - ongoing: true (flags: 106, prio: 0) - posted: 2:00:39 PM (1758996039855) - when 3:03:41 AM (1758956621129) - diff notify: 200, diff recv value: 200
+09-27 14:00:40.063 12027 12027 I GDH.NotificationReceiver: Signos notification with text 'Reconnecting ...' - ignore it!
+09-27 14:00:40.100 12027 12027 D GDH.NotificationReceiver: New notification posted from com.signos.core - ongoing: true (flags: 98, prio: 0) - posted: 2:00:39 PM (1758996039888) - when 2:00:39 PM (1758996039887)
+09-27 14:00:40.100 12027 12027 I GDH.NotificationReceiver: New notification from com.signos.core - ongoing: true (flags: 98, prio: 0) - posted: 2:00:39 PM (1758996039888) - when 2:00:39 PM (1758996039887) - diff notify: 200, diff recv value: 200
+09-27 14:00:40.100 12027 12027 I GDH.NotificationReceiver: using regex (?:^|\s)(\d*\.?\d+)(?=\s|$)
+09-27 14:00:40.100 12027 12027 I GDH.NotificationReceiver: extracted title `Signos` and text `107 mg/dL`
+09-27 14:00:40.100 12027 12027 I GDH.NotificationReceiver: Extracted glucose value: 107.0 from time: 2:00:39 PM
+09-27 14:00:40.100 12027 12027 D GDH.Utils.WakeLockHelper: init called - count: 0
+09-27 14:00:40.101 12027 12027 I GDH.Utils.WakeLockHelper: wakelock acquired: true
+09-27 14:00:40.101 12027 12027 D GDH.ReceiveData: Glucodata received from NOTIFICATION: Bundle[{glucodata.Minute.Alarm=0, glucodata.Minute.Rate=NaN, glucodata.Minute.Time=1758996039888, glucodata.Minute.mgdl=107, glucodata.Minute.SerialNumber=Signos}] - timestamp: Sep 27, 2025 2:00:39 PM - difference: 200000
+09-27 14:00:40.101 12027 12027 I GDH.ReceiveData: Glucodata received from NOTIFICATION: Bundle[{glucodata.Minute.Alarm=0, glucodata.Minute.Rate=NaN, glucodata.Minute.Time=1758996039888, glucodata.Minute.mgdl=107, glucodata.Minute.SerialNumber=Signos}] - timestamp: Sep 27, 2025 2:00:39 PM
+09-27 14:00:40.103 12027 12027 D GDH.ReceiveData: 1 Calculate 3 min delta - new_value 107, old_value 110, delta -1.0 
+09-27 14:00:40.103 12027 12027 D GDH.ReceiveData: 5 Calculate 6 min delta - new_value 107, old_value 110, delta -3.0 
+09-27 14:00:40.103 12027 12027 D GDH.ReceiveData: 15 Calculate 18 min delta - new_value 107, old_value 72, delta 35.0 
+09-27 14:00:40.103 12027 12027 D GDH.ReceiveData: Calculated rate for 7.0 values - sum -2.0746005: -0.16448452
+09-27 14:00:40.103 12027 12027 D GDH.AlarmHandler: Check delta alarm trigger: deltaFallingCount=0 - deltaRisingCount=0 - time=2:00 PM - snoozeTime=off - tempInactive=off - lastFallingAlarmTime=7:00 PM - lastRisingAlarmTime=7:00 PM - falling=>off - rising=>off
+09-27 14:00:40.103 12027 12027 D GDH.InternalNotifier: getNotifiers
+09-27 14:00:40.103 12027 12027 D GDH.InternalNotifier: getNotifiers synchronized
+09-27 14:00:40.103 12027 12027 D GDH.InternalNotifier: Sending new data from BROADCAST to 6 notifier(s).
+09-27 14:00:40.103 12027 12027 D GDH.InternalNotifier: getNotifiers
+09-27 14:00:40.103 12027 12027 D GDH.InternalNotifier: getNotifiers synchronized
+09-27 14:00:40.103 12027 12027 D GDH.Task.Time.TaskService: OnNotifyData for source BROADCAST
+09-27 14:00:40.103 12027 12027 D GDH.Task.Time.TaskService: nothing to execute: elapsedTimeMinute=0 - lastElapsedMinute=3 - elapsedIobCobTimeMinute=29316602
+09-27 14:00:40.103 12027 12027 D GDH.Task.Time.TaskService: elapsed: 0 nextTrigger: 1 - interval: 1
+09-27 14:00:40.103 12027 12195 D GDH.dbAccess: Add new value 107 at 2:00:39 PM (1758996039000)
+09-27 14:00:40.103 12027 12027 I GDH.Task.Time.TaskService: Set next alarm after 1 minute(s) at 2:01:42 PM (received at 2:00:39 PM) with a delay of 3s
+09-27 14:00:40.104 12027 12027 D GDH.Task.BackgroundWorker: stopWork called for class TimeTaskWorker
+09-27 14:00:40.104 12027 12027 D GDH.Task.BackgroundWorker: triggerDelay called for class TimeTaskWorker with delay 64s at 2:01:44 PM
+09-27 14:00:40.104 12027 12027 D GDH.Task.Source.TaskService: OnNotifyData for source BROADCAST
+09-27 14:00:40.104 12027 12027 D GDH.Task.Source.TaskService: Check IOB/COB task execution after 29316602 min
+09-27 14:00:40.104 12027 12027 D GDH.Task.Source.TaskService: No next alarm set for current interval -1
+09-27 14:00:40.104 12027 12027 D GDH.WearPhoneConnection: OnNotifyData called for BROADCAST
+09-27 14:00:40.104 12027 12027 D GDH.WearPhoneConnection: OnNotifyData for source BROADCAST and extras Bundle[{glucodata.Minute.Alarm=0, glucodata.Minute.Delta=-1.0, gdh.IOB_COB_time=0, glucodata.Minute.Rate=-0.16448452, glucodata.Minute.Time=1758996039000, glucodata.Minute.mgdl=107, glucodata.Minute.COB=NaN, glucodata.Minute.IOB=NaN, gdh.delta_rising_count=0, glucodata.Minute.SerialNumber=Signos, gdh.delta_falling_count=0, gdh.bundle.calculated=Bundle[{gdh.rate.source=NaN, gdh.rate.calculated=-0.16448452, gdh.delta.15min=35.0, gdh.delta.1min=-1.0, gdh.delta.5min=-3.0}], gdh.sensor_start_time=0, glucodata.Minute.glucose=107.0}]
+09-27 14:00:40.104 12027 12027 D GDH.WearPhoneConnection: 1 nodes found for sending message for BROADCAST
+09-27 14:00:40.104 12027 21774 D GDH.Utils.WakeLockHelper: init called - count: 1
+09-27 14:00:40.104 12027 21774 D GDH.Task.Source.TaskService: checkExecution for LibreLinkSourceTask: elapsedTimeMinute=0 - lastElapsedMinute=0 - elapsedIobCobTimeMinute=29316602 - interval=1 - active=false
+09-27 14:00:40.104 12027 21774 D GDH.Task.Source.TaskService: nothing to execute for LibreLinkSourceTask
+09-27 14:00:40.104 12027 21774 D GDH.Task.Source.TaskService: checkExecution for DexcomShareSourceTask: elapsedTimeMinute=0 - lastElapsedMinute=0 - elapsedIobCobTimeMinute=29316602 - interval=5 - active=false
+09-27 14:00:40.104 12027 21774 D GDH.Task.Source.TaskService: nothing to execute for DexcomShareSourceTask
+09-27 14:00:40.104 12027 21774 D GDH.Task.Source.TaskService: checkExecution for MedtrumSourceTask: elapsedTimeMinute=0 - lastElapsedMinute=0 - elapsedIobCobTimeMinute=29316602 - interval=2 - active=false
+09-27 14:00:40.104 12027 21774 D GDH.Task.Source.TaskService: nothing to execute for MedtrumSourceTask
+09-27 14:00:40.104 12027 12027 D GDH.GlucoDataServiceMobile: OnNotifyData called for source BROADCAST
+09-27 14:00:40.104 12027 21774 D GDH.Task.Source.TaskService: checkExecution for NightscoutSourceTask: elapsedTimeMinute=0 - lastElapsedMinute=0 - elapsedIobCobTimeMinute=29316602 - interval=1 - active=false
+09-27 14:00:40.105 12027 21774 D GDH.Task.Source.TaskService: nothing to execute for NightscoutSourceTask
+09-27 14:00:40.105 12027 21774 D GDH.Task.Source.TaskService: No next alarm set for current interval -1
+09-27 14:00:40.105 12027 21774 D GDH.Utils.WakeLockHelper: release called - active: true count: 2
+09-27 14:00:40.105 12027 12027 D GDH.GlucoDataServiceMobile: start called
+09-27 14:00:40.105 12027 12027 D GDH.PermanentNotification: OnNotifyData called for source BROADCAST with extras {
+09-27 14:00:40.105 12027 12027 D GDH.PermanentNotification:   glucodata.Minute.Alarm => Integer: 0
+09-27 14:00:40.105 12027 12027 D GDH.PermanentNotification:   glucodata.Minute.Delta => Float: -1.0
+09-27 14:00:40.105 12027 12027 D GDH.PermanentNotification:   gdh.IOB_COB_time => Long: 0
+09-27 14:00:40.105 12027 12027 D GDH.PermanentNotification:   glucodata.Minute.Rate => Float: -0.16448452
+09-27 14:00:40.105 12027 12027 D GDH.PermanentNotification:   glucodata.Minute.Time => Long: 1758996039000
+09-27 14:00:40.105 12027 12027 D GDH.PermanentNotification:   glucodata.Minute.mgdl => Integer: 107
+09-27 14:00:40.105 12027 12027 D GDH.PermanentNotification:   level => Integer: 83
+09-27 14:00:40.105 12027 12027 D GDH.PermanentNotification:   glucodata.Minute.COB => Float: NaN
+09-27 14:00:40.105 12027 12027 D GDH.PermanentNotification:   glucodata.Minute.IOB => Float: NaN
+09-27 14:00:40.105 12027 12027 D GDH.PermanentNotification:   gdh.delta_rising_count => Integer: 0
+09-27 14:00:40.105 12027 12027 D GDH.PermanentNotification:   glucodata.Minute.SerialNumber => String: Signos
+09-27 14:00:40.105 12027 12027 D GDH.PermanentNotification:   gdh.delta_falling_count => Integer: 0
+09-27 14:00:40.105 12027 12027 D GDH.PermanentNotification:   gdh.bundle.calculated => Bundle: {
+09-27 14:00:40.105 12027 12027 D GDH.PermanentNotification:     gdh.rate.source => Float: NaN
+09-27 14:00:40.105 12027 12027 D GDH.PermanentNotification:     gdh.rate.calculated => Float: -0.16448452
+09-27 14:00:40.105 12027 12027 D GDH.PermanentNotification:     gdh.delta.15min => Float: 35.0
+09-27 14:00:40.105 12027 12027 D GDH.PermanentNotification:     gdh.delta.1min => Float: -1.0
+09-27 14:00:40.105 12027 12027 D GDH.PermanentNotification:     gdh.delta.5min => Float: -3.0
+09-27 14:00:40.105 12027 12027 D GDH.PermanentNotification:   }
+09-27 14:00:40.105 12027 12027 D GDH.PermanentNotification:   gdh.version_code => Integer: 155
+09-27 14:00:40.105 12027 12027 D GDH.PermanentNotification:   gdh.sensor_start_time => Long: 0
+09-27 14:00:40.105 12027 12027 D GDH.PermanentNotification:   glucodata.Minute.glucose => Float: 107.0
+09-27 14:00:40.105 12027 12027 D GDH.PermanentNotification: } - graph-id null
+09-27 14:00:40.105 12027 12027 D GDH.PermanentNotification: showNotifications service running: true - onlySecond=false
+09-27 14:00:40.105 12027 12027 D GDH.PermanentNotification: showPrimaryNotification true
+09-27 14:00:40.105 12027 12027 D GDH.PermanentNotification: getNotification withContent=true - channel=MOBILE_FOREGROUND - customLayout=true
+09-27 14:00:40.105 12027 12027 D GDH.Utils.Packages: Get tap action de.michelinside.glucodatahandler
+09-27 14:00:40.105 12027 12027 D GDH.Utils.Packages: Create tap action intent for de.michelinside.glucodatahandler - code: 0 - broadcast: false
+09-27 14:00:40.105 12027 12027 D GDH.Utils.BitmapPool: Bitmap reused for dimensions: 100-100 (new size: 1)
+09-27 14:00:40.105 12027 12027 D GDH.Utils.Bitmap: Create 100 x 100 bitmap for ↑ (rate: -0.16448452) - text-size: 100.0 - degrees: 90 - color: -16711936 - shadow: true
+09-27 14:00:40.105 12027 12027 D GDH.Utils.Bitmap: Center 100x100 bitmap for ↑ - x: 19.0 - y: 85.5 - text-size: 100.0
+09-27 14:00:40.106 12027 12027 D GDH.Utils.BitmapPool: Bitmap reused for dimensions: 100-100 (new size: 0)
+09-27 14:00:40.106 12027 12027 D GDH.Utils.BitmapPool: Bitmap returned to pool for dimensions: 100-100 (new size: 1)
+09-27 14:00:40.106 12027 12027 D GDH.Utils.BitmapPool: Bitmap returned to pool for dimensions: 100-100 (new size: 2)
+09-27 14:00:40.106 12027 12027 I NotificationManager: de.michelinside.glucodatahandler: notify(1234, null, Notification(channel=GDH_foreground shortcut=null contentView=de.michelinside.glucodatahandler/0x7f0d008c vibrate=null sound=null defaults=0 flags=ONGOING_EVENT|ONLY_ALERT_ONCE|NO_CLEAR color=0x00000000 category=status groupKey=GDH_foreground vis=PUBLIC semFlags=0x0 semPriority=0 semMissedCount=0)) as user
+09-27 14:00:40.107 12027 12250 D WM-Processor: Processor cancelling 2a98e3c7-b17f-4cb1-9b5a-8a82d4d68730
+09-27 14:00:40.107 12027 12250 D WM-Processor: WorkerWrapper could not be found for 2a98e3c7-b17f-4cb1-9b5a-8a82d4d68730
+09-27 14:00:40.108 12027 12027 D GDH.Tasker.DataAction: sending new intent to tasker for source BROADCAST
+09-27 14:00:40.109 12027 12027 D GDH.Utils.WakeLockHelper: release called - active: true count: 1
+09-27 14:00:40.109 12027 12027 I GDH.Utils.WakeLockHelper: wakelock release
+09-27 14:00:40.109 12027 12027 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+09-27 14:00:40.109 12027 12027 I GDH.WearPhoneConnection: BROADCAST: 1091 bytes send with path /glucodata_intent_json to node Node{Galaxy Watch Ultra (ZWSM), id=a6f91f39, hops=1, isNearby=true}
+09-27 14:00:40.109 12027 12027 D GDH.InternalNotifier: getNotifiers
+09-27 14:00:40.109 12027 12027 D GDH.InternalNotifier: getNotifiers synchronized
+09-27 14:00:40.109 12027 12027 D GDH.InternalNotifier: Sending new data from SOURCE_STATE_CHANGE to 0 notifier(s).
+09-27 14:00:40.109 12027 12027 D GDH.InternalNotifier: getNotifiers
+09-27 14:00:40.109 12027 12027 D GDH.InternalNotifier: getNotifiers synchronized
+09-27 14:00:40.109 12027 12250 D WM-GreedyScheduler: Cancelling work ID 2a98e3c7-b17f-4cb1-9b5a-8a82d4d68730
+09-27 14:00:40.115 12027 12250 D WM-SystemJobScheduler: Scheduling work ID c872e46f-0f92-4001-9fd5-ebdac4f347a1Job ID 1430
+09-27 14:00:40.315 12027 12027 D GDH.NotificationReceiver: New notification posted from de.michelinside.glucodatahandler - ongoing: true (flags: 106, prio: 0) - posted: 2:00:40 PM (1758996040107) - when 2:00:39 PM (1758996039000)
+09-27 14:00:40.910 12027 12027 D GDH.NotificationReceiver: New notification posted from com.signos.core - ongoing: true (flags: 98, prio: 0) - posted: 2:00:40 PM (1758996040702) - when 2:00:40 PM (1758996040702)
+09-27 14:00:40.910 12027 12027 I GDH.NotificationReceiver: New notification from com.signos.core - ongoing: true (flags: 98, prio: 0) - posted: 2:00:40 PM (1758996040702) - when 2:00:40 PM (1758996040702) - diff notify: 0, diff recv value: 1

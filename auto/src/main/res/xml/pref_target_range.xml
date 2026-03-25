@@ -52,7 +52,7 @@
                     android:summary="@string/pref_color_alarm_summary"
                     app:iconSpaceReserved="false"/>
                 <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
-                    android:defaultValue="@color/yellow"
+                    android:defaultValue="@color/out_of_range"
                     android:key="color_out_of_range"
                     android:title="@string/pref_color_out_of_range"
                     app:cpv_dialogTitle="@string/pref_color_out_of_range"

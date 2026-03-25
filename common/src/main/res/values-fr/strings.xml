@@ -662,7 +662,7 @@
     <string name="pref_send_battery_level_to_watch_summary">Envoyer le niveau de batterie à la montre pour l\'afficher dans la complication et sur l\'écran principal.</string>
     <string name="pref_battery_level">Afficher le niveau de batterie</string>
     <string name="forward_to_watch_interval_summary">Définissez le temps minimum (en minutes) entre les mesures de glucose avant d\'envoyer une nouvelle mise à jour à la montre.\nLes alarmes et les mesures très basses seront toujours envoyées.</string>
-    <string name="forward_to_values_summary">Définissez le temps minimum (en minutes) entre les mesures de glucose avant d\'envoyer une nouvelle mise à jour aux récepteurs (pas pour Health Connect).</string>
+    <string name="forward_to_values_summary">Définissez le temps minimum (en minutes) entre les mesures de glucose avant d\'envoyer une nouvelle mise à jour aux récepteurs.</string>
     <string name="alarm_repeat_summary">L\'alarme sonnera et vibrera de manière répétée jusqu\'à ce que vous rejetiez la notification ou que la durée maximale de l\'alarme définie soit atteinte.</string>
     <string name="alarm_repeat_time">Durée maximale de l\'alarme</string>
     <string name="alarm_repeat_time_summary">Spécifiez la durée maximale (en minutes) pendant laquelle l\'alarme sonnera et vibrera. Une valeur de 0 signifie que l\'alarme se répétera indéfiniment.</string>
@@ -684,8 +684,7 @@
     <string name="pref_watchfaces_default">Standard</string>
     <string name="pref_watchfaces_default_summary">La plupart des fabricants de montres proposent déjà des cadrans de montre qui peuvent être utilisés avec la complication GlucoDataHandler.\nPar exemple, la plupart des cadrans de montre « Info » de Samsung sont compatibles.</string>
     <string name="pref_watchfaces_pujie">Pujie</string>
-    <string name="pref_watchfaces_pujie_summary">Pujie est une application de création de cadrans de montre avec une bibliothèque cloud.\nPour trouver des cadrans de montre compatibles, recherchez dans la bibliothèque les cadrans de montre commençant par « GDH_ ».\nRemarque : Pujie n’est pas compatible avec les appareils Wear OS 5.\nAppuyez ici pour ouvrir l’application dans le Play Store.</string>
-    <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>
+    <string name="pref_watchfaces_pujie_summary">Pujie est une application de création de cadrans de montre avec une bibliothèque cloud.\nPour trouver des cadrans de montre compatibles, recherchez dans la bibliothèque les cadrans de montre commençant par « GDH_ ».\nAppuyez ici pour ouvrir l’application dans le Play Store.</string>
     <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man crée des cadrans de montre tiers spécialement conçus pour être utilisés avec GlucoDataHandler.\nAppuyez ici pour ouvrir sa page Play Store.</string>
     <string name="pref_watchfaces_gdc">Cadrans de montre GDC</string>
     <string name="pref_watchfaces_gdc_summary">Les cadrans de montre GDC sont conçus pour être utilisés avec GlucoDataHandler.\nAppuyez ici pour ouvrir la page Play Store.</string>
@@ -766,7 +765,8 @@
     <string name="notification_reader_enabled">Activer le lecteur de notifications</string>
     <string name="no_receiver">Aucune application</string>
     <string name="notification_reader_app_regex">Filtre de valeur Regex</string>
-    <string name="notification_reader_app_regex_summary">Regex pour analyser la valeur du texte dans la notification.\nVeuillez modifier uniquement si vous savez ce que vous faites ou si vous obtenez un conseil du développeur.</string>
+    <string name="notification_reader_app_regex_summary">Regex pour analyser la valeur du texte dans la notification.</string>
+    <string name="advanced_settings_developer_summary">Veuillez modifier uniquement si vous savez ce que vous faites ou si vous obtenez un conseil du développeur.</string>
     <string name="notification_reader_five_minute_interval">Intervalle de 5 minutes</string>
     <string name="notification_reader_five_minute_interval_summary">Certaines applications, comme Dexcom, mettent à jour leurs notifications assez souvent. Pour ignorer ces mises à jour avec la même valeur, activez l\'intervalle de 5 minutes.\nSi activé, il n\'y aura une nouvelle valeur que toutes les 5 minutes ou si la valeur dans la notification a changé.</string>
     <string name="pref_source_notification_info_summary">Pour recevoir des valeurs des notifications d\'autres applications, une autorisation d\'accès aux notifications est nécessaire !\nLa notification doit inclure la valeur de glucose ou l\'IOB/COB sous forme de chaîne.\nComme chaque notification a une mise en page différente, elle peut ne pas fonctionner avec toutes les applications. En cas de problème, veuillez me contacter avec une capture d\'écran de la notification et les journaux.</string>
@@ -904,7 +904,7 @@ Vous pouvez gérer ces autorisations à tout moment dans les paramètres de l\'a
     <string name="pref_switch_xdrip_server_reduce_data_summary">Cela réduira les données fournies au minimum pour éviter les problèmes de mémoire sur certaines montres Garmin.\nVeuillez vérifier la compatibilité avec votre cadran de montre.</string>
     <string name="error_port_in_use">Le port est en cours d\'utilisation !\nVeuillez arrêter les autres serveurs web fonctionnant sur ce port et redémarrer le serveur web local.</string>
     <string name="state_active">actif</string>
-    <string name="pref_garmin_info_summary">Il n\'y a pas d\'application dédiée pour Garmin, Fitbit ou Pebble, juste un serveur web local, qui est utilisé par les cadrans de montre avec support xDrip+.\nRecherchez simplement de tels cadrans dans le Connect IQ Store et configurez la source xDrip+ pour ces cadrans.\nIMPORTANT : si vous utilisez également xDrip+ ou Juggluco, vous ne pouvez activer le serveur web local que dans une seule application, car ils utilisent le même port (17580) !</string>
+    <string name="pref_garmin_info_summary">Il n\'y a pas d\'application dédiée pour Garmin ou Fitbit, juste un serveur web local, qui est utilisé par les cadrans de montre avec support xDrip+.\nRecherchez simplement de tels cadrans dans le Connect IQ Store et configurez la source xDrip+ pour ces cadrans.\nIMPORTANT : si vous utilisez également xDrip+ ou Juggluco, vous ne pouvez activer le serveur web local que dans une seule application, car ils utilisent le même port (17580) !</string>
     <string name="remaining">Restant</string>
     <string name="pref_switch_xdrip_open_server">Ouvrir le serveur web</string>
     <string name="pref_switch_xdrip_open_server_summary">Rendre le serveur web ouvert aux autres appareils du réseau.\nCela peut causer des problèmes de sécurité, donc ne l\'activez que si vous avez vraiment besoin d\'accéder aux données du serveur web depuis le réseau.\nLes cadrans de montre Garmin demandent les données directement sur le téléphone, donc aucun serveur ouvert n\'est nécessaire !</string>
@@ -933,14 +933,12 @@ Vous pouvez gérer ces autorisations à tout moment dans les paramètres de l\'a
     <string name="src_ns_summary">Suivre à distance le service web Nightscout.</string>
     <string name="pref_cat_wear_os_summary">Pour les montres Wear OS, par ex. toutes les Google Pixel Watches, Samsung Galaxy Watch 4 et plus récentes, et bien d\'autres.</string>
     <string name="pref_cat_watchdrip_summary">Pour les montres prises en charge par l\'application externe WatchDrip+, telles que la plupart des modèles Mi Band, Xiaomi Smart Band et Amazfit.</string>
-    <string name="pref_cat_garminpebble">Montres Garmin, Fitbit et Pebble</string>
-    <string name="pref_cat_garminpebble_summary">Pour les appareils et applications pouvant recevoir des données de glycémie du service web xDrip+, tels que Garmin, Pebble et certaines montres Fitbit.</string>
+    <string name="pref_cat_garminpebble">Montres Garmin et Fitbit</string>
+    <string name="pref_cat_garminpebble_summary">Pour les appareils et applications pouvant recevoir des données de glycémie du service web xDrip+, tels que Garmin et certaines montres Fitbit.</string>
     <string name="pref_garmin_watchfaces_summary">Appuyez ici pour ouvrir le magasin Connect IQ pour les cadrans de montre xDrip+.\nSi les cadrans prennent en charge xDrip+, ils devraient également être compatibles avec cette application.</string>
     <string name="pref_garmin_watchfaces">Garmin</string>
     <string name="pref_fitbit_watchfaces">Fitbit</string>
     <string name="pref_fitbit_watchfaces_summary">Appuyez ici pour ouvrir la page web de Glance, qui prend en charge les services web xDrip+.</string>
-    <string name="pref_pebble_watchfaces">Pebble</string>
-    <string name="pref_pebble_watchfaces_summary">Appuyez ici pour ouvrir les cadrans de montre Pebble conçus pour xDrip+, qui devraient également être compatibles avec cette application.</string>
     <string name="gmi">GMI</string>
     <string name="pref_lockscreen_x_pos">Position horizontale</string>
     <string name="pref_lockscreen_x_pos_summary">Position horizontale de l\'image :\n0 est la gauche de l\'écran\n40 est la droite de l\'écran</string>
@@ -970,4 +968,34 @@ Vous pouvez gérer ces autorisations à tout moment dans les paramètres de l\'a
     </plurals>
 
     <string name="dexcom_server_down_error">Le serveur Dexcom semble être en panne !\nAppuyez ici pour vérifier l\'état du serveur.\nSi l\'application Dexcom est sur le même téléphone, vous pouvez utiliser le Lecteur de notifications à la place.</string>
+
+    <!-- v2.3 -->
+
+    <string name="medtrum_wrong_user_type_info">Seuls les comptes suiveurs sont autorisés.\nAppuyez ici pour créer un nouveau compte suiveur et vous inviter vous-même.</string>
+    <string name="notification_reader_value_with_unit">Valeur avec unité</string>
+    <string name="notification_reader_value_with_unit_summary">Si l\'unité (mmol ou mg) fait partie de la valeur dans la notification, activez cette option pour ignorer tous les champs sans unité.</string>
+
+    <string name="button_yes">Oui</string>
+    <string name="button_no">Non</string>
+    <string name="patient_changed">Patient modifié</string>
+    <string name="patient_changed_reset_db">Vous avez changé de patient.\nVoulez-vous réinitialiser la base de données pour supprimer les anciennes données du patient ?</string>
+    <string name="update">Mettre à jour</string>
+    <string name="pref_transfer_to_healthconnect_summary">Partage des valeurs de glycémie avec Health Connect.</string>
+    <string name="pref_transfer_to_local_apps_summary">Envoi d\'une diffusion (broadcast) vers d\'autres applications locales sur cet appareil.</string>
+    <string name="source_aidex_summary">Activer le récepteur de diffusion AiDEX. Nécessite une version de l\'application AiDEX égale ou inférieure à 1.0.17.</string>
+    <string name="pref_source_aidex_summary">Reçoit les diffusions de l\'application AiDEX. Nécessite une version de l\'application AiDEX égale ou inférieure à 1.0.17.</string>
+
+    <string name="transfer_values_interval_summary">Intervalle d\'envoi des valeurs de glycémie.\nToutes les valeurs enregistrées depuis la dernière transmission seront incluses.</string>
+    <string name="health_connect_settings">Ouvrir Health Connect</string>
+    <string name="health_connect_settings_summary">Gérer les autorisations et l\'accès aux données pour Health Connect.</string>
+    <string name="health_connect_not_supported_version">Health Connect nécessite au moins Android 9.</string>
+    <string name="pref_transfer_to_nightscout_summary">Téléverser les valeurs de glycémie vers Nightscout.</string>
+    <string name="transfer_to_nightscout">Téléversement Nightscout</string>
+    <string name="label_profile">Profil</string>
+    <string name="pref_watchfaces_cx_summary">Les cadrans Creative eXtreme prennent également en charge les complications GlucoDataHandler.\nVous devez utiliser l\'application Facer pour utiliser ces cadrans.\nAppuyez ici pour ouvrir la page Facer des cadrans Create eXtreme.</string>
+    <string name="notification_reader_interval_summary">Réglez ce paramètre pour qu\'il corresponde à la fréquence de mise à jour de votre capteur afin d\'éviter de traiter des notifications redondantes.</string>
+    <string name="pref_transfer_to_local_apps">Applications locales</string>
+
+    <string name="xdrip_open_server_api_secret_summary">Secret d\'API optionnel pour protéger l\'accès. S\'il est configuré, le même secret doit être défini dans l\'application cliente pour accéder aux données.</string>
+    <string name="pref_xdrip_server_summary">Fournit un serveur web local sur le port 17580 qui émule le service web xDrip+, pouvant être utilisé par divers services externes, cadrans et applications.</string>
 </resources>

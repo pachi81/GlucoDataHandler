@@ -45,7 +45,7 @@ Ta innowacyjna aplikacja odbiera dane z różnych źródeł i wizualizuje je w p
   * **WAŻNA UWAGA:** GDH na Wear OS nie może działać samodzielnie. Do konfiguracji wymagana jest aplikacja na telefonie.
 
 * **Obsługa WatchDrip+:** Używaj GDH z określonymi urządzeniami Mi Band, Xiaomi Smart Band i Amazfit
-* **Zegarki Garmin, Fitbit i Pebble**
+* **Zegarki Garmin i Fitbit**
 * **Health Connect**
 
 * **Ułatwienia dostępu:** Pełna obsługa funkcji TalkBack (podziękowania dla Alexa za testy!).
@@ -90,6 +90,8 @@ Dwóch użytkowników tworzy jednak tarcze zegarka specjalnie dla komplikacji Gl
 @[RobertoW-UK](https://github.com/RobertoW-UK): AOD, widget baterii
 
 @[rgodha24](https://github.com/rgodha24): Czytnik powiadomień
+
+@[rileyg98](https://github.com/rileyg98): AiDEX broadcast support
 
 # Szczególne podziękowania
 
