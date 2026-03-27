@@ -24,9 +24,14 @@ class SourceOnlineFragment : PreferenceFragmentCompatBase(), SharedPreferences.O
     private val LOG_ID = "GDH.SourceOnlineFragment"
     private var settingsChanged = false
 
+    companion object {
+        var intervalChanged = false
+    }
+
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         Log.d(LOG_ID, "onCreatePreferences called")
         try {
+            intervalChanged = false
             preferenceManager.sharedPreferencesName = Constants.SHARED_PREF_TAG
             setPreferencesFromResource(R.xml.sources_online, rootKey)
         } catch (exc: Exception) {
@@ -60,8 +65,24 @@ class SourceOnlineFragment : PreferenceFragmentCompatBase(), SharedPreferences.O
             super.onResume()
             preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
             updateEnableStates()
+            if(intervalChanged) {
+                updateInterval()
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.toString())
+        }
+    }
+
+    private fun updateInterval() {
+        try {
+            val prefInterval = findPreference<SeekBarPreference>(Constants.SHARED_PREF_SOURCE_INTERVAL)
+            if(prefInterval != null) {
+                prefInterval.value = preferenceManager.sharedPreferences!!.getInt(Constants.SHARED_PREF_SOURCE_INTERVAL, 1)
+                Log.d(LOG_ID, "Update pref interval to ${prefInterval.value}")
+                intervalChanged = false
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "updateInterval exception: " + exc.toString())
         }
     }
 
@@ -110,7 +131,7 @@ class SourceOnlineFragment : PreferenceFragmentCompatBase(), SharedPreferences.O
 }
 
 abstract class SourceOnlineFragmentBase(val preferenceResId: Int) : PreferenceFragmentCompatBase(), SharedPreferences.OnSharedPreferenceChangeListener, NotifierInterface {
-    protected val LOG_ID = "GDH.SourceOnlineFragment"
+    protected val LOG_ID = "GDH.SourceOnlineFragmentBase"
     private var settingsChanged = false
     protected open val patientIdKey = ""
     private var patientId = ""
@@ -246,15 +267,17 @@ abstract class SourceOnlineFragmentBase(val preferenceResId: Int) : PreferenceFr
                 Constants.SHARED_PREF_DEXCOM_SHARE_ENABLED -> 5
                 Constants.SHARED_PREF_MEDTRUM_ENABLED -> 2
                 Constants.SHARED_PREF_YUWELL_ENABLED -> 3
-                else -> 1
+                Constants.SHARED_PREF_LIBRE_ENABLED -> 1
+                else -> -1
             }
             val curInterval = sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_INTERVAL, 1)
-            if(interval > curInterval) {
+            if(interval > 0 && interval != curInterval) {
                 Log.i(LOG_ID, "Change interval from $curInterval to $interval for $key")
                 with(sharedPreferences.edit()) {
                     putInt(Constants.SHARED_PREF_SOURCE_INTERVAL, interval)
                     apply()
                 }
+                SourceOnlineFragment.intervalChanged = true
             }
         }
     }

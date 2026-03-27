@@ -26,8 +26,8 @@ import java.net.UnknownHostException
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.max
 
-abstract class DataSourceTask(private val enabledKey: String, protected val source: DataSource) : BackgroundTask() {
-    private var enabled = false
+abstract class DataSourceTask(protected val enabledKey: String, protected val source: DataSource) : BackgroundTask() {
+    protected var enabled = false
     private var prefInterval = 1
     protected open var minInterval = 1
     private var delaySec = 10L
@@ -460,20 +460,22 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     protected open fun enable() {}
 
     private fun setEnabled(newEnabled: Boolean): Boolean {
-        Log.v(LOG_ID, "Set enabled=$newEnabled (old: $enabled) for $source")
-        var changed = false
+        Log.d(LOG_ID, "Set enabled=$newEnabled (old: $enabled) for $source")
         if(newEnabled != enabled) {
             enabled = newEnabled
             Log.i(LOG_ID, "Set enabled=$enabled for $source")
-            changed = true
             if(enabled)
                 enable()
             else
                 disable()
+            if (source == SourceStateData.lastSource) {
+                setState(SourceState.NONE)
+                if(SourceStateData.lastState != SourceState.CONNECTED)
+                    lastExecution = 0L  // reset execution to try again immediately on error
+            }
+            return true
         }
-        if (!enabled && source == SourceStateData.lastSource)
-            setState(SourceState.NONE)
-        return changed
+        return false
     }
 
     override fun checkPreferenceChanged(sharedPreferences: SharedPreferences, key: String?, context: Context): Boolean {

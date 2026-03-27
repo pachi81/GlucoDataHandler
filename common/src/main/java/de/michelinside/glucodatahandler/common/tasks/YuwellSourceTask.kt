@@ -67,6 +67,10 @@ class YuwellSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_YUWELL_E
             }
             return androidIdData
         }
+
+        fun forceLogout() {
+            instance?.forceLogout()
+        }
     }
 
     enum class RequestType(val id: Int) {
@@ -309,14 +313,29 @@ class YuwellSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_YUWELL_E
                     Log.w(LOG_ID, "User was logged out - disable it")
                     reset()
                     forceLogoutError = true
+                    setLastError(GlucoDataService.context!!.getString(R.string.src_yuwell_logout_error), 303,
+                        GlucoDataService.context!!.resources.getString(R.string.yuwell_log_out_message))
+                    enabled = false  // set to false to prevent overwrite of last error message
                     GlucoDataService.sharedPref!!.edit {
-                        putBoolean(Constants.SHARED_PREF_YUWELL_ENABLED, false)
+                        putBoolean(enabledKey, false)
                     }
                     retry = false
                     return null
                 }
                 if(code == 423) {
                     Log.w(LOG_ID, "Too many requests!")
+                    retry = false
+                    return null
+                }
+                if(code == 208) {
+                    Log.w(LOG_ID, "Disable source as it is already logged in to another app!!!")
+                    setLastError(GlucoDataService.context!!.resources.getString(R.string.yuwell_logged_in_to_other_app), code,
+                        GlucoDataService.context!!.resources.getString(R.string.yuwell_log_out_message))
+                    // set enabled to false to prevent overwrite of last error message
+                    enabled = false
+                    GlucoDataService.sharedPref!!.edit {
+                        putBoolean(enabledKey, false)
+                    }
                     retry = false
                     return null
                 }
@@ -412,7 +431,6 @@ class YuwellSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_YUWELL_E
             val dataArray = jsonObj.optJSONArray("data")
             if(dataArray != null && dataArray.length() > 0) {
                 Log.d(LOG_ID, "Handle ${dataArray.length()} patients")
-                val newPatientData = mutableMapOf<String, String>()
                 for (i in 0 until dataArray.length()) {
                     val data = dataArray.getJSONObject(i)
                     if(data.has("wearingRecordId") && data.has("email")) {
@@ -547,7 +565,7 @@ class YuwellSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_YUWELL_E
     }
 
     private fun createUserIdRequest(): String? {
-        if(userId.isNullOrEmpty())
+        if(userId.isEmpty())
             return null
         val json = JSONObject()
         json.put("userId", userId)
@@ -571,9 +589,29 @@ class YuwellSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_YUWELL_E
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Logout exception: " + exc.toString() )
         }
-        reset()
     }
 
+    private fun forceLogout() {
+        try {
+            if(user.isEmpty() || token.isNotEmpty()) {
+                return
+            }
+            Log.w(LOG_ID, "Force logout call for user $user")
+
+            val json = JSONObject()
+            json.put("clientId", BuildConfig.YUWELL_CLIENT_ID)
+            json.put("email", user)
+            val data = encrypt(RequestType.FORCE_LOGOUT, json.toString()) ?: return
+            CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
+                if(checkResponse(httpPost(server, getHeader(), data)) != null ) {
+                    setLastError(GlucoDataService.context!!.resources.getString(R.string.yuwell_force_logout_sent), -1,
+                        GlucoDataService.context!!.resources.getString(R.string.yuwell_force_logout_info))
+                }
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "forceLogout exception: " + exc.toString() )
+        }
+    }
 
     override fun interrupt() {
         super.interrupt()
