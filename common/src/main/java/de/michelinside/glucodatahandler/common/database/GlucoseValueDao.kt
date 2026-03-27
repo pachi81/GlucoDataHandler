@@ -59,6 +59,9 @@ interface GlucoseValueDao {
     @Query("SELECT COUNT(*) FROM glucose_values WHERE value >= :minVal AND value <= :maxVal AND timestamp >= :minTime")
     fun getValuesInRangeCount(minTime: Long, minVal: Int, maxVal: Int): Int
 
+    @Query("SELECT * FROM glucose_values WHERE timestamp < :timestamp ORDER BY timestamp DESC LIMIT 1")
+    fun getPreviousValue(timestamp: Long): GlucoseValue?
+
     @Query("DELETE FROM glucose_values WHERE timestamp = :timestamp")
     fun deleteValue(timestamp: Long)
 
