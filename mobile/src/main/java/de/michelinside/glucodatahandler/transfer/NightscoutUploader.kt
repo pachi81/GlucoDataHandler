@@ -133,7 +133,7 @@ object NightscoutUploader: SharedPreferences.OnSharedPreferenceChangeListener, N
                             jsonEntry.put("rssi", 100)
                             jsonEntry.put("filtered", it.value*1000)
                             jsonEntry.put("unfiltered", it.value*1000)
-                            jsonEntry.put("direction", getDirection(it, prevValue))
+                            jsonEntry.put("direction", GlucoDataUtils.calculateDirection(it, prevValue))
                             if(Log.isLoggable(LOG_ID, android.util.Log.VERBOSE))
                                 Log.v(LOG_ID, "$jsonEntry")
                             jsonEntries.put(jsonEntry)
@@ -162,24 +162,6 @@ object NightscoutUploader: SharedPreferences.OnSharedPreferenceChangeListener, N
             Log.e(LOG_ID, "Error uploading values: ${exc.message}")
         }
         return false
-    }
-
-    private fun getDirection(value: GlucoseValue, prevValue: GlucoseValue?): String {
-        if(value.timestamp/1000 == ReceiveData.time/1000) {
-            Log.d(LOG_ID, "Using current rate: ${ReceiveData.rate}")
-            return GlucoDataUtils.getDexcomLabel(ReceiveData.rate)
-        }
-        if(prevValue != null) {
-            val diff = value.value - prevValue.value
-            val timeDiff = Utils.getTimeDiffMinute(value.timestamp, prevValue.timestamp, RoundingMode.HALF_UP)
-            if(timeDiff > 0) {
-                val rate = (diff.toFloat()*10 / timeDiff.toFloat())/Constants.GLUCOSE_CONVERSION_FACTOR
-                Log.d(LOG_ID, "Using calculated rate: $rate for current: ${value.value}(${Utils.getUiTimeStamp(value.timestamp)}) - prev: ${prevValue.value}(${Utils.getUiTimeStamp(prevValue.timestamp)}) - diff: $diff - timeDiff: $timeDiff")
-                return GlucoDataUtils.getDexcomLabel(rate)
-            }
-        }
-        Log.d(LOG_ID, "No direction found for for current: ${value.value}(${Utils.getUiTimeStamp(value.timestamp)}) - prev: ${prevValue?.value}")
-        return ""
     }
 
     private fun updateLastValueTime(context: Context, time: Long) {
