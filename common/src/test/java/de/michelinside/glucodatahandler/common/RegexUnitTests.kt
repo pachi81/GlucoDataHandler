@@ -89,6 +89,14 @@ class RegexUnitTests {
                 expected,
                 getFloatFromRegex(regex, value)
             )
+            Assert.assertNull(
+                "Value '$value' with cob regex '${NotificationReceiver.defaultCobRegex}'",
+                getFloatFromRegex(regex, value)
+            )
+            Assert.assertNull(
+                "Value '$value' with IOB regex '${NotificationReceiver.defaultIobRegex}'",
+                getFloatFromRegex(regex, value)
+            )
         }
 
         invalidValues.forEach { value ->
@@ -134,7 +142,9 @@ class RegexUnitTests {
             "IOB: 10:23",
             "4g",
             "5 G",
-            "4.123 EU"
+            "4.123 EU",
+            "11.6 mmol",
+            "123 mg/dl"
         )
 
         validValues.forEach { (value, expected) ->
@@ -169,7 +179,10 @@ class RegexUnitTests {
             "abc",
             "COB: 12",
             "COB: 10:23",
-            "4.983 U"
+            "4.983 U",
+            "123",
+            "11.6 mmol",
+            "123 mg/dl"
         )
 
         validValues.forEach { (value, expected) ->
@@ -184,6 +197,45 @@ class RegexUnitTests {
             Assert.assertNull(
                 "Value '$value' with regex '${NotificationReceiver.defaultCobRegex}'",
                 getFloatFromRegex(regex, value)
+            )
+        }
+    }
+
+
+    @Test
+    fun testRegexWithUnit() {
+
+        val regex = NotificationReceiver.defaultGlucoseRegex.toRegex(RegexOption.IGNORE_CASE)
+        val cobRegex = NotificationReceiver.defaultCobRegex.toRegex(RegexOption.IGNORE_CASE)
+        val iobRegex = NotificationReceiver.defaultIobRegex.toRegex(RegexOption.IGNORE_CASE)
+
+        val validValues = mapOf(
+            "123 mg/dl" to 123F,
+            "123 mg/dL" to 123F,
+            "123.4 mmol/L" to 123.4F,
+            "12,3 mmol/l" to 12.3F, // Comma pre-processed
+            "Value is 6,5 mmol/l at 14:45" to 6.5F, // Comma pre-processed
+            "65 mg/dl" to 65F,
+            "100 mg" to 100F,
+            "14.1 mmol/l" to 14.1F,
+            "23 mmol" to 23F,
+            " 11.6 mmol/L " to 11.6F
+        )
+
+        validValues.forEach { (value, expected) ->
+            Assert.assertTrue(value.lowercase().contains("mmol") || value.lowercase().contains("mg"))
+            Assert.assertEquals(
+                "Value '$value' with regex '${NotificationReceiver.defaultGlucoseRegex}'",
+                expected,
+                getFloatFromRegex(regex, value)
+            )
+            Assert.assertNull(
+                "Value '$value' with cob regex '${NotificationReceiver.defaultCobRegex}'",
+                getFloatFromRegex(cobRegex, value)
+            )
+            Assert.assertNull(
+                "Value '$value' with IOB regex '${NotificationReceiver.defaultIobRegex}'",
+                getFloatFromRegex(iobRegex, value)
             )
         }
     }
