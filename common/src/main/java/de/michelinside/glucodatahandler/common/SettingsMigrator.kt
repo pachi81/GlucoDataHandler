@@ -17,8 +17,8 @@ object SettingsMigrator {
     private val LOG_ID = "GDH.SettingsMigrator"
 
     fun migrateSettings(context: Context) {
+        Log.i(LOG_ID, "migrateSettings called")
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
-        Log.v(LOG_ID, "migrateSettings called")
 
         val oldVersion = sharedPref.getInt(Constants.SHARED_PREF_GDH_VERSION, 0)
         val isUpgrade = oldVersion < BuildConfig.BASE_VERSION
@@ -213,7 +213,7 @@ object SettingsMigrator {
 
         // Medtrum
         if(sharedPref.contains(Constants.SHARED_PREF_MEDTRUM_COOKIE)) {
-            GlucoDataService.sharedExtraPref!!.edit {
+            sharedExtraPref.edit {
                 putString(Constants.SHARED_PREF_MEDTRUM_COOKIE, sharedPref.getString(Constants.SHARED_PREF_MEDTRUM_COOKIE, ""))
             }
             sharedPref.edit {

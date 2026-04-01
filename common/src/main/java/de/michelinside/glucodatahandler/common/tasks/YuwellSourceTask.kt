@@ -35,6 +35,7 @@ class YuwellSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_YUWELL_E
     override val LOG_ID = "GDH.Task.Source.Yuwell"
     override var minInterval = 3
     override val patientIdKey = Constants.SHARED_PREF_YUWELL_PATIENT_ID
+    private val sensitivData = mutableSetOf("password", "userUID", "refreshToken", "userId", "userEmail", "email", "clientId", "clientSecret", "mac", "userIdSubscribe")
     companion object {
         private var instance: YuwellSourceTask? = null
         private var user = ""
@@ -233,25 +234,6 @@ class YuwellSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_YUWELL_E
         return handleValuesResponse(httpPost(server, getHeader(), valueRequest), firstNeededValue)
     }
 
-    val sensitivData = mutableSetOf("password", "userUID", "refreshToken", "userId", "userEmail", "email", "clientId", "clientSecret", "mac", "userIdSubscribe")
-
-    private fun replaceSensitiveData(body: String): String {
-        try {
-            var result = body.take(1100)
-            sensitivData.forEach {
-                val groups = Regex("\"$it\":\"(.*?)\"").find(result)?.groupValues
-                if(!groups.isNullOrEmpty() && groups.size > 1 && groups[1].isNotEmpty()) {
-                    val replaceValue = groups[0].replace(groups[1], "---")
-                    result = result.replace(groups[0], replaceValue)
-                }
-            }
-            return result.take(1000)
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "replaceSensitiveData exception: " + exc.toString() )
-            return body
-        }
-    }
-
     private fun encrypt(type: RequestType, body: String?): String? {
         val key = AESTools.generateKey()
         if(key == null || body == null)
@@ -298,7 +280,7 @@ class YuwellSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_YUWELL_E
         if (response.isNullOrEmpty()) {
             return null
         }
-        Log.i(LOG_ID, "Handle json response for id ${beanResponse.id}: " + replaceSensitiveData(response))
+        Log.i(LOG_ID, "Handle json response for id ${beanResponse.id}: " + Utils.replaceSensitiveData(response, sensitivData))
         val jsonObj = JSONObject(response)
         if(jsonObj.has("code")) {
             val code = jsonObj.getInt("code")

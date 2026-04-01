@@ -31,6 +31,7 @@ import java.net.HttpURLConnection
 class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, DataSource.LIBRELINK) {
     override val LOG_ID = "GDH.Task.Source.LibreLinkTask"
     override val patientIdKey = Constants.SHARED_PREF_LIBRE_PATIENT_ID
+    private val sensitivData = mutableSetOf("id", "patientId", "firstName", "lastName", "did", "token", "deviceId", "email", "primaryValue", "secondaryValue" )
     companion object {
         private var instance: LibreLinkSourceTask? = null
         private var user = ""
@@ -105,25 +106,6 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "save reset exception: " + exc.toString() )
-        }
-    }
-
-    val sensitivData = mutableSetOf("id", "patientId", "firstName", "lastName", "did", "token", "deviceId", "email", "primaryValue", "secondaryValue" )
-
-    private fun replaceSensitiveData(body: String): String {
-        try {
-            var result = body
-            sensitivData.forEach {
-                val groups = Regex("\"$it\":\"(.*?)\"").find(result)?.groupValues
-                if(!groups.isNullOrEmpty() && groups.size > 1 && groups[1].isNotEmpty()) {
-                    val replaceValue = groups[0].replace(groups[1], "---")
-                    result = result.replace(groups[0], replaceValue)
-                }
-            }
-            return result.take(1000)
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "replaceSensitiveData exception: " + exc.toString() )
-            return body
         }
     }
 
@@ -253,7 +235,7 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
         if (body.isNullOrEmpty()) {
             return null
         }
-        Log.i(LOG_ID, "Handle json response: " + replaceSensitiveData(body))
+        Log.i(LOG_ID, "Handle json response: " + Utils.replaceSensitiveData(body, sensitivData))
         val jsonObj = JSONObject(body)
         if (jsonObj.has("status")) {
             val status = jsonObj.optInt("status", -1)
@@ -442,7 +424,7 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
                 if(data.has("graphData")) {
                     parseGraphData(data.optJSONArray("graphData"))
                 } else {
-                    Log.w(LOG_ID, "No graphData found in response: ${replaceSensitiveData(body!!)}")
+                    Log.w(LOG_ID, "No graphData found in response: ${Utils.replaceSensitiveData(body, sensitivData)}")
                 }
                 if(data.has("connection")) {
                     val connection = data.optJSONObject("connection")
@@ -452,7 +434,7 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
             }
         }
 
-        Log.e(LOG_ID, "No data found in response: ${replaceSensitiveData(body!!)}")
+        Log.e(LOG_ID, "No data found in response: ${Utils.replaceSensitiveData(body, sensitivData)}")
         setLastError(GlucoDataService.context!!.resources.getString(R.string.missing_data), -1, GlucoDataService.context!!.resources.getString(R.string.provide_logs))
         reset()
         retry = true
@@ -523,7 +505,7 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
             val array = jsonObject.optJSONArray("data")
             if (array != null) {
                 if (array.length() == 0) {
-                    Log.w(LOG_ID, "Empty data array in response: ${replaceSensitiveData(body!!)}")
+                    Log.w(LOG_ID, "Empty data array in response: ${Utils.replaceSensitiveData(body, sensitivData)}")
                     if(dataReceived) {
                         setLastError(GlucoDataService.context!!.resources.getString(R.string.source_no_patient))
                         reset()
@@ -534,7 +516,7 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
                 }
                 return getPatientData(array)
             } else {
-                Log.e(LOG_ID, "No data array found in response: ${replaceSensitiveData(body!!)}")
+                Log.e(LOG_ID, "No data array found in response: ${Utils.replaceSensitiveData(body, sensitivData)}")
                 setLastError(GlucoDataService.context!!.resources.getString(R.string.missing_data), -1, GlucoDataService.context!!.resources.getString(R.string.provide_logs))
                 reset()
                 retry = true
@@ -576,7 +558,7 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
                 return true
             }
         }
-        Log.e(LOG_ID, "No or invalid glucoseMeasurement found in response: ${replaceSensitiveData(data.toString())}")
+        Log.e(LOG_ID, "No or invalid glucoseMeasurement found in response: ${Utils.replaceSensitiveData(data.toString(), sensitivData)}")
         setLastError(GlucoDataService.context!!.resources.getString(R.string.missing_data), -1, "Please restart your phone or the Libre app.")
         return false
     }

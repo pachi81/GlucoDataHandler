@@ -158,7 +158,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                             triggerStartService(context, startServiceReceiver!!)
                         }
                     } else {
-                        Log.e(LOG_ID,"start exception: " + exc.message.toString())
+                        Log.e(LOG_ID,"start exception: " + exc.message.toString() + "\n" + exc.stackTraceToString())
                         isRunning = false
                     }
                 }

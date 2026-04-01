@@ -29,6 +29,7 @@ class MedtrumSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_MEDTRUM
     override val LOG_ID = "GDH.Task.Source.Medtrum"
     override var minInterval = 2
     override val patientIdKey = Constants.SHARED_PREF_MEDTRUM_PATIENT_ID
+    private val sensitivData = mutableSetOf("birth_date", "real_name", "uid", "username", "serial", "user_name" )
     companion object {
         private var instance: MedtrumSourceTask? = null
         private var user = ""
@@ -142,25 +143,6 @@ class MedtrumSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_MEDTRUM
         return true
     }
 
-    val sensitivData = mutableSetOf("birth_date", "real_name", "uid", "username", "serial", "user_name" )
-
-    private fun replaceSensitiveData(body: String): String {
-        try {
-            var result = body
-            sensitivData.forEach {
-                val groups = Regex("\"$it\":\"(.*?)\"").find(result)?.groupValues
-                if(!groups.isNullOrEmpty() && groups.size > 1 && groups[1].isNotEmpty()) {
-                    val replaceValue = groups[0].replace(groups[1], "---")
-                    result = result.replace(groups[0], replaceValue)
-                }
-            }
-            return result.take(1000)
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "replaceSensitiveData exception: " + exc.toString() )
-            return body
-        }
-    }
-
     private fun getErrorMessage(jsonObj: JSONObject): String {
         if(jsonObj.has("msg")) {
             return jsonObj.optString("msg", "Error")?: "Error"
@@ -172,7 +154,7 @@ class MedtrumSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_MEDTRUM
         if (body.isNullOrEmpty()) {
             return null
         }
-        Log.i(LOG_ID, "Handle json response: " + replaceSensitiveData(body))
+        Log.i(LOG_ID, "Handle json response: " + Utils.replaceSensitiveData(body, sensitivData))
         val jsonObj = JSONObject(body)
         if (jsonObj.has("res")) {
             val status = jsonObj.optString("res", "Err")
