@@ -27,6 +27,7 @@ object Constants {
     const val COMMAND_EXTRA = "command"
     const val COMMAND_BUNDLE = "command_bundle"
     const val GLUCOSE_CONVERSION_FACTOR = 18.0182F
+    const val GLUCOSE_DELTA_TREND_FACTOR = 1.8F
     const val GLUCOSE_MIN_VALUE = 36    // 2 mmol/l
     const val GLUCOSE_MAX_VALUE = 600   // 33,3 mmol/l
     const val ACTION_STOP_FOREGROUND = "stop_foreground"

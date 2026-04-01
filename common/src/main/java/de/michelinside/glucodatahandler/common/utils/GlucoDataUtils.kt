@@ -112,7 +112,7 @@ object GlucoDataUtils {
             val diff = value.value - prevValue.value
             val timeDiff = Utils.getTimeDiffMinute(value.timestamp, prevValue.timestamp, RoundingMode.HALF_UP)
             if(timeDiff > 0) {
-                val rate = (diff.toFloat()*10 / timeDiff.toFloat())/Constants.GLUCOSE_CONVERSION_FACTOR
+                val rate = (diff.toFloat() / timeDiff.toFloat()) / Constants.GLUCOSE_DELTA_TREND_FACTOR
                 Log.d(LOG_ID, "Using calculated rate: $rate for current: ${value.value}(${Utils.getUiTimeStamp(value.timestamp)}) - prev: ${prevValue.value}(${Utils.getUiTimeStamp(prevValue.timestamp)}) - diff: $diff - timeDiff: $timeDiff")
                 return getDexcomLabel(rate)
             }
