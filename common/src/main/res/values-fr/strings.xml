@@ -492,7 +492,6 @@
     <string name="activity_large_arrow_icon_summary">Veuillez désactiver ce paramètre si la flèche de tendance est trop grande ou recadrée.</string>
     <string name="pref_cat_ui_settings">Interface utilisateur</string>
     <string name="gda_foreground_info">GlucoDataAuto est en cours d\'exécution</string>
-    <string name="gda_foreground_summary">Activez-le uniquement si vous utilisez une source de suivi et uniquement les notifications Android Auto.\nCela empêche Android de fermer cette application lorsqu\'elle n\'est pas connectée à Android Auto, de sorte que l\'application ne peut pas reconnaître la connexion Android Auto.\nAu lieu d\'activer ce paramètre, vous pouvez également ouvrir l\'application dans Android Auto une fois, si vous êtes connecté.</string>
     <string name="battery_optimization_disabled">L\'optimisation de la batterie est activée!\nAppuyez ici pour la désactiver.</string>
     <string name="gda_source_follower_info_summary">Si vous utilisez une source de suivi, l\'application peut ne pas démarrer lorsqu\'elle est connectée à Android Auto, si vous utilisez uniquement les notifications Android Auto.\nPour vous assurer que l\'application détecte la connexion Android Auto, vous devez désactiver l\'optimisation de la batterie.\nSi cela ne fonctionne toujours pas, vous pouvez également activer le mode premier plan ou vous devez ouvrir l\'application dans Android Auto une fois, si elle est connectée à Android Auto.</string>
     <string name="gda_help_aa_title">Configurer Android Auto</string>
@@ -998,4 +997,7 @@ Vous pouvez gérer ces autorisations à tout moment dans les paramètres de l\'a
 
     <string name="xdrip_open_server_api_secret_summary">Secret d\'API optionnel pour protéger l\'accès. S\'il est configuré, le même secret doit être défini dans l\'application cliente pour accéder aux données.</string>
     <string name="pref_xdrip_server_summary">Fournit un serveur web local sur le port 17580 qui émule le service web xDrip+, pouvant être utilisé par divers services externes, cadrans et applications.</string>
+
+    <string name="gda_foreground_summary">Mode de dépannage optionnel qui stabilise la connexion Android Auto en empêchant l\'application d\'être fermée en arrière-plan. Le service reste inactif sans connexion active, et la notification peut être facilement balayée à partir d\'Android 14.</string>
+
 </resources>

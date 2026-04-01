@@ -491,7 +491,6 @@
     <string name="activity_large_arrow_icon_summary">如趨勢箭頭太大導致被裁切請停用此設定</string>
     <string name="pref_cat_ui_settings">使用者介面</string>
     <string name="gda_foreground_info">GlucoDataAuto 執行中</string>
-    <string name="gda_foreground_summary">僅在您使用追蹤器資料來源且只使用 Android Auto 通知時才啟用\n這可以避免 Android 未連線到 Android Auto 時就將程式關閉，導致程式無法偵測 Android Auto 連線\n除了啟用此選項外，也可以在連線時於 Android Auto 中手動開啟程式一次</string>
     <string name="battery_optimization_disabled">已啟用電池最佳化！\n按這裡停用</string>
     <string name="gda_source_follower_info_summary">如果您使用追蹤器資料來源且只使用 Android Auto 通知時，程式可能無法在連線 Android Auto 時自動啟動\n若要確保程式能偵測 Android Auto 連線，必須停用電池最佳化\n如果仍然無法運作，也可以啟用前景模式，或在連線時於 Android Auto 中手動開啟程式一次</string>
     <string name="gda_help_aa_title">設定 Android Auto</string>
@@ -993,4 +992,6 @@ GlucoDataHandler 只會將血糖數據寫入健康連結，除非您明確授予
 
     <string name="xdrip_open_server_api_secret_summary">用於保護存取的選填 API 密鑰。如果已設定，則必須在用戶端程式中設定相同的密鑰才能存取資料。</string>
     <string name="pref_xdrip_server_summary">在連接埠 17580 提供模擬 xDrip+ 網頁服務的本機網頁伺服器，可供各種外部服務、錶盤和應用程式使用。</string>
+
+    <string name="gda_foreground_summary">選填的疑難排解模式，透過防止應用程式在背景遭終止來穩定 Android Auto 連線。在沒有活動連線時，此服務將保持停用狀態；從 Android 14 開始，可以輕鬆滑動移除通知。</string>
 </resources>

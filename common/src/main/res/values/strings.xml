@@ -557,7 +557,6 @@
     <string name="activity_large_arrow_icon_summary">Please disable this setting, if the trend arrow is too big or cropped.</string>
     <string name="pref_cat_ui_settings">User interface</string>
     <string name="gda_foreground_info">GlucoDataAuto is running</string>
-    <string name="gda_foreground_summary">Only enable it, if you are using a follower source and Android Auto notifications only.\nThis prevents Android from closing this app, while not connected to Android Auto, so the app can not recognize the Android Auto connection.\nInstead of enabling this setting, you can also open the app in Android Auto once, if you are connected.</string>
     <string name="battery_optimization_disabled">Battery optimization is enabled!\nPress here to disable it.</string>
     <string name="gda_source_follower_info_summary">If you are using a follower source, the app may not be started while connected to Android Auto, if you are using Android Auto Notifications only.\nTo make sure the app detects Android Auto connection you have to disable battery optimization.\nIf it still does not work, you can also enable foreground mode or you have to open the app in Android Auto once, if it is connected to Android Auto.</string>
     <string name="gda_help_aa_title">Setup Android Auto</string>
@@ -1064,5 +1063,6 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="xdrip_open_server_api_secret_summary">Optional API secret to protect access. If configured, the same secret must be set in the client app to access the data.</string>
     <string name="pref_xdrip_server_summary">Provides a local web server on port 17580 that emulates xDrip+ web service, which can be used by various external services, watchfaces, and apps.</string>
 
+    <string name="gda_foreground_summary">Optional troubleshooting mode that stabilizes the Android Auto connection by preventing the app from being killed in the background. The service remains inactive without an active connection, and the notification can be easily swiped away starting with Android 14.</string>
 
 </resources>

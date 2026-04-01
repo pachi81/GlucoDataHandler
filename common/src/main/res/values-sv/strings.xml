@@ -482,7 +482,6 @@
     <string name="activity_large_arrow_icon_summary">Avaktivera om trendpilen är för stor och därmed beskärs.</string>
     <string name="pref_cat_ui_settings">Gränssnitt</string>
     <string name="gda_foreground_info">GlucoDataAuto körs</string>
-    <string name="gda_foreground_summary">Aktivera endast om en online-datakälla och endast Android Auto-meddelanden används.\nDenna inställning förhindrar att Android stänger den här appen när den inte är ansluten till Android Auto, så att appen inte kan identifiera Android Auto-anslutningen.\nAlternativt kan man också öppna appen direkt i Android Auto en gång.</string>
     <string name="battery_optimization_disabled">Batterioptimeringar är aktiva!\nTryck här för att inaktivera dem.</string>
     <string name="gda_source_follower_info_summary">Om en online-datakälla används kanske appen inte startar när man är ansluten till Android Auto och endast använder Android Auto-meddelanden.\nFör att säkerställa att appen känner igen Android Auto-anslutningen måste batterioptimeringen inaktiveras.\nOm det fortfarande inte fungerar bör man också aktivera förgrundsläget eller öppna appen en gång direkt i Android Auto.</string>
     <string name="gda_help_aa_title">Ställ in Android Auto</string>
@@ -992,4 +991,6 @@ Du kan hantera dessa behörigheter när som helst i Health Connect-appens instä
 
     <string name="xdrip_open_server_api_secret_summary">Voliteľný API tajný kľúč na ochranu prístupu. Ak je nakonfigurovaný, rovnaký kľúč musí byť nastavený aj v klientskej aplikácii na prístup k údajom.</string>
     <string name="pref_xdrip_server_summary">Poskytuje lokálny webový server na porte 17580, ktorý emuluje webovú službu xDrip+ a môže byť použitý rôznymi externými službami, ciferníkmi a aplikáciami.</string>
+
+    <string name="gda_foreground_summary">Valfritt felsökningsläge som stabiliserar Android Auto-anslutningen genom att förhindra att appen avslutas i bakgrunden. Tjänsten förblir inaktiv utan en aktiv anslutning, och aviseringen kan enkelt swipas bort från och med Android 14.</string>
 </resources>
