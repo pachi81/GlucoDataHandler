@@ -46,6 +46,7 @@ import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.R as CR
 import androidx.core.content.edit
+import de.michelinside.glucodatahandler.common.SettingsMigrator
 
 class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -85,7 +86,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
 
         private fun migrateSettings(context: Context) {
             Log.v(LOG_ID, "migrateSettings called")
-            GlucoDataService.migrateSettings(context)
+            SettingsMigrator.migrateSettings(context)
             val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
             if(!sharedPref.contains(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB)) {
                 sharedPref.edit {

@@ -81,7 +81,7 @@ class MedtrumSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_MEDTRUM
         dataReceived = false
         try {
             Log.d(LOG_ID, "Save reset")
-            GlucoDataService.sharedPref!!.edit {
+            GlucoDataService.sharedExtraPref!!.edit {
                 putString(Constants.SHARED_PREF_MEDTRUM_COOKIE, cookie)
             }
         } catch (exc: Exception) {
@@ -210,7 +210,7 @@ class MedtrumSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_MEDTRUM
             if(!setCookie.isNullOrEmpty()) {
                 Log.d(LOG_ID, "Set cookie: $setCookie")
                 cookie = setCookie
-                GlucoDataService.sharedPref!!.edit {
+                GlucoDataService.sharedExtraPref!!.edit {
                     putString(Constants.SHARED_PREF_MEDTRUM_COOKIE, cookie)
                 }
                 return true
@@ -451,11 +451,11 @@ class MedtrumSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_MEDTRUM
         if (key == null) {
             user = sharedPreferences.getString(Constants.SHARED_PREF_MEDTRUM_USER, "")!!.trim()
             password = sharedPreferences.getString(Constants.SHARED_PREF_MEDTRUM_PASSWORD, "")!!.trim()
-            cookie = sharedPreferences.getString(Constants.SHARED_PREF_MEDTRUM_COOKIE, "")!!
+            topLevelDomain = sharedPreferences.getString(Constants.SHARED_PREF_MEDTRUM_SERVER, "eu")?: "eu"
+            cookie = GlucoDataService.sharedExtraPref!!.getString(Constants.SHARED_PREF_MEDTRUM_COOKIE, "")!!
             if(cookie.isNotEmpty()) {
                 dataReceived = true
             }
-            topLevelDomain = sharedPreferences.getString(Constants.SHARED_PREF_MEDTRUM_SERVER, "eu")?: "eu"
             InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
             trigger = true
         } else {

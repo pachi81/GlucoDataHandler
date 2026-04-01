@@ -97,7 +97,7 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
         dataReceived = false
         try {
             Log.d(LOG_ID, "Save reset")
-            GlucoDataService.sharedPref!!.edit {
+            GlucoDataService.sharedExtraPref!!.edit {
                 putString(Constants.SHARED_PREF_LIBRE_TOKEN, token)
                 putString(Constants.SHARED_PREF_LIBRE_USER_ID, userId)
                 putLong(Constants.SHARED_PREF_LIBRE_TOKEN_EXPIRE, tokenExpire)
@@ -341,7 +341,7 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
             if(user != null && user.has("id")) {
                 userId = user.optString("id")
                 Log.i(LOG_ID, "User ID set!")
-                GlucoDataService.sharedPref!!.edit {
+                GlucoDataService.sharedExtraPref!!.edit {
                     putString(Constants.SHARED_PREF_LIBRE_USER_ID, userId)
                 }
             }
@@ -357,9 +357,11 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
                             Date(tokenExpire)
                         ))
                     }
-                    GlucoDataService.sharedPref!!.edit {
+                    GlucoDataService.sharedExtraPref!!.edit {
                         putString(Constants.SHARED_PREF_LIBRE_TOKEN, token)
                         putLong(Constants.SHARED_PREF_LIBRE_TOKEN_EXPIRE, tokenExpire)
+                    }
+                    GlucoDataService.sharedPref!!.edit {
                         putBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, false)
                     }
                 }
@@ -370,7 +372,7 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
     private fun saveRegion() {
         try {
             Log.d(LOG_ID, "Save region $region")
-            GlucoDataService.sharedPref!!.edit {
+            GlucoDataService.sharedExtraPref!!.edit {
                 putString(Constants.SHARED_PREF_LIBRE_REGION, region)
             }
         } catch (exc: Exception) {
@@ -615,17 +617,19 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
         if (key == null) {
             user = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_USER, "")!!.trim()
             password = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, "")!!.trim()
-            token = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_TOKEN, "")!!
-            if(token.isNotEmpty()) {
-                dataReceived = true
-                userId = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_USER_ID, "")!!
-            }
-            tokenExpire = sharedPreferences.getLong(Constants.SHARED_PREF_LIBRE_TOKEN_EXPIRE, 0L)
-            region = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_REGION, "")!!
             autoAcceptTOU = sharedPreferences.getBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, true)
             topLevelDomain = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_SERVER, "io")?: "io"
             version = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_VERSION, version)?: version
             Log.i(LOG_ID, "Using version: $version")
+
+            token = GlucoDataService.sharedExtraPref!!.getString(Constants.SHARED_PREF_LIBRE_TOKEN, "")!!
+            if(token.isNotEmpty()) {
+                dataReceived = true
+                userId = GlucoDataService.sharedExtraPref!!.getString(Constants.SHARED_PREF_LIBRE_USER_ID, "")!!
+            }
+            tokenExpire = GlucoDataService.sharedExtraPref!!.getLong(Constants.SHARED_PREF_LIBRE_TOKEN_EXPIRE, 0L)
+            region = GlucoDataService.sharedExtraPref!!.getString(Constants.SHARED_PREF_LIBRE_REGION, "")!!
+
             InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
             trigger = true
         } else {
