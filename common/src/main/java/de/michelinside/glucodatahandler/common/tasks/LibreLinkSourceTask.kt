@@ -559,7 +559,7 @@ class LibreLinkSourceTask : MultiPatientSourceTask(Constants.SHARED_PREF_LIBRE_E
             }
         }
         Log.e(LOG_ID, "No or invalid glucoseMeasurement found in response: ${Utils.replaceSensitiveData(data.toString(), sensitivData)}")
-        setLastError(GlucoDataService.context!!.resources.getString(R.string.missing_data), -1, "Please restart your phone or the Libre app.")
+        setLastError(GlucoDataService.context!!.resources.getString(R.string.missing_data), -1, GlucoDataService.context!!.resources.getString(R.string.restart_libre_app))
         return false
     }
 

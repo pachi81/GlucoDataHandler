@@ -1063,6 +1063,8 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="xdrip_open_server_api_secret_summary">Optional API secret to protect access. If configured, the same secret must be set in the client app to access the data.</string>
     <string name="pref_xdrip_server_summary">Provides a local web server on port 17580 that emulates xDrip+ web service, which can be used by various external services, watchfaces, and apps.</string>
 
+    <!-- v2.4 -->
+
     <string name="gda_foreground_summary">Optional troubleshooting mode that stabilizes the Android Auto connection by preventing the app from being killed in the background. The service remains inactive without an active connection, and the notification can be easily swiped away starting with Android 14.</string>
 
     <string name="src_cat_yuwell">Yuwell Anytime</string>
@@ -1084,5 +1086,6 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="yuwell_reenable_source">Press here to re-enable Yuwell source.</string>
     <string name="yuwell_logged_in_to_other_app">Account already active on another device.</string>
     <string name="yuwell_log_out_message">Yuwell source disabled! Please log out of the other app first to use this account here.</string>
+    <string name="restart_libre_app">Please restart your phone or the Libre app.</string>
 
 </resources>
