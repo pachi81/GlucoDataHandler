@@ -1000,6 +1000,30 @@
     <string name="xdrip_open_server_api_secret_summary">Opcjonalny klucz API secret używany do ochrony. Kiedy zostanie ustawiony, należy go uwzględniać w każdym zapytaniu do API.</string>
     <string name="pref_xdrip_server_summary">Zapewnia lokalny serwer sieciowy na porcie 17580, który działa taknsamo jak usługa sieciowa xDrip+, z której mogą korzystać różne usługi zewnętrzne, tarcze zegarków i aplikacje.</string>
 
+
+    <!-- v2.4 -->
+
     <string name="gda_foreground_summary">Optional troubleshooting mode that stabilizes the Android Auto connection by preventing the app from being killed in the background. The service remains inactive without an active connection, and the notification can be easily swiped away starting with Android 14.</string>
+
+    <string name="src_cat_yuwell">Yuwell Anytime</string>
+    <string name="src_yuwell_summary">Remotely follow Yuwell Anytime app.</string>
+    <string name="pref_source_yuwell_info">Setup Yuwell Anytime Follow</string>
+    <string name="pref_source_yuwell_info_summary">- Install Anytime Follow app\n- Register a user\n- Invite the user from Yuwell Anytime app\n- Accept invitation in the \'Notifications\' tab\n- IMPORTANT: Log out this user afterwards!</string>
+    <string name="src_yuwell_patient_summary">Patient to follow.</string>
+    <string name="src_yuwell_user_summary">Username for Anytime Follow account.</string>
+    <string name="src_yuwell_password_summary">Password for Anytime Follow account.</string>
+    <string name="src_yuwell_enabled_summary">Enable following Yuwell Anytime.</string>
+    <string name="source_yuwell">Yuwell</string>
+    <string name="src_yuwell_logout_error">User was logged out!</string>
+    <string name="yuwell_force_logout_sent">Verification email sent, please check your mailbox!</string>
+    <string name="yuwell_force_logout_info">After you have confirmed the logout, you can re-enable source here.</string>
+    <string name="yuwell_trigger_force_logout">Press here to force logout the current user from the other app.</string>
+    <string name="yuwell_force_logout_title">Force logout</string>
+    <string name="yuwell_force_logout_message">If you trigger a force logout of the user, you will receive an email verification afterwards.\nYou have to confirm the logout in the mail.</string>
+
+    <string name="yuwell_reenable_source">Press here to re-enable Yuwell source.</string>
+    <string name="yuwell_logged_in_to_other_app">Account already active on another device.</string>
+    <string name="yuwell_log_out_message">Yuwell source disabled! Please log out of the other app first to use this account here.</string>
+    <string name="restart_libre_app">Please restart your phone or the Libre app.</string>
 
 </resources>
