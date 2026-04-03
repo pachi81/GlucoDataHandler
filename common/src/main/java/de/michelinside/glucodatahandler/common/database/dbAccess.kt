@@ -228,6 +228,17 @@ object dbAccess {
         return database!!.glucoseValuesDao().getLiveValues()
     }
 
+    fun getPreviousValue(timestamp: Long): GlucoseValue? {
+        return runBlocking {
+            try {
+                database!!.glucoseValuesDao().getPreviousValue(timestamp)
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "getPreviousValue exception: $exc")
+                null
+            }
+        }
+    }
+
     fun hasGlucoseValues(minTime: Long = 0L): Boolean = runBlocking {
         if(active) {
             scope.async {

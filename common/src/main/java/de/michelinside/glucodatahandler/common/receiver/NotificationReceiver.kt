@@ -378,19 +378,23 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     }
 
     override fun onNotificationPosted(statusBarNotification: StatusBarNotification?) {
-        if (isRegistered()) {
-            statusBarNotification?.let { sbn ->
-                Log.d(LOG_ID, "New notification posted from ${sbn.packageName} - ongoing: ${sbn.isOngoing} (flags: ${sbn.notification?.flags}, prio: ${sbn.notification?.priority}) - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`})")
-                if(sbn.packageName == applicationContext.packageName)
-                    return  // ignore notification from own app
-                val sharedPref = applicationContext.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
-                if (validGlucoseNotification(sbn, sharedPref)) {
-                    parseValue(sbn)
-                }
-                if (validIobCobNotification(sbn, sharedPref)) {
-                    parseIobCobValue(sbn)
+        try {
+            if (isRegistered()) {
+                statusBarNotification?.let { sbn ->
+                    Log.d(LOG_ID, "New notification posted from ${sbn.packageName} - ongoing: ${sbn.isOngoing} (flags: ${sbn.notification?.flags}, prio: ${sbn.notification?.priority}) - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`})")
+                    if(sbn.packageName == applicationContext.packageName)
+                        return  // ignore notification from own app
+                    val sharedPref = applicationContext.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
+                    if (validGlucoseNotification(sbn, sharedPref)) {
+                        parseValue(sbn)
+                    }
+                    if (validIobCobNotification(sbn, sharedPref)) {
+                        parseIobCobValue(sbn)
+                    }
                 }
             }
+        } catch (e: Exception) {
+            Log.e(LOG_ID, "Exception in onNotificationPosted: " + e.message + "\n" + e.stackTraceToString())
         }
     }
 
@@ -439,36 +443,46 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     }
 
     private fun parseValue(sbn: StatusBarNotification, setError: Boolean = true): Boolean {
-        val regex = glucoseRegex
-        Log.i(LOG_ID, "using regex $regex")
-        val value = parseValueFromNotification(sbn, false, regex)
-        if(!value.isNaN()) {
-            lastValueNotificationTime = sbn.postTime
-            val rate = parseTrendValue(sbn)
-            handleGlucoseValue(value, rate, sbn)
-            return true
-        } else if(setError) {
-            if(parsedTextViews.isNotEmpty()) {
-                SourceStateData.setError(DataSource.NOTIFICATION, applicationContext.resources.getString(R.string.source_no_valid_value) + "\n${parsedTextViews.distinct()}")
+        try {
+            val regex = glucoseRegex
+            Log.i(LOG_ID, "using regex $regex")
+            val value = parseValueFromNotification(sbn, false, regex)
+            if(!value.isNaN()) {
+                lastValueNotificationTime = sbn.postTime
+                val rate = parseTrendValue(sbn)
+                handleGlucoseValue(value, rate, sbn)
+                return true
+            } else if(setError) {
+                if(parsedTextViews.isNotEmpty()) {
+                    SourceStateData.setError(DataSource.NOTIFICATION, applicationContext.resources.getString(R.string.source_no_valid_value) + "\n${parsedTextViews.distinct()}")
+                } else {
+                    SourceStateData.setError(DataSource.NOTIFICATION, applicationContext.resources.getString(R.string.missing_data))
+                }
             } else {
-                SourceStateData.setError(DataSource.NOTIFICATION, applicationContext.resources.getString(R.string.missing_data))
+                Log.w(LOG_ID, "No valid value found in notification:\n${parsedTextViews.distinct()}")
             }
-        } else {
-            Log.w(LOG_ID, "No valid value found in notification:\n${parsedTextViews.distinct()}")
+        } catch (e: Exception) {
+            Log.e(LOG_ID, "Exception in parseValue: " + e.message + "\n" + e.stackTraceToString())
+            SourceStateData.setError(DataSource.NOTIFICATION, e.message?:"Exception occurred")
         }
         return false
     }
 
     private fun parseIobCobValue(sbn: StatusBarNotification) {
-        val sharedPref = applicationContext.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
-        val iobValue = parseIobValue(sbn, sharedPref)
-        val cobValue = parseCobValue(sbn, sharedPref)
-        if(!iobValue.isNaN() || !cobValue.isNaN())
-            handleIobCobValue(iobValue, cobValue, sbn.postTime)
-        else if(parsedTextViews.isNotEmpty()) {
-            SourceStateData.setError(DataSource.NOTIFICATION_IOB, applicationContext.resources.getString(R.string.invalid_iob_value) + "\n${parsedTextViews.distinct()}")
-        } else {
-            SourceStateData.setError(DataSource.NOTIFICATION_IOB, applicationContext.resources.getString(R.string.missing_data))
+        try {
+            val sharedPref = applicationContext.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
+            val iobValue = parseIobValue(sbn, sharedPref)
+            val cobValue = parseCobValue(sbn, sharedPref)
+            if(!iobValue.isNaN() || !cobValue.isNaN())
+                handleIobCobValue(iobValue, cobValue, sbn.postTime)
+            else if(parsedTextViews.isNotEmpty()) {
+                SourceStateData.setError(DataSource.NOTIFICATION_IOB, applicationContext.resources.getString(R.string.invalid_iob_value) + "\n${parsedTextViews.distinct()}")
+            } else {
+                SourceStateData.setError(DataSource.NOTIFICATION_IOB, applicationContext.resources.getString(R.string.missing_data))
+            }
+        } catch (e: Exception) {
+            Log.e(LOG_ID, "Exception in parseIobCobValue: " + e.message + "\n" + e.stackTraceToString())
+            SourceStateData.setError(DataSource.NOTIFICATION_IOB, e.message?:"Exception occurred")
         }
     }
 
@@ -493,6 +507,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
 
     private fun parseString(value: String?, regex: Regex, isIobCob: Boolean, needsUnit: Boolean): Float? {
         try {
+            Log.d(LOG_ID, "Parsing string '$value' with regex '$regex' (isIobCob: $isIobCob - needsUnit: $needsUnit)")
             if(!value.isNullOrEmpty()) {
                 if(!isIobCob && needsUnit) {
                     if(!value.lowercase().contains("mmol") && !value.lowercase().contains("mg")) {
@@ -501,14 +516,14 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                     }
                 }
                 Utils.parseRegexGroupValues(value, regex)?.get(1)?.toFloatOrNull()?.let {
-                    if(!isIobCob) {
-                        // check value not being a IOB or COB value
+                    if(!isIobCob && !needsUnit) {
+                        // check value not being an IOB or COB value
                         if(Utils.parseRegexGroupValues(value, iobRegex) != null) {
-                            Log.d(LOG_ID, "Found IOB value: $it in $value - ignore for glucose value")
+                            Log.i(LOG_ID, "Found IOB value: $it in $value ($iobRegex)- ignore for glucose value")
                             return null
                         }
                         if(Utils.parseRegexGroupValues(value, cobRegex) != null) {
-                            Log.d(LOG_ID, "Found COB value: $it in $value - ignore for glucose value")
+                            Log.i(LOG_ID, "Found COB value: $it in $value ($cobRegex) - ignore for glucose value")
                             return null
                         }
                     }

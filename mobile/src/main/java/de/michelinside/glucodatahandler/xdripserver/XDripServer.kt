@@ -299,11 +299,12 @@ object XDripServer : SharedPreferences.OnSharedPreferenceChangeListener {
         Log.i(LOG_ID, "createResponse - brief=$brief - count=$count - sensor=$sensor - reduced=$reduced - values: ${this.size} - first value time=${Utils.getUiTimeStamp(this.first().timestamp)}")
 
         val entries = this.mapIndexed { index, glucose ->
-            val prev =
-                if (index < this.size - 1) this[index + 1].value.toDouble() else null
+            val prevGlucose =
+                if (index < this.size - 1) this[index + 1] else dbAccess.getPreviousValue(glucose.timestamp)
+            val prev = prevGlucose?.value?.toDouble()
             val delta = prev?.let { this[index].value - it } ?: 0.0
 
-            val direction = GlucoDataUtils.getDexcomLabel(delta.toFloat())
+            val direction = GlucoDataUtils.calculateDirection(glucose, prevGlucose)
 
             XDripSvgEntry(
                 _id = if (brief) null else "${ReceiveData.sensorID}#${index + 1}",

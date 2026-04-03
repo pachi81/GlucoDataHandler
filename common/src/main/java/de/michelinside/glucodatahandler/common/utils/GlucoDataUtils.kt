@@ -5,11 +5,13 @@ import android.content.Intent
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.database.GlucoseValue
+import java.math.RoundingMode
 import kotlin.math.abs
 import kotlin.random.Random
 
 object GlucoDataUtils {
-    //private val LOG_ID = "GDH.Utils.GlucoData"
+    private val LOG_ID = "GDH.Utils.GlucoData"
 
     fun getGlucoseTime(time: Long): Long {  // remove milliseconds
         return (time / 1000)*1000
@@ -97,6 +99,26 @@ object GlucoDataUtils {
             "⇈" -> 4f
             else -> Float.NaN
         }
+    }
+
+    fun calculateDirection(value: GlucoseValue, prevValue: GlucoseValue?): String {
+        if(value.timestamp/1000 == ReceiveData.time/1000) {
+            Log.d(LOG_ID, "Using current rate: ${ReceiveData.rate}")
+            return getDexcomLabel(ReceiveData.rate)
+        }
+        if(prevValue != null) {
+            if(prevValue.timestamp > value.timestamp)
+                return calculateDirection(prevValue, value)
+            val diff = value.value - prevValue.value
+            val timeDiff = Utils.getTimeDiffMinute(value.timestamp, prevValue.timestamp, RoundingMode.HALF_UP)
+            if(timeDiff > 0) {
+                val rate = (diff.toFloat() / timeDiff.toFloat()) / Constants.GLUCOSE_DELTA_TREND_FACTOR
+                Log.d(LOG_ID, "Using calculated rate: $rate for current: ${value.value}(${Utils.getUiTimeStamp(value.timestamp)}) - prev: ${prevValue.value}(${Utils.getUiTimeStamp(prevValue.timestamp)}) - diff: $diff - timeDiff: $timeDiff")
+                return getDexcomLabel(rate)
+            }
+        }
+        Log.d(LOG_ID, "No direction found for for current: ${value.value}(${Utils.getUiTimeStamp(value.timestamp)}) - prev: ${prevValue?.value}")
+        return ""
     }
 
     fun getDexcomLabel(rate: Float): String {

@@ -157,7 +157,7 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
         }
         return resultUrl
     }
-    
+
     private fun getHeader(): MutableMap<String, String> {
         val result = mutableMapOf<String, String>()
         if (secret.isNotEmpty()) {
@@ -203,11 +203,11 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
             val jsonObject = jsonEntries.getJSONObject(lastValueIndex)
             val type: String? = if (jsonObject.has("type") ) jsonObject.getString("type") else null
             if (type == null || type != "sgv") {
-                return Pair(false, "Unsupported type '" + type + "' found in response: " + body.take(100))
+                return Pair(false, "Unsupported type '$type' found in response: $jsonObject")
             }
 
-            if(!jsonObject.has("date") || !jsonObject.has("sgv") || !jsonObject.has("direction"))
-                return Pair(false, "Missing values in response: " + body.take(100))
+            if(!jsonObject.has("date") || !jsonObject.has("sgv"))
+                return Pair(false, "Missing values in response: $jsonObject")
 
             val valueTime = jsonObject.getLong("date")
             if(valueTime < firstValueTime)
@@ -288,8 +288,12 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
     private fun setRate( bundle: Bundle, jsonObject: JSONObject) {
         if (jsonObject.has("trend"))
             bundle.putFloat(ReceiveData.RATE, getRateFromTrend(jsonObject.getInt("trend")))
-        else
+        else if (jsonObject.has("direction"))
             bundle.putFloat(ReceiveData.RATE, GlucoDataUtils.getRateFromLabel(jsonObject.getString("direction")))
+        else {
+            Log.w(LOG_ID, "Missing direction/trend in response: " + jsonObject)
+            bundle.putFloat(ReceiveData.RATE, Float.NaN)
+        }
     }
 
     private fun getRateFromTrend(trend: Int): Float {

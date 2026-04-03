@@ -15,7 +15,9 @@ import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.R
 import androidx.core.content.edit
+import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
+import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.HttpRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,6 +25,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
+import java.math.RoundingMode
 
 
 object NightscoutUploader: SharedPreferences.OnSharedPreferenceChangeListener, NotifierInterface {
@@ -115,22 +118,32 @@ object NightscoutUploader: SharedPreferences.OnSharedPreferenceChangeListener, N
             if(glucoseValues.isNotEmpty()) {
                 scope.launch {
                     try {
+                        val sortedValues = glucoseValues.sortedBy { it.timestamp }
                         // create JSON from values
                         val jsonEntries = JSONArray()
                         val device = context.resources.getString(R.string.app_name)
-                        glucoseValues.forEach {
+                        var prevValue: GlucoseValue? = dbAccess.getPreviousValue(sortedValues.first().timestamp)
+                        sortedValues.forEach {
                             val jsonEntry = JSONObject()
                             jsonEntry.put("sgv", it.value)
                             jsonEntry.put("date", it.timestamp)
                             jsonEntry.put("device", device)
                             jsonEntry.put("type", "sgv")
+                            jsonEntry.put("noise", 1)
+                            jsonEntry.put("rssi", 100)
+                            jsonEntry.put("filtered", it.value*1000)
+                            jsonEntry.put("unfiltered", it.value*1000)
+                            jsonEntry.put("direction", GlucoDataUtils.calculateDirection(it, prevValue))
+                            if(Log.isLoggable(LOG_ID, android.util.Log.VERBOSE))
+                                Log.v(LOG_ID, "$jsonEntry")
                             jsonEntries.put(jsonEntry)
+                            prevValue = it
                         }
                         val httpRequest = HttpRequest()
                         val response = httpRequest.post(getUrl(), jsonEntries.toString(), getHeader(), true)
                         if(response == 200) {
-                            Log.i(LOG_ID, "Successfully uploaded ${glucoseValues.size} values from ${Utils.getUiTimeStamp(glucoseValues.first().timestamp)} to ${Utils.getUiTimeStamp(glucoseValues.last().timestamp)}")
-                            updateLastValueTime(context,glucoseValues.last().timestamp)
+                            Log.i(LOG_ID, "Successfully uploaded ${sortedValues.size} values from ${Utils.getUiTimeStamp(sortedValues.first().timestamp)} to ${Utils.getUiTimeStamp(sortedValues.last().timestamp)}")
+                            updateLastValueTime(context,sortedValues.last().timestamp)
                             state = SourceState.CONNECTED
                         } else {
                             Log.e(LOG_ID, "Error uploading glucose data: $response - msg: ${httpRequest.responseMessage} - error: ${httpRequest.responseError}")
@@ -150,7 +163,6 @@ object NightscoutUploader: SharedPreferences.OnSharedPreferenceChangeListener, N
         }
         return false
     }
-
 
     private fun updateLastValueTime(context: Context, time: Long) {
         if(time > lastUploadTime) {
