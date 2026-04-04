@@ -102,6 +102,10 @@ object GlucoDataUtils {
     }
 
     fun calculateDirection(value: GlucoseValue, prevValue: GlucoseValue?): String {
+        if(value.rate != null && !value.rate!!.isNaN()) {
+            Log.d(LOG_ID, "Using db rate: ${value.rate}")
+            return getDexcomLabel(value.rate!!)
+        }
         if(value.timestamp/1000 == ReceiveData.time/1000) {
             Log.d(LOG_ID, "Using current rate: ${ReceiveData.rate}")
             return getDexcomLabel(ReceiveData.rate)

@@ -518,7 +518,8 @@ class YuwellSourceTask() : MultiPatientSourceTask(Constants.SHARED_PREF_YUWELL_E
                     val timestamp = glucoseValue.getLong("glucoseDate")
                     if(timestamp >= firstNeededValue) {
                         val value = glucoseValue.getInt("glucoseValueMg")
-                        values.add(GlucoseValue(timestamp, value))
+                        val rate = if(data.has("glucoseTrend")) getRateFromTrend(data.optInt("glucoseTrend")) else null
+                        values.add(GlucoseValue(timestamp, value, rate))
                         if(timestamp > lastValueTime ) {
                             lastValueTime = timestamp
                         }

@@ -229,7 +229,13 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
                         val worldTime = re.replace(data.getString("WT"), "").toLong()
                         if(worldTime < firstValueTime || !GlucoDataUtils.isGlucoseValid(value))
                             continue
-                        values.add(GlucoseValue(worldTime, value))
+                        val trendInt = data.optInt("Trend")
+                        val rate = if(trendInt != 0) {
+                            getRateFromTrend(trendInt)
+                        } else {
+                            GlucoDataUtils.getRateFromLabel(data.getString("Trend"))
+                        }
+                        values.add(GlucoseValue(worldTime, value, rate))
                         if(worldTime > lastTime) {
                             lastTime = worldTime
                             lastValueIndex = i

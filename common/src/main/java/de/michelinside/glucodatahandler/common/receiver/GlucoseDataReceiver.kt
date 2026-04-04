@@ -201,7 +201,8 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
                                             return@launch
                                         }
                                         if(firstValueTime > 0 && time/1000 < maxTime/1000 && time > firstValueTime) {
-                                            values.add(GlucoseValue(time, value))
+                                            val rate: Float? = if(parts.size > 7) parts[7].toFloat() else null
+                                            values.add(GlucoseValue(time, value, rate))
                                         }
                                         if(abs(Utils.getTimeDiffMinute(time, maxTime)) == 0L) {
                                             lastValueReceived = true  // current value must be part and also historical data

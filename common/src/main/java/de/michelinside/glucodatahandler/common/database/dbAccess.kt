@@ -286,12 +286,12 @@ object dbAccess {
         return updated
     }
 
-    fun addGlucoseValue(time: Long, value: Int) {
+    fun addGlucoseValue(time: Long, value: Int, rate: Float) {
         if(active && GlucoDataUtils.isGlucoseValid(value)) {
             scope.launch {
                 try {
                     Log.d(LOG_ID, "Add new value $value at ${Utils.getUiTimeStamp(time)} ($time)")
-                    database!!.glucoseValuesDao().insertValue(GlucoseValue(GlucoDataUtils.getGlucoseTime(time), value))
+                    database!!.glucoseValuesDao().insertValue(GlucoseValue(GlucoDataUtils.getGlucoseTime(time), value, rate))
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "addGlucoseValue exception: $exc")
                 }

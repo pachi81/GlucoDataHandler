@@ -70,7 +70,11 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     var time: Long = 0
     var receiveTime: Long = 0
     var timeDiff: Long = 0
-    var rateLabel: String? = null
+    val rateLabel: String get() {
+        if(GlucoDataService.context != null)
+            return GlucoDataUtils.getRateLabel(GlucoDataService.context!!, rate)
+        return GlucoDataUtils.getDexcomLabel(rate)
+    }
     var source: DataSource = DataSource.NONE
     val forceGlucoseAlarm: Boolean get() {
         return ((alarm and 8) == 8)
@@ -655,7 +659,6 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                             }
                         }
                     }
-                    rateLabel = GlucoDataUtils.getRateLabel(context, rate)
                     rawValue = extras.getInt(MGDL)
                     if (isMmol) {
                         if (extras.containsKey(GLUCOSECUSTOM)) {
@@ -668,7 +671,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     } else {
                         glucose = rawValue.toFloat()
                     }
-                    time = newTime //time in msec
+                    time = GlucoDataUtils.getGlucoseTime(newTime) //time in msec
 
                     if(extras.containsKey(IOB) || extras.containsKey(COB)) {
                         iob = extras.getFloat(IOB, Float.NaN)
@@ -702,7 +705,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                         }
                     }
 
-                    dbAccess.addGlucoseValue(time, getDbValue())
+                    dbAccess.addGlucoseValue(time, getDbValue(), rate)
 
                     val notifySource = if(interApp) NotifySource.MESSAGECLIENT else NotifySource.BROADCAST
 
