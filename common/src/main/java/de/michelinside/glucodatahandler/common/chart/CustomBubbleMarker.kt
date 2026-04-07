@@ -3,9 +3,11 @@ package de.michelinside.glucodatahandler.common.chart
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.text.format.DateUtils
+import android.widget.ImageView
 import de.michelinside.glucodatahandler.common.utils.Log
 import android.widget.TextView
 import androidx.appcompat.widget.LinearLayoutCompat
@@ -16,6 +18,8 @@ import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
 import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.database.dbAccess
+import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import java.text.DateFormat
 import java.time.Duration
 import java.util.Date
@@ -39,6 +43,7 @@ class CustomBubbleMarker(context: Context, private val showDate: Boolean, privat
                 val time: TextView = this.findViewById(R.id.time)
                 val glucose: TextView = this.findViewById(R.id.glucose)
                 val delta: TextView = this.findViewById(R.id.delta)
+                val rate: ImageView = this.findViewById(R.id.trendImage)
                 val layout: LinearLayoutCompat = this.findViewById(R.id.marker_layout)
                 if(isGlucose) {
                     date.text = DateFormat.getDateInstance(DateFormat.SHORT).format(dateValue)
@@ -52,6 +57,13 @@ class CustomBubbleMarker(context: Context, private val showDate: Boolean, privat
                         delta.visibility = GONE
                     }
                     layout.visibility = VISIBLE
+                    val dbValue = dbAccess.getGlucoseValue(timeValue)
+                    if(dbValue != null && dbValue.rate != null && !dbValue.rate!!.isNaN()) {
+                        rate.visibility = VISIBLE
+                        rate.setImageBitmap(BitmapUtils.rateToBitmap(dbValue.rate!!, Color.WHITE, 50, 50))
+                    } else {
+                        rate.visibility = GONE
+                    }
                 } else {
                     date.text = ""
                     time.text = ""

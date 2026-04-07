@@ -200,6 +200,22 @@ object dbAccess {
         }
     }
 
+    fun getGlucoseValue(timestamp: Long): GlucoseValue? = runBlocking {
+        if(active) {
+            scope.async {
+                try {
+                    Log.d(LOG_ID, "getGlucoseValues - minTime: ${Utils.getUiTimeStamp(timestamp)}")
+                    database!!.glucoseValuesDao().getValue(GlucoDataUtils.getGlucoseTime(timestamp))
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "getGlucoseValues exception: $exc")
+                    null
+                }
+            }.await()
+        } else {
+            null
+        }
+    }
+
 
     fun getLastTopNGlucoseValues(count: Int): List<GlucoseValue> = runBlocking {
         if(active) {

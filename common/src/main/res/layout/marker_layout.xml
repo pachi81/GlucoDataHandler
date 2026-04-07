@@ -29,15 +29,28 @@
         android:autoSizeTextType="uniform"
         tools:text="12:59:59 AM" />
 
-    <TextView
-        android:id="@+id/glucose"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:autoSizeMinTextSize="1sp"
-        android:autoSizeStepGranularity="1sp"
-        android:autoSizeTextType="uniform"
-        tools:text="12.9" />
+        android:orientation="horizontal"
+        tools:ignore="UselessParent">
+        <TextView
+            android:id="@+id/glucose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:autoSizeMinTextSize="1sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            tools:text="12.9" />
+        <ImageView
+            android:id="@+id/trendImage"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/trend"
+            android:visibility="gone"
+            android:src="@drawable/icon_question" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/delta"
