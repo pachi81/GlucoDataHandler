@@ -38,9 +38,11 @@ class SelectReceiverPreferenceDialogFragmentCompat : PreferenceDialogFragmentCom
         }
 
         private fun getReceivers(context: Context, isTapAction: Boolean): HashMap<String, String> {
-            val receivers = PackageUtils.getPackages(context)
-            if(!isTapAction)
+            val receivers = PackageUtils.getPackages(context).toMutableMap() as HashMap<String, String>
+            if(!isTapAction) {
+                Log.v(LOG_ID, "Remove own package for non-tapAction")
                 receivers.remove(context.packageName)
+            }
             return receivers
         }
         private fun getActions(context: Context): HashMap<String, String> {
@@ -68,7 +70,7 @@ class SelectReceiverPreferenceDialogFragmentCompat : PreferenceDialogFragmentCom
             if(receivers.containsKey(value))
                 return receivers[value].toString()
             if(value.isNotEmpty()) {
-                Log.w(LOG_ID, "Unknown receiver: $value")
+                Log.w(LOG_ID, "Unknown receiver: $value - isTapAction: $isTapAction")
                 val name = PackageUtils.checkPackageName(context, value)
                 if(name != null)
                     return name

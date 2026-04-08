@@ -114,7 +114,7 @@ object PackageUtils {
         return null
     }
 
-    fun getPackages(context: Context): HashMap<String, String> {
+    fun getPackages(context: Context): Map<String, String> {
         waitForUpdate()
         if (packages.isEmpty() && !_isUpdating.value) {
             Log.i(LOG_ID, "Updating receivers")
