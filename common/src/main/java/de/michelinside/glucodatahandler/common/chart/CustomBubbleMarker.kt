@@ -23,6 +23,7 @@ import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import java.text.DateFormat
 import java.time.Duration
 import java.util.Date
+import androidx.core.graphics.withSave
 
 @SuppressLint("ViewConstructor")
 class CustomBubbleMarker(context: Context, private val showDate: Boolean, private val showDelta: Boolean) : MarkerView(context, R.layout.marker_layout) {
@@ -60,8 +61,10 @@ class CustomBubbleMarker(context: Context, private val showDate: Boolean, privat
                     val dbValue = dbAccess.getGlucoseValue(timeValue)
                     if(dbValue != null && dbValue.rate != null && !dbValue.rate!!.isNaN()) {
                         rate.visibility = VISIBLE
+                        Log.v(LOG_ID, "Trend found - ${dbValue.rate}")
                         rate.setImageBitmap(BitmapUtils.rateToBitmap(dbValue.rate!!, Color.WHITE, 50, 50))
                     } else {
+                        Log.v(LOG_ID, "No trend found")
                         rate.visibility = GONE
                     }
                 } else {
@@ -120,51 +123,51 @@ class CustomBubbleMarker(context: Context, private val showDate: Boolean, privat
             val width = width.toFloat()
             val height = height.toFloat()
             val offset = getOffsetForDrawingAtPoint(posX, posY)
-            val saveId: Int = canvas.save()
-            val path = Path()
+            canvas.withSave {
+                val path = Path()
 
-            if (posY < height + arrowSize) {
-                if (posX > chart.width - width) {
-                    path.moveTo(width - (2 * arrowSize), 2f)
-                    path.lineTo(width, -arrowSize + arrowCircleOffset)
-                    path.lineTo(width - arrowSize, 2f)
-                } else {
-                    if (posX > width / 2) {
-                        path.moveTo(width / 2 - arrowSize / 2, 2f)
-                        path.lineTo(width / 2, -arrowSize + arrowCircleOffset)
-                        path.lineTo(width / 2 + arrowSize / 2, 2f)
+                if (posY < height + arrowSize) {
+                    if (posX > chart.width - width) {
+                        path.moveTo(width - (2 * arrowSize), 2f)
+                        path.lineTo(width, -arrowSize + arrowCircleOffset)
+                        path.lineTo(width - arrowSize, 2f)
                     } else {
-                        path.moveTo(0f, -arrowSize + arrowCircleOffset)
-                        path.lineTo(0f + arrowSize, 2f)
-                        path.lineTo(0f, 2f)
-                        path.lineTo(0f, -arrowSize + arrowCircleOffset)
+                        if (posX > width / 2) {
+                            path.moveTo(width / 2 - arrowSize / 2, 2f)
+                            path.lineTo(width / 2, -arrowSize + arrowCircleOffset)
+                            path.lineTo(width / 2 + arrowSize / 2, 2f)
+                        } else {
+                            path.moveTo(0f, -arrowSize + arrowCircleOffset)
+                            path.lineTo(0f + arrowSize, 2f)
+                            path.lineTo(0f, 2f)
+                            path.lineTo(0f, -arrowSize + arrowCircleOffset)
+                        }
                     }
-                }
-                path.offset(posX + offset.x, posY + offset.y)
-            } else {
-                if (posX > chart.width - width) {
-                    path.moveTo(width, (height - 2) + arrowSize - arrowCircleOffset)
-                    path.lineTo(width - arrowSize, height - 2)
-                    path.lineTo(width - (2 * arrowSize), height - 2)
+                    path.offset(posX + offset.x, posY + offset.y)
                 } else {
-                    if (posX > width / 2) {
-                        path.moveTo(width / 2 + arrowSize / 2, height - 2)
-                        path.lineTo(width / 2, (height - 2) + arrowSize - arrowCircleOffset)
-                        path.lineTo(width / 2 - arrowSize / 2, height - 2)
-                        path.lineTo(0f, height - 2)
+                    if (posX > chart.width - width) {
+                        path.moveTo(width, (height - 2) + arrowSize - arrowCircleOffset)
+                        path.lineTo(width - arrowSize, height - 2)
+                        path.lineTo(width - (2 * arrowSize), height - 2)
                     } else {
-                        path.moveTo(0f + (arrowSize * 2), height - 2)
-                        path.lineTo(0f, (height - 2) + arrowSize - arrowCircleOffset)
-                        path.lineTo(0f, height - 2)
-                        path.lineTo(0f + arrowSize, height - 2)
+                        if (posX > width / 2) {
+                            path.moveTo(width / 2 + arrowSize / 2, height - 2)
+                            path.lineTo(width / 2, (height - 2) + arrowSize - arrowCircleOffset)
+                            path.lineTo(width / 2 - arrowSize / 2, height - 2)
+                            path.lineTo(0f, height - 2)
+                        } else {
+                            path.moveTo(0f + (arrowSize * 2), height - 2)
+                            path.lineTo(0f, (height - 2) + arrowSize - arrowCircleOffset)
+                            path.lineTo(0f, height - 2)
+                            path.lineTo(0f + arrowSize, height - 2)
+                        }
                     }
+                    path.offset(posX + offset.x, posY + offset.y)
                 }
-                path.offset(posX + offset.x, posY + offset.y)
+                canvas.drawPath(path, paint)
+                canvas.translate(posX + offset.x, posY + offset.y)
+                draw(canvas)
             }
-            canvas.drawPath(path, paint)
-            canvas.translate(posX + offset.x, posY + offset.y)
-            draw(canvas)
-            canvas.restoreToCount(saveId)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Exception in getOffsetForDrawingAtPoint", exc)
         }

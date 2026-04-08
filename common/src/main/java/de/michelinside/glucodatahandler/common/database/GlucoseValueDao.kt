@@ -14,6 +14,9 @@ interface GlucoseValueDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertValues(events: List<GlucoseValue>)
 
+    @Query("UPDATE glucose_values SET rate = :rate WHERE timestamp = :glucoseTime")
+    fun updateRate(glucoseTime: Long, rate: Float)
+
     @Query("SELECT * FROM glucose_values ORDER BY timestamp")
     fun getValues(): List<GlucoseValue>
 

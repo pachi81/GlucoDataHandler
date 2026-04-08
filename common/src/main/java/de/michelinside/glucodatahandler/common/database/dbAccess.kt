@@ -30,6 +30,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.File
+import kotlin.collections.first
+import kotlin.collections.isNotEmpty
+import kotlin.collections.last
 
 object dbAccess {
     private val LOG_ID = "GDH.dbAccess"
@@ -294,7 +297,7 @@ object dbAccess {
         val minTime = System.currentTimeMillis()-Constants.DB_MAX_DATA_TIME_MS
         values.forEach { 
             if(it.timestamp > minTime && GlucoDataUtils.isGlucoseValid(it.value)) {
-                updated.add(GlucoseValue(GlucoDataUtils.getGlucoseTime(it.timestamp), it.value))
+                updated.add(GlucoseValue(GlucoDataUtils.getGlucoseTime(it.timestamp), it.value, it.rate))
             } else {
                 Log.w(LOG_ID, "Invalid value ${it.value} at ${Utils.getUiTimeStamp(it.timestamp)} (${it.timestamp})")
             }
@@ -340,6 +343,19 @@ object dbAccess {
                     }
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "addGlucoseValues exception: $exc")
+                }
+            }
+        }
+    }
+
+
+    fun updateRate(time: Long, rate: Float) {
+        if(active && time > 0 && !rate.isNaN()) {
+            scope.launch {
+                try {
+                    database!!.glucoseValuesDao().updateRate(GlucoDataUtils.getGlucoseTime(time), rate)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "updateRate exception: $exc")
                 }
             }
         }
@@ -551,5 +567,6 @@ object dbAccess {
             }
         }
     }
+
 
 }

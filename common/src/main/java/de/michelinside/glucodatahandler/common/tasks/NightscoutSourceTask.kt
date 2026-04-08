@@ -291,9 +291,9 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
 
     private fun getRate(jsonObject: JSONObject): Float {
         if (jsonObject.has("trend"))
-            getRateFromTrend(jsonObject.getInt("trend"))
+            return getRateFromTrend(jsonObject.getInt("trend"))
         else if (jsonObject.has("direction"))
-            GlucoDataUtils.getRateFromLabel(jsonObject.getString("direction"))
+            return GlucoDataUtils.getRateFromLabel(jsonObject.getString("direction"))
         else {
             Log.w(LOG_ID, "Missing direction/trend in response: " + jsonObject)
         }

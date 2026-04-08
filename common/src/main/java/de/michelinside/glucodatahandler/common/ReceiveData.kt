@@ -425,8 +425,11 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         val lastRate = rate
         val lastDelta = delta
         calculateDeltasAndRate(time, rawValue)
-        if(rate != lastRate || delta != lastDelta)
+        if(rate != lastRate || delta != lastDelta) {
+            Log.d(LOG_ID, "Recalculated $rate ($lastRate) and $delta ($lastDelta)")
+            dbAccess.updateRate(time, rate)
             InternalNotifier.notify(GlucoDataService.context!!, NotifySource.MESSAGECLIENT, createExtras())
+        }
     }
 
     private fun calculateDeltasAndRate(new_time: Long, new_value: Int) {

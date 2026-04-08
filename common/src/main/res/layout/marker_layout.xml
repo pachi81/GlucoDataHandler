@@ -45,9 +45,10 @@
             tools:text="12.9" />
         <ImageView
             android:id="@+id/trendImage"
-            android:layout_width="wrap_content"
+            android:layout_width="20dp"
             android:layout_height="match_parent"
             android:contentDescription="@string/trend"
+            android:scaleType="fitCenter"
             android:visibility="gone"
             android:src="@drawable/icon_question" />
     </LinearLayout>
