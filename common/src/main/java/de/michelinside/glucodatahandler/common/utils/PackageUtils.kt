@@ -215,6 +215,7 @@ object PackageUtils {
             receiverFilter.add("com.gluroo.")  // Gluroo
             receiverFilter.add("com.microtechmd.cgms") // Aidex CGM
             receiverFilter.add("com.sinocare.ican.health") // iCan CGM
+            receiverFilter.add("com.isens.csair")  // Caresense Air
         }
         return receiverFilter
     }
