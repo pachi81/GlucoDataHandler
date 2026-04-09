@@ -11,13 +11,10 @@ import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.annotation.RequiresApi
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.*
-import de.michelinside.glucodatahandler.common.chart.ChartCreator
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
-import de.michelinside.glucodatahandler.common.receiver.GlucoseDataReceiver
-import de.michelinside.glucodatahandler.common.utils.Utils.isScreenReaderOn
 import de.michelinside.glucodatahandler.healthconnect.HealthConnectManager
 import de.michelinside.glucodatahandler.tasker.setWearConnectionState
 import de.michelinside.glucodatahandler.watch.WatchDrip
@@ -68,220 +65,21 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                     return
 
                 migrated = true
-                val sharedPrefs = context.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
+                val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
                 Log.i(LOG_ID, "migrateSettings called")
-                if(!sharedPrefs.contains(Constants.SHARED_PREF_GLUCODATA_RECEIVERS)) {
-                    val receivers = HashSet<String>()
-                    val sendToAod = sharedPrefs.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD, false)
-                    if (sendToAod)
-                        receivers.add("de.metalgearsonic.glucodata.aod")
-                    Log.i(LOG_ID, "Upgrade receivers to " + receivers.toString())
-                    with(sharedPrefs.edit()) {
-                        putStringSet(Constants.SHARED_PREF_GLUCODATA_RECEIVERS, receivers)
-                        apply()
-                    }
-                }
-
-                if(!sharedPrefs.contains(Constants.SHARED_PREF_XDRIP_RECEIVERS)) {
-                    val receivers = HashSet<String>()
-                    receivers.add("com.eveningoutpost.dexdrip")
-                    Log.i(LOG_ID, "Upgrade receivers to " + receivers.toString())
-                    with(sharedPrefs.edit()) {
-                        putStringSet(Constants.SHARED_PREF_XDRIP_RECEIVERS, receivers)
-                        apply()
-                    }
-                }
-
-                // create default tap actions
-                // notifications
-                if(!sharedPrefs.contains(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_TAP_ACTION)) {
-                    val curApp = context.packageName
-                    Log.i(LOG_ID, "Setting default tap action for notification to $curApp")
-                    with(sharedPrefs.edit()) {
-                        putString(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_TAP_ACTION, curApp)
-                        apply()
-                    }
-                }
-                if(!sharedPrefs.contains(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_TAP_ACTION)) {
-                    val curApp = context.packageName
-                    Log.i(LOG_ID, "Setting default tap action for second notification to $curApp")
-                    with(sharedPrefs.edit()) {
-                        putString(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_TAP_ACTION, curApp)
-                        apply()
-                    }
-                }
-                // widgets
-                if(!sharedPrefs.contains(Constants.SHARED_PREF_FLOATING_WIDGET_TAP_ACTION)) {
-                    val curApp = context.packageName
-                    Log.i(LOG_ID, "Setting default tap action for floating widget to $curApp")
-                    with(sharedPrefs.edit()) {
-                        putString(Constants.SHARED_PREF_FLOATING_WIDGET_TAP_ACTION, curApp)
-                        apply()
-                    }
-                }
-                if(!sharedPrefs.contains(Constants.SHARED_PREF_WIDGET_TAP_ACTION)) {
-                    val curApp = context.packageName
-                    Log.i(LOG_ID, "Setting default tap action for widget to $curApp")
-                    with(sharedPrefs.edit()) {
-                        putString(Constants.SHARED_PREF_WIDGET_TAP_ACTION, curApp)
-                        apply()
-                    }
-                }
-                if(!sharedPrefs.contains(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE_MIGRATION) || !sharedPrefs.contains(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE_MIGRATION_2)) {
-                    if(sharedPrefs.contains(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE)) {
-                        val oldValue = sharedPrefs.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, 0)
-                        if(oldValue in 1..10) {
-                            Log.i(LOG_ID, "Migrating size from $oldValue")
-                            with(sharedPrefs.edit()) {
-                                putInt(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, oldValue+1)
-                                apply()
-                            }
-                        }
-                    }
-                    with(sharedPrefs.edit()) {
-                        putBoolean(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE_MIGRATION, true)
-                        putBoolean(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE_MIGRATION_2, true)
-                        apply()
-                    }
-                }
 
                 // full screen alarm notification
-                if(!sharedPrefs.contains(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED)) {
+                if(!sharedPref.contains(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED)) {
                     if (AlarmNotification.hasFullscreenPermission(context)) {
                         Log.i(LOG_ID, "Enabling fullscreen notification as default")
-                        with(sharedPrefs.edit()) {
-                            putBoolean(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED, true)
-                            apply()
+                        sharedPref.edit {
+                            putBoolean(
+                                Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED,
+                                true
+                            )
                         }
                     }
                 }
-
-                // graph settings related to screen reader
-                if(!sharedPrefs.contains(Constants.SHARED_PREF_GRAPH_DURATION_PHONE_MAIN)) {
-                    val isScreenReader = context.isScreenReaderOn()
-                    Log.i(LOG_ID, "Setting default duration for graph - screenReader: $isScreenReader")
-                    with(sharedPrefs.edit()) {
-                        putInt(Constants.SHARED_PREF_GRAPH_DURATION_PHONE_MAIN, if(isScreenReader) 0 else ChartCreator.defaultDurationHours)
-                        apply()
-                    }
-                }
-                if(sharedPrefs.contains(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION) || !sharedPrefs.contains(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_SHOW_GRAPH)) {
-                    val isScreenReader = context.isScreenReaderOn()
-                    Log.i(LOG_ID, "Setting default duration for notification graph - screenReader: $isScreenReader")
-                    with(sharedPrefs.edit()) {
-                        putBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_SHOW_GRAPH, !isScreenReader && sharedPrefs.getInt(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION, 0) > 0)
-                        remove(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION)
-                        apply()
-                    }
-                }
-                if(!sharedPrefs.contains(Constants.SHARED_PREF_FULLSCREEN_LANDSCAPE)) {
-                    val isScreenReader = context.isScreenReaderOn()
-                    Log.i(LOG_ID, "Setting default fullscreen mode for screenReader: $isScreenReader")
-                    with(sharedPrefs.edit()) {
-                        putBoolean(Constants.SHARED_PREF_FULLSCREEN_LANDSCAPE, !isScreenReader)
-                        apply()
-                    }
-                }
-
-                if(sharedPrefs.contains(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_PHONE_WIDGET)) {
-                    val oldDuration = sharedPrefs.getInt(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_PHONE_WIDGET, 0)
-                    Log.i(LOG_ID, "Migratate old widget duration of $oldDuration hours to bitmap duration")
-                    with(sharedPrefs.edit()) {
-                        if(oldDuration > 0)
-                            putInt(Constants.SHARED_PREF_GRAPH_BITMAP_DURATION, oldDuration)
-                        remove(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_PHONE_WIDGET)
-                        apply()
-                    }
-                }
-                if(sharedPrefs.contains(Constants.DEPRECATED_SHARED_PREF_GRAPH_SHOW_AXIS_PHONE_WIDGET)) {
-                    val oldShowAxis = sharedPrefs.getBoolean(Constants.DEPRECATED_SHARED_PREF_GRAPH_SHOW_AXIS_PHONE_WIDGET, false)
-                    Log.i(LOG_ID, "Migratate old widget show axis of $oldShowAxis to bitmap show axis")
-                    with(sharedPrefs.edit()) {
-                        putBoolean(Constants.SHARED_PREF_GRAPH_BITMAP_SHOW_AXIS, oldShowAxis)
-                        remove(Constants.DEPRECATED_SHARED_PREF_GRAPH_SHOW_AXIS_PHONE_WIDGET)
-                        apply()
-                    }
-                }
-
-                // Juggluco webserver settings
-                if(!sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_ENABLED) || !sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_IOB_SUPPORT)) {
-                    // check current source for Juggluco and if Nightscout is enabled for local requests supporting IOB
-                    var webServer = false
-                    var apiSecret = ""
-                    if(sharedPrefs.getBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED, true)
-                        && sharedPrefs.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED, false)
-                        && sharedPrefs.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, false)
-                        && sharedPrefs.getString(Constants.SHARED_PREF_NIGHTSCOUT_TOKEN, "").isNullOrEmpty()
-                        && sharedPrefs.getString(Constants.SHARED_PREF_NIGHTSCOUT_URL, "")!!.trim().trimEnd('/') == GlucoseDataReceiver.JUGGLUCO_WEBSERVER
-                        ) {
-                        val sharedGlucosePref = context.getSharedPreferences(Constants.GLUCODATA_BROADCAST_ACTION, MODE_PRIVATE)
-                        if(DataSource.fromIndex(sharedGlucosePref.getInt(Constants.EXTRA_SOURCE_INDEX, DataSource.NONE.ordinal)) == DataSource.JUGGLUCO) {
-                            webServer = true
-                            apiSecret = sharedPrefs.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, "")?:""
-                        }
-                    }
-                    Log.i(LOG_ID, "Using Juggluco webserver: $webServer")
-                    sharedPrefs.edit {
-                        putBoolean( Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_ENABLED, webServer)
-                        putBoolean( Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_IOB_SUPPORT, webServer)
-                        if (webServer) {
-                            putString( Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_API_SECRET, apiSecret)
-                            putBoolean(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED, false)
-                        }
-                    }
-                }
-
-                // notification icon
-                if(!sharedPrefs.contains(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON)
-                    || sharedPrefs.getString(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, PermanentNotification.StatusBarIcon.GLUCOSE.pref) == PermanentNotification.StatusBarIcon.APP.pref) {
-                    with(sharedPrefs.edit()) {
-                        putString(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, PermanentNotification.StatusBarIcon.GLUCOSE.pref)
-                        apply()
-                    }
-                }
-                if(!sharedPrefs.contains(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON)
-                    || sharedPrefs.getString(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON, PermanentNotification.StatusBarIcon.TREND.pref) == PermanentNotification.StatusBarIcon.APP.pref) {
-                    with(sharedPrefs.edit()) {
-                        putString(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON, PermanentNotification.StatusBarIcon.TREND.pref)
-                        apply()
-                    }
-                }
-                if(!sharedPrefs.contains(Constants.SHARED_PREF_THIRD_PERMANENT_NOTIFICATION_ICON)
-                    || sharedPrefs.getString(Constants.SHARED_PREF_THIRD_PERMANENT_NOTIFICATION_ICON, PermanentNotification.StatusBarIcon.DELTA.pref) == PermanentNotification.StatusBarIcon.APP.pref) {
-                    with(sharedPrefs.edit()) {
-                        putString(Constants.SHARED_PREF_THIRD_PERMANENT_NOTIFICATION_ICON, PermanentNotification.StatusBarIcon.DELTA.pref)
-                        apply()
-                    }
-                }
-
-                // special Android 16 handling
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
-                    if(!sharedPrefs.contains(Constants.SHARED_PREF_API_36_DISABLE_NOTIFICATION)) {
-                        Log.w(LOG_ID, "Disable second and third notification for Android 16")
-                        sharedPrefs.edit {
-                            putBoolean(Constants.SHARED_PREF_API_36_DISABLE_NOTIFICATION, true)
-                            putBoolean(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION, false)
-                            putBoolean(Constants.SHARED_PREF_THIRD_PERMANENT_NOTIFICATION, false)
-                        }
-                    }
-                }
-
-                // Health Connect interval support
-                if(!sharedPrefs.contains(Constants.SHARED_PREF_SEND_TO_HEALTH_CONNECT_INTERVAL)) {
-                    if(sharedPrefs.contains(Constants.SHARED_PREF_SEND_TO_HEALTH_CONNECT) && sharedPrefs.getBoolean(Constants.SHARED_PREF_SEND_TO_HEALTH_CONNECT, false)) {
-                        Log.i(LOG_ID, "Setting default Health Connect interval for active instaces to 1 minute")
-                        sharedPrefs.edit {
-                            putInt(Constants.SHARED_PREF_SEND_TO_HEALTH_CONNECT_INTERVAL, 1)
-                        }
-                    } else {
-                        // else set interval for force using 5 minutes in the future...
-                        Log.i(LOG_ID, "Setting default Health Connect interval to 5 minutes")
-                        sharedPrefs.edit {
-                            putInt(Constants.SHARED_PREF_SEND_TO_HEALTH_CONNECT_INTERVAL, 5)
-                        }
-                    }
-                }
-
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "migrateSettings exception: " + exc.message.toString() )
             }
