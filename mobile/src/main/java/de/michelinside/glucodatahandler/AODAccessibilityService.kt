@@ -116,8 +116,8 @@ class AODAccessibilityService : AccessibilityService() {
                 Display.STATE_ON -> {
                     Log.d(LOG_ID, "Phone screen turned on")
                     triggerAodState(GlucoDataService.context!!, false)
-                    removeOverlay()
                     aodWidget?.pause()
+                    removeOverlay()
                 }
             }
             currentState = state
