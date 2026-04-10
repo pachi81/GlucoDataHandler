@@ -236,14 +236,14 @@ abstract class DataSourceTask(protected val enabledKey: String, protected val so
 
     open fun needsInternet(): Boolean = true
 
-    override fun execute(context: Context) {
-        if (canExecute()) {
+    override fun execute(context: Context, force: Boolean) {
+        if (force || canExecute()) {
             if (needsInternet() && !HttpRequest.isConnected(context)) {
                 Log.w(LOG_ID, "No internet connection")
                 setState(SourceState.NO_CONNECTION)
                 return
             }
-            Log.d(LOG_ID, "Execute request for $source - lastExecution: ${Utils.getUiTimeStamp(lastExecution)}")
+            Log.d(LOG_ID, "Execute request for $source - lastExecution: ${Utils.getUiTimeStamp(lastExecution)} - force: $force")
             try {
                 lastExecution = System.currentTimeMillis()
                 executeRequest()

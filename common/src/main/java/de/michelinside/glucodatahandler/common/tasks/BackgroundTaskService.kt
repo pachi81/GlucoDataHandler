@@ -149,7 +149,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                                             LOG_ID,
                                             "execute after " + elapsedTimeMinute + " min: " + it.javaClass.simpleName
                                         )
-                                        it.execute(context!!)
+                                        it.execute(context!!, force)
                                     } catch(ex:InterruptedException) {
                                         Log.e(LOG_ID,"execute task " + it.javaClass.simpleName + " interrupted: " + ex)
                                         it.interrupt()
