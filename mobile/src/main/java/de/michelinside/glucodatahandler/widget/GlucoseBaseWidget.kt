@@ -270,11 +270,11 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
                     remoteViews.setViewVisibility(R.id.iobText, View.GONE)
                 else
                     remoteViews.setViewVisibility(R.id.iobText, View.VISIBLE)
-                if(ReceiveData.cob.isNaN() && ReceiveData.iob.isNaN())
-                    remoteViews.setViewVisibility(R.id.layout_iob_cob, View.GONE)
-                else
-                    remoteViews.setViewVisibility(R.id.layout_iob_cob, View.VISIBLE)
             }
+            if(ReceiveData.cob.isNaN() && ReceiveData.iob.isNaN())
+                remoteViews.setViewVisibility(R.id.layout_iob_cob, View.GONE)
+            else
+                remoteViews.setViewVisibility(R.id.layout_iob_cob, View.VISIBLE)
         }
         if(hasGraph) {
             // update graph
