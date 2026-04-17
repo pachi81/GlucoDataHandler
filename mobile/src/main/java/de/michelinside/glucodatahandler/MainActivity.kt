@@ -85,6 +85,7 @@ import kotlin.math.min
 import kotlin.time.Duration.Companion.days
 import de.michelinside.glucodatahandler.common.R as CR
 import androidx.core.net.toUri
+import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 import de.michelinside.glucodatahandler.common.tasks.YuwellSourceTask
 import de.michelinside.glucodatahandler.transfer.NightscoutUploader
 
@@ -340,7 +341,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                         startActivity(
                             Intent(
                                 ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
-                                Uri.parse("package:$packageName")
+                                "package:$packageName".toUri()
                             )
                         )
                     } catch (exc: Exception) {
@@ -489,7 +490,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 R.id.action_help -> {
                     val browserIntent = Intent(
                         Intent.ACTION_VIEW,
-                        Uri.parse(resources.getText(CR.string.help_link).toString())
+                        resources.getText(CR.string.help_link).toString().toUri()
                     )
                     startActivity(browserIntent)
                     return true
@@ -497,7 +498,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 R.id.action_support -> {
                     val browserIntent = Intent(
                         Intent.ACTION_VIEW,
-                        Uri.parse(resources.getText(CR.string.support_link).toString())
+                        resources.getText(CR.string.support_link).toString().toUri()
                     )
                     startActivity(browserIntent)
                     return true
@@ -515,7 +516,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 R.id.action_google_groups -> {
                     val browserIntent = Intent(
                         Intent.ACTION_VIEW,
-                        Uri.parse(resources.getText(CR.string.google_gdh_group_url).toString())
+                        resources.getText(CR.string.google_gdh_group_url).toString().toUri()
                     )
                     startActivity(browserIntent)
                     return true
@@ -523,7 +524,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 R.id.action_facebook -> {
                     val browserIntent = Intent(
                         Intent.ACTION_VIEW,
-                        Uri.parse(resources.getText(CR.string.facebook_gdh_group_url).toString())
+                        resources.getText(CR.string.facebook_gdh_group_url).toString().toUri()
                     )
                     startActivity(browserIntent)
                     return true
@@ -588,9 +589,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 when (state) {
                     AlarmState.SNOOZE -> AlarmHandler.setSnooze(0)  // disable snooze
                     AlarmState.DISABLED -> {
-                        with(sharedPref.edit()) {
+                        sharedPref.edit {
                             putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, true)
-                            apply()
                         }
                     }
                     AlarmState.INACTIVE,
@@ -633,9 +633,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private fun updateAlarmIcon() {
         try {
             if(!AlarmNotification.channelActive(this)) {
-                with(sharedPref.edit()) {
+                sharedPref.edit {
                     putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
-                    apply()
                 }
             }
             val state = AlarmNotificationBase.currentAlarmState
@@ -755,7 +754,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     startActivity(
                         Intent(
                             ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
-                            Uri.parse("package:$packageName")
+                            "package:$packageName".toUri()
                         )
                     )
                 } catch (exc: Exception) {
@@ -779,9 +778,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         val pm = getSystemService(POWER_SERVICE) as PowerManager
         if (!pm.isIgnoringBatteryOptimizations(packageName)) {
             Log.w(LOG_ID, "Battery optimization is active")
-            val onClickListener = View.OnClickListener {
+            val onClickListener = OnClickListener {
                 val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
-                intent.data = Uri.parse("package:$packageName")
+                intent.data = "package:$packageName".toUri()
                 startActivity(intent)
             }
             tableNotes.addView(createRow(resources.getString(CR.string.battery_optimization_disabled), onClickListener))
@@ -837,7 +836,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 }
                 val browserIntent = Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse(resources.getString(resUrlId))
+                    resources.getString(resUrlId).toUri()
                 )
                 val onClickListener = OnClickListener {
                     try {
@@ -934,11 +933,23 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     GlucoDataService.checkForConnectedNodes(false)
                 }
                 WearPhoneConnection.getNodeConnectionStates(this).forEach { (name, state) ->
-                    if(state > 0)
-                        tableConnections.addView(createProgressBarRow(name, state.toFloat(), BatteryLevelWidget.getColor(state)))
-                    else if(state == 0)
+                    if(state.first > 0) {
+                        val isCharhing = BatteryReceiver.isCharging(state.second)
+                        var value = "${DecimalFormat("#.#").format(state.first)}%"
+                        if(isCharhing)
+                            value += " ⚡"
+                        val textView =  createColumn(value, true, null, 3F)
+                        tableConnections.addView(
+                            createProgressBarRow(
+                                name,
+                                state.first.toFloat(),
+                                BatteryLevelWidget.getColor(state.first),
+                                textView
+                            )
+                        )
+                    } else if(state.first == 0)
                         tableConnections.addView(createRow(name, resources.getString(CR.string.state_connected), onCheckClickListener))
-                    else if(state == -1)
+                    else if(state.first == -1)
                         tableConnections.addView(createRow(name, resources.getString(CR.string.state_await_data), onCheckClickListener))
                 }
             }
@@ -1075,9 +1086,14 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private fun createSensorAgeColumn(duration: Duration, runtimeMinutes: Float): TextView {
         val onClickListener = OnClickListener {
             try {
-                with(sharedPref.edit()) {
-                    putBoolean(Constants.SHARED_PREF_SHOW_SENSOR_AGE_REMAIN_TIME, !sharedPref.getBoolean(Constants.SHARED_PREF_SHOW_SENSOR_AGE_REMAIN_TIME, false))
-                    apply()
+                sharedPref.edit {
+                    putBoolean(
+                        Constants.SHARED_PREF_SHOW_SENSOR_AGE_REMAIN_TIME,
+                        !sharedPref.getBoolean(
+                            Constants.SHARED_PREF_SHOW_SENSOR_AGE_REMAIN_TIME,
+                            false
+                        )
+                    )
                 }
                 updateDetailsTable()
             } catch (exc: Exception) {
@@ -1211,9 +1227,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             val excMsg = sharedPref.getString(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_MESSAGE, "") ?: ""
             val time = sharedPref.getLong(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_TIME, 0)
             Log.e(LOG_ID, "Uncaught exception detected at ${DateFormat.getDateTimeInstance().format(Date(time))}: $excMsg")
-            with(sharedPref.edit()) {
+            sharedPref.edit {
                 putBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, false)
-                apply()
             }
 
             if(time > 0 && (System.currentTimeMillis()- ReceiveData.time) < (60*60 * 1000) && !GdhUncaughtExecptionHandler.isOutOfMemoryException(excMsg)) {
@@ -1260,10 +1275,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                         view?.setPadding(systemBars!!.left, systemBars!!.top, systemBars!!.right, systemBars!!.bottom)
                 }
                 chart.moveViewToX(chart.xChartMax)
-                with(sharedPref.edit()) {
+                sharedPref.edit {
                     Log.d(LOG_ID, "save fullscreen mode: $fullscreen")
                     putBoolean(Constants.SHARED_PREF_FULLSCREEN_LANDSCAPE, fullscreen)
-                    apply()
                 }
             }
         } catch (exc: Exception) {

@@ -36,7 +36,10 @@ class WatchBattery @JvmOverloads constructor(
     val nodeId: String = "<id>",
     @field:TaskerInputField("name")
     @get:TaskerOutputVariable("name", R.string.watch_name_label, R.string.watch_name_html_label)
-    val name: String = "<name>"
+    val name: String = "<name>",
+    @field:TaskerInputField("charging")
+    @get:TaskerOutputVariable("charging", R.string.battery_charging_label, R.string.battery_charging_html_label)
+    val charging: Boolean = false
 )
 
 
@@ -80,9 +83,10 @@ object TaskerWatchBatteryReceiver: NotifierInterface {
                 val nodeId = extras.getString(Constants.EXTRA_NODE_ID)
                 if(nodeId != null) {
                     WearPhoneConnection.getNodeBatteryLevel(nodeId, false).firstNotNullOf { (name, level) ->
-                        if (level > 0) {
+                        if (level.first > 0) {
                             Log.d(LOG_ID, "sending watch battery level $level for node $nodeId - name $name to tasker for source " + dataSource.toString())
-                            WatchBatteryEvent::class.java.requestQuery(context, WatchBattery(level, nodeId, name))
+                            WatchBatteryEvent::class.java.requestQuery(context, WatchBattery(level.first, nodeId, name,
+                                BatteryReceiver.isCharging(level.second)))
                         } else {
                             Log.w(LOG_ID, "No level found for node $nodeId - name $name")
                         }
