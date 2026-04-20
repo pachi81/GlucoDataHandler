@@ -13,7 +13,7 @@ import de.michelinside.glucodatahandler.common.ui.SelectReceiverPreferenceDialog
 abstract class SettingsFragmentCompatBase: PreferenceFragmentCompatBase() {
     private val LOG_ID = "GDH.SettingsFragmentCompatBase"
 
-    open fun getDialogFragment(preference: Preference): DialogFragment? {
+    override fun getDialogFragment(preference: Preference): DialogFragment? {
         var dialogFragment: DialogFragment? = null
         if (preference is TimePickerPreference) {
             dialogFragment = TimePickerPreferenceDialogFragmentCompat()
@@ -25,26 +25,5 @@ abstract class SettingsFragmentCompatBase: PreferenceFragmentCompatBase() {
             dialogFragment = SelectReceiverPreferenceDialogFragmentCompat.initial(preference.key)
         }
         return dialogFragment
-    }
-
-    open fun showDialogFragment(preference: Preference): Boolean {
-        val dialogFragment = getDialogFragment(preference)
-        if (dialogFragment != null) {
-            dialogFragment.setTargetFragment(this, 0)
-            dialogFragment.show(parentFragmentManager, "androidx.preference.PreferenceFragment.DIALOG")
-            return true
-        }
-        return false
-    }
-
-    override fun onDisplayPreferenceDialog(preference: Preference) {
-        Log.d(LOG_ID, "onDisplayPreferenceDialog called for " + preference.javaClass)
-        try {
-            if (!showDialogFragment(preference)) {
-                super.onDisplayPreferenceDialog(preference)
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "onDisplayPreferenceDialog exception: " + exc.toString())
-        }
     }
 }

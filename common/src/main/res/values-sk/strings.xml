@@ -490,7 +490,6 @@
     <string name="activity_large_arrow_icon_summary">Prosím, vypnite toto nastavenie, ak je šípka trendu príliš veľká alebo orezaná.</string>
     <string name="pref_cat_ui_settings">Používateľské rozhranie</string>
     <string name="gda_foreground_info">GlucoDataAuto je spustené</string>
-    <string name="gda_foreground_summary">Povoľte túto funkciu len v prípade, že používate zdroj sledovateľa a iba upozornenia Android Auto.\nToto zabráni systému Android v zatvorení tejto aplikácie, keď nie je pripojená k Android Auto, takže aplikácia nemôže rozpoznať pripojenie Android Auto.\nNamiesto aktivovania tohto nastavenia môžete aplikáciu v Android Auto otvoriť raz, ak ste pripojení.</string>
     <string name="battery_optimization_disabled">Optimalizácia batérie je zapnutá!\nStlačte tu, aby ste ju vypli.</string>
     <string name="gda_source_follower_info_summary">Ak používate zdroj sledovateľa, aplikácia sa nemusí spustiť, keď je pripojená k Android Auto, ak používate iba upozornenia Android Auto.\nAby aplikácia rozpoznala pripojenie Android Auto, musíte deaktivovať optimalizáciu batérie.\nAk to stále nefunguje, môžete tiež aktivovať režim popredia alebo musíte aplikáciu raz otvoriť v Android Auto, ak je pripojená k Android Auto.</string>
     <string name="gda_help_aa_title">Nastaviť Android Auto</string>
@@ -1003,5 +1002,7 @@ Tieto povolenia môžete kedykoľvek spravovať v nastaveniach aplikácie Health
 
     <string name="xdrip_open_server_api_secret_summary">Voliteľný API tajný kľúč na ochranu prístupu. Ak je nakonfigurovaný, rovnaký kľúč musí byť nastavený aj v klientskej aplikácii na prístup k údajom.</string>
     <string name="pref_xdrip_server_summary">Poskytuje lokálny webový server na porte 17580, ktorý emuluje webovú službu xDrip+ a môže byť použitý rôznymi externými službami, ciferníkmi a aplikáciami.</string>
+
+    <string name="gda_foreground_summary">Voliteľný režim riešenia problémov, ktorý stabilizuje pripojenie k Android Auto tým, že zabraňuje ukončeniu aplikácie na pozadí. Služba zostáva neaktívna bez aktívneho pripojenia a oznámenie sa dá od Androidu 14 jednoducho odstrániť potiahnutím.</string>
 </resources>
 

@@ -241,12 +241,16 @@ object HealthConnectManager: NotifierInterface {
                     val recordsToInsert = mutableListOf<BloodGlucoseRecord>()
 
                     glucoseValues.forEach {
-                        recordsToInsert.add(BloodGlucoseRecord(
-                            time = Instant.ofEpochMilli(it.timestamp),
-                            zoneOffset = ZonedDateTime.now().offset,
-                            level = BloodGlucose.milligramsPerDeciliter(it.value.toDouble()),
-                            metadata = currentMeta
-                        ))
+                        if(it.timestamp > System.currentTimeMillis()) {
+                            Log.w(LOG_ID, "Ignoring glucose value with timestamp in the future: ${Utils.getUiTimeStamp(it.timestamp)}")
+                        } else {
+                            recordsToInsert.add(BloodGlucoseRecord(
+                                time = Instant.ofEpochMilli(it.timestamp),
+                                zoneOffset = ZonedDateTime.now().offset,
+                                level = BloodGlucose.milligramsPerDeciliter(it.value.toDouble()),
+                                metadata = currentMeta
+                            ))
+                        }
                     }
 
                     client.insertRecords(recordsToInsert)

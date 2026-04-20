@@ -15,64 +15,20 @@ import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.ScreenEventReceiver
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
-import de.michelinside.glucodatahandler.common.utils.Utils.isScreenReaderOn
 
 
 class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterface {
     companion object {
         private val LOG_ID = "GDH.GlucoDataServiceWear"
         private var starting = false
-        private var migrated = false
 
         fun start(context: Context) {
             if(!starting) {
                 starting = true
                 Log.d(LOG_ID, "start called")
                 startServiceReceiver = StartServiceReceiver::class.java
-                migrateSettings(context)
                 start(AppSource.WEAR_APP, context, GlucoDataServiceWear::class.java)
                 starting = false
-            }
-        }
-
-        private fun migrateSettings(context: Context) {
-            try {
-                if(migrated)
-                    return
-
-                migrated = true
-                Log.i(LOG_ID, "migrateSettings called")
-                val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-                // notification to vibrate_only
-                if(!sharedPref.contains(Constants.SHARED_PREF_NOTIFICATION_VIBRATE) && sharedPref.contains("notification")) {
-                    with(sharedPref.edit()) {
-                        putBoolean(Constants.SHARED_PREF_NOTIFICATION_VIBRATE, sharedPref.getBoolean("notification", false))
-                        apply()
-                    }
-                }
-                // complications
-                if(!sharedPref.contains(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION)) {
-                    val curApp = context.packageName
-                    Log.i(LOG_ID, "Setting default tap action for complications to $curApp")
-                    with(sharedPref.edit()) {
-                        putString(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION, curApp)
-                        apply()
-                    }
-                }
-
-                // graph settings
-                if(sharedPref.contains(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION) || !sharedPref.contains(Constants.SHARED_PREF_GRAPH_BITMAP_DURATION)) {
-                    val isScreenReader = context.isScreenReaderOn()
-                    val oldDuration = if(isScreenReader) 0 else sharedPref.getInt(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION, 2)
-                    Log.i(LOG_ID, "Setting default duration for graph - screenReader: $isScreenReader - oldDuration: $oldDuration")
-                    with(sharedPref.edit()) {
-                        putInt(Constants.SHARED_PREF_GRAPH_BITMAP_DURATION, oldDuration)
-                        remove(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION)
-                        apply()
-                    }
-                }
-            } catch( exc: Exception ) {
-                Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
             }
         }
     }

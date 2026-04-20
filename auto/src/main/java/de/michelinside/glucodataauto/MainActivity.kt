@@ -191,6 +191,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         try {
             Log.d(LOG_ID, "onResume called")
             super.onResume()
+            if(!GlucoDataService.isServiceRunning)
+                GlucoDataService.context = this.applicationContext
             checkUncaughtException()
             update()
             InternalNotifier.addNotifier( this, this, mutableSetOf(
@@ -209,8 +211,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.UPDATE_MAIN))
 
             GlucoDataServiceAuto.startDataSync()
-            if(!GlucoDataService.isServiceRunning)
-                GlucoDataService.context = this.applicationContext
             chartBitmap.resume()
             versionChecker.checkVersion(1)
             checkNewSettings()
@@ -471,6 +471,13 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
             noDataLayout.visibility = if(ReceiveData.time>0) View.GONE else View.VISIBLE
 
+            if(GlucoDataService.patientName.isNullOrEmpty()) {
+                if(title != resources.getString(R.string.app_name))
+                    setTitle(R.string.app_name)
+            } else {
+                setTitle(GlucoDataService.patientName)
+            }
+
             updateNotesTable()
             updateAlarmsTable()
             updateConnectionsTable()
@@ -590,10 +597,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     private fun updateDetailsTable() {
         tableDetails.removeViews(1, maxOf(0, tableDetails.childCount - 1))
-        if(!GlucoDataServiceAuto.patientName.isNullOrEmpty()) {
-            tableDetails.addView(createRow(CR.string.patient_name, GlucoDataServiceAuto.patientName!!))
-        }
-
         if(ReceiveData.time > 0) {
             if (ReceiveData.isMmol)
                 tableDetails.addView(createRow(CR.string.info_label_raw, "${ReceiveData.rawValue} mg/dl"))

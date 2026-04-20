@@ -73,7 +73,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                         + " - elapsedAlarmTime=" + Utils.getElapsedTimeMinute(alarmTime)
                         + " - elapsedIobCobTimeMinute=" + Utils.getElapsedTimeMinute(task.getLastIobCobTime(), RoundingMode.HALF_UP)
                         + " - interval=" + task.getIntervalMinute())
-                if (elapsedTimeMinute != 0L) {
+                if (elapsedTimeMinute != 0L && elapsedTimeMinute != lastElapsedMinute) {
                     if (lastElapsedMinute < 0 && initialExecution) {
                         Log.i(LOG_ID, "Trigger initial task execution")
                         return true   // trigger initial execution
@@ -87,7 +87,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                         return true   // interval expired for active task
                     }
                 }
-                if (task.hasIobCobSupport()) {
+                if (!isRunning() && task.hasIobCobSupport()) {
                     if (Utils.getElapsedTimeMinute(task.getLastIobCobTime(), RoundingMode.HALF_UP) >= task.getIntervalMinute()) {
                         Log.i(LOG_ID, "Trigger " + task.javaClass.simpleName + " IOB/COB execution after " + Utils.getElapsedTimeMinute(task.getLastIobCobTime(), RoundingMode.HALF_UP) + " min")
                         return true   // IOB/COB interval expired for active task
@@ -123,6 +123,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
 
     private fun isRunning(): Boolean {
         if(runningThread!=null && runningThread!!.isAlive()) {
+            Log.d(LOG_ID, "Thread still active with ID ${runningThread?.threadId()}")
             return true
         }
         return false
@@ -148,7 +149,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                                             LOG_ID,
                                             "execute after " + elapsedTimeMinute + " min: " + it.javaClass.simpleName
                                         )
-                                        it.execute(context!!)
+                                        it.execute(context!!, force)
                                     } catch(ex:InterruptedException) {
                                         Log.e(LOG_ID,"execute task " + it.javaClass.simpleName + " interrupted: " + ex)
                                         it.interrupt()
@@ -221,7 +222,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                 }
                 curInterval = newInterval
                 curDelay = newDelay
-                if(triggerExecute && initialExecution && elapsedTimeMinute >= 1) {
+                if(triggerExecute && initialExecution && elapsedTimeMinute >= 1 && !isRunning()) {
                     Log.i(LOG_ID, "Trigger initial execution")
                     executeTasks(true)
                 } else if (curInterval > 0) {

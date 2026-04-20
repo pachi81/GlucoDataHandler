@@ -1,12 +1,16 @@
 package de.michelinside.glucodataauto.android_auto
 
+import android.annotation.SuppressLint
 import de.michelinside.glucodataauto.R
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.ServiceInfo
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Paint
 import android.media.session.PlaybackState
+import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.support.v4.media.MediaBrowserCompat
@@ -33,13 +37,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import de.michelinside.glucodataauto.GlucoDataServiceAuto.Companion.NOTIFICATION_ID
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.chart.ChartBitmapHandler
 import de.michelinside.glucodatahandler.common.utils.BitmapPool
+import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.R as CR
+import androidx.core.content.edit
 
 
 class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
-    private val LOG_ID = "GDH.AA.CarMediaBrowserService"
+
     private val MEDIA_ROOT_ID = "root"
     private val MEDIA_GLUCOSE_ID = "glucose_value"
     private val MEDIA_NOTIFICATION_TOGGLE_ID = "toggle_notification"
@@ -53,22 +61,48 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     private var curBitmap: Bitmap? = null
 
     companion object {
-        var active = false
+        private var isForegroundService = false
+        private val LOG_ID = "GDH.AA.CarMediaBrowserService"
+        private var service: CarMediaBrowserService? = null
+        val active: Boolean get() = service != null
+
+        fun setForeground(context: Context, foreground: Boolean) {
+            try {
+                Log.i(LOG_ID, "setForeground called with foreground=$foreground - isForegroundService=$isForegroundService - active=$active")
+                if(!active || foreground != isForegroundService) {
+                    val serviceIntent = Intent(context, CarMediaBrowserService::class.java)
+                    serviceIntent.putExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, foreground)
+                    if (foreground)
+                        context.startForegroundService(serviceIntent)
+                    else
+                        context.startService(serviceIntent)
+                }
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "setForeground exception: " + exc.message.toString() )
+            }
+        }
+
+        fun enable() {
+            Log.d(LOG_ID, "enable")
+            service?.enable()
+        }
+
+        fun disable() {
+            Log.d(LOG_ID, "disable")
+            service?.disable()
+        }
     }
 
     override fun onCreate() {
-        Log.d(LOG_ID, "onCreate")
+        Log.i(LOG_ID, "onCreate")
         try {
             super.onCreate()
-            active = true
             GlucoDataServiceAuto.init(this)
-            GlucoDataServiceAuto.start(this)
-            CarMediaPlayer.enable(this)
-            ChartBitmapHandler.register(this, this.javaClass.simpleName)
-            sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
             sharedPref.registerOnSharedPreferenceChangeListener(this)
 
             session = MediaSessionCompat(this, "MyMusicService")
+
             // Callbacks to handle events from the user (play, pause, search)
             session.setCallback(object : MediaSessionCompat.Callback() {
                 override fun onPlayFromMediaId(mediaId: String, extras: Bundle?) {
@@ -88,15 +122,22 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                                 session.setPlaybackState(buildState(PlaybackState.STATE_PLAYING))
                         } else if(curMediaItem == MEDIA_NOTIFICATION_TOGGLE_ID) {
                             Log.d(LOG_ID, "Toggle notification")
-                            with(sharedPref.edit()) {
-                                putBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, !CarNotification.enable_notification)
-                                apply()
+                            sharedPref.edit {
+                                putBoolean(
+                                    Constants.SHARED_PREF_CAR_NOTIFICATION,
+                                    !CarNotification.enable_notification
+                                )
                             }
                         } else if(curMediaItem == MEDIA_SPEAK_TOGGLE_ID) {
                             Log.d(LOG_ID, "Toggle speak")
-                            with(sharedPref.edit()) {
-                                putBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE, !sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE, false))
-                                apply()
+                            sharedPref.edit {
+                                putBoolean(
+                                    Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE,
+                                    !sharedPref.getBoolean(
+                                        Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE,
+                                        false
+                                    )
+                                )
                             }
                         }
                     } catch (exc: Exception) {
@@ -126,32 +167,72 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             sessionToken = session.sessionToken
             mediaController = MediaControllerCompat(this, session.sessionToken)
             TextToSpeechUtils.initTextToSpeech(this)
-            InternalNotifier.addNotifier(this, this, mutableSetOf(
-                NotifySource.BROADCAST,
-                NotifySource.MESSAGECLIENT,
-                NotifySource.SETTINGS,
-                NotifySource.TIME_VALUE,
-                NotifySource.GRAPH_CHANGED))
+            service = this
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
     }
 
-    override fun onDestroy() {
-        Log.d(LOG_ID, "onDestroy")
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.i(LOG_ID, "onStartCommand called with intent ${Utils.dumpBundle(intent?.extras)}, flags $flags and startId $startId")
         try {
-            active = false
+            val isForeground = intent?.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, false)?: true  // true as default for started from extern!
+            Log.d(LOG_ID, "onStartCommand isForeground: $isForeground - isForegroundService: $isForegroundService")
+            if (isForeground && !isForegroundService) {
+                Log.i(LOG_ID, "Starting service in foreground!")
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+                    startForeground(NOTIFICATION_ID, GlucoDataServiceAuto.getNotification(this), ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
+                else
+                    startForeground(NOTIFICATION_ID, GlucoDataServiceAuto.getNotification(this))
+                isForegroundService = true
+            } else if ( isForegroundService && !isForeground ) {
+                isForegroundService = false
+                Log.i(LOG_ID, "Stopping service in foreground!")
+                stopForeground(STOP_FOREGROUND_REMOVE)
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Error starting foreground in onStartCommand: ${exc.message}")
+        }
+
+        super.onStartCommand(intent, flags, startId)
+
+        return START_STICKY  // keep alive
+    }
+
+    override fun onDestroy() {
+        Log.w(LOG_ID, "onDestroy")
+        try {
+            disable()
+            service = null
+            isForegroundService = false
             CarMediaPlayer.setCallback(null)
             InternalNotifier.remNotifier(this, this)
             sharedPref.unregisterOnSharedPreferenceChangeListener(this)
             session.release()
-            GlucoDataServiceAuto.stop(this)
-            ChartBitmapHandler.unregister(this.javaClass.simpleName)
-            BitmapPool.returnBitmap(curBitmap)
             super.onDestroy()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.message.toString() )
         }
+    }
+
+    private fun enable() {
+        Log.i(LOG_ID, "enable")
+        InternalNotifier.addNotifier(this, this, mutableSetOf(
+            NotifySource.BROADCAST,
+            NotifySource.MESSAGECLIENT,
+            NotifySource.SETTINGS,
+            NotifySource.TIME_VALUE,
+            NotifySource.GRAPH_CHANGED))
+        ChartBitmapHandler.register(this, this.javaClass.simpleName)
+    }
+
+    private fun disable() {
+        Log.i(LOG_ID, "disable")
+        InternalNotifier.remNotifier(this, this)
+        ChartBitmapHandler.unregister(this.javaClass.simpleName)
+        BitmapPool.returnBitmap(curBitmap)
+        curBitmap = null
+        session.setPlaybackState(buildState(PlaybackState.STATE_STOPPED))
     }
 
     override fun onGetRoot(
@@ -261,6 +342,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         }
     }
 
+    @SuppressLint("InflateParams")
     private fun getBackgroundImage(): Bitmap? {
         val coloredCover = sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_COLORED, true)
         try {
@@ -319,18 +401,22 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                 MEDIA_NOTIFICATION_TOGGLE_ID -> {
                     curMediaItem = MEDIA_GLUCOSE_ID
                     Log.d(LOG_ID, "Toggle notification")
-                    with(sharedPref.edit()) {
-                        putBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, !CarNotification.enable_notification)
-                        apply()
+                    sharedPref.edit {
+                        putBoolean(
+                            Constants.SHARED_PREF_CAR_NOTIFICATION,
+                            !CarNotification.enable_notification
+                        )
                     }
                 }
                MEDIA_SPEAK_TOGGLE_ID -> {
                    curMediaItem = MEDIA_GLUCOSE_ID
                     Log.d(LOG_ID, "Toggle speak")
-                    with(sharedPref.edit()) {
-                        putBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE, !sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE, false))
-                        apply()
-                    }
+                   sharedPref.edit {
+                       putBoolean(
+                           Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE,
+                           !sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE, false)
+                       )
+                   }
                 }
             }
         } catch (exc: Exception) {
@@ -353,8 +439,8 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                 title = title.trim()
             }
             var subtitle = ""
-            if(!GlucoDataServiceAuto.patientName.isNullOrEmpty())
-                subtitle += GlucoDataServiceAuto.patientName + " - "
+            if(!GlucoDataService.patientName.isNullOrEmpty())
+                subtitle += GlucoDataService.patientName + " - "
             subtitle += "🕒 " + ReceiveData.getElapsedTimeMinuteAsString(this)
 
             session.setMetadata(
@@ -459,7 +545,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             val position = if(state==PlaybackState.STATE_PLAYING) getPosition() else 0L
             Log.d(LOG_ID, "buildState called for state $state - pos: ${position}/${duration}")
             playBackState = state
-            val bundleWithDuration = if (duration == 0L) null else Bundle().apply {
+            val bundleWithDuration = Bundle().apply {
                 putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration) // duration in Millisekunden
             }
             return PlaybackStateCompat.Builder().setActions(

@@ -6,6 +6,8 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.os.Handler
 import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.google.gson.Gson
 import de.michelinside.glucodatahandler.common.Command
 import de.michelinside.glucodatahandler.common.Constants
@@ -28,6 +30,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.File
+import kotlin.collections.first
+import kotlin.collections.isNotEmpty
+import kotlin.collections.last
 
 object dbAccess {
     private val LOG_ID = "GDH.dbAccess"
@@ -51,7 +56,7 @@ object dbAccess {
                 Log.i(LOG_ID, "migration from 1 to 2")
                 db.execSQL("UPDATE glucose_values SET TIMESTAMP = ((TIMESTAMP / 1000) * 1000)")
             } catch (exc: Exception) {
-                Log.e(LOG_ID, "migration exception: $exc")
+                Log.e(LOG_ID, "migration exception 1-2: $exc")
                 db.execSQL("DELETE FROM glucose_values")
             }
         }
@@ -64,7 +69,7 @@ object dbAccess {
                 // Correct CREATE TABLE statement matching the LogEntry entity exactly
                 db.execSQL("CREATE TABLE `log` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `priority` INTEGER NOT NULL, `tag` TEXT NOT NULL, `msg` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `pid` INTEGER NOT NULL, `tid` INTEGER NOT NULL)")
             } catch (exc: Exception) {
-                Log.e(LOG_ID, "migration exception: $exc")
+                Log.e(LOG_ID, "migration exception 2-3: $exc")
             }
         }
     }
@@ -77,7 +82,19 @@ object dbAccess {
                 db.execSQL("DROP TABLE IF EXISTS `log`")
                 db.execSQL("CREATE TABLE `log` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `priority` INTEGER NOT NULL, `tag` TEXT NOT NULL, `msg` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `pid` INTEGER NOT NULL, `tid` INTEGER NOT NULL)")
             } catch (exc: Exception) {
-                Log.e(LOG_ID, "migration exception: $exc")
+                Log.e(LOG_ID, "migration exception 3-4: $exc")
+            }
+        }
+    }
+
+    private val migration_4_5 = object : Migration(4, 5) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            try {
+                Log.i(LOG_ID, "migration from 4 to 5")
+                // Re-create table with new structure
+                db.execSQL("ALTER TABLE glucose_values ADD COLUMN rate REAL")
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "migration exception 4-5: $exc")
             }
         }
     }
@@ -103,7 +120,12 @@ object dbAccess {
                 Database::class.java,
                 DATABASE_NAME
             )
-                .addMigrations(migration_1_2, migration_2_3, migration_3_4)
+                .addMigrations(
+                    migration_1_2,
+                    migration_2_3,
+                    migration_3_4,
+                    migration_4_5
+                )
                 .build()
             Log.i(LOG_ID, "Database created - version $version")
         } catch (exc: Exception) {
@@ -178,6 +200,22 @@ object dbAccess {
             }.await()
         } else {
             emptyList()
+        }
+    }
+
+    fun getGlucoseValue(timestamp: Long): GlucoseValue? = runBlocking {
+        if(active) {
+            scope.async {
+                try {
+                    Log.d(LOG_ID, "getGlucoseValues - minTime: ${Utils.getUiTimeStamp(timestamp)}")
+                    database!!.glucoseValuesDao().getValue(GlucoDataUtils.getGlucoseTime(timestamp))
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "getGlucoseValues exception: $exc")
+                    null
+                }
+            }.await()
+        } else {
+            null
         }
     }
 
@@ -259,7 +297,7 @@ object dbAccess {
         val minTime = System.currentTimeMillis()-Constants.DB_MAX_DATA_TIME_MS
         values.forEach { 
             if(it.timestamp > minTime && GlucoDataUtils.isGlucoseValid(it.value)) {
-                updated.add(GlucoseValue(GlucoDataUtils.getGlucoseTime(it.timestamp), it.value))
+                updated.add(GlucoseValue(GlucoDataUtils.getGlucoseTime(it.timestamp), it.value, it.rate))
             } else {
                 Log.w(LOG_ID, "Invalid value ${it.value} at ${Utils.getUiTimeStamp(it.timestamp)} (${it.timestamp})")
             }
@@ -267,12 +305,12 @@ object dbAccess {
         return updated
     }
 
-    fun addGlucoseValue(time: Long, value: Int) {
+    fun addGlucoseValue(time: Long, value: Int, rate: Float) {
         if(active && GlucoDataUtils.isGlucoseValid(value)) {
             scope.launch {
                 try {
                     Log.d(LOG_ID, "Add new value $value at ${Utils.getUiTimeStamp(time)} ($time)")
-                    database!!.glucoseValuesDao().insertValue(GlucoseValue(GlucoDataUtils.getGlucoseTime(time), value))
+                    database!!.glucoseValuesDao().insertValue(GlucoseValue(GlucoDataUtils.getGlucoseTime(time), value, rate))
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "addGlucoseValue exception: $exc")
                 }
@@ -305,6 +343,19 @@ object dbAccess {
                     }
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "addGlucoseValues exception: $exc")
+                }
+            }
+        }
+    }
+
+
+    fun updateRate(time: Long, rate: Float) {
+        if(active && time > 0 && !rate.isNaN()) {
+            scope.launch {
+                try {
+                    database!!.glucoseValuesDao().updateRate(GlucoDataUtils.getGlucoseTime(time), rate)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "updateRate exception: $exc")
                 }
             }
         }
@@ -516,5 +567,6 @@ object dbAccess {
             }
         }
     }
+
 
 }

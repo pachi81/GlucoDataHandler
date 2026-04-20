@@ -14,3 +14,4 @@ dev_release/
 debug/
 second/
 /.kotlin/
+/gradle/gradle-daemon-jvm.properties

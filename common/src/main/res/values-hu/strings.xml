@@ -175,9 +175,6 @@ A riasztások és a nagyon alacsony értékek mindig elküldésre kerülnek.</st
     <string name="battery_optimization_disabled">Az akkumulátor optimalizálás aktív!
 Kattintson ide a letiltáshoz.</string>
     <string name="gda_foreground_info">A GlucoDataAuto fut</string>
-    <string name="gda_foreground_summary">Csak akkor engedélyezze, ha csak egy követő forrást és Android Auto értesítéseket használ.
-Ez megakadályozza, hogy az Android bezárja ezt az alkalmazást, miközben nincs csatlakoztatva az Android Auto-hoz, így az alkalmazás nem ismeri fel az Android Auto kapcsolatot.
-Alternatív megoldásként megnyithatja az alkalmazást közvetlenül az Android Auto alkalmazásban.</string>
     <string name="gda_help_aa_dev_mode">1. Fejlesztői beállítások engedélyezése</string>
     <string name="gda_help_aa_dev_mode_summary">- Nyissa meg az Android Auto-t
 - Görgessen a verzióig
@@ -1064,4 +1061,7 @@ Ezeket az engedélyeket bármikor kezelheti a Health Connect alkalmazás beáll�
 
     <string name="xdrip_open_server_api_secret_summary">Opcionális API-titok a hozzáférés védelme érdekében. Ha be van állítva, ugyanazt a titkot kell megadni a kliens alkalmazásban is az adatok eléréséhez.</string>
     <string name="pref_xdrip_server_summary">Helyi webszervert biztosít a 17580-as porton, amely emulálja az xDrip+ webszolgáltatást, így különféle külső szolgáltatások, óraszámlapok és alkalmazások használhatják.</string>
+
+    <string name="gda_foreground_summary">Opcionális hibaelhárítási mód, amely stabilizálja az Android Auto kapcsolatot azáltal, hogy megakadályozza az alkalmazás háttérben történő leállítását. A szolgáltatás aktív kapcsolat nélkül inaktív marad, és az értesítés az Android 14-től kezdve egyszerűen elcsúsztatható.</string>
+
 </resources>

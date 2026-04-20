@@ -261,7 +261,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     }
 
     fun getNotification(withContent: Boolean, iconKey: String, channel: ChannelType, customLayout: Boolean) : Notification {
-        Log.d(LOG_ID, "getNotification withContent=$withContent - channel=${channel} - customLayout=$customLayout")
+        Log.d(LOG_ID, "getNotification withContent=$withContent - channel=${channel} - customLayout=$customLayout - iconKey=$iconKey")
         val notificationBuilder = getNotificationBuilder(channel)
         val notificationBuild = notificationBuilder!!
             .setSmallIcon(getStatusBarIcon(iconKey))

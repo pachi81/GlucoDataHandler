@@ -10,7 +10,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import de.michelinside.glucodatahandler.common.preferences.PreferenceHelper
 import de.michelinside.glucodatahandler.preferences.SettingsFragment
-import de.michelinside.glucodatahandler.preferences.SourceFragment
+import de.michelinside.glucodatahandler.common.preferences.SourceFragment
 import de.michelinside.glucodatahandler.preferences.AlarmFragment
 import de.michelinside.glucodatahandler.common.R as RC
 

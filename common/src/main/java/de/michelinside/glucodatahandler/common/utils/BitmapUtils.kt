@@ -183,7 +183,7 @@ object BitmapUtils {
         return rotatedBitmap
     }
 
-    private fun rateToBitmap(rate: Float, color: Int, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F, strikeThrough: Boolean = false, withShadow: Boolean = false): Bitmap? {
+    fun rateToBitmap(rate: Float, color: Int, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F, strikeThrough: Boolean = false, withShadow: Boolean = false): Bitmap? {
         try {
             if (rate.isNaN()) {
                 return textToBitmap("?", color, true, false, width, height, withShadow = withShadow )

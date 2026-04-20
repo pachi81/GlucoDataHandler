@@ -5,5 +5,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "glucose_values")
 class GlucoseValue (
     @PrimaryKey val timestamp: Long,
-    var value: Int
+    var value: Int,
+    var rate: Float? = null
 )

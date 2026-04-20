@@ -492,7 +492,6 @@
     <string name="activity_large_arrow_icon_summary">Schakel deze instelling uit als de trendpijl te groot of bijgesneden is.</string>
     <string name="pref_cat_ui_settings">Gebruikersinterface</string>
     <string name="gda_foreground_info">GlucoDataAuto is actief</string>
-    <string name="gda_foreground_summary">Schakel dit alleen in als u een volgerbron en alleen Android Auto-meldingen gebruikt.\nDit voorkomt dat Android deze app sluit terwijl deze niet is verbonden met Android Auto, zodat de app de Android Auto-verbinding niet kan herkennen.\nIn plaats van deze instelling in te schakelen, kunt u de app ook eenmaal openen in Android Auto als u verbonden bent.</string>
     <string name="battery_optimization_disabled">Batterijoptimalisatie is ingeschakeld!\nDruk hier om het uit te schakelen.</string>
     <string name="gda_source_follower_info_summary">Als u een volgerbron gebruikt, wordt de app mogelijk niet gestart terwijl deze is verbonden met Android Auto, als u alleen Android Auto-meldingen gebruikt.\nOm ervoor te zorgen dat de app de Android Auto-verbinding detecteert, moet u batterijoptimalisatie uitschakelen.\nAls het nog steeds niet werkt, kunt u ook de voorgrondmodus inschakelen of moet u de app eenmaal openen in Android Auto als deze is verbonden met Android Auto.</string>
     <string name="gda_help_aa_title">Android Auto instellen</string>
@@ -1001,4 +1000,7 @@ U kunt deze toestemmingen op elk moment beheren in de instellingen van de Health
 
     <string name="xdrip_open_server_api_secret_summary">Optioneel API-geheim om de toegang te beveiligen. Indien geconfigureerd, moet hetzelfde geheim worden ingesteld in de client-app om toegang te krijgen tot de gegevens.</string>
     <string name="pref_xdrip_server_summary">Biedt een lokale webserver op poort 17580 die de xDrip+ webservice emuleert en kan worden gebruikt door verschillende externe services, watchfaces en apps.</string>
+
+    <string name="gda_foreground_summary">Optionele probleemoplossingsmodus die de Android Auto-verbinding stabiliseert door te voorkomen dat de app op de achtergrund wordt afgesloten. De service blijft inactief zonder een actieve verbinding en de melding kan vanaf Android 14 eenvoudig worden weggeveegd.</string>
+
 </resources>

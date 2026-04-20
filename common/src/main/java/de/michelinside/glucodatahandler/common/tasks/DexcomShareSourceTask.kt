@@ -26,7 +26,7 @@ import java.net.HttpURLConnection
 
 class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_ENABLED, DataSource.DEXCOM_SHARE) {
     private val LOG_ID = "GDH.Task.Source.DexcomShareTask"
-    override var minInterval = 5L
+    override var minInterval = 5
     companion object {
         private var user = ""
         private var password = ""
@@ -229,7 +229,13 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
                         val worldTime = re.replace(data.getString("WT"), "").toLong()
                         if(worldTime < firstValueTime || !GlucoDataUtils.isGlucoseValid(value))
                             continue
-                        values.add(GlucoseValue(worldTime, value))
+                        val trendInt = data.optInt("Trend")
+                        val rate = if(trendInt != 0) {
+                            getRateFromTrend(trendInt)
+                        } else {
+                            GlucoDataUtils.getRateFromLabel(data.getString("Trend"))
+                        }
+                        values.add(GlucoseValue(worldTime, value, rate))
                         if(worldTime > lastTime) {
                             lastTime = worldTime
                             lastValueIndex = i

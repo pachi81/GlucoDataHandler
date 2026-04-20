@@ -15,7 +15,6 @@ import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.R
 import androidx.core.content.edit
-import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.HttpRequest
@@ -25,7 +24,6 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
-import java.math.RoundingMode
 
 
 object NightscoutUploader: SharedPreferences.OnSharedPreferenceChangeListener, NotifierInterface {
@@ -127,6 +125,7 @@ object NightscoutUploader: SharedPreferences.OnSharedPreferenceChangeListener, N
                             val jsonEntry = JSONObject()
                             jsonEntry.put("sgv", it.value)
                             jsonEntry.put("date", it.timestamp)
+                            jsonEntry.put("dateString", java.time.Instant.ofEpochMilli(it.timestamp).toString())
                             jsonEntry.put("device", device)
                             jsonEntry.put("type", "sgv")
                             jsonEntry.put("noise", 1)
@@ -188,7 +187,15 @@ object NightscoutUploader: SharedPreferences.OnSharedPreferenceChangeListener, N
                 } else {
                     when(key) {
                         Constants.SHARED_PREF_NIGHTSCOUT_UPLOAD_URL -> {
-                            url = sharedPreferences.getString(Constants.SHARED_PREF_NIGHTSCOUT_UPLOAD_URL, "")!!.trim().trimEnd('/')
+                            val newUrl = sharedPreferences.getString(Constants.SHARED_PREF_NIGHTSCOUT_UPLOAD_URL, "")!!.trim().trimEnd('/')
+                            if(newUrl != url) {
+                                Log.d(LOG_ID, "URL changed from $url to $newUrl")
+                                url = newUrl
+                                lastUploadTime = 0L
+                                sharedPreferences.edit {
+                                    putLong(Constants.SHARED_PREF_NIGHTSCOUT_UPLOAD_TIME, lastUploadTime)
+                                }
+                            }
                         }
                         Constants.SHARED_PREF_NIGHTSCOUT_UPLOAD_SECRET -> {
                             secret = Utils.encryptSHA1(sharedPreferences.getString(Constants.SHARED_PREF_NIGHTSCOUT_UPLOAD_SECRET, "")!!)

@@ -25,6 +25,11 @@ class SourceOfflineFragment : PreferenceFragmentCompatBase() {
         try {
             preferenceManager.sharedPreferencesName = Constants.SHARED_PREF_TAG
             setPreferencesFromResource(R.xml.sources_offline, rootKey)
+            if(GlucoDataService.appSource == AppSource.AUTO_APP) {
+                Log.v(LOG_ID, "Enable GDH cat info")
+                val prefGDH = findPreference<PreferenceCategory>("cat_gdh_info")
+                prefGDH?.isVisible = true
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreatePreferences exception: " + exc.toString())
         }
@@ -78,12 +83,6 @@ abstract class SourceOfflineFragmentBase(val preferenceResId: Int) : PreferenceF
         try {
             preferenceManager.sharedPreferencesName = Constants.SHARED_PREF_TAG
             setPreferencesFromResource(preferenceResId, rootKey)
-
-            if(GlucoDataService.appSource == AppSource.AUTO_APP) {
-                val prefGDH = findPreference<PreferenceCategory>("cat_gdh_info")
-                prefGDH?.isVisible = true
-            }
-
             initPreferences()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreatePreferences exception: " + exc.toString())

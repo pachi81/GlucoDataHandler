@@ -1,0 +1,20 @@
+## This will logout an use, which is logged in on another device/app
+## IMPORTANT, you have to apply this via e-mail!
+
+Accept-Encoding: gzip
+Accept-Language: en-US
+Connection: Keep-Alive
+Content-Length: 229
+Content-Type: application/json; charset=UTF-8
+Host: anyapi-de.yuwell-poctech.com
+User-Agent: okhttp/4.8.1
+X-Timezone: GMT
+
+id: 5
+
+{"clientId":"---","email":"---"}
+
+---------------- Response
+
+
+{"code":200,"message":"Verification email sent, please check your mailbox"}

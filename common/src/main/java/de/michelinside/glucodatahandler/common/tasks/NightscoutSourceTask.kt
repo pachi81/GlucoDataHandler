@@ -186,7 +186,7 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
                             glucose = GlucoDataUtils.mmolToMg(glucose)
                         val time = jsonEntry.getLong("date")
                         if(GlucoDataUtils.isGlucoseValid(glucose) && time > 0 && time >= firstValueTime) {
-                            values.add(GlucoseValue(time, glucose.toInt()))
+                            values.add(GlucoseValue(time, glucose.toInt(), getRate(jsonEntry)))
                             if(time > lastTime) {
                                 lastTime = time
                                 lastValueIndex = i
@@ -286,14 +286,18 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
     }
 
     private fun setRate( bundle: Bundle, jsonObject: JSONObject) {
+        bundle.putFloat(ReceiveData.RATE, getRate(jsonObject))
+    }
+
+    private fun getRate(jsonObject: JSONObject): Float {
         if (jsonObject.has("trend"))
-            bundle.putFloat(ReceiveData.RATE, getRateFromTrend(jsonObject.getInt("trend")))
+            return getRateFromTrend(jsonObject.getInt("trend"))
         else if (jsonObject.has("direction"))
-            bundle.putFloat(ReceiveData.RATE, GlucoDataUtils.getRateFromLabel(jsonObject.getString("direction")))
+            return GlucoDataUtils.getRateFromLabel(jsonObject.getString("direction"))
         else {
             Log.w(LOG_ID, "Missing direction/trend in response: " + jsonObject)
-            bundle.putFloat(ReceiveData.RATE, Float.NaN)
         }
+        return Float.NaN
     }
 
     private fun getRateFromTrend(trend: Int): Float {

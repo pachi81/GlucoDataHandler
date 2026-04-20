@@ -16,6 +16,7 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlin.math.max
+import androidx.core.graphics.createBitmap
 
 
 class LockScreenWallpaper(context: Context): WallpaperBase(context, "GDH.LockScreenWallpaper") {
@@ -45,16 +46,16 @@ class LockScreenWallpaper(context: Context): WallpaperBase(context, "GDH.LockScr
         try {
             Log.v(LOG_ID, "creatWallpaper called")
             val screenWidth = BitmapUtils.getScreenWidth(context)
-            val screenHeigth = BitmapUtils.getScreenHeight(context)
-            val wallpaper = Bitmap.createBitmap(screenWidth, screenHeigth, Bitmap.Config.ARGB_8888)
+            val screenHeight = BitmapUtils.getScreenHeight(context)
+            val wallpaper = createBitmap(screenWidth, screenHeight)
             if(bitmap != null) {
                 val screenDPI = BitmapUtils.getScreenDpi().toFloat()
                 val canvas = Canvas(wallpaper)
                 val drawable = bitmap.toDrawable(context.resources)
-                drawable.setBounds(0, 0, screenWidth, screenHeigth)
+                drawable.setBounds(0, 0, screenWidth, screenHeight)
                 val xOffset = (screenWidth-bitmap.width) * xPos/40F
-                val yOffset = max(0F, ((screenHeigth-bitmap.height)*yPos/100F)) //-(screenDPI*0.3F))
-                Log.d(LOG_ID, "Create wallpaper (x*y:${bitmap.width}*${bitmap.height}) at x=$xOffset/$screenWidth and y=$yOffset/$screenHeigth DPI=$screenDPI")
+                val yOffset = max(0F, ((screenHeight-bitmap.height)*yPos/100F)) //-(screenDPI*0.3F))
+                Log.d(LOG_ID, "Create wallpaper (x*y:${bitmap.width}*${bitmap.height}) at x=$xOffset/$screenWidth and y=$yOffset/$screenHeight DPI=$screenDPI")
                 canvas.drawBitmap(bitmap, xOffset, yOffset, Paint(Paint.ANTI_ALIAS_FLAG))
             }
             return wallpaper
@@ -79,7 +80,7 @@ class LockScreenWallpaper(context: Context): WallpaperBase(context, "GDH.LockScr
         setWallpaper(null, context)
     }
 
-    override open fun update() {
+    override fun update() {
         try {
             Log.v(LOG_ID, "updateLockScreen called - active=$active")
             if (active) {

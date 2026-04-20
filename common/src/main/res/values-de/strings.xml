@@ -482,7 +482,6 @@
     <string name="activity_large_arrow_icon_summary">Bitte deaktivieren, wenn der Trendpfeil zu groß und dadurch abgeschnitten wird.</string>
     <string name="pref_cat_ui_settings">Oberfläche</string>
     <string name="gda_foreground_info">GlucoDataAuto wird ausgeführt</string>
-    <string name="gda_foreground_summary">Nur aktivieren, wenn eine Online Datenquelle und nur Android Auto-Benachrichtigungen verwendet werden.\nDiese Einstellung verhindert, dass Android diese App schließt, wenn sie nicht mit Android Auto verbunden ist, sodass die App die Android Auto-Verbindung nicht erkennen kann.\nAlternativ kann man auch einmal die App direkt in Android Auto öffnen.</string>
     <string name="battery_optimization_disabled">Akkuoptimierungen sind aktiv!\nHier drücken, um sie zu deaktivieren.</string>
     <string name="gda_source_follower_info_summary">Wenn eine Online Datenquelle verwendet wird, wird die App möglicherweise nicht gestartet, wenn man mit Android Auto verbunden ist und nur Android Auto-Benachrichtigungen verwendet werden.\nUm sicherzustellen, dass die App die Android Auto-Verbindung erkennt, muss die Akkuoptimierung deaktiviert werden.\nWenn es immer noch nicht funktioniert, sollte man auch den Vordergrundmodus aktivieren oder die App einmal direkt in Android Auto öffnen.</string>
     <string name="gda_help_aa_title">Android Auto einrichten</string>
@@ -992,4 +991,7 @@ Sie können diese Berechtigungen jederzeit in den Health Connect App-Einstellung
 
     <string name="xdrip_open_server_api_secret_summary">Optionales API-Secret zum Schutz der Zugriffe. Falls konfiguriert, muss dieses Secret auch beim Client für den Zugriff konfiguriert werden.</string>
     <string name="pref_xdrip_server_summary">Stellt einen lokalen Webserver auf Port 17580 bereit, der den xDrip+-Webservice emuliert und von verschiedenen externen Diensten, Uhren und Apps genutzt werden kann.</string>
+
+    <string name="gda_foreground_summary">Optionaler Modus zur Problembehebung, der die Verbindung zu Android Auto stabilisiert, indem er das Beenden der App im Hintergrund verhindert. Der Dienst bleibt ohne aktive Verbindung inaktiv, zudem lässt sich die Benachrichtigung ab Android 14 einfach wegwischen.</string>
+
 </resources>

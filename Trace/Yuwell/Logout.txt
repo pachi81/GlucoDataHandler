@@ -1,0 +1,17 @@
+Accept-Encoding: gzip
+Accept-Language: en-US
+Connection: Keep-Alive
+Content-Length: 139
+Content-Type: application/json; charset=UTF-8
+expectedGrantType: password
+Host: anyapi-de.yuwell-poctech.com
+token: ---
+User-Agent: okhttp/4.8.1
+X-Timezone: GMT
+
+
+{"userId":"---"}
+
+--------- response
+
+{"code":200,"message":"!error.user.logout.success!"}

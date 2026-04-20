@@ -41,6 +41,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.setPadding
 import androidx.preference.PreferenceManager
+import androidx.core.content.edit
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GdhUncaughtExecptionHandler
@@ -84,6 +85,8 @@ import kotlin.math.min
 import kotlin.time.Duration.Companion.days
 import de.michelinside.glucodatahandler.common.R as CR
 import androidx.core.net.toUri
+import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
+import de.michelinside.glucodatahandler.common.tasks.YuwellSourceTask
 import de.michelinside.glucodatahandler.transfer.NightscoutUploader
 
 
@@ -227,9 +230,11 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
             statGroup.setOnCheckedChangeListener { _, _ ->
                 Log.d(LOG_ID, "statGroup changed")
-                with(sharedPref.edit()) {
-                    putInt(Constants.SHARED_PREF_MAIN_STATISTICS_DAYS, if(btnStat1d.isChecked) 1 else 7)
-                    apply()
+                sharedPref.edit {
+                    putInt(
+                        Constants.SHARED_PREF_MAIN_STATISTICS_DAYS,
+                        if (btnStat1d.isChecked) 1 else 7
+                    )
                 }
                 updateStatisticsTable()
             }
@@ -336,7 +341,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                         startActivity(
                             Intent(
                                 ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
-                                Uri.parse("package:$packageName")
+                                "package:$packageName".toUri()
                             )
                         )
                     } catch (exc: Exception) {
@@ -363,9 +368,11 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                         AlarmGeneralFragment.requestFullScreenPermission(this)
                     },
                     { _, _ ->
-                        with(sharedPref.edit()) {
-                            putBoolean(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED, false)
-                            apply()
+                        sharedPref.edit {
+                            putBoolean(
+                                Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED,
+                                false
+                            )
                         }
                     }
                 )
@@ -378,9 +385,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     resources.getString(CR.string.setting_permission_missing_message, resources.getString(CR.string.pref_cat_aod)),
                     { _, _ -> LockscreenSettingsFragment.requestAccessibilitySettings(this) },
                     { _, _ ->
-                        with(sharedPref.edit()) {
+                        sharedPref.edit {
                             putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)
-                            apply()
                         }
                     }
                 )
@@ -396,9 +402,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     CR.string.gdh_disclaimer_message,
                     null
                 )
-                with(sharedPref.edit()) {
+                sharedPref.edit {
                     putString(Constants.SHARED_PREF_DISCLAIMER_SHOWN, BuildConfig.VERSION_NAME)
-                    apply()
                 }
             }
             if(!sharedPref.contains(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU)) {
@@ -407,21 +412,18 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                         resources.getString(CR.string.src_cat_libreview),
                         resources.getString(CR.string.src_libre_tou_message),
                         { _, _ ->
-                            with(sharedPref.edit()) {
+                            sharedPref.edit {
                                 putBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, true)
-                                apply()
                             }
                         },
                         { _, _ ->
-                            with(sharedPref.edit()) {
+                            sharedPref.edit {
                                 putBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, false)
-                                apply()
                             }
                         })
                 } else {
-                    with(sharedPref.edit()) {
+                    sharedPref.edit {
                         putBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, true)
-                        apply()
                     }
                 }
             }
@@ -488,7 +490,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 R.id.action_help -> {
                     val browserIntent = Intent(
                         Intent.ACTION_VIEW,
-                        Uri.parse(resources.getText(CR.string.help_link).toString())
+                        resources.getText(CR.string.help_link).toString().toUri()
                     )
                     startActivity(browserIntent)
                     return true
@@ -496,7 +498,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 R.id.action_support -> {
                     val browserIntent = Intent(
                         Intent.ACTION_VIEW,
-                        Uri.parse(resources.getText(CR.string.support_link).toString())
+                        resources.getText(CR.string.support_link).toString().toUri()
                     )
                     startActivity(browserIntent)
                     return true
@@ -514,7 +516,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 R.id.action_google_groups -> {
                     val browserIntent = Intent(
                         Intent.ACTION_VIEW,
-                        Uri.parse(resources.getText(CR.string.google_gdh_group_url).toString())
+                        resources.getText(CR.string.google_gdh_group_url).toString().toUri()
                     )
                     startActivity(browserIntent)
                     return true
@@ -522,7 +524,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 R.id.action_facebook -> {
                     val browserIntent = Intent(
                         Intent.ACTION_VIEW,
-                        Uri.parse(resources.getText(CR.string.facebook_gdh_group_url).toString())
+                        resources.getText(CR.string.facebook_gdh_group_url).toString().toUri()
                     )
                     startActivity(browserIntent)
                     return true
@@ -562,9 +564,11 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 }
                 R.id.action_floating_widget_toggle -> {
                     Log.v(LOG_ID, "Floating widget toggle")
-                    with(sharedPref.edit()) {
-                        putBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, !sharedPref.getBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, false))
-                        apply()
+                    sharedPref.edit {
+                        putBoolean(
+                            Constants.SHARED_PREF_FLOATING_WIDGET,
+                            !sharedPref.getBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, false)
+                        )
                     }
                     updateMenuItems()
                 }
@@ -585,16 +589,14 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 when (state) {
                     AlarmState.SNOOZE -> AlarmHandler.setSnooze(0)  // disable snooze
                     AlarmState.DISABLED -> {
-                        with(sharedPref.edit()) {
+                        sharedPref.edit {
                             putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, true)
-                            apply()
                         }
                     }
                     AlarmState.INACTIVE,
                     AlarmState.ACTIVE -> {
-                        with(sharedPref.edit()) {
+                        sharedPref.edit {
                             putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
-                            apply()
                         }
                     }
                     AlarmState.ALARM -> {
@@ -604,17 +606,15 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                         if(AlarmHandler.inactiveAutoReenable)
                             AlarmHandler.disableInactiveTime()
                         else {
-                            with(sharedPref.edit()) {
+                            sharedPref.edit {
                                 putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
-                                apply()
                             }
                         }
                     }
                 }
             } else {
-                with(sharedPref.edit()) {
+                sharedPref.edit {
                     putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
-                    apply()
                 }
                 Dialogs.showOkDialog(this, CR.string.permission_alarm_notification_title, CR.string.permission_alarm_notification_message) { _, _ ->
                     val intent: Intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
@@ -633,9 +633,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private fun updateAlarmIcon() {
         try {
             if(!AlarmNotification.channelActive(this)) {
-                with(sharedPref.edit()) {
+                sharedPref.edit {
                     putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
-                    apply()
                 }
             }
             val state = AlarmNotificationBase.currentAlarmState
@@ -755,7 +754,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     startActivity(
                         Intent(
                             ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
-                            Uri.parse("package:$packageName")
+                            "package:$packageName".toUri()
                         )
                     )
                 } catch (exc: Exception) {
@@ -779,9 +778,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         val pm = getSystemService(POWER_SERVICE) as PowerManager
         if (!pm.isIgnoringBatteryOptimizations(packageName)) {
             Log.w(LOG_ID, "Battery optimization is active")
-            val onClickListener = View.OnClickListener {
+            val onClickListener = OnClickListener {
                 val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
-                intent.data = Uri.parse("package:$packageName")
+                intent.data = "package:$packageName".toUri()
                 startActivity(intent)
             }
             tableNotes.addView(createRow(resources.getString(CR.string.battery_optimization_disabled), onClickListener))
@@ -820,6 +819,10 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     onClickListener
                 )
             )
+            if(SourceStateData.lastErrorInfo.isNotEmpty()) {
+                // add error specific information in an own row
+                tableConnections.addView(createRow(SourceStateData.lastErrorInfo))
+            }
             if(SourceStateData.lastState == SourceState.ERROR && SourceStateData.lastSource == DataSource.DEXCOM_SHARE && msg.startsWith("50")) {
                 val resId: Int
                 val resUrlId: Int
@@ -833,7 +836,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 }
                 val browserIntent = Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse(resources.getString(resUrlId))
+                    resources.getString(resUrlId).toUri()
                 )
                 val onClickListener = OnClickListener {
                     try {
@@ -870,9 +873,51 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     )
                 )
             }
-            if(SourceStateData.lastErrorInfo.isNotEmpty()) {
-                // add error specific information in an own row
-                tableConnections.addView(createRow(SourceStateData.lastErrorInfo))
+            if(SourceStateData.lastState == SourceState.ERROR && SourceStateData.lastSource == DataSource.YUWELL) {
+
+                if(!sharedPref.getBoolean(Constants.SHARED_PREF_YUWELL_ENABLED, false)) {
+                    // Yuwell error exists, but not enabled -> only occurs after error 208 -> re-enable Yuwell
+                    val onReeanbleListener = OnClickListener {
+                        try {
+                            sharedPref.edit {
+                                putBoolean(Constants.SHARED_PREF_YUWELL_ENABLED, true)
+                            }
+                            update()
+                        } catch (exc: Exception) {
+                            Log.e(LOG_ID, "Yuwell reenable exception: " + exc.message.toString() )
+                        }
+                    }
+
+                    tableConnections.addView(
+                        createRow(
+                            resources.getString(CR.string.yuwell_reenable_source),
+                            onReeanbleListener
+                        )
+                    )
+                }
+
+                if(msg.startsWith("208")) {
+                    val onClickListener = OnClickListener {
+                        try {
+                            Dialogs.showOkCancelDialog(this,
+                                CR.string.yuwell_force_logout_title,
+                                CR.string.yuwell_force_logout_message,
+                                { _, _ ->
+                                    YuwellSourceTask.forceLogout()
+                                },
+                                null)
+                        } catch (exc: Exception) {
+                            Log.e(LOG_ID, "Yuwell force logout exception: " + exc.message.toString() )
+                        }
+                    }
+
+                    tableConnections.addView(
+                        createRow(
+                            resources.getString(CR.string.yuwell_trigger_force_logout),
+                            onClickListener
+                        )
+                    )
+                }
             }
             tableConnections.addView(createRow(CR.string.request_timestamp, Utils.getUiTimeStamp(SourceStateData.lastStateTime)))
         }
@@ -888,11 +933,23 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     GlucoDataService.checkForConnectedNodes(false)
                 }
                 WearPhoneConnection.getNodeConnectionStates(this).forEach { (name, state) ->
-                    if(state > 0)
-                        tableConnections.addView(createProgressBarRow(name, state.toFloat(), BatteryLevelWidget.getColor(state)))
-                    else if(state == 0)
+                    if(state.first > 0) {
+                        val isCharhing = BatteryReceiver.isCharging(state.second)
+                        var value = "${DecimalFormat("#.#").format(state.first)}%"
+                        if(isCharhing)
+                            value += " ⚡"
+                        val textView =  createColumn(value, true, null, 3F)
+                        tableConnections.addView(
+                            createProgressBarRow(
+                                name,
+                                state.first.toFloat(),
+                                BatteryLevelWidget.getColor(state.first),
+                                textView
+                            )
+                        )
+                    } else if(state.first == 0)
                         tableConnections.addView(createRow(name, resources.getString(CR.string.state_connected), onCheckClickListener))
-                    else if(state == -1)
+                    else if(state.first == -1)
                         tableConnections.addView(createRow(name, resources.getString(CR.string.state_await_data), onCheckClickListener))
                 }
             }
@@ -1029,9 +1086,14 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private fun createSensorAgeColumn(duration: Duration, runtimeMinutes: Float): TextView {
         val onClickListener = OnClickListener {
             try {
-                with(sharedPref.edit()) {
-                    putBoolean(Constants.SHARED_PREF_SHOW_SENSOR_AGE_REMAIN_TIME, !sharedPref.getBoolean(Constants.SHARED_PREF_SHOW_SENSOR_AGE_REMAIN_TIME, false))
-                    apply()
+                sharedPref.edit {
+                    putBoolean(
+                        Constants.SHARED_PREF_SHOW_SENSOR_AGE_REMAIN_TIME,
+                        !sharedPref.getBoolean(
+                            Constants.SHARED_PREF_SHOW_SENSOR_AGE_REMAIN_TIME,
+                            false
+                        )
+                    )
                 }
                 updateDetailsTable()
             } catch (exc: Exception) {
@@ -1165,9 +1227,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             val excMsg = sharedPref.getString(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_MESSAGE, "") ?: ""
             val time = sharedPref.getLong(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_TIME, 0)
             Log.e(LOG_ID, "Uncaught exception detected at ${DateFormat.getDateTimeInstance().format(Date(time))}: $excMsg")
-            with(sharedPref.edit()) {
+            sharedPref.edit {
                 putBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, false)
-                apply()
             }
 
             if(time > 0 && (System.currentTimeMillis()- ReceiveData.time) < (60*60 * 1000) && !GdhUncaughtExecptionHandler.isOutOfMemoryException(excMsg)) {
@@ -1214,10 +1275,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                         view?.setPadding(systemBars!!.left, systemBars!!.top, systemBars!!.right, systemBars!!.bottom)
                 }
                 chart.moveViewToX(chart.xChartMax)
-                with(sharedPref.edit()) {
+                sharedPref.edit {
                     Log.d(LOG_ID, "save fullscreen mode: $fullscreen")
                     putBoolean(Constants.SHARED_PREF_FULLSCREEN_LANDSCAPE, fullscreen)
-                    apply()
                 }
             }
         } catch (exc: Exception) {

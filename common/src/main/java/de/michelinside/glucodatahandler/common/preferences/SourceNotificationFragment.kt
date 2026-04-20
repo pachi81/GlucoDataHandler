@@ -120,36 +120,6 @@ open class SourceNotificationBase(val resourceId: Int) : PreferenceFragmentCompa
             Log.e(LOG_ID, "onCreatePreferences exception: " + exc.toString())
         }
     }
-
-    private fun getDialogFragment(preference: Preference): DialogFragment? {
-        var dialogFragment: DialogFragment? = null
-        if (preference is SelectReceiverPreference) {
-            Log.d(LOG_ID, "Show SelectReceiver Dialog")
-            dialogFragment = SelectReceiverPreferenceDialogFragmentCompat.initial(preference.key)
-        }
-        return dialogFragment
-    }
-
-    private fun showDialogFragment(preference: Preference): Boolean {
-        val dialogFragment = getDialogFragment(preference)
-        if (dialogFragment != null) {
-            dialogFragment.setTargetFragment(this, 0)
-            dialogFragment.show(parentFragmentManager, "androidx.preference.PreferenceFragment.DIALOG")
-            return true
-        }
-        return false
-    }
-
-    override fun onDisplayPreferenceDialog(preference: Preference) {
-        Log.d(LOG_ID, "onDisplayPreferenceDialog called for " + preference.javaClass)
-        try {
-            if (!showDialogFragment(preference)) {
-                super.onDisplayPreferenceDialog(preference)
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "onDisplayPreferenceDialog exception: " + exc.toString())
-        }
-    }
 }
 
 

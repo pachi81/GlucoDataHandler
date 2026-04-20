@@ -186,6 +186,8 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             return true
         if(packageName.lowercase().startsWith("com.microtech.aidexx.diaexport."))  // DiaExpert
             return true
+        if(packageName.lowercase().startsWith("com.isens.csair"))  // Caresense Air
+            return true
 
         if(onGoingNotificationPackage == packageName)
             return true
@@ -198,6 +200,8 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         if(packageName.lowercase().startsWith("com.camdiab."))  // CamAPS FX
             return true
         if(packageName.lowercase().startsWith("com.signos."))  // Signos (uses Dexcom Sensor)
+            return true
+        if(packageName.lowercase().startsWith("com.isens.csair"))  // Caresense Air
             return true
         return false
     }

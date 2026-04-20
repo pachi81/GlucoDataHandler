@@ -8,6 +8,7 @@ import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.tasks.LibreLinkSourceTask
 import de.michelinside.glucodatahandler.common.tasks.MedtrumSourceTask
 import de.michelinside.glucodatahandler.common.R
+import de.michelinside.glucodatahandler.common.tasks.YuwellSourceTask
 
 object SelectPatientPopup {
     private val LOG_ID = "GDH.SelectPatientPopup"
@@ -25,6 +26,10 @@ object SelectPatientPopup {
             DataSource.LIBRELINK -> {
                 patients = LibreLinkSourceTask.patientData
                 patientIdKey = Constants.SHARED_PREF_LIBRE_PATIENT_ID
+            }
+            DataSource.YUWELL -> {
+                patients = YuwellSourceTask.patientData
+                patientIdKey = Constants.SHARED_PREF_YUWELL_PATIENT_ID
             }
             else -> {
                 patients = null
