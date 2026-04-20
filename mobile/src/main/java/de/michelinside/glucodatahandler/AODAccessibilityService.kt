@@ -1,6 +1,7 @@
 package de.michelinside.glucodatahandler
 
 import android.accessibilityservice.AccessibilityService
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -28,6 +29,7 @@ import kotlin.math.abs
 import kotlin.math.max
 
 
+@SuppressLint("AccessibilityPolicy")
 class AODAccessibilityService : AccessibilityService() {
     private var overlayView: View? = null
     private lateinit var windowManager: WindowManager
@@ -82,7 +84,7 @@ class AODAccessibilityService : AccessibilityService() {
                 Log.d(LOG_ID, "Display state changed: $state")
                 when (state) {
                     Display.STATE_OFF, Display.STATE_DOZE, Display.STATE_DOZE_SUSPEND -> {
-                        displayStateChanged(Display.STATE_OFF, 1)  // no delay, as this state is already triggered with some delay
+                        displayStateChanged(Display.STATE_OFF)
                     }
                     Display.STATE_ON -> {
                         displayStateChanged(Display.STATE_ON)
@@ -196,13 +198,11 @@ class AODAccessibilityService : AccessibilityService() {
     //    private val handler = android.os.Handler(android.os.Looper.getMainLooper())
 
     private fun checkAndCreateOverlay(delayMillis: Long = 1000) {
+        pendingOverlayRunnable?.let { return }
+
         Log.d(LOG_ID, "Checking if overlay should be created - delay: $delayMillis")
 
-        // Bestehende geplante Tasks abbrechen
-        pendingOverlayRunnable?.let { handler.removeCallbacks(it) }
-
         pendingOverlayRunnable = Runnable {
-            // ZUSÄTZLICHER CHECK: Prüfen, ob wir uns wirklich noch im "Aus"-Zustand befinden
             if (!powerManager.isInteractive && (currentState != Display.STATE_ON)) {
                 try {
                     triggerAodState(GlucoDataService.context!!, true)
@@ -238,11 +238,6 @@ class AODAccessibilityService : AccessibilityService() {
                 Log.d(LOG_ID, "Overlay creation cancelled: Phone is interactive (${powerManager.isInteractive}) or state is ON (${currentState == Display.STATE_ON})")
                 return
             }
-            val defaultDisplay = displayManager.getDisplay(Display.DEFAULT_DISPLAY)
-            if (defaultDisplay != null && defaultDisplay.state == Display.STATE_ON) {
-                Log.d(LOG_ID, "createOverlay cancelled: Display hardware is actually ON")
-                return
-            }
             if(aodWidget == null) {
                 aodWidget = AodWidget(this)
                 aodWidget!!.create()
@@ -261,6 +256,9 @@ class AODAccessibilityService : AccessibilityService() {
             )
 
             imageView.setImageBitmap(bitmap)
+            val isLandscape = resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
+            val screenWidth = BitmapUtils.getScreenWidth(this)
+            val screenHeight = BitmapUtils.getScreenHeight(this)
             val yOffset = max(0F, ((BitmapUtils.getScreenHeight(this)-bitmap.height)*aodWidget!!.getYPos()/100F)+offset)
             val xOffset = max(0F, ((BitmapUtils.getScreenWidth(this)-bitmap.width)*aodWidget!!.getXPos()/40F)+offset)
 
@@ -277,7 +275,7 @@ class AODAccessibilityService : AccessibilityService() {
                 y = yOffset.toInt()
             }
 
-            Log.d(LOG_ID, "Adding overlay at y-pos ${layoutParams.y}")
+            Log.d(LOG_ID, "Create AOD overlay (x*y:${layoutParams.x}*${layoutParams.y}) at x=$xOffset/$screenWidth and y=$yOffset/$screenHeight - isLandscape=$isLandscape")
 
             windowManager.addView(imageView, layoutParams)
             overlayView = imageView
