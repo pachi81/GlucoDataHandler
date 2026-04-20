@@ -40,6 +40,8 @@ import kotlin.collections.plus
 import kotlin.collections.set
 import kotlin.collections.toTypedArray
 import de.michelinside.glucodatahandler.common.R as CR
+import androidx.core.content.edit
+import androidx.core.net.toUri
 
 abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragmentCompatBase(), SharedPreferences.OnSharedPreferenceChangeListener {
     protected val LOG_ID = "GDH.SettingsFragmentBase"
@@ -66,9 +68,8 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
                     if (pref != null) {
                         pref.isChecked = true
                     }
-                    with(preferenceManager.sharedPreferences!!.edit()) {
+                    preferenceManager.sharedPreferences!!.edit {
                         putBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, true)
-                        apply()
                     }
                 }
             }
@@ -116,9 +117,8 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
                         if (pref != null) {
                             pref.isChecked = false
                         }
-                        with(preferenceManager.sharedPreferences!!.edit()) {
+                        preferenceManager.sharedPreferences!!.edit {
                             putBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, false)
-                            apply()
                         }
                         requestOverlayPermission()
                     } else if (!sharedPreferences.getBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, false)) {
@@ -149,7 +149,7 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
         try {
             val intent = Intent(
                 Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                Uri.parse("package:" + requireContext().packageName)
+                ("package:" + requireContext().packageName).toUri()
             )
             intent.putExtra(Settings.EXTRA_APP_PACKAGE,requireContext().packageName)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -179,6 +179,15 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
         val pwdPref = findPreference<EditTextPreference>(prefName)
         pwdPref?.setOnBindEditTextListener {editText ->
             editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        }
+    }
+
+
+    protected fun setSummary(key: String, defaultResId: Int) {
+        val pref = findPreference<Preference>(key)
+        if(pref != null) {
+            val value = preferenceManager.sharedPreferences!!.getString(key, "")!!.trim()
+            pref.summary = value.ifEmpty { resources.getString(defaultResId) }
         }
     }
 
