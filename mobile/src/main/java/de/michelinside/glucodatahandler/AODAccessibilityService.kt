@@ -40,6 +40,8 @@ class AODAccessibilityService : AccessibilityService() {
     private var yPosOffset = 0
     private var yPosOffsetFactor = 1
     private val MAX_Y_POS_OFFSET = 10
+    private val handler = android.os.Handler(android.os.Looper.getMainLooper())
+    private var pendingOverlayRunnable: Runnable? = null
     val offset: Int get() {
         if(abs(yPosOffset) >= MAX_Y_POS_OFFSET)
             yPosOffsetFactor *= -1
@@ -102,7 +104,7 @@ class AODAccessibilityService : AccessibilityService() {
             when (state) {
                 Display.STATE_OFF, Display.STATE_DOZE, Display.STATE_DOZE_SUSPEND -> {
                     Log.d(LOG_ID, "Phone screen is off or in Doze")
-                    val sharedPref = getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+                    val sharedPref = getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
                     val enabled = sharedPref.getBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)
                     if (enabled) {
                         checkAndCreateOverlay(delayMillis)
@@ -115,6 +117,11 @@ class AODAccessibilityService : AccessibilityService() {
                 }
                 Display.STATE_ON -> {
                     Log.d(LOG_ID, "Phone screen turned on")
+                    // WICHTIG: Geplante Overlays sofort stoppen!
+                    pendingOverlayRunnable?.let {
+                        handler.removeCallbacks(it)
+                        pendingOverlayRunnable = null
+                    }
                     triggerAodState(GlucoDataService.context!!, false)
                     aodWidget?.pause()
                     removeOverlay()
@@ -190,10 +197,13 @@ class AODAccessibilityService : AccessibilityService() {
 
     private fun checkAndCreateOverlay(delayMillis: Long = 1000) {
         Log.d(LOG_ID, "Checking if overlay should be created - delay: $delayMillis")
-        val handler = android.os.Handler(android.os.Looper.getMainLooper())
 
-        handler.postDelayed({
-            if (!powerManager.isInteractive) {
+        // Bestehende geplante Tasks abbrechen
+        pendingOverlayRunnable?.let { handler.removeCallbacks(it) }
+
+        pendingOverlayRunnable = Runnable {
+            // ZUSÄTZLICHER CHECK: Prüfen, ob wir uns wirklich noch im "Aus"-Zustand befinden
+            if (!powerManager.isInteractive && (currentState != Display.STATE_ON)) {
                 try {
                     triggerAodState(GlucoDataService.context!!, true)
                     if(aodWidget == null) {
@@ -206,8 +216,14 @@ class AODAccessibilityService : AccessibilityService() {
                 } catch (e: Exception) {
                     Log.e(LOG_ID, "Error adding overlay", e)
                 }
+            } else {
+                Log.d(LOG_ID, "Overlay creation cancelled: Phone is interactive or state is ON")
+                removeOverlay()
             }
-        }, delayMillis)
+            pendingOverlayRunnable = null
+        }
+
+        handler.postDelayed(pendingOverlayRunnable!!, delayMillis)
     }
 
     fun removeAndCreateOverlay()
@@ -218,8 +234,15 @@ class AODAccessibilityService : AccessibilityService() {
 
     private fun createOverlay() {
         try {
-            if (powerManager.isInteractive)
+            if (powerManager.isInteractive || currentState == Display.STATE_ON) {
+                Log.d(LOG_ID, "Overlay creation cancelled: Phone is interactive (${powerManager.isInteractive}) or state is ON (${currentState == Display.STATE_ON})")
                 return
+            }
+            val defaultDisplay = displayManager.getDisplay(Display.DEFAULT_DISPLAY)
+            if (defaultDisplay != null && defaultDisplay.state == Display.STATE_ON) {
+                Log.d(LOG_ID, "createOverlay cancelled: Display hardware is actually ON")
+                return
+            }
             if(aodWidget == null) {
                 aodWidget = AodWidget(this)
                 aodWidget!!.create()
@@ -229,6 +252,7 @@ class AODAccessibilityService : AccessibilityService() {
             if (bitmap == null)
                 return
 
+            Log.d(LOG_ID, "Creating overlay")
             val imageView = ImageView(this)
 
             imageView.layoutParams = FrameLayout.LayoutParams(
