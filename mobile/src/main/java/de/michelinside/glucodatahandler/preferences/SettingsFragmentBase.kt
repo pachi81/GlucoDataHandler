@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -42,6 +41,7 @@ import kotlin.collections.toTypedArray
 import de.michelinside.glucodatahandler.common.R as CR
 import androidx.core.content.edit
 import androidx.core.net.toUri
+import de.michelinside.glucodatahandler.common.service.WearPhoneManager
 
 abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragmentCompatBase(), SharedPreferences.OnSharedPreferenceChangeListener {
     protected val LOG_ID = "GDH.SettingsFragmentBase"
@@ -420,7 +420,9 @@ class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen)  {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             val enabled = (AODAccessibilityService.isAccessibilitySettingsEnabled(requireContext()))
             Log.i(LOG_ID, "Accessibility permission: $enabled")
-            preferenceManager.sharedPreferences?.edit()?.putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, enabled)?.apply()
+            preferenceManager.sharedPreferences?.edit {
+                putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, enabled)
+            }
             val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_AOD_WP_ENABLED)
             if (pref != null)
                 pref.isChecked = enabled
@@ -430,8 +432,9 @@ class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen)  {
         val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_AOD_WP_ENABLED)
         if (pref != null && pref.isChecked) {
             if (!AODAccessibilityService.isAccessibilitySettingsEnabled(requireContext())) {
-                preferenceManager.sharedPreferences?.edit()
-                    ?.putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)?.apply()
+                preferenceManager.sharedPreferences?.edit {
+                    putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)
+                }
                 pref.isChecked = false
             }
         }
@@ -475,13 +478,13 @@ class WatchWearOsFragment: SettingsFragmentBase(R.xml.pref_watch_wearos) {
         Log.v(LOG_ID, "initPreferences called")
         val prefCheckWearOS = findPreference<Preference>(Constants.SHARED_PREF_CHECK_WEAR_OS_CONNECTION)
         prefCheckWearOS!!.setOnPreferenceClickListener {
-            GlucoDataService.checkForConnectedNodes()
+            WearPhoneManager.checkForConnectedNodes()
             true
         }
 
         val prefResetWearOS = findPreference<Preference>(Constants.SHARED_PREF_RESET_WEAR_OS_CONNECTION)
         prefResetWearOS!!.setOnPreferenceClickListener {
-            GlucoDataService.resetWearPhoneConnection()
+            WearPhoneManager.resetWearPhoneConnection()
             true
         }
     }

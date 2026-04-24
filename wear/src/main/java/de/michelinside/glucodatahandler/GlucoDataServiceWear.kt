@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.os.Bundle
+import androidx.core.content.edit
 import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.database.dbSync
@@ -14,7 +15,9 @@ import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.ScreenEventReceiver
+import de.michelinside.glucodatahandler.common.service.WearPhoneManager
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
+import de.michelinside.glucodatahandler.common.utils.Utils
 
 
 class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterface {
@@ -104,9 +107,9 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
                     updateComplicationNotifier()
                     checkServices(context)
                     if(ScreenEventReceiver.isDisplayOff()) {
-                        sendCommand(Command.PAUSE_NODE)
+                        WearPhoneManager.sendCommand(Command.PAUSE_NODE)
                     } else {
-                        sendCommand(Command.RESUME_NODE)
+                        WearPhoneManager.sendCommand(Command.RESUME_NODE)
                         dbSync.requestDbSync(context)
                     }
                 }
@@ -169,4 +172,55 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
         }
     }
 
+    override fun getSettings(): Bundle? = null
+
+    override fun setSettings(context: Context, bundle: Bundle) {
+        if(Log.isLoggable(LOG_ID, android.util.Log.VERBOSE))
+            Log.v(LOG_ID, "setSettings called with bundle ${(Utils.dumpBundle(bundle))}")
+        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
+        sharedPref!!.edit {
+            putBoolean(
+                Constants.SHARED_PREF_SHOW_OTHER_UNIT,
+                bundle.getBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, ReceiveData.isMmol)
+            )
+            putBoolean(
+                Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED,
+                bundle.getBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED, true)
+            )
+            putBoolean(
+                Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED,
+                bundle.getBoolean(Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED, true)
+            )
+            putBoolean(
+                Constants.SHARED_PREF_SOURCE_AAPS_ENABLED,
+                bundle.getBoolean(Constants.SHARED_PREF_SOURCE_AAPS_ENABLED, true)
+            )
+            putBoolean(
+                Constants.SHARED_PREF_SOURCE_BYODA_ENABLED,
+                bundle.getBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, true)
+            )
+            putBoolean(
+                Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED,
+                bundle.getBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, true)
+            )
+            putBoolean(
+                Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED,
+                bundle.getBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, true)
+            )
+            putBoolean(
+                Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE,
+                bundle.getBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, true)
+            )
+            putBoolean(
+                Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED,
+                bundle.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)
+            )
+            putString(
+                Constants.SHARED_PREF_SENSOR_RUNTIME,
+                bundle.getString(Constants.SHARED_PREF_SENSOR_RUNTIME, "14")
+            )
+            putString(Constants.PATIENT_NAME, bundle.getString(Constants.PATIENT_NAME, ""))
+        }
+        ReceiveData.setSettings(sharedPref, bundle)
+    }
 }

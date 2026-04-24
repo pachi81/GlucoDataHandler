@@ -27,6 +27,7 @@ import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.service.WearPhoneManager
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.watch.WatchDrip
 import java.io.FileOutputStream
@@ -267,7 +268,7 @@ object AlarmNotification : AlarmNotificationBase() {
                             Constants.EXTRA_AA_CONNECTED,
                             CarModeReceiver.AA_connected
                         )
-                        GlucoDataService.sendCommand(Command.AA_CONNECTION_STATE, bundle)
+                        WearPhoneManager.sendCommand(Command.AA_CONNECTION_STATE, bundle)
                     }
                     updateAlarmState(context)
                 }

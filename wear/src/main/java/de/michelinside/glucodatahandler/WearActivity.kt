@@ -47,6 +47,7 @@ import java.time.Duration
 import java.util.Date
 import kotlin.time.Duration.Companion.days
 import androidx.core.content.edit
+import de.michelinside.glucodatahandler.common.service.WearPhoneManager
 
 class WearActivity : AppCompatActivity(), NotifierInterface {
 
@@ -222,7 +223,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 requestNotificationPermission = false
                 GlucoDataServiceWear.start(this.applicationContext)
             }
-            GlucoDataService.checkForConnectedNodes(true)
+            WearPhoneManager.checkForConnectedNodes(true)
             chartBitmap.resume()
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
@@ -325,10 +326,15 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                     AlarmState.DISABLED -> {
                         val lastState = sharedPref.getInt(Constants.SHARED_PREF_WEAR_LAST_ALARM_STATE, 1)
                         Log.d(LOG_ID, "Last alarm state $lastState")
-                        with(sharedPref.edit()) {
-                            putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, (lastState and 1) == 1)
-                            putBoolean(Constants.SHARED_PREF_NOTIFICATION_VIBRATE, (lastState and 2) == 2)
-                            apply()
+                        sharedPref.edit {
+                            putBoolean(
+                                Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED,
+                                (lastState and 1) == 1
+                            )
+                            putBoolean(
+                                Constants.SHARED_PREF_NOTIFICATION_VIBRATE,
+                                (lastState and 2) == 2
+                            )
                         }
                     }
                     AlarmState.INACTIVE,
@@ -339,11 +345,10 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                         if(sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION_VIBRATE, false))
                             lastState = lastState or 2
                         Log.d(LOG_ID, "Saving last alarm state $lastState")
-                        with(sharedPref.edit()) {
+                        sharedPref.edit {
                             putInt(Constants.SHARED_PREF_WEAR_LAST_ALARM_STATE, lastState)
                             putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
                             putBoolean(Constants.SHARED_PREF_NOTIFICATION_VIBRATE, false)
-                            apply()
                         }
                     }
                     AlarmState.ALARM -> {
@@ -463,12 +468,12 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
         if (WearPhoneConnection.nodesConnected) {
             if (WearPhoneConnection.connectionError) {
                 val onResetClickListener = View.OnClickListener {
-                    GlucoDataService.resetWearPhoneConnection()
+                    WearPhoneManager.resetWearPhoneConnection()
                 }
                 tableConnections.addView(createRow(CR.string.source_phone, resources.getString(CR.string.detail_reset_connection), onResetClickListener))
             } else {
                 val onCheckClickListener = View.OnClickListener {
-                    GlucoDataService.checkForConnectedNodes(false)
+                    WearPhoneManager.checkForConnectedNodes(false)
                 }
                 val states = WearPhoneConnection.getNodeConnectionStates(this.applicationContext)
                 if(states.size == 1 ) {

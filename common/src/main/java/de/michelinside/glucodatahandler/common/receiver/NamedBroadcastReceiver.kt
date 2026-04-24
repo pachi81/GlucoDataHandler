@@ -3,12 +3,12 @@ package de.michelinside.glucodatahandler.common.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import de.michelinside.glucodatahandler.common.GlucoDataService
+import de.michelinside.glucodatahandler.common.service.ReceiverManager
 
 abstract class NamedBroadcastReceiver: BroadcastReceiver(), NamedReceiver {
 
     final override fun onReceive(context: Context, intent: Intent) {
-        if(!GlucoDataService.isRegistered(this))
+        if(!ReceiverManager.isRegistered(this))
             return
         onReceiveData(context, intent)
     }

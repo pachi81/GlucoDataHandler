@@ -30,8 +30,6 @@ import de.michelinside.glucodataauto.receiver.GlucoDataReceiver
 import de.michelinside.glucodataauto.receiver.LibrePatchedReceiver
 import de.michelinside.glucodataauto.receiver.NsEmulatorReceiver
 import de.michelinside.glucodataauto.receiver.XDripReceiver
-import de.michelinside.glucodatahandler.common.GlucoDataService.Companion.checkNotificationReceiverPermission
-import de.michelinside.glucodatahandler.common.GlucoDataService.Companion.updateNotificationReceiver
 import de.michelinside.glucodatahandler.common.Intents
 import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.DataSource
@@ -47,6 +45,7 @@ import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.R as CR
 import androidx.core.content.edit
 import de.michelinside.glucodatahandler.common.SettingsMigrator
+import de.michelinside.glucodatahandler.common.service.ReceiverManager
 
 class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -308,11 +307,11 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                     if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED, true)) {
                         if(glucoDataReceiver == null) {
                             glucoDataReceiver = GlucoDataReceiver()
-                            if(!GlucoDataService.registerReceiver(context, glucoDataReceiver!!, IntentFilter("glucodata.Minute")))
+                            if(!ReceiverManager.registerReceiver(context, glucoDataReceiver!!, IntentFilter("glucodata.Minute")))
                                 glucoDataReceiver = null
                         }
                     } else if (glucoDataReceiver != null) {
-                        GlucoDataService.unregisterReceiver(context, glucoDataReceiver)
+                        ReceiverManager.unregisterReceiver(context, glucoDataReceiver)
                         glucoDataReceiver = null
                     }
                 }
@@ -321,11 +320,11 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                     if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED, true)) {
                         if(xDripReceiver == null) {
                             xDripReceiver = XDripReceiver()
-                            if(!GlucoDataService.registerReceiver(context, xDripReceiver!!, IntentFilter("com.eveningoutpost.dexdrip.BgEstimate")))
+                            if(!ReceiverManager.registerReceiver(context, xDripReceiver!!, IntentFilter("com.eveningoutpost.dexdrip.BgEstimate")))
                                 xDripReceiver = null
                         }
                     } else if (xDripReceiver != null) {
-                        GlucoDataService.unregisterReceiver(context, xDripReceiver)
+                        ReceiverManager.unregisterReceiver(context, xDripReceiver)
                         xDripReceiver = null
                     }
                 }
@@ -334,11 +333,11 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                     if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_AAPS_ENABLED, true)) {
                         if(aapsReceiver == null) {
                             aapsReceiver = AAPSReceiver()
-                            if(!GlucoDataService.registerReceiver(context, aapsReceiver!!, IntentFilter(Intents.AAPS_BROADCAST_ACTION)))
+                            if(!ReceiverManager.registerReceiver(context, aapsReceiver!!, IntentFilter(Intents.AAPS_BROADCAST_ACTION)))
                                 aapsReceiver = null
                         }
                     } else if (aapsReceiver != null) {
-                        GlucoDataService.unregisterReceiver(context, aapsReceiver)
+                        ReceiverManager.unregisterReceiver(context, aapsReceiver)
                         aapsReceiver = null
                     }
                 }
@@ -350,11 +349,11 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                             dexcomFilter.addAction(Intents.DEXCOM_CGM_BROADCAST_ACTION)
                             dexcomFilter.addAction(Intents.DEXCOM_G7_BROADCAST_ACTION)
                             dexcomReceiver = DexcomBroadcastReceiver()
-                            if(!GlucoDataService.registerReceiver(context, dexcomReceiver!!, dexcomFilter))
+                            if(!ReceiverManager.registerReceiver(context, dexcomReceiver!!, dexcomFilter))
                                 dexcomReceiver = null
                         }
                     } else if (dexcomReceiver != null) {
-                        GlucoDataService.unregisterReceiver(context, dexcomReceiver)
+                        ReceiverManager.unregisterReceiver(context, dexcomReceiver)
                         dexcomReceiver = null
                     }
                 }
@@ -363,11 +362,11 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                     if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, true)) {
                         if(nsEmulatorReceiver == null) {
                             nsEmulatorReceiver = NsEmulatorReceiver()
-                            if(!GlucoDataService.registerReceiver(context, nsEmulatorReceiver!!, IntentFilter(Intents.NS_EMULATOR_BROADCAST_ACTION)))
+                            if(!ReceiverManager.registerReceiver(context, nsEmulatorReceiver!!, IntentFilter(Intents.NS_EMULATOR_BROADCAST_ACTION)))
                                 nsEmulatorReceiver = null
                         }
                     } else if (nsEmulatorReceiver != null) {
-                        GlucoDataService.unregisterReceiver(context, nsEmulatorReceiver)
+                        ReceiverManager.unregisterReceiver(context, nsEmulatorReceiver)
                         nsEmulatorReceiver = null
                     }
                 }
@@ -376,11 +375,11 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                     if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, true)) {
                         if(diaboxReceiver == null) {
                             diaboxReceiver = DiaboxReceiver()
-                            if(!GlucoDataService.registerReceiver(context, diaboxReceiver!!, IntentFilter(Intents.DIABOX_BROADCAST_ACTION)))
+                            if(!ReceiverManager.registerReceiver(context, diaboxReceiver!!, IntentFilter(Intents.DIABOX_BROADCAST_ACTION)))
                                 diaboxReceiver = null
                         }
                     } else if (diaboxReceiver != null) {
-                        GlucoDataService.unregisterReceiver(context, diaboxReceiver)
+                        ReceiverManager.unregisterReceiver(context, diaboxReceiver)
                         diaboxReceiver = null
                     }
                 }
@@ -392,17 +391,17 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                             val filter = IntentFilter()
                             filter.addAction(Constants.XDRIP_ACTION_GLUCOSE_READING)
                             filter.addAction(Constants.XDRIP_ACTION_SENSOR_ACTIVATE)
-                            if(!GlucoDataService.registerReceiver(context, librePatchedReceiver!!, filter))
+                            if(!ReceiverManager.registerReceiver(context, librePatchedReceiver!!, filter))
                                 librePatchedReceiver = null
                         }
                     } else if (librePatchedReceiver != null) {
-                        GlucoDataService.unregisterReceiver(context, librePatchedReceiver)
+                        ReceiverManager.unregisterReceiver(context, librePatchedReceiver)
                         librePatchedReceiver = null
                     }
                 }
 
                 if (key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED) {
-                    updateNotificationReceiver(sharedPref, context)
+                    ReceiverManager.updateNotificationReceiver(sharedPref, context)
                 }
 
             } catch (exc: Exception) {
@@ -414,34 +413,34 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
             try {
                 Log.d(LOG_ID, "Unregister receiver")
                 if (glucoDataReceiver != null) {
-                    GlucoDataService.unregisterReceiver(context, glucoDataReceiver)
+                    ReceiverManager.unregisterReceiver(context, glucoDataReceiver)
                     glucoDataReceiver = null
                 }
                 if (xDripReceiver != null) {
-                    GlucoDataService.unregisterReceiver(context, xDripReceiver)
+                    ReceiverManager.unregisterReceiver(context, xDripReceiver)
                     xDripReceiver = null
                 }
                 if (dexcomReceiver != null) {
-                    GlucoDataService.unregisterReceiver(context, dexcomReceiver)
+                    ReceiverManager.unregisterReceiver(context, dexcomReceiver)
                     dexcomReceiver = null
                 }
                 if (nsEmulatorReceiver != null) {
-                    GlucoDataService.unregisterReceiver(context, nsEmulatorReceiver)
+                    ReceiverManager.unregisterReceiver(context, nsEmulatorReceiver)
                     nsEmulatorReceiver = null
                 }
                 if (aapsReceiver != null) {
-                    GlucoDataService.unregisterReceiver(context, aapsReceiver)
+                    ReceiverManager.unregisterReceiver(context, aapsReceiver)
                     aapsReceiver = null
                 }
                 if (diaboxReceiver != null) {
-                    GlucoDataService.unregisterReceiver(context, diaboxReceiver)
+                    ReceiverManager.unregisterReceiver(context, diaboxReceiver)
                     diaboxReceiver = null
                 }
                 if (librePatchedReceiver != null) {
-                    GlucoDataService.unregisterReceiver(context, librePatchedReceiver)
+                    ReceiverManager.unregisterReceiver(context, librePatchedReceiver)
                     librePatchedReceiver = null
                 }
-                GlucoDataService.unregisterSourceReceiver(context)
+                ReceiverManager.unregisterSourceReceiver(context)
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "unregisterSourceReceiver exception: " + exc.toString())
             }
@@ -514,7 +513,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                     if(dataSyncCount>0) {
                         updateSourceReceiver(this, key)
                     } else if(key == Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED && sharedPreferences.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)) {
-                        checkNotificationReceiverPermission(this, true)
+                        ReceiverManager.checkNotificationReceiverPermission(this, true)
                     }
                 }
                 Constants.PATIENT_NAME -> {

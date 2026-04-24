@@ -471,9 +471,13 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             Log.i(LOG_ID, "Node with id " + nodeId + " connected!")
             if(notConnectedNodes.isEmpty())
                 removeTimer()
-            if (GlucoDataService.appSource == AppSource.PHONE_APP) {
-                Log.i(LOG_ID, "Send settings to watch $nodeId")
+            val settings = GlucoDataService.getSettings()
+            if(settings != null) {
+                Log.i(LOG_ID, "Send settings to $nodeId")
                 sendMessage(NotifySource.SETTINGS, GlucoDataService.getSettings(), filterReceiverId = nodeId)
+            }
+            if (GlucoDataService.appSource == AppSource.PHONE_APP) {
+                Log.i(LOG_ID, "Send additional settings to watch $nodeId")
                 sendMessage(NotifySource.SOURCE_SETTINGS, DataSourceTask.getSettingsBundle(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)), filterReceiverId = nodeId)
                 sendMessage(NotifySource.ALARM_SETTINGS, AlarmHandler.getSettings(), filterReceiverId = nodeId)
                 if(cleanUpDbOnWatchConnected) {

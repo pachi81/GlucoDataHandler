@@ -26,12 +26,14 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.service.WearPhoneManager
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.utils.WakeLockHelper
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.read
 import kotlin.concurrent.write
 import de.michelinside.glucodatahandler.common.R as CR
+import androidx.core.net.toUri
 
 
 abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -237,7 +239,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     curAlarmTime = 0
                     curTestAlarmType = AlarmType.NONE
                     if(!fromClient)
-                        GlucoDataService.sendCommand(Command.STOP_ALARM)
+                        WearPhoneManager.sendCommand(Command.STOP_ALARM)
                     updateAlarmState(GlucoDataService.context!!)
                     InternalNotifier.notify(GlucoDataService.context!!, NotifySource.NOTIFICATION_STOPPED, null)
                 }
@@ -252,7 +254,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         Log.d(LOG_ID, "stopForLockscreenSnooze called")
         stopVibrationAndSound()
         stopTrigger()
-        GlucoDataService.sendCommand(Command.STOP_ALARM)
+        WearPhoneManager.sendCommand(Command.STOP_ALARM)
     }
 
     fun stopVibrationAndSound() {
@@ -826,7 +828,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             val path = alarmType.setting.customSoundPath
             if(path.isEmpty())
                 return null
-            return Uri.parse(path)
+            return path.toUri()
         }
         return getDefaultAlarm(alarmType, context)
     }
@@ -847,7 +849,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
 
     protected fun getUri(resId: Int, context: Context): Uri {
         val uri = "android.resource://" + context.packageName + "/" + resId
-        return Uri.parse(uri)
+        return uri.toUri()
     }
 
     private fun getVibrationPattern(alarmType: AlarmType): LongArray? {
@@ -1036,7 +1038,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             when(TriggerAction.valueOf(action)) {
                 TriggerAction.TEST_ALARM -> {
                     executeTest(alarmType, context)
-                    GlucoDataService.sendCommand(Command.TEST_ALARM, extras)
+                    WearPhoneManager.sendCommand(Command.TEST_ALARM, extras)
                 }
                 TriggerAction.START_ALARM_SOUND -> {
                     val duration = startSound(alarmType, context, true)

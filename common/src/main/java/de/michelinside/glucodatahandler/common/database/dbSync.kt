@@ -9,6 +9,7 @@ import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.Command
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
+import de.michelinside.glucodatahandler.common.service.WearPhoneManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -175,7 +176,7 @@ object dbSync : ChannelClient.ChannelCallback() {
                     Log.i(LOG_ID, "db sync succeeded")
                     if (GlucoDataService.appSource == AppSource.PHONE_APP) {
                         Log.d(LOG_ID, "Trigger watch sync")
-                        GlucoDataService.sendCommand(Command.REQUEST_DB_SYNC)
+                        WearPhoneManager.sendCommand(Command.REQUEST_DB_SYNC)
                     }
                 } else {
                     Log.w(LOG_ID, "db sync failed - cur retry: $retryCount")
@@ -185,7 +186,7 @@ object dbSync : ChannelClient.ChannelCallback() {
                         requestDbSync(context, retryCount)
                     } else {
                         Log.d(LOG_ID, "Trigger watch sync even phone sync failed...")
-                        GlucoDataService.sendCommand(Command.REQUEST_DB_SYNC)
+                        WearPhoneManager.sendCommand(Command.REQUEST_DB_SYNC)
                     }
                 }
             } catch (exc: Exception) {
@@ -202,7 +203,7 @@ object dbSync : ChannelClient.ChannelCallback() {
             retryCount = curRetry
             recvFinished = false
             registerChannel(context)
-            GlucoDataService.sendCommand(Command.DB_SYNC)
+            WearPhoneManager.sendCommand(Command.DB_SYNC)
             waitFor(context)
         }
     }

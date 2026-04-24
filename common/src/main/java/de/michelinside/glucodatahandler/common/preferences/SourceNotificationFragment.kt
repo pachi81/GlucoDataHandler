@@ -4,16 +4,11 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.core.content.ContextCompat
 import de.michelinside.glucodatahandler.common.utils.Log
-import androidx.fragment.app.DialogFragment
-import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
 import de.michelinside.glucodatahandler.common.Constants
-import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
-import de.michelinside.glucodatahandler.common.receiver.NotificationReceiver
-import de.michelinside.glucodatahandler.common.ui.SelectReceiverPreference
-import de.michelinside.glucodatahandler.common.ui.SelectReceiverPreferenceDialogFragmentCompat
+import de.michelinside.glucodatahandler.common.service.ReceiverManager
 
 class SourceNotificationFragment : PreferenceFragmentCompatBase(), SharedPreferences.OnSharedPreferenceChangeListener {
     private val LOG_ID = "GDH.NotificationFragment"
@@ -96,7 +91,7 @@ class SourceNotificationFragment : PreferenceFragmentCompatBase(), SharedPrefere
         Log.d(LOG_ID, "checkPermission called")
         val enablePref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED)
         if(enablePref!=null) {
-            if(enablePref.isChecked && !GlucoDataService.checkNotificationReceiverPermission(requireContext(), false)) {
+            if(enablePref.isChecked && !ReceiverManager.checkNotificationReceiverPermission(requireContext(), false)) {
                 Log.w(LOG_ID, "Disable notification receiver as permission not granted, yet!")
                 enablePref.isChecked = false
             }

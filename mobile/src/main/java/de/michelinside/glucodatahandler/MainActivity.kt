@@ -86,6 +86,7 @@ import kotlin.time.Duration.Companion.days
 import de.michelinside.glucodatahandler.common.R as CR
 import androidx.core.net.toUri
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
+import de.michelinside.glucodatahandler.common.service.WearPhoneManager
 import de.michelinside.glucodatahandler.common.tasks.YuwellSourceTask
 import de.michelinside.glucodatahandler.transfer.NightscoutUploader
 
@@ -203,7 +204,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 try {
                     val browserIntent = Intent(
                         Intent.ACTION_VIEW,
-                        Uri.parse(resources.getText(CR.string.help_link).toString())
+                        resources.getText(CR.string.help_link).toString().toUri()
                     )
                     startActivity(browserIntent)
                 } catch (exc: Exception) {
@@ -292,7 +293,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 requestNotificationPermission = false
                 PermanentNotification.showNotifications()
             }
-            GlucoDataService.checkForConnectedNodes(true)
+            WearPhoneManager.checkForConnectedNodes(true)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.message.toString() )
         }
@@ -925,12 +926,12 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         if (WearPhoneConnection.nodesConnected) {
             if (WearPhoneConnection.connectionError) {
                 val onResetClickListener = OnClickListener {
-                    GlucoDataService.resetWearPhoneConnection()
+                    WearPhoneManager.resetWearPhoneConnection()
                 }
                 tableConnections.addView(createRow(CR.string.source_wear, resources.getString(CR.string.detail_reset_connection), onResetClickListener))
             } else {
                 val onCheckClickListener = OnClickListener {
-                    GlucoDataService.checkForConnectedNodes(false)
+                    WearPhoneManager.checkForConnectedNodes(false)
                 }
                 WearPhoneConnection.getNodeConnectionStates(this).forEach { (name, state) ->
                     if(state.first > 0) {

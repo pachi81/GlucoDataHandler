@@ -16,6 +16,7 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.receiver.InternalActionReceiver
+import de.michelinside.glucodatahandler.common.service.WearPhoneManager
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.GlucoseStatistics
 import de.michelinside.glucodatahandler.common.utils.Log
@@ -338,7 +339,7 @@ object dbAccess {
                         InternalNotifier.notify(GlucoDataService.context!!, NotifySource.DB_DATA_CHANGED, extras)
                         if(!internal) {
                             // trigger dbsync with watch
-                            GlucoDataService.sendCommand(Command.REQUEST_DB_SYNC)
+                            WearPhoneManager.sendCommand(Command.REQUEST_DB_SYNC)
                         }
                     }
                 } catch (exc: Exception) {

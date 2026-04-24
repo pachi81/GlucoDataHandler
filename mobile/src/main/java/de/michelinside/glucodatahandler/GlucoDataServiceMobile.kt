@@ -24,6 +24,7 @@ import de.michelinside.glucodatahandler.widget.GlucoseBaseWidget
 import de.michelinside.glucodatahandler.widget.LockScreenWallpaper
 import de.michelinside.glucodatahandler.xdripserver.XDripServer
 import androidx.core.content.edit
+import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.tasker.TaskerWatchBatteryReceiver
 import de.michelinside.glucodatahandler.transfer.TransferService
 
@@ -48,13 +49,6 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                 migrateSettings(context)
                 start(AppSource.PHONE_APP, context, GlucoDataServiceMobile::class.java)
                 starting = false
-            }
-        }
-
-        fun sendLogcatRequest() {
-            if(connection != null) {
-                Log.d(LOG_ID, "sendLogcatRequest called")
-                connection!!.sendMessage(NotifySource.LOGCAT_REQUEST, null, filterReceiverId = connection!!.pickBestNodeId())
             }
         }
 
@@ -230,6 +224,33 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         floatingWidget.update()
         if(!PermanentNotification.recreateBitmap())
             PermanentNotification.showNotifications()
+    }
+
+    override fun getSettings(): Bundle {
+        val bundle = ReceiveData.getSettingsBundle()
+        // other settings
+        if (sharedPref != null) {
+            bundle.putBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, sharedPref!!.getBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, ReceiveData.isMmol))
+            bundle.putBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED, true))
+            bundle.putBoolean(Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED, true))
+            bundle.putBoolean(Constants.SHARED_PREF_SOURCE_AAPS_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_AAPS_ENABLED, true))
+            bundle.putBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, true))
+            bundle.putBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, true))
+            bundle.putBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, true))
+            bundle.putBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false))
+            bundle.putBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, sharedPref!!.getBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, true))
+            bundle.putString(Constants.SHARED_PREF_SENSOR_RUNTIME, sharedPref!!.getString(Constants.SHARED_PREF_SENSOR_RUNTIME, "14"))
+            bundle.putString(Constants.PATIENT_NAME, sharedPref!!.getString(Constants.PATIENT_NAME, ""))
+        }
+        if(Log.isLoggable(LOG_ID, android.util.Log.VERBOSE))
+            Log.v(LOG_ID, "getSettings called with bundle ${(Utils.dumpBundle(bundle))}")
+        return bundle
+    }
+
+    override fun setSettings(context: Context, bundle: Bundle) {
+        if(Log.isLoggable(LOG_ID, android.util.Log.VERBOSE))
+            Log.v(LOG_ID, "setSettings called with bundle ${(Utils.dumpBundle(bundle))}")
+
     }
 
 }

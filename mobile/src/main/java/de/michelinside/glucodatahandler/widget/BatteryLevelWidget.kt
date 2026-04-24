@@ -8,11 +8,11 @@ import de.michelinside.glucodatahandler.common.utils.Log
 import android.widget.RemoteViews
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
-import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
+import de.michelinside.glucodatahandler.common.service.WearPhoneManager
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.R as CR
@@ -83,7 +83,7 @@ class BatteryLevelWidget : AppWidgetProvider() {
 
 
                 if (WearPhoneConnection.nodesConnected && !WearPhoneConnection.connectionError) {
-                    val connection = GlucoDataService.getWearPhoneConnection()
+                    val connection = WearPhoneManager.getWearPhoneConnection()
                     if (connection != null) {
                         val nodeId = connection.pickBestNodeId()
                         if (nodeId != null) {
