@@ -18,7 +18,7 @@ class BatteryReceiver: BroadcastReceiver() {
             if (intent.extras == null || intent.extras!!.isEmpty) {
                 return
             }
-            Log.v(LOG_ID, "Batter intent received: ${Utils.dumpBundle(intent.extras)}")
+            Log.d(LOG_ID, "Batter intent received: ${Utils.dumpBundle(intent.extras)}")
             val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             val enabled = sharedPref!!.getBoolean(Constants.SHARED_PREF_BATTERY_RECEIVER_ENABLED, true)
             val curValue = intent.extras!!.getInt(LEVEL, -1)

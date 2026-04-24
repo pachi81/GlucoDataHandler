@@ -63,16 +63,31 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         )
 
         const val defaultGlucoseRegex = """(?:^|\s)(\d+(\.\d)?)(?=\s|\p{S}|$)"""
-        const val defaultIobRegex = """(\d*\.?\d+)\s?[a-fh-z]\b"""
+        const val defaultIobRegex = """(\d*\.?\d+)\s?([a-fh-z]\b|ie$)"""
+        const val minimedIobRegex = """(\d*\.?\d+)\s?[^\d\s]$"""
         const val defaultCobRegex = """(\d+)\s?g\b"""
+    }
+
+    private fun toRegex(regex: String): Regex {
+        return regex.toRegex(setOf(RegexOption.IGNORE_CASE, RegexOption.CANON_EQ))
     }
 
     private fun getRegex(key: String, defaultRegex: String): Regex {
         val sharedPref = GlucoDataService.sharedPref?: applicationContext.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
         val regex = sharedPref.getString(key, defaultRegex)
         if(regex.isNullOrEmpty())
-            return defaultRegex.toRegex(RegexOption.IGNORE_CASE)
-        return regex.toRegex(RegexOption.IGNORE_CASE)
+            return toRegex(defaultRegex)
+        return toRegex(regex)
+    }
+
+    private fun getIobRegex(packageName: String, sharedPref: SharedPreferences?): Regex {
+        val regexValue = sharedPref?.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX, "")
+        if(!regexValue.isNullOrEmpty())
+            return toRegex(regexValue)
+
+        if(packageName.lowercase().startsWith("com.medtronic."))  // MiniMed
+            return toRegex(minimedIobRegex)
+        return toRegex(defaultIobRegex)
     }
 
     private val glucoseRegex: Regex get() {
@@ -492,7 +507,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
 
     private fun parseIobValue(sbn: StatusBarNotification, sharedPref: SharedPreferences): Float {
         if(sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_ENABLED, true)) {
-            val regex = iobRegex
+            val regex = getIobRegex(sbn.packageName, sharedPref)
             Log.i(LOG_ID, "using IOB regex $regex")
             return parseValueFromNotification(sbn, true, regex)
 
@@ -509,13 +524,23 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         return Float.NaN
     }
 
+    private fun hasUnit(value: String?): Boolean {
+        if(!value.isNullOrEmpty()) {
+            return value.lowercase().contains("mmol") || value.lowercase().contains("mg")
+        }
+        return false
+    }
+
     private fun parseString(value: String?, regex: Regex, isIobCob: Boolean, needsUnit: Boolean): Float? {
         try {
             Log.d(LOG_ID, "Parsing string '$value' with regex '$regex' (isIobCob: $isIobCob - needsUnit: $needsUnit)")
             if(!value.isNullOrEmpty()) {
-                if(!isIobCob && needsUnit) {
-                    if(!value.lowercase().contains("mmol") && !value.lowercase().contains("mg")) {
+                if(needsUnit) {
+                    if(!isIobCob && !hasUnit(value)) {
                         Log.d(LOG_ID, "Ignoring value $value without unit")
+                        return null
+                    } else if(isIobCob && hasUnit(value)) {
+                        Log.d(LOG_ID, "Ignoring value $value with unit for IOB/COB")
                         return null
                     }
                 }
@@ -557,7 +582,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         // Extract data from notification extras as needed
         val title = extras?.getCharSequence("android.title")?.toString()
         val text = extras?.getCharSequence("android.text")?.toString()
-        val needsUnit = if(isIobCob) false else hasValueWithUnit(sbn.packageName, GlucoDataService.sharedPref!!)
+        val needsUnit = hasValueWithUnit(sbn.packageName, GlucoDataService.sharedPref!!)
         Log.i(LOG_ID, "extracted title `$title` and text `$text` check for unit: $needsUnit")
 
         if(!title.isNullOrEmpty()) {

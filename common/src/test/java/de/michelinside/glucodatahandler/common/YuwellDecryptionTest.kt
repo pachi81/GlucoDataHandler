@@ -33,7 +33,7 @@ class YuwellDecryptionTest {
                 return body
             var result = body
             sensitivData.forEach {
-                val groups = Regex("\"$it\":\"(.*?)\"").find(result)?.groupValues
+                val groups = Regex("\"$it\":\"(.*?)\"").find(result!!)?.groupValues
                 if(!groups.isNullOrEmpty() && groups.size > 1 && groups[1].isNotEmpty()) {
                     val replaceValue = groups[0].replace(groups[1], "---")
                     result = result.replace(groups[0], replaceValue)
