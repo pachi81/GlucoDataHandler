@@ -34,14 +34,18 @@ import java.io.FileOutputStream
 
 object AlarmNotification : AlarmNotificationBase() {
     private var noAlarmOnWearConnected = false
+    private var alarmWhileWearCharging = false
     private var noAlarmOnAAConnected = false
     private var fullscreenEnabled = true
 
     override val active: Boolean get() {
         if(getEnabled()) {
             if(noAlarmOnWearConnected && WearPhoneConnection.nodesConnected) {
-                Log.d(LOG_ID, "No alarm as wear is connected")
-                return false
+                Log.d(LOG_ID, "Checking wear charging state - alarm while wear charging: ${alarmWhileWearCharging} - wear charging ${WearPhoneConnection.watchCharging}")
+                if(!alarmWhileWearCharging || !WearPhoneConnection.watchCharging) {
+                    Log.d(LOG_ID, "No alarm as wear is connected")
+                    return false
+                }
             }
             if(noAlarmOnAAConnected && CarModeReceiver.AA_connected) {
                 Log.d(LOG_ID, "No alarm as Android Auto is connected")
@@ -203,11 +207,13 @@ object AlarmNotification : AlarmNotificationBase() {
                 onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED)
                 onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_WEAR_CONNECTED)
                 onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED)
+                onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_WEAR_NO_ALARM_WHILE_CHARGING)
             } else {
                 when(key) {
                     Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED -> setFullscreenEnabled(sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED, fullscreenEnabled))
                     Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_WEAR_CONNECTED -> noAlarmOnWearConnected = sharedPreferences.getBoolean(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_WEAR_CONNECTED, noAlarmOnWearConnected)
                     Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED -> noAlarmOnAAConnected = sharedPreferences.getBoolean(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED, noAlarmOnAAConnected)
+                    Constants.SHARED_PREF_WEAR_NO_ALARM_WHILE_CHARGING -> alarmWhileWearCharging = sharedPreferences.getBoolean(Constants.SHARED_PREF_WEAR_NO_ALARM_WHILE_CHARGING, alarmWhileWearCharging)
                 }
             }
             super.onSharedPreferenceChanged(sharedPreferences, key)
@@ -247,7 +253,7 @@ object AlarmNotification : AlarmNotificationBase() {
     }
 
     override fun getNotifierFilter(): MutableSet<NotifySource> {
-        return mutableSetOf(NotifySource.CAR_CONNECTION, NotifySource.NODE_CONNECTED)
+        return mutableSetOf(NotifySource.CAR_CONNECTION, NotifySource.NODE_CONNECTED, NotifySource.NODE_BATTERY_LEVEL)
     }
 
     override fun executeTest(alarmType: AlarmType, context: Context, fromIntern: Boolean) {
@@ -271,6 +277,10 @@ object AlarmNotification : AlarmNotificationBase() {
                         WearPhoneManager.sendCommand(Command.AA_CONNECTION_STATE, bundle)
                     }
                     updateAlarmState(context)
+                }
+                NotifySource.NODE_BATTERY_LEVEL -> {
+                    if(alarmWhileWearCharging)
+                        updateAlarmState(context)
                 }
                 else -> super.OnNotifyData(context, dataSource, extras)
 

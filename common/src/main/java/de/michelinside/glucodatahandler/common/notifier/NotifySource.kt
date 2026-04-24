@@ -34,5 +34,6 @@ enum class NotifySource {
     SERVICE_STARTED,
     NODE_CONNECTED,
     TASKER_SETTINGS,
-    UPDATE_MAIN;
+    UPDATE_MAIN,
+    WATCH_SETTINGS;
 }

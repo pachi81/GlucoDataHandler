@@ -1,7 +1,6 @@
 package de.michelinside.glucodatahandler.common
 
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import de.michelinside.glucodatahandler.common.utils.Log
 import com.google.android.gms.tasks.Tasks
@@ -79,6 +78,10 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
 
         private val notConnectedNodes: Set<String> get() = noDataReceived + noDataSend
         val connectionError: Boolean get() = notConnectedNodes.isNotEmpty() && connectRetries > 3
+
+        val watchCharging: Boolean get() {
+            return nodeBatteryLevel.all { BatteryReceiver.isCharging(it.value.second) }
+        }
 
         fun getBatterLevels(addMissing: Boolean = true): List<Pair<Int,Int>> {
             val batterLevels = mutableListOf<Pair<Int,Int>>()
@@ -171,9 +174,11 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         openConnection()
         if (sendSettings) {
             filter.add(NotifySource.TASKER_SETTINGS)
-            filter.add(NotifySource.SETTINGS)   // only send setting changes from phone to wear!
+            filter.add(NotifySource.SETTINGS)
             filter.add(NotifySource.SOURCE_SETTINGS)
             filter.add(NotifySource.ALARM_SETTINGS)
+        } else {
+            filter.add(NotifySource.WATCH_SETTINGS)
         }
         InternalNotifier.addNotifier(this.context, this, filter)
     }
@@ -357,6 +362,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             NotifySource.CAPILITY_INFO -> Constants.REQUEST_DATA_MESSAGE_PATH
             NotifySource.TASKER_SETTINGS -> Constants.TASKER_SETTINGS_INTENT_MESSAGE_PATH
             NotifySource.SETTINGS -> Constants.GENERAL_SETTINGS_INTENT_MESSAGE_PATH
+            NotifySource.WATCH_SETTINGS -> Constants.GENERAL_SETTINGS_INTENT_MESSAGE_PATH
             NotifySource.SOURCE_SETTINGS -> Constants.SOURCE_SETTINGS_INTENT_MESSAGE_PATH
             NotifySource.ALARM_SETTINGS -> Constants.ALARM_SETTINGS_INTENT_MESSAGE_PATH
             NotifySource.LOGCAT_REQUEST -> Constants.REQUEST_LOGCAT_MESSAGE_PATH
@@ -637,7 +643,8 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                         if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
                             Log.d(LOG_ID, "Glucose settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(extras))
                         GlucoDataService.setSettings(context, extras)
-                        InternalNotifier.notify(context, NotifySource.SETTINGS, extras)
+                        if(GlucoDataService.appSource == AppSource.WEAR_APP)
+                            InternalNotifier.notify(context, NotifySource.SETTINGS, extras)
                     }
                 }
 

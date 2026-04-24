@@ -250,6 +250,13 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
     override fun setSettings(context: Context, bundle: Bundle) {
         if(Log.isLoggable(LOG_ID, android.util.Log.VERBOSE))
             Log.v(LOG_ID, "setSettings called with bundle ${(Utils.dumpBundle(bundle))}")
+        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
+        sharedPref!!.edit {
+            putBoolean(
+                Constants.SHARED_PREF_WEAR_NO_ALARM_WHILE_CHARGING,
+                bundle.getBoolean(Constants.SHARED_PREF_WEAR_NO_ALARM_WHILE_CHARGING, false)
+            )
+        }
 
     }
 

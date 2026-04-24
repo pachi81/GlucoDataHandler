@@ -12,7 +12,6 @@ import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.utils.Utils
 
 class BatteryReceiver: BroadcastReceiver() {
-    private val LOG_ID = "GDH.BatteryReceiver"
     override fun onReceive(context: Context, intent: Intent) {
         try {
             if (intent.extras == null || intent.extras!!.isEmpty) {
@@ -42,11 +41,13 @@ class BatteryReceiver: BroadcastReceiver() {
     }
 
     companion object {
+        private val LOG_ID = "GDH.BatteryReceiver"
         const val LEVEL = BatteryManager.EXTRA_LEVEL
         const val STATUS = BatteryManager.EXTRA_STATUS
         var batteryPercentage: Int = 0
         var batteryStatus: Int = BatteryManager.BATTERY_STATUS_UNKNOWN
         fun isCharging(status: Int): Boolean {
+            Log.v(LOG_ID, "Checking charging status: $status")
             return status == BatteryManager.BATTERY_STATUS_CHARGING ||
                     status == BatteryManager.BATTERY_STATUS_FULL
         }

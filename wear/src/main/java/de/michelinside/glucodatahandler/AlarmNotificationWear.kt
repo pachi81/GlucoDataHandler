@@ -11,6 +11,7 @@ import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 import de.michelinside.glucodatahandler.common.utils.Utils
 
 
@@ -18,6 +19,7 @@ object AlarmNotificationWear : AlarmNotificationBase() {
     private var noAlarmOnPhoneConnected = false
     private var noAlarmOnAAConnected = false
     private var aa_connected = false
+    private var noAlarmWhileCharging = false
 
     var isAaConnected: Boolean
         get() {
@@ -32,9 +34,13 @@ object AlarmNotificationWear : AlarmNotificationBase() {
         return (noAlarmOnAAConnected && isAaConnected)
     }
 
+    private val isCharging: Boolean get() {
+        return (noAlarmWhileCharging && BatteryReceiver.isCharging(BatteryReceiver.batteryStatus))
+    }
+
     override val active: Boolean get() {
-        Log.d(LOG_ID, "Check active enabled: ${getEnabled()} - vibrate: $vibrateOnly - aa-active: $isAaActive")
-        return isEnabled() && (!isAaActive)
+        Log.d(LOG_ID, "Check active enabled: ${getEnabled()} - vibrate: $vibrateOnly - charging: $isCharging - aa-active: $isAaActive")
+        return isEnabled() && !isAaActive && !isCharging
     }
 
     fun isEnabled(): Boolean {
@@ -60,6 +66,7 @@ object AlarmNotificationWear : AlarmNotificationBase() {
             if (key == null) {
                 onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_WEAR_NO_ALARM_POPUP_PHONE_CONNECTED)
                 onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED)
+                onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_WEAR_NO_ALARM_WHILE_CHARGING)
                 if(GlucoDataService.context != null)
                     AlarmHandler.checkNotifier(GlucoDataService.context!!)
             } else {
@@ -68,6 +75,8 @@ object AlarmNotificationWear : AlarmNotificationBase() {
                         Constants.SHARED_PREF_WEAR_NO_ALARM_POPUP_PHONE_CONNECTED, noAlarmOnPhoneConnected)
                     Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED -> noAlarmOnAAConnected = sharedPreferences.getBoolean(
                         Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED, noAlarmOnAAConnected)
+                    Constants.SHARED_PREF_WEAR_NO_ALARM_WHILE_CHARGING -> noAlarmWhileCharging = sharedPreferences.getBoolean(
+                        Constants.SHARED_PREF_WEAR_NO_ALARM_WHILE_CHARGING, noAlarmWhileCharging)
                 }
             }
             super.onSharedPreferenceChanged(sharedPreferences, key)
@@ -77,7 +86,7 @@ object AlarmNotificationWear : AlarmNotificationBase() {
     }
 
     override fun getNotifierFilter(): MutableSet<NotifySource> {
-        return mutableSetOf(NotifySource.CAR_CONNECTION, NotifySource.CAPILITY_INFO, NotifySource.DISPLAY_STATE_CHANGED)
+        return mutableSetOf(NotifySource.CAR_CONNECTION, NotifySource.CAPILITY_INFO, NotifySource.DISPLAY_STATE_CHANGED, NotifySource.BATTERY_LEVEL)
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
@@ -95,6 +104,9 @@ object AlarmNotificationWear : AlarmNotificationBase() {
                 }
                 NotifySource.DISPLAY_STATE_CHANGED -> {
                     AlarmHandler.checkNotifier(context)
+                }
+                NotifySource.BATTERY_LEVEL -> {
+                    updateAlarmState(context)
                 }
                 else -> super.OnNotifyData(context, dataSource, extras)
             }

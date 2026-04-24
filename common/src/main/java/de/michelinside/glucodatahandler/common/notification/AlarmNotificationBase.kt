@@ -893,7 +893,8 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME,
         Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME,
         Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS,
-        Constants.SHARED_PREF_ALARM_INACTIVE_AUTO_RE_ENABLE
+        Constants.SHARED_PREF_ALARM_INACTIVE_AUTO_RE_ENABLE,
+        Constants.SHARED_PREF_WEAR_NO_ALARM_WHILE_CHARGING
     )
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {

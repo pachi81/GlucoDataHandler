@@ -1087,5 +1087,7 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="yuwell_logged_in_to_other_app">Account already active on another device.</string>
     <string name="yuwell_log_out_message">Yuwell source disabled! Please log out of the other app first to use this account here.</string>
     <string name="restart_libre_app">Please restart your phone or the Libre app.</string>
+    <string name="alarm_wear_no_alarm_while_charging">No alarm while charging</string>
+    <string name="alarm_wear_no_alarm_while_charging_summary">No alarm is triggered on watch while charging it.</string>
 
 </resources>

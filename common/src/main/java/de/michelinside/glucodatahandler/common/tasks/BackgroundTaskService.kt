@@ -122,8 +122,8 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
     }
 
     private fun isRunning(): Boolean {
-        if(runningThread!=null && runningThread!!.isAlive()) {
-            Log.d(LOG_ID, "Thread still active with ID ${runningThread?.threadId()}")
+        if(runningThread!=null && runningThread!!.isAlive) {
+            Log.d(LOG_ID, "Thread still active with ID ${runningThread?.id}")
             return true
         }
         return false

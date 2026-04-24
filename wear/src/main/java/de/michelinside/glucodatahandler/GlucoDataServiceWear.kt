@@ -172,7 +172,14 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
         }
     }
 
-    override fun getSettings(): Bundle? = null
+    override fun getSettings(): Bundle? {
+        if(sharedPref != null) {
+            val bundle = Bundle()
+            bundle.putBoolean(Constants.SHARED_PREF_WEAR_NO_ALARM_WHILE_CHARGING, sharedPref!!.getBoolean(Constants.SHARED_PREF_WEAR_NO_ALARM_WHILE_CHARGING, false))
+            return bundle
+        }
+        return null
+    }
 
     override fun setSettings(context: Context, bundle: Bundle) {
         if(Log.isLoggable(LOG_ID, android.util.Log.VERBOSE))
