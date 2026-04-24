@@ -102,46 +102,6 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }
 
-def registerPostBuildCopy(String taskName, String triggerTaskName, String buildSubPath, String localDest, boolean isAab) {
-    def buildDir = layout.buildDirectory.dir(buildSubPath)
-    def localDir = file(localDest)
-    def globalPath = rootProject.releasePath.toString()
-    def vCode = rootProject.versionCode.toString()
-    def pattern = isAab ? "**/*.aab" : "**/*.apk"
-
-    def localTask = tasks.register(taskName, Copy) {
-        from buildDir
-        include pattern
-        into localDir
-    }
-
-    def globalTask = tasks.register("${taskName}Global", Copy) {
-        from buildDir
-        include pattern
-        into isAab ? new File(globalPath, "Playstore/$vCode") : new File(globalPath)
-    }
-
-    tasks.matching { it.name == triggerTaskName }.configureEach {
-        finalizedBy localTask, globalTask
-    }
-}
-
-def registerPostBuildCopyInt(String taskName, String triggerTaskName, String localSource, boolean isAab) {
-    def globalPath = rootProject.releasePath.toString()
-    def vCode = rootProject.versionCode.toString()
-    def pattern = isAab ? "**/*.aab" : "**/*.apk"
-
-    def intTask = tasks.register(taskName, Copy) {
-        from "${projectDir}/${localSource}"
-        include pattern
-        into isAab ? new File(globalPath, "Playstore/$vCode") : new File(globalPath)
-    }
-
-    tasks.matching { it.name == triggerTaskName }.configureEach {
-        finalizedBy intTask
-    }
-}
-
 // --- Dynamic Post-Build Copy Logic (Groovy Version - Configuration Cache Compatible) ---
 
 // Pre-calculate global values to avoid project state access in closures

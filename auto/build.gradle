@@ -90,7 +90,6 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     implementation 'com.joaomgcd:taskerpluginlibrary:0.4.10'
     implementation project(path: ':common')
-    implementation project(path: ':common')
     implementation "androidx.car.app:app:1.7.0"
     implementation "androidx.preference:preference-ktx:1.2.1"
     implementation "com.jaredrummler:colorpicker:1.1.0"

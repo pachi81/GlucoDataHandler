@@ -67,7 +67,7 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:5.23.0'
     testImplementation 'org.mockito.kotlin:mockito-kotlin:6.3.0'
     testImplementation "org.json:json:20251224"
-    implementation 'com.google.code.gson:gson:2.13.2'
+    implementation 'com.google.code.gson:gson:2.14.0'
     //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'
 
     //Room
