@@ -86,8 +86,10 @@ import kotlin.time.Duration.Companion.days
 import de.michelinside.glucodatahandler.common.R as CR
 import androidx.core.net.toUri
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
+import de.michelinside.glucodatahandler.common.service.ReceiverManager
 import de.michelinside.glucodatahandler.common.service.WearPhoneManager
 import de.michelinside.glucodatahandler.common.tasks.YuwellSourceTask
+import de.michelinside.glucodatahandler.healthconnect.HealthConnectState
 import de.michelinside.glucodatahandler.transfer.NightscoutUploader
 
 
@@ -129,6 +131,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private var doNotUpdate = false
     private lateinit var chartCreator: ChartCreator
     private var systemBars: Insets? = null
+    private var triggerHealthConnect = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -294,6 +297,10 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 PermanentNotification.showNotifications()
             }
             WearPhoneManager.checkForConnectedNodes(true)
+            if(triggerHealthConnect) {
+                triggerHealthConnect = false
+                HealthConnectManager.writeLastValues(this)
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.message.toString() )
         }
@@ -361,6 +368,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         var permissionRequested = false
         if(sharedPref.contains(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED) && sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED, false)) {
             if (!AlarmNotification.hasFullscreenPermission(this)) {
+                Log.w(LOG_ID, "Missing fullscreen permission")
                 permissionRequested = true
                 Dialogs.showOkCancelDialog(this,
                     resources.getString(CR.string.permission_missing_title),
@@ -381,6 +389,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         }
         if(!permissionRequested && sharedPref.contains(Constants.SHARED_PREF_AOD_WP_ENABLED) && sharedPref.getBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)) {
             if (!AODAccessibilityService.isAccessibilitySettingsEnabled(this)) {
+                permissionRequested = true
+                Log.w(LOG_ID, "Missing AOD permission")
                 Dialogs.showOkCancelDialog(this,
                     resources.getString(CR.string.permission_missing_title),
                     resources.getString(CR.string.setting_permission_missing_message, resources.getString(CR.string.pref_cat_aod)),
@@ -388,6 +398,21 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     { _, _ ->
                         sharedPref.edit {
                             putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)
+                        }
+                    }
+                )
+            }
+        }
+        if(!permissionRequested && sharedPref.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED) && sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)) {
+            if (!ReceiverManager.checkNotificationReceiverPermission(this, false)) {
+                Log.w(LOG_ID, "Missing notification reader permission!")
+                Dialogs.showOkCancelDialog(this,
+                    resources.getString(CR.string.permission_missing_title),
+                    resources.getString(CR.string.setting_permission_missing_message, resources.getString(CR.string.pref_source_notification)),
+                    { _, _ -> ReceiverManager.requestNotificationReceiverPermission(this) },
+                    { _, _ ->
+                        sharedPref.edit {
+                            putBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)
                         }
                     }
                 )
@@ -959,7 +984,18 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             tableConnections.addView(createRow(CR.string.pref_switch_watchdrip_enabled, resources.getString(CR.string.connected_label)))
         }
         if(HealthConnectManager.enabled && HealthConnectManager.state.resId != 0) {
-            tableConnections.addView(createRow(CR.string.pref_healthconnect, resources.getString(HealthConnectManager.state.resId)))
+            var onClickListener: OnClickListener? = null
+            if(HealthConnectManager.state == HealthConnectState.NO_PERMISSION) {
+                onClickListener = OnClickListener {
+                    try {
+                        HealthConnectManager.openHealthConnectSettings(this)
+                        triggerHealthConnect = true
+                    } catch (exc: Exception) {
+                        Log.e(LOG_ID, "Medtrum browse exception: " + exc.message.toString() )
+                    }
+                }
+            }
+            tableConnections.addView(createRow(CR.string.pref_healthconnect, resources.getString(HealthConnectManager.state.resId), onClickListener))
         }
         if(NightscoutUploader.state != SourceState.NONE) {
             if(NightscoutUploader.state == SourceState.ERROR && NightscoutUploader.lastError.isNotEmpty())

@@ -196,15 +196,18 @@ object ReceiverManager {
         }
     }
 
+    fun requestNotificationReceiverPermission(context: Context) {
+        // request permissions
+        val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
+    }
 
     fun checkNotificationReceiverPermission(context: Context, requestPermission: Boolean): Boolean {
         val notificationListeners = Settings.Secure.getString(context.contentResolver, "enabled_notification_listeners")
         if(!notificationListeners.contains(context.packageName)) {
             if(requestPermission) {
-                // request permissions
-                val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                context.startActivity(intent)
+                requestNotificationReceiverPermission(context)
             }
             return false
         }

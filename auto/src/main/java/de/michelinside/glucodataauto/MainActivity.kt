@@ -26,6 +26,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.content.edit
 import androidx.core.view.MenuCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -47,6 +48,7 @@ import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.service.ReceiverManager
 import de.michelinside.glucodatahandler.common.tasks.DexcomShareSourceTask
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.GitHubVersionChecker
@@ -115,7 +117,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             versionChecker = GitHubVersionChecker("GlucoDataAuto", BuildConfig.VERSION_NAME, this)
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
-            sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
 
             ReceiveData.initData(this)
             TextToSpeechUtils.initTextToSpeech(this)
@@ -213,6 +215,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             GlucoDataServiceAuto.startDataSync()
             chartBitmap.resume()
             versionChecker.checkVersion(1)
+            checkMissingPermissions()
             checkNewSettings()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.message.toString() )
@@ -223,6 +226,24 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         Log.v(LOG_ID, "onDestroy called")
         super.onDestroy()
         chartBitmap.close()
+    }
+
+    private fun checkMissingPermissions() {
+        if(sharedPref.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED) && sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)) {
+            if (!ReceiverManager.checkNotificationReceiverPermission(this, false)) {
+                Log.w(LOG_ID, "Missing notification reader permission!")
+                Dialogs.showOkCancelDialog(this,
+                    resources.getString(CR.string.permission_missing_title),
+                    resources.getString(CR.string.setting_permission_missing_message, resources.getString(CR.string.pref_source_notification)),
+                    { _, _ -> ReceiverManager.requestNotificationReceiverPermission(this) },
+                    { _, _ ->
+                        sharedPref.edit {
+                            putBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)
+                        }
+                    }
+                )
+            }
+        }
     }
 
     fun requestPermission() : Boolean {
@@ -668,7 +689,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             if(Log.isLoggable(LOG_ID, android.util.Log.VERBOSE))
                 Log.v(LOG_ID, "onActivityResult called for requestCode: " + requestCode + " - resultCode: " + resultCode + " - data: " + Utils.dumpBundle(data?.extras))
             super.onActivityResult(requestCode, resultCode, data)
-            if (resultCode == Activity.RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 if (requestCode == CREATE_FILE) {
                     data?.data?.also { uri ->
                         Utils.saveLogs(this, uri)

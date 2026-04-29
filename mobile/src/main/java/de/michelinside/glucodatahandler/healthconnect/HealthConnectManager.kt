@@ -31,6 +31,8 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.ZonedDateTime
+import androidx.core.content.edit
+import androidx.core.net.toUri
 
 enum class HealthConnectState(val resId: Int) {
     UNKNOWN(0),
@@ -272,9 +274,8 @@ object HealthConnectManager: NotifierInterface {
         if(time > lastValueTime) {
             Log.i(LOG_ID, "Updating last value time to ${Utils.getUiTimeStamp(time)}")
             lastValueTime = time
-            with(sharedExtraPref.edit()) {
+            sharedExtraPref.edit {
                 putLong(Constants.SHARED_PREF_HEALTH_CONNECT_LAST_VALUE_TIME, lastValueTime)
-                apply()
             }
         }
     }
@@ -287,7 +288,7 @@ object HealthConnectManager: NotifierInterface {
     private fun openHealthConnectPlaystore(context: Context) {
         val intent = Intent(
             Intent.ACTION_VIEW,
-            Uri.parse("market://details?id=com.google.android.apps.healthdata")
+            "market://details?id=com.google.android.apps.healthdata".toUri()
         )
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         if (intent.resolveActivity(context.packageManager) != null) {
@@ -296,7 +297,7 @@ object HealthConnectManager: NotifierInterface {
             Log.e(LOG_ID, "Could not resolve intent to open Health Connect settings.")
             val webIntent = Intent(
                 Intent.ACTION_VIEW,
-                Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.apps.healthdata")
+                "https://play.google.com/store/apps/details?id=com.google.android.apps.healthdata".toUri()
             )
             webIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(webIntent)
@@ -310,6 +311,7 @@ object HealthConnectManager: NotifierInterface {
                 val intent = Intent(HealthConnectClient.ACTION_HEALTH_CONNECT_SETTINGS)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 context.startActivity(intent)
+                state = HealthConnectState.UNKNOWN
             } else {
                 openHealthConnectPlaystore(context)
             }
