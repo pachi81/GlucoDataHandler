@@ -18,6 +18,7 @@ import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.Command
 import de.michelinside.glucodatahandler.common.Constants
@@ -666,6 +667,20 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         return audioManager.ringerMode
     }
 
+    private fun getRealRingMode(context: Context): Int {
+        if(audioManager.ringerMode <= 0) {
+            try {
+                val systemRingerMode = Settings.Global.getInt(context.contentResolver, "mode_ringer", -1)
+                Log.d(LOG_ID, "Getting system ringer mode $systemRingerMode - AudioManager=${audioManager.ringerMode}")
+                if(systemRingerMode > 0)
+                    return systemRingerMode
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "Error getting system ringer mode: $exc")
+            }
+        }
+        return audioManager.ringerMode
+    }
+
     protected fun checkCreateSound(alarmType: AlarmType, context: Context) {
         try {
             Log.v(LOG_ID, "checkCreateSound called for force sound=$forceSound - vibration=$forceVibration - DnD=${Channels.getNotificationManager().currentInterruptionFilter} - ringmode=${audioManager.ringerMode}")
@@ -686,9 +701,8 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                                 targetRingerMode = soundMode.ringerMode
                             }
                         }
-                        Log.d(LOG_ID, "Check force sound for soundMode=$soundMode - targetRinger=$targetRingerMode - currentRinger=${audioManager.ringerMode}")
                         if (targetRingerMode > audioManager.ringerMode ) {
-                            lastRingerMode = audioManager.ringerMode
+                            lastRingerMode = getRealRingMode(context)  // set to real mode, which may differ from ringerMode
                             Log.d(LOG_ID, "Set cur ringer mode $lastRingerMode to $targetRingerMode")
                             audioManager.ringerMode = targetRingerMode
                         }
