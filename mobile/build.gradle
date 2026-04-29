@@ -97,7 +97,7 @@ dependencies {
     implementation 'com.joaomgcd:taskerpluginlibrary:0.4.10'
     implementation project(path: ':common')
     implementation 'com.google.android.gms:play-services-tasks:18.4.1'
-    implementation 'com.google.android.gms:play-services-wearable:19.0.0'
+    implementation 'com.google.android.gms:play-services-wearable:20.0.1'
     implementation "androidx.car.app:app:1.7.0"
     implementation "androidx.preference:preference-ktx:1.2.1"
     implementation "com.jaredrummler:colorpicker:1.1.0"
