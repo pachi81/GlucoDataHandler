@@ -246,21 +246,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 return false
             }
         }
-        requestExactAlarmPermission()
         return true
-    }
-
-    private fun requestExactAlarmPermission() {
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                if (!Utils.canScheduleExactAlarms(this.applicationContext)) {
-                    Log.i(LOG_ID, "Request exact alarm permission...")
-                    startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
-                }
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "requestExactAlarmPermission exception: " + exc.message.toString() )
-        }
     }
 
     @SuppressLint("SetTextI18n")
