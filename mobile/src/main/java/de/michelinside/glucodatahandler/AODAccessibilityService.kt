@@ -21,16 +21,19 @@ import android.provider.Settings
 import android.view.Display
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
+import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.widget.AodWidget
 import kotlin.math.abs
 import kotlin.math.max
 
 
 @SuppressLint("AccessibilityPolicy")
-class AODAccessibilityService : AccessibilityService() {
+class AODAccessibilityService : AccessibilityService(), NotifierInterface {
     private var overlayView: View? = null
     private lateinit var windowManager: WindowManager
     private lateinit var powerManager: PowerManager
@@ -74,28 +77,7 @@ class AODAccessibilityService : AccessibilityService() {
 
     private lateinit var displayManager: android.hardware.display.DisplayManager
 
-    private val displayListener = object : android.hardware.display.DisplayManager.DisplayListener {
-        override fun onDisplayAdded(displayId: Int) {}
-        override fun onDisplayRemoved(displayId: Int) {}
-        override fun onDisplayChanged(displayId: Int) {
-            if (displayId == Display.DEFAULT_DISPLAY) {
-                val display = displayManager.getDisplay(displayId)
-                val state = display?.state ?: Display.STATE_UNKNOWN
-                Log.d(LOG_ID, "Display state changed: $state")
-                when (state) {
-                    Display.STATE_OFF, Display.STATE_DOZE, Display.STATE_DOZE_SUSPEND -> {
-                        displayStateChanged(Display.STATE_OFF)
-                    }
-                    Display.STATE_ON -> {
-                        displayStateChanged(Display.STATE_ON)
-                    }
-                    else -> {
-                        Log.w(LOG_ID, "Unknown display state: $state")
-                    }
-                }
-            }
-        }
-    }
+    private var displayListener: android.hardware.display.DisplayManager.DisplayListener? = null
 
     private fun displayStateChanged(state: Int, delayMillis: Long = 1000) {
         try {
@@ -179,19 +161,64 @@ class AODAccessibilityService : AccessibilityService() {
             }
             registerReceiver(screenStateReceiver, filter)
 
-            // Registriere den DisplayListener
-            displayManager.registerDisplayListener(displayListener, null)
+            InternalNotifier.addNotifier(this, this, mutableSetOf(NotifySource.CAR_CONNECTION))
+
+            updateDisplayListener()
 
             // Initialer Check
-            val defaultDisplay = displayManager.getDisplay(Display.DEFAULT_DISPLAY)
-            Log.d(LOG_ID, "Default display state: ${defaultDisplay?.state}")
-            if (defaultDisplay != null && defaultDisplay.state != Display.STATE_ON) {
-                Log.i(LOG_ID, "Initial default display state is ${defaultDisplay.state}")
-                displayStateChanged(defaultDisplay.state)
-            }
-
+            triggerDisplayCheck()
         } catch (e: Exception) {
             Log.e(LOG_ID, "Error in onCreate", e)
+        }
+    }
+
+    private fun triggerDisplayCheck(delayMillis: Long = 1000) {
+        val defaultDisplay = displayManager.getDisplay(Display.DEFAULT_DISPLAY)
+        Log.d(LOG_ID, "Default display state: ${defaultDisplay?.state}")
+        if (defaultDisplay != null && defaultDisplay.state != Display.STATE_ON) {
+            Log.i(LOG_ID, "Initial default display state is ${defaultDisplay.state}")
+            displayStateChanged(defaultDisplay.state, delayMillis)
+        }
+    }
+
+    private fun updateDisplayListener() {
+        try {
+            Log.d(LOG_ID, "updateDisplayListener called for AA connected: ${CarModeReceiver.AA_connected}")
+            if(CarModeReceiver.AA_connected) {
+                if(displayListener == null) {
+                    displayListener = object : android.hardware.display.DisplayManager.DisplayListener{
+                        override fun onDisplayAdded(displayId: Int) {}
+                        override fun onDisplayRemoved(displayId: Int) {}
+                        override fun onDisplayChanged(displayId: Int) {
+                            if (displayId == Display.DEFAULT_DISPLAY) {
+                                val display = displayManager.getDisplay(displayId)
+                                val state = display?.state ?: Display.STATE_UNKNOWN
+                                Log.d(LOG_ID, "Display state changed: $state")
+                                when (state) {
+                                    Display.STATE_OFF, Display.STATE_DOZE, Display.STATE_DOZE_SUSPEND -> {
+                                        displayStateChanged(Display.STATE_OFF, 10)
+                                    }
+                                    Display.STATE_ON -> {
+                                        displayStateChanged(Display.STATE_ON)
+                                    }
+                                    else -> {
+                                        Log.w(LOG_ID, "Unknown display state: $state")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    displayManager.registerDisplayListener(displayListener, null)
+                    Log.i(LOG_ID, "DisplayListener enabled!")
+                    triggerDisplayCheck(10)
+                }
+            } else if(displayListener != null) {
+                displayManager.unregisterDisplayListener(displayListener)
+                displayListener = null
+                Log.i(LOG_ID, "DisplayListener disabled!")
+            }
+        } catch (e: Exception) {
+            Log.e(LOG_ID, "Error in updateDisplayListener", e)
         }
     }
 
@@ -298,8 +325,10 @@ class AODAccessibilityService : AccessibilityService() {
         Log.d(LOG_ID, "Service destroyed")
 
         try {
+            InternalNotifier.remNotifier(this, this)
             unregisterReceiver(screenStateReceiver)
-            displayManager.unregisterDisplayListener(displayListener)
+            if(displayListener != null)
+                displayManager.unregisterDisplayListener(displayListener)
             triggerAodState(GlucoDataService.context!!, false)
         } catch (e: Exception) {
             Log.e(LOG_ID, "Error unregistering receiver", e)
@@ -326,6 +355,19 @@ class AODAccessibilityService : AccessibilityService() {
         }
     }
 
+    override fun OnNotifyData(
+        context: Context,
+        dataSource: NotifySource,
+        extras: Bundle?
+    ) {
+        Log.d(LOG_ID, "OnNotifyData received for $dataSource with extras: ${Utils.dumpBundle(extras)}")
+        when (dataSource) {
+            NotifySource.CAR_CONNECTION -> {
+                updateDisplayListener()
+            }
+            else -> {}
+        }
+    }
 
 
 }
