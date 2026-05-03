@@ -142,7 +142,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             Log.v(LOG_ID, "onCreate called")
 
             GlucoDataServiceMobile.start(this.applicationContext)
-            PackageUtils.updatePackages(this.applicationContext)
+            PackageUtils.updatePackages(this.applicationContext, false)
 
             txtBgValue = findViewById(R.id.txtBgValue)
             viewIcon = findViewById(R.id.viewIcon)

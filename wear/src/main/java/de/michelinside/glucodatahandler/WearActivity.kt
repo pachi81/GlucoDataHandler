@@ -178,7 +178,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
 
             if(requestPermission())
                 GlucoDataServiceWear.start(this.applicationContext)
-            PackageUtils.updatePackages(this.applicationContext)
+            PackageUtils.updatePackages(this.applicationContext, false)
             checkUncaughtException()
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())

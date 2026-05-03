@@ -28,11 +28,9 @@ import de.michelinside.glucodatahandler.common.utils.GlucoseStatistics
 import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
-import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.service.ReceiverManager
 import de.michelinside.glucodatahandler.common.service.StartupTrigger
 import de.michelinside.glucodatahandler.common.service.WearPhoneManager
-import androidx.core.content.edit
 
 
 enum class AppSource {
@@ -230,7 +228,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
 
             ReceiveData.initData(this)
             SourceTaskService.run(this)
-            PackageUtils.updatePackages(this)
+            PackageUtils.updatePackages(this, false)
 
             WearPhoneManager.init(this, appSource == AppSource.PHONE_APP)
 

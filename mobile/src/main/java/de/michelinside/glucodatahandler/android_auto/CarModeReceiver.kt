@@ -39,7 +39,7 @@ object CarModeReceiver {
             Log.i(LOG_ID, "onReceive called for intent " + intent + ": " + Utils.dumpBundle(intent.extras))
             if(!PackageUtils.isGlucoDataAutoAvailable(context)) {
                 Log.i(LOG_ID, "GlucoDataAuto not available, but package received -> update packages")
-                PackageUtils.updatePackages(context)
+                PackageUtils.updatePackages(context, true)
             }
             val curEnable = gda_enabled
             val curDuration = graph_duration

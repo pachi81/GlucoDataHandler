@@ -23,6 +23,7 @@ import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import de.michelinside.glucodatahandler.common.R
 import kotlinx.coroutines.launch
+import androidx.core.content.edit
 
 
 class SelectReceiverPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat() {
@@ -115,7 +116,7 @@ class SelectReceiverPreferenceDialogFragmentCompat : PreferenceDialogFragmentCom
             val updatingProgress = view.findViewById<ProgressBar>(R.id.updatingProgress)
             
             reloadImage.setOnClickListener {
-                PackageUtils.updatePackages(requireContext())
+                PackageUtils.updatePackages(requireContext(), true)
             }
 
             lifecycleScope.launch {
@@ -143,9 +144,8 @@ class SelectReceiverPreferenceDialogFragmentCompat : PreferenceDialogFragmentCom
         Log.d(LOG_ID, "onDialogClosed called with positiveResult: " +  positiveResult.toString() )
         try {
             if(positiveResult) {
-                with(sharedPref.edit()) {
+                sharedPref.edit {
                     putBoolean(showAllKey, showAllSwitch.isChecked)
-                    apply()
                 }
                 selectReceiverPreference!!.setReceiver(receiver)
             }

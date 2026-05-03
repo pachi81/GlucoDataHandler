@@ -20,13 +20,17 @@ import kotlinx.coroutines.flow.asStateFlow
 object PackageUtils {
     private val LOG_ID = "GDH.Utils.Packages"
     private val packages = HashMap<String, String>()
-
+    private var lastPackageUpdate = 0L
     private val _isUpdating = MutableStateFlow(false)
     val isUpdating = _isUpdating.asStateFlow()
 
     @SuppressLint("QueryPermissionsNeeded")
-    fun updatePackages(context: Context) {
+    fun updatePackages(context: Context, force: Boolean) {
         if(!_isUpdating.value) {
+            if(!force && !packages.isEmpty() && Utils.getElapsedTimeMinute(lastPackageUpdate) < 10) {
+                Log.d(LOG_ID, "Skip updating packages, last update was ${Utils.getElapsedTimeMinute(lastPackageUpdate)} minutes ago")
+                return
+            }
             _isUpdating.value = true
             packages.clear()
             // Use a specific scope instead of GlobalScope for better lifecycle control
@@ -67,6 +71,7 @@ object PackageUtils {
                     Log.e(LOG_ID, "updatePackages exception: " + exc.toString())
                 } finally {
                     _isUpdating.value = false
+                    lastPackageUpdate = System.currentTimeMillis()
                     Log.i(LOG_ID, "${packages.size} packages found")
                 }
             }
@@ -118,7 +123,7 @@ object PackageUtils {
         waitForUpdate()
         if (packages.isEmpty() && !_isUpdating.value) {
             Log.i(LOG_ID, "Updating receivers")
-            updatePackages(context)
+            updatePackages(context, true)
             waitForUpdate()
         }
         return packages
@@ -163,7 +168,9 @@ object PackageUtils {
             intent.setPackage(context.packageName)
             return Pair(intent, true)
         }
-        return Pair(context.packageManager.getLaunchIntentForPackage(tapAction), false)
+        val launchIntent = context.packageManager.getLaunchIntentForPackage(tapAction)
+        launchIntent?.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+        return Pair(launchIntent, false)
     }
 
     fun getTapActionIntent(
