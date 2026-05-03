@@ -1091,5 +1091,6 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="restart_libre_app">Please restart your phone or the Libre app.</string>
     <string name="alarm_wear_no_alarm_while_charging">No alarm while charging</string>
     <string name="alarm_wear_no_alarm_while_charging_summary">No alarm is triggered on watch while charging it.</string>
+    <string name="export_settings_info">You are about to export your settings.\nPlease do not share this file with anyone, as it may contain sensitive information like usernames and passwords.\nNote: Even if the developer asks for help, he usually only requires your logs, not your settings.\nDo you want to proceed with the export?</string>
 
 </resources>
