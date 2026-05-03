@@ -38,6 +38,8 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     private val trendRegex = "([→↗↑↘↓⇈⇊])".toRegex()
     private val receivedNotifications = mutableListOf<StatusBarNotification>()
     private val intervalCheckTimeSpan = 10 // seconds -> from interval-timespan until interval+timespan
+    private var isOutOfSync = true  // initially out of sync to accept first notifications
+    private val minNotificationInterval = 2 // seconds -> minimum interval between notifications in out-of-sync mode
 
 
     companion object {
@@ -339,7 +341,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             val minDiff = 50
             val diffValueTime = (sbn.postTime - ReceiveData.time)/1000 // in seconds
             val diffNotifyTime = (sbn.postTime - lastValueNotificationTime)/1000 // in seconds
-            Log.i(LOG_ID, "New notification from ${sbn.packageName} - ongoing: ${sbn.isOngoing} (flags: ${sbn.notification?.flags}, prio: ${sbn.notification?.priority}) - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`}) - diff notify: $diffNotifyTime, diff recv value: $diffValueTime")
+            Log.i(LOG_ID, "New notification from ${sbn.packageName} - ongoing: ${sbn.isOngoing} (flags: ${sbn.notification?.flags}, prio: ${sbn.notification?.priority}) - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`}) - diff notify: $diffNotifyTime, diff recv value: $diffValueTime - outOfSync: $isOutOfSync")
             if(diffNotifyTime <= 0L)
                 return false
             if(!sbn.isOngoing && hasOngoingNotification(sbn.packageName))
@@ -347,16 +349,39 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             if(isSpecialNotification(sbn))
                 return false
             val interval = getInterval(sbn.packageName, sharedPref)
+
+            // Handle out-of-sync mode: accept all notifications with minimum interval, regardless of value changes
+            if(isOutOfSync && interval >= 3) {
+                Log.i(LOG_ID, "Out of sync mode active - checking minimum interval of ${minNotificationInterval}s (diff: $diffNotifyTime)")
+                if(diffNotifyTime >= minNotificationInterval) {
+                    // In out-of-sync mode, ignore duplicate values like in normal mode
+                    updateOnlyChangedValue = true
+                    return true
+                }
+                Log.i(LOG_ID, "Ignoring notification - minimum interval not reached")
+                return false
+            }
+
+            // Normal sync mode
             if(interval > 1) {
                 Log.i(LOG_ID, "Handle $interval min notification - lastValueChanged: $lastValueChanged - diff: $diffValueTime")
                 stopWaitThread()
+
+                // Check if out-of-sync should be activated: time jump > interval + 1 minute
+                val intervalTimeSec = interval * 60
+                val outOfSyncThreshold = intervalTimeSec + 60
+                if(diffValueTime > outOfSyncThreshold) {
+                    Log.i(LOG_ID, "Activating out-of-sync mode! Time jump detected: $diffValueTime > $outOfSyncThreshold")
+                    isOutOfSync = true
+                    return true
+                }
+
                 /*
                     - time to ignore notifications: 60s if the last value was not a new one and 180s if the last value was a new one
                     - until 250s only update for changed values
                     - after 250s wait until 315s for a newer notification if the value has not changed - if there is no new one, use this one
                     - after 310s use the value
                  */
-                val intervalTimeSec = interval*60
                 val ignoreTime = if(lastValueChanged) (intervalTimeSec-60) else 60
                 if(diffValueTime<=ignoreTime) {
                     Log.i(LOG_ID, "Ignoring notification")
@@ -715,7 +740,12 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         if(mgVal >= Constants.GLUCOSE_MIN_VALUE && mgVal <= Constants.GLUCOSE_MAX_VALUE) {
             if(ReceiveData.getElapsedTimeMinute(RoundingMode.HALF_UP) > 0) {
                 val delta = (mgVal - ReceiveData.rawValue).toFloat() / ReceiveData.getElapsedTimeMinute(RoundingMode.HALF_UP)
-                val maxDelta = if(updateOnlyChangedValue) 10F else 40F
+                // In out-of-sync mode, allow larger delta values since sensor was out of reach
+                val maxDelta = when {
+                    isOutOfSync -> 100F  // larger tolerance during out-of-sync recovery
+                    updateOnlyChangedValue -> 10F
+                    else -> 40F
+                }
                 if(abs(delta) > maxDelta) {
                     Log.i(LOG_ID, "Ignoring value notification with delta: $delta (max: $maxDelta)")
                     return false
@@ -727,7 +757,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     }
 
     private fun handleGlucoseValue(glucoseValue: Float, rate: Float, sbn: StatusBarNotification) {
-        Log.i(LOG_ID, "Extracted glucose value: $glucoseValue and rate $rate from time: ${Utils.getUiTimeStamp(sbn.postTime)}")
+        Log.i(LOG_ID, "Extracted glucose value: $glucoseValue and rate $rate from time: ${Utils.getUiTimeStamp(sbn.postTime)} - outOfSync: $isOutOfSync")
         if(updateOnlyChangedValue && glucoseValue == lastValue) {
             Log.i(LOG_ID, "Ignoring value notification with same value: $glucoseValue")
         } else if (validGlucoseValue(glucoseValue)) {
@@ -750,6 +780,13 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             glucoExtras.putInt(ReceiveData.ALARM, 0)
             ReceiveData.handleIntent(applicationContext, DataSource.NOTIFICATION, glucoExtras)
             SourceStateData.setState(DataSource.NOTIFICATION, SourceState.NONE)
+            
+            // Deactivate out-of-sync mode only when value has changed and was successfully processed
+            if(isOutOfSync && lastValueChanged) {
+                Log.i(LOG_ID, "Value changed detected in out-of-sync mode - deactivating out-of-sync")
+                isOutOfSync = false
+            }
+            
             if(sbn.isOngoing && !hasOngoingNotification(sbn.packageName)) {
                 Log.i(LOG_ID, "Valid glucose value received with ongoing notification from ${sbn.packageName}")
                 onGoingNotificationPackage = sbn.packageName
