@@ -767,12 +767,12 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             else
                 System.currentTimeMillis()
             if(iob != extras.getFloat(IOB, Float.NaN) || cob != extras.getFloat(COB, Float.NaN)) {
-                Log.i(LOG_ID, "Only IOB/COB changed: " + extras.getFloat(IOB, Float.NaN) + "/" +  extras.getFloat(COB, Float.NaN) + " - at " + Utils.getUiTimeStamp(iobCobTime))
+                Log.i(LOG_ID, "Only IOB/COB changed: ${extras.getFloat(IOB, Float.NaN)}/${extras.getFloat(COB, Float.NaN)} - at ${Utils.getUiTimeStamp(iobCobTime)} - from $dataSource")
                 iob = extras.getFloat(IOB, Float.NaN)
                 cob = extras.getFloat(COB, Float.NaN)
                 iobCobChange = true
             } else {
-                Log.d(LOG_ID, "Only IOB/COB time changed at " + Utils.getUiTimeStamp(iobCobTime))
+                Log.d(LOG_ID, "Only IOB/COB time changed at ${Utils.getUiTimeStamp(iobCobTime)} for source $dataSource")
             }
 
             // do not forward extras as interApp to prevent sending back to source...
