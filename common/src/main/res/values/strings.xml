@@ -68,6 +68,8 @@
     <string name="pref_source_dexcom_byoda_info" translatable="false">Dexcom BYODA (AAPS)</string>
     <string name="pref_source_libre_patched" translatable="false">Libre patched app</string>
 
+    <string name="hba1c" translatable="false">Hba1c</string>
+
     <!-- start of resources -->
 
     <string name="info_label_sensor_id">Sensor</string>
