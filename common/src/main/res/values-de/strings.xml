@@ -994,7 +994,6 @@ Sie können diese Berechtigungen jederzeit in den Health Connect App-Einstellung
 
     <string name="gda_foreground_summary">Optionaler Modus zur Problembehebung, der die Verbindung zu Android Auto stabilisiert, indem er das Beenden der App im Hintergrund verhindert. Der Dienst bleibt ohne aktive Verbindung inaktiv, zudem lässt sich die Benachrichtigung ab Android 14 einfach wegwischen.</string>
 
-    <string name="src_cat_yuwell">Yuwell Anytime</string>
     <string name="src_yuwell_summary">Werte der Yuwell Anytime App über die Cloud empfangen.</string>
     <string name="pref_source_yuwell_info">Yuwell Anytime Follow einrichten</string>
     <string name="pref_source_yuwell_info_summary">- Anytime Follow App installieren\n- Benutzer registrieren\n- Benutzer aus der Yuwell Anytime App einladen\n- Einladung im Reiter \'Benachrichtigungen\' annehmen\n- WICHTIG: Diesen Benutzer danach abmelden!</string>
@@ -1002,7 +1001,6 @@ Sie können diese Berechtigungen jederzeit in den Health Connect App-Einstellung
     <string name="src_yuwell_user_summary">Benutzername für das Anytime Follow Konto.</string>
     <string name="src_yuwell_password_summary">Passwort für das Anytime Follow Konto.</string>
     <string name="src_yuwell_enabled_summary">Empfang von Yuwell Anytime Werten aktivieren.</string>
-    <string name="source_yuwell">Yuwell</string>
     <string name="src_yuwell_logout_error">Benutzer wurde abgemeldet!</string>
     <string name="yuwell_force_logout_sent">Bestätigungs-E-Mail gesendet, bitte prüfen Sie Ihr Postfach!</string>
     <string name="yuwell_force_logout_info">Nachdem Sie die Abmeldung bestätigt haben, können Sie die Quelle hier wieder aktivieren.</string>
