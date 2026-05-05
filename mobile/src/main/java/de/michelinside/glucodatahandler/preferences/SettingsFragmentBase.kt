@@ -236,6 +236,8 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
 
             setEnableState<EditTextPreference>(sharedPreferences, Constants.SHARED_PREF_XDRIP_SERVER_API_SECRET, Constants.SHARED_PREF_XDRIP_OPEN_SERVER)
 
+            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_STANDARD_CHILDREN_STATISTICS, Constants.SHARED_PREF_STANDARD_STATISTICS)
+
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())
         }
@@ -330,7 +332,8 @@ class GeneralAdvancedSettingsFragment: SettingsFragmentBase(R.xml.pref_general_a
         try {
             super.onSharedPreferenceChanged(sharedPreferences, key)
             when (key) {
-                Constants.SHARED_PREF_STANDARD_STATISTICS -> {
+                Constants.SHARED_PREF_STANDARD_STATISTICS,
+                Constants.SHARED_PREF_STANDARD_CHILDREN_STATISTICS -> {
                     GlucoseStatistics.reset()
                 }
             }

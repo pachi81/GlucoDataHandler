@@ -1092,5 +1092,8 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="alarm_wear_no_alarm_while_charging">No alarm while charging</string>
     <string name="alarm_wear_no_alarm_while_charging_summary">No alarm is triggered on watch while charging it.</string>
     <string name="export_settings_info">You are about to export your settings.\nPlease do not share this file with anyone, as it may contain sensitive information like usernames and passwords.\nNote: Even if the developer asks for help, he usually only requires your logs, not your settings.\nDo you want to proceed with the export?</string>
+    <string name="pref_switch_standard_children_statistics">Using TITR for children</string>
+    <string name="pref_switch_standard_children_statistics_summary">Using Time in Tighter Range (TITR) with targets of 70–140 mg/dl (3.9–7.8 mmol/l) is recommended for small children in some regions.</string>
+
 
 </resources>

@@ -25,6 +25,12 @@
             android:summary="@string/pref_switch_standard_statistics_summary"
             app:iconSpaceReserved="false" />
         <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="standard_children_statistics"
+            android:title="@string/pref_switch_standard_children_statistics"
+            android:summary="@string/pref_switch_standard_children_statistics_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="relative_time"
             android:summary="@string/pref_relative_time_summary"
