@@ -990,4 +990,29 @@ Puoi gestire queste autorizzazioni in qualsiasi momento nelle impostazioni dell\
     <string name="pref_xdrip_server_summary">Fornisce un server web locale sulla porta 17580 che emula il servizio web di xDrip+, che può essere utilizzato da vari servizi esterni, quadranti e app.</string>
 
     <string name="gda_foreground_summary">Modalità opzionale di risoluzione dei problemi che stabilizza la connessione Android Auto impedendo la chiusura dell\'app in background. Il servizio rimane inattivo senza una connessione attiva e la notifica può essere facilmente rimossa con uno scorrimento a partire da Android 14.</string>
+
+    <string name="src_yuwell_summary">Segui l\'app Yuwell Anytime da remoto.</string>
+    <string name="pref_source_yuwell_info">Configura Yuwell Anytime Follow</string>
+    <string name="pref_source_yuwell_info_summary">- Installa l\'app Anytime Follow\n- Registra un utente\n- Invita l\'utente dall\'app Yuwell Anytime\n- Accetta l\'invito nella scheda \'Notifiche\'\n- IMPORTANTE: Successivamente disconnetti questo utente!</string>
+    <string name="src_yuwell_patient_summary">Paziente da seguire.</string>
+    <string name="src_yuwell_user_summary">Nome utente per l\'account Anytime Follow.</string>
+    <string name="src_yuwell_password_summary">Password per l\'account Anytime Follow.</string>
+    <string name="src_yuwell_enabled_summary">Abilita il monitoraggio di Yuwell Anytime.</string>
+    <string name="src_yuwell_logout_error">L\'utente è stato disconnesso!</string>
+    <string name="yuwell_force_logout_sent">Email di verifica inviata, controlla la tua casella di posta!</string>
+    <string name="yuwell_force_logout_info">Dopo aver confermato la disconnessione, puoi riabilitare la sorgente qui.</string>
+    <string name="yuwell_trigger_force_logout">Premi qui per forzare la disconnessione dell\'utente corrente dall\'altra app.</string>
+    <string name="yuwell_force_logout_title">Disconnessione forzata</string>
+    <string name="yuwell_force_logout_message">Se attivi una disconnessione forzata dell\'utente, riceverai un\'email di verifica.\nDevi confermare la disconnessione nell\'email.</string>
+
+    <string name="yuwell_reenable_source">Premi qui per riabilitare la sorgente Yuwell.</string>
+    <string name="yuwell_logged_in_to_other_app">Account già attivo su un altro dispositivo.</string>
+    <string name="yuwell_log_out_message">Sorgente Yuwell disabilitata! Esci prima dall\'altra app per usare questo account qui.</string>
+    <string name="restart_libre_app">Riavvia il telefono o l\'app Libre.</string>
+    <string name="alarm_wear_no_alarm_while_charging">Nessun allarme durante la ricarica</string>
+    <string name="alarm_wear_no_alarm_while_charging_summary">Nessun allarme viene attivato sull\'orologio durante la ricarica.</string>
+    <string name="export_settings_info">Stai per esportare le tue impostazioni.\nNon condividere questo file con nessuno, poiché potrebbe contenere informazioni sensibili come nomi utente e password.\nNota: anche se lo sviluppatore chiede aiuto, di solito richiede solo i log, non le impostazioni.\nVuoi procedere con l\'esportazione?</string>
+    <string name="pref_switch_standard_children_statistics">Utilizzo di TITR per i bambini</string>
+    <string name="pref_switch_standard_children_statistics_summary">L\'uso del \"Time in Tighter Range\" (TITR) con target di 70–140 mg/dl (3,9–7,8 mmol/l) è raccomandato per i bambini piccoli in alcune regioni.</string>
+
 </resources>

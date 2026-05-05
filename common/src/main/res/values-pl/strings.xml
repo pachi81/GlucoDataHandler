@@ -1005,7 +1005,6 @@
 
     <string name="gda_foreground_summary">Opcjonalny tryb diagnostyczny, który stabilizuje połączenie z Android Auto poprzez zapobieganie zamykaniu aplikacji w tle. Usługa pozostaje nieaktywna bez aktywnego połączenia, a powiadomienie można łatwo usunąć przesuwając palcem od wersji Android 14.</string>
 
-    <string name="src_cat_yuwell">Yuwell Anytime</string>
     <string name="src_yuwell_summary">Zdalne śledzenie aplikacji Yuwell Anytime.</string>
     <string name="pref_source_yuwell_info">Konfiguracja śledzenia Yuwell Anytime</string>
     <string name="pref_source_yuwell_info_summary">- Zainstaluj aplikację Anytime Follow\n- Zarejestruj użytkownika\n- Zaproś użytkownika z aplikacji Yuwell Anytime\n- Zaakceptuj zaproszenie w zakładce „Powiadomienia”\n- WAŻNE: Następnie wyloguj tego użytkownika!</string>
@@ -1013,7 +1012,6 @@
     <string name="src_yuwell_user_summary">Nazwa użytkownika konta Anytime Follow.</string>
     <string name="src_yuwell_password_summary">Hasło do konta Anytime Follow.</string>
     <string name="src_yuwell_enabled_summary">Włącz śledzenie Yuwell Anytime.</string>
-    <string name="source_yuwell">Yuwell</string>
     <string name="src_yuwell_logout_error">Użytkownik został wylogowany!</string>
     <string name="yuwell_force_logout_sent">Wysłano e-mail weryfikacyjny, sprawdź swoją skrzynkę pocztową!</string>
     <string name="yuwell_force_logout_info">Po potwierdzeniu wylogowania możesz ponownie włączyć źródło tutaj.</string>

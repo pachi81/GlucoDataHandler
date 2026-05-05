@@ -1004,5 +1004,29 @@ Tieto povolenia môžete kedykoľvek spravovať v nastaveniach aplikácie Health
     <string name="pref_xdrip_server_summary">Poskytuje lokálny webový server na porte 17580, ktorý emuluje webovú službu xDrip+ a môže byť použitý rôznymi externými službami, ciferníkmi a aplikáciami.</string>
 
     <string name="gda_foreground_summary">Voliteľný režim riešenia problémov, ktorý stabilizuje pripojenie k Android Auto tým, že zabraňuje ukončeniu aplikácie na pozadí. Služba zostáva neaktívna bez aktívneho pripojenia a oznámenie sa dá od Androidu 14 jednoducho odstrániť potiahnutím.</string>
+
+    <string name="src_yuwell_summary">Vzdialene sledovať aplikáciu Yuwell Anytime.</string>
+    <string name="pref_source_yuwell_info">Nastavenie Yuwell Anytime Follow</string>
+    <string name="pref_source_yuwell_info_summary">- Nainštalujte aplikáciu Anytime Follow\n- Zaregistrujte používateľa\n- Pozvite používateľa z aplikácie Yuwell Anytime\n- Prijmite pozvánku na karte \'Upozornenia\'\n- DÔLEŽITÉ: Potom tohto používateľa odhláste!</string>
+    <string name="src_yuwell_patient_summary">Pacient na sledovanie.</string>
+    <string name="src_yuwell_user_summary">Používateľské meno pre účet Anytime Follow.</string>
+    <string name="src_yuwell_password_summary">Heslo pre účet Anytime Follow.</string>
+    <string name="src_yuwell_enabled_summary">Povoliť sledovanie Yuwell Anytime.</string>
+    <string name="src_yuwell_logout_error">Používateľ bol odhlásený!</string>
+    <string name="yuwell_force_logout_sent">Overovací e-mail bol odoslaný, skontrolujte si prosím vašu poštovú schránku!</string>
+    <string name="yuwell_force_logout_info">Po potvrdení odhlásenia tu môžete znova povoliť zdroj.</string>
+    <string name="yuwell_trigger_force_logout">Stlačte tu pre vynútené odhlásenie aktuálneho používateľa z inej aplikácie.</string>
+    <string name="yuwell_force_logout_title">Vynútené odhlásenie</string>
+    <string name="yuwell_force_logout_message">Ak spustíte vynútené odhlásenie používateľa, následne dostanete e-mail na overenie.\nOdhlásenie musíte potvrdiť v e-maile.</string>
+
+    <string name="yuwell_reenable_source">Stlačte tu pre opätovné povelenie zdroja Yuwell.</string>
+    <string name="yuwell_logged_in_to_other_app">Účet je už aktívny na inom zariadení.</string>
+    <string name="yuwell_log_out_message">Zdroj Yuwell je vypnutý! Ak chcete tento účet používať tu, najskôr sa odhláste z inej aplikácie. </string>
+    <string name="restart_libre_app">Prosím, reštartujte telefón alebo aplikáciu Libre.</string>
+    <string name="alarm_wear_no_alarm_while_charging">Žiadny alarm počas nabíjania</string>
+    <string name="alarm_wear_no_alarm_while_charging_summary">Počas nabíjania hodiniek sa na nich nespustí žiadny alarm.</string>
+    <string name="export_settings_info">Chystáte sa exportovať svoje nastavenia.\nProsím, nezdieľajte tento súbor s nikým, pretože môže obsahovať citlivé informácie, ako sú používateľské mená a heslá.\nPoznámka: Aj keď vývojár požiada o pomoc, zvyčajne vyžaduje iba vaše záznamy, nie nastavenia.\nChcete pokračovať v exporte?</string>
+    <string name="pref_switch_standard_children_statistics">Použiť TITR pre deti</string>
+    <string name="pref_switch_standard_children_statistics_summary">Používanie \"času v užšom rozsahu\" (TITR) s cieľovými hodnotami 70 – 140 mg/dl (3,9 – 7,8 mmol/l) sa v niektorých regiónoch odporúča pre malé deti.</string>
 </resources>
 

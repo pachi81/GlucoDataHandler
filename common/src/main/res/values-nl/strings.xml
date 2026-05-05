@@ -1003,4 +1003,27 @@ U kunt deze toestemmingen op elk moment beheren in de instellingen van de Health
 
     <string name="gda_foreground_summary">Optionele probleemoplossingsmodus die de Android Auto-verbinding stabiliseert door te voorkomen dat de app op de achtergrund wordt afgesloten. De service blijft inactief zonder een actieve verbinding en de melding kan vanaf Android 14 eenvoudig worden weggeveegd.</string>
 
+    <string name="src_yuwell_summary">Volg de Yuwell Anytime-app op afstand.</string>
+    <string name="pref_source_yuwell_info">Yuwell Anytime-volger instellen</string>
+    <string name="pref_source_yuwell_info_summary">- Installeer Anytime Follow-app\n- Registreer een gebruiker\n- Nodig de gebruiker uit vanuit de Yuwell Anytime-app\n- Accepteer de uitnodiging in het tabblad \'Meldingen\'\n- BELANGRIJK: Log deze gebruiker daarna uit!</string>
+    <string name="src_yuwell_patient_summary">Patiënt om te volgen.</string>
+    <string name="src_yuwell_user_summary">Gebruikersnaam voor Anytime Follow-account.</string>
+    <string name="src_yuwell_password_summary">Wachtwoord voor Anytime Follow-account.</string>
+    <string name="src_yuwell_enabled_summary">Schakel volgen van Yuwell Anytime in.</string>
+    <string name="src_yuwell_logout_error">Gebruiker is uitgelogd!</string>
+    <string name="yuwell_force_logout_sent">Verificatie-e-mail verzonden, controleer uw mailbox!</string>
+    <string name="yuwell_force_logout_info">Nadat u het uitloggen heeft bevestigd, kunt u de bron hier opnieuw inschakelen.</string>
+    <string name="yuwell_trigger_force_logout">Druk hier om de huidige gebruiker geforceerd uit te loggen bij de andere app.</string>
+    <string name="yuwell_force_logout_title">Geforceerd uitloggen</string>
+    <string name="yuwell_force_logout_message">Als u geforceerd uitloggen van de gebruiker activeert, ontvangt u daarna een e-mailverificatie.\nU moet het uitloggen in de e-mail bevestigen.</string>
+
+    <string name="yuwell_reenable_source">Druk hier om de Yuwell-bron opnieuw in te schakelen.</string>
+    <string name="yuwell_logged_in_to_other_app">Account is al actief op een ander apparaat.</string>
+    <string name="yuwell_log_out_message">Yuwell-bron uitgeschakeld! Log eerst uit bij de andere app om dit account hier te gebruiken.</string>
+    <string name="restart_libre_app">Start uw telefoon of de Libre-app opnieuw op.</string>
+    <string name="alarm_wear_no_alarm_while_charging">Geen alarm tijdens opladen</string>
+    <string name="alarm_wear_no_alarm_while_charging_summary">Er wordt geen alarm geactiveerd op het horloge terwijl het wordt opgeladen.</string>
+    <string name="export_settings_info">U staat op het punt uw instellingen te exporteren.\nDeel dit bestand met niemand, aangezien het gevoelige informatie zoals gebruikersnamen en wachtwoorden kan bevatten.\nOpmerking: Zelfs als de ontwikkelaar om hulp vraagt, heeft hij normaal gesproken alleen uw logboeken nodig, niet uw instellingen.\nWilt u doorgaan met exporteren?</string>
+    <string name="pref_switch_standard_children_statistics">TITR gebruiken voor kinderen</string>
+    <string name="pref_switch_standard_children_statistics_summary">Het gebruik van \"Time in Tighter Range\" (TITR) met streefwaarden van 70–140 mg/dl (3,9–7,8 mmol/l) wordt in sommige regio\'s aanbevolen voor kleine kinderen.</string>
 </resources>

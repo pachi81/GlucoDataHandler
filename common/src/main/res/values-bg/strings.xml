@@ -1003,4 +1003,27 @@ GlucoDataHandler само записва данни за кръвната зах
 
     <string name="gda_foreground_summary">Опционален режим за отстраняване на неизправности, който стабилизира връзката с Android Auto, като предотвратява затварянето на приложението във фонов режим. Услугата остава неактивна без активна връзка, а известието може лесно да бъде премахнато чрез плъзгане от Android 14 нататък.</string>
 
+    <string name="src_yuwell_summary">Дистанционно проследяване на приложението Yuwell Anytime.</string>
+    <string name="pref_source_yuwell_info">Настройка на Yuwell Anytime Follow</string>
+    <string name="pref_source_yuwell_info_summary">- Инсталирайте приложението Anytime Follow\n- Регистрирайте потребител\n- Поканете потребителя от приложението Yuwell Anytime\n- Приемете поканата в раздела „Известия“\n- ВАЖНО: Излезте от този потребител след това!</string>
+    <string name="src_yuwell_patient_summary">Пациент за проследяване.</string>
+    <string name="src_yuwell_user_summary">Потребителско име за акаунта в Anytime Follow.</string>
+    <string name="src_yuwell_password_summary">Парола за акаунта в Anytime Follow.</string>
+    <string name="src_yuwell_enabled_summary">Активиране на проследяването на Yuwell Anytime.</string>
+    <string name="src_yuwell_logout_error">Потребителят беше отписан!</string>
+    <string name="yuwell_force_logout_sent">Изпратен е имейл за потвърждение, моля, проверете пощенската си кутия!</string>
+    <string name="yuwell_force_logout_info">След като потвърдите отписването, можете да активирате отново източника тук.</string>
+    <string name="yuwell_trigger_force_logout">Натиснете тук за принудително отписване на текущия потребител от другото приложение.</string>
+    <string name="yuwell_force_logout_title">Принудително отписване</string>
+    <string name="yuwell_force_logout_message">Ако задействате принудително отписване на потребителя, след това ще получите имейл за потвърждение.\nТрябва да потвърдите отписването в имейла.</string>
+
+    <string name="yuwell_reenable_source">Натиснете тук, за да активирате отново източника на Yuwell.</string>
+    <string name="yuwell_logged_in_to_other_app">Акаунтът вече е активен на друго устройство.</string>
+    <string name="yuwell_log_out_message">Източникът Yuwell е деактивиран! Моля, първо излезте от другото приложение, за да използвате този акаунт тук.</string>
+    <string name="restart_libre_app">Моля, рестартирайте телефона си или приложението Libre.</string>
+    <string name="alarm_wear_no_alarm_while_charging">Без аларма по време на зареждане</string>
+    <string name="alarm_wear_no_alarm_while_charging_summary">На часовника не се задейства аларма, докато се зарежда.</string>
+    <string name="export_settings_info">На път сте да експортирате настройките си.\nМоля, не споделяйте този файл с никого, тъй като той може да съдържа чувствителна информация като потребителски имена и пароли.\nЗабележка: Дори ако разработчикът поиска помощ, той обикновено се нуждае само от вашите регистрационни файлове, а не от настройките ви.\nИскате ли да продължите с експортирането?</string>
+    <string name="pref_switch_standard_children_statistics">Използване на TITR за деца</string>
+    <string name="pref_switch_standard_children_statistics_summary">Използването на „Време в по-тесен диапазон“ (TITR) с целеви стойности от 70–140 mg/dl (3.9–7.8 mmol/l) се препоръчва за малки деца в някои региони.</string>
 </resources>

@@ -920,10 +920,10 @@ Sie können diese Berechtigungen jederzeit in den Health Connect App-Einstellung
     <string name="pref_source_libre_patched_summary">Gepatchte Libre-App, die lokale Broadcasts sendet.\nAuch andere Apps verwenden dieses Broadcast-Format, um Glukosedaten weiterzuleiten.</string>
     <string name="pref_source_xdrip_broadcast_service_api_info">xDrip+ Broadcast Service API</string>
     <string name="pref_source_xdrip_broadcast_service_api_info_summary">Die xDrip+ Broadcast Service API ist eine alternative Schnittstelle, um die Daten (inkl. IOB) von xDrip+ zu empfangen.</string>
-    <string name="src_libreview_summary">FreeStyle Libre App aus der Ferne folgen.</string>
-    <string name="src_dexcom_share_summary">Dexcom App aus der Ferne folgen.</string>
-    <string name="src_medtrum_summary">Medtrum App aus der Ferne folgen.</string>
-    <string name="src_ns_summary">Nightscout Webdienst aus der Ferne folgen.</string>
+    <string name="src_libreview_summary">Werte der FreeStyle Libre App über die Cloud empfangen.</string>
+    <string name="src_dexcom_share_summary">Werte der Dexcom App über die Cloud empfangen.</string>
+    <string name="src_medtrum_summary">Werte der Medtrum App über die Cloud empfangen.</string>
+    <string name="src_ns_summary">Werte über den Nightscout Webdienst empfangen.</string>
     <string name="pref_cat_wear_os_summary">Für Wear OS-Uhren, z. B. alle Google Pixel Watches, Samsung Galaxy Watch 4 und neuere sowie viele andere.</string>
     <string name="pref_cat_watchdrip_summary">Für Uhren, die von der externen WatchDrip+-App unterstützt werden, wie die meisten Mi Band, Xiaomi Smart Band- und Amazfit-Modelle.</string>
     <string name="pref_cat_garminpebble">Garmin- und Fitbit-Uhren</string>
@@ -994,4 +994,29 @@ Sie können diese Berechtigungen jederzeit in den Health Connect App-Einstellung
 
     <string name="gda_foreground_summary">Optionaler Modus zur Problembehebung, der die Verbindung zu Android Auto stabilisiert, indem er das Beenden der App im Hintergrund verhindert. Der Dienst bleibt ohne aktive Verbindung inaktiv, zudem lässt sich die Benachrichtigung ab Android 14 einfach wegwischen.</string>
 
+    <string name="src_cat_yuwell">Yuwell Anytime</string>
+    <string name="src_yuwell_summary">Werte der Yuwell Anytime App über die Cloud empfangen.</string>
+    <string name="pref_source_yuwell_info">Yuwell Anytime Follow einrichten</string>
+    <string name="pref_source_yuwell_info_summary">- Anytime Follow App installieren\n- Benutzer registrieren\n- Benutzer aus der Yuwell Anytime App einladen\n- Einladung im Reiter \'Benachrichtigungen\' annehmen\n- WICHTIG: Diesen Benutzer danach abmelden!</string>
+    <string name="src_yuwell_patient_summary">Patient, dessen Werte empfangen werden sollen.</string>
+    <string name="src_yuwell_user_summary">Benutzername für das Anytime Follow Konto.</string>
+    <string name="src_yuwell_password_summary">Passwort für das Anytime Follow Konto.</string>
+    <string name="src_yuwell_enabled_summary">Empfang von Yuwell Anytime Werten aktivieren.</string>
+    <string name="source_yuwell">Yuwell</string>
+    <string name="src_yuwell_logout_error">Benutzer wurde abgemeldet!</string>
+    <string name="yuwell_force_logout_sent">Bestätigungs-E-Mail gesendet, bitte prüfen Sie Ihr Postfach!</string>
+    <string name="yuwell_force_logout_info">Nachdem Sie die Abmeldung bestätigt haben, können Sie die Quelle hier wieder aktivieren.</string>
+    <string name="yuwell_trigger_force_logout">Hier drücken, um die Abmeldung des aktuellen Benutzers aus der anderen App zu erzwingen.</string>
+    <string name="yuwell_force_logout_title">Abmeldung erzwingen</string>
+    <string name="yuwell_force_logout_message">Wenn Sie eine erzwungene Abmeldung des Benutzers auslösen, erhalten Sie anschließend eine E-Mail-Verifizierung.\nSie müssen die Abmeldung in der E-Mail bestätigen.</string>
+
+    <string name="yuwell_reenable_source">Hier drücken, um die Yuwell-Quelle wieder zu aktivieren.</string>
+    <string name="yuwell_logged_in_to_other_app">Konto bereits auf einem anderen Gerät aktiv.</string>
+    <string name="yuwell_log_out_message">Yuwell-Quelle deaktiviert! Bitte melden Sie sich zuerst aus der anderen App ab, um dieses Konto hier zu verwenden.</string>
+    <string name="restart_libre_app">Bitte starten Sie Ihr Telefon oder die Libre-App neu.</string>
+    <string name="alarm_wear_no_alarm_while_charging">Kein Alarm beim Laden</string>
+    <string name="alarm_wear_no_alarm_while_charging_summary">Auf der Uhr wird kein Alarm ausgelöst, während sie geladen wird.</string>
+    <string name="export_settings_info">Sie sind im Begriff, Ihre Einstellungen zu exportieren.\nBitte teilen Sie diese Datei mit niemandem, da sie sensible Informationen wie Benutzernamen und Passwörter enthalten kann.\nHinweis: Selbst wenn der Entwickler um Hilfe bittet, benötigt er normalerweise nur Ihre Logs, nicht Ihre Einstellungen.\nMöchten Sie mit dem Export fortfahren?</string>
+    <string name="pref_switch_standard_children_statistics">TITR für Kinder verwenden</string>
+    <string name="pref_switch_standard_children_statistics_summary">Die Verwendung von „Time in Tighter Range“ (TITR) mit Zielwerten von 70–140 mg/dl (3,9–7,8 mmol/l) wird für kleine Kinder in einigen Regionen empfohlen.</string>
 </resources>

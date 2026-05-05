@@ -44,7 +44,6 @@
     <string name="video_tutorial_juggluco" translatable="false">https://youtu.be/evS5rXDiciY?si=DTxlGYhYm-nNboHl</string>
 
 
-
     <string name="vibrate_pattern_super_mario" translatable="false">Super Mario</string>
     <string name="vibrate_pattern_turtles" translatable="false">Turtles</string>
     <string name="vibrate_pattern_final_fantasy" translatable="false">Final Fantasy</string>
@@ -67,6 +66,8 @@
     <string name="pref_source_eversense_info" translatable="false">Eversense (ESEL)/Dexcom BYODA (xDrip+)</string>
     <string name="pref_source_dexcom_byoda_info" translatable="false">Dexcom BYODA (AAPS)</string>
     <string name="pref_source_libre_patched" translatable="false">Libre patched app</string>
+    <string name="src_cat_yuwell" translatable="false">Yuwell Anytime</string>
+    <string name="source_yuwell" translatable="false">Yuwell</string>
 
     <string name="hba1c" translatable="false">Hba1c</string>
 
@@ -1069,7 +1070,6 @@ You can manage these permissions at any time in the Health Connect app settings.
 
     <string name="gda_foreground_summary">Optional troubleshooting mode that stabilizes the Android Auto connection by preventing the app from being killed in the background. The service remains inactive without an active connection, and the notification can be easily swiped away starting with Android 14.</string>
 
-    <string name="src_cat_yuwell">Yuwell Anytime</string>
     <string name="src_yuwell_summary">Remotely follow Yuwell Anytime app.</string>
     <string name="pref_source_yuwell_info">Setup Yuwell Anytime Follow</string>
     <string name="pref_source_yuwell_info_summary">- Install Anytime Follow app\n- Register a user\n- Invite the user from Yuwell Anytime app\n- Accept invitation in the \'Notifications\' tab\n- IMPORTANT: Log out this user afterwards!</string>
@@ -1077,7 +1077,6 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="src_yuwell_user_summary">Username for Anytime Follow account.</string>
     <string name="src_yuwell_password_summary">Password for Anytime Follow account.</string>
     <string name="src_yuwell_enabled_summary">Enable following Yuwell Anytime.</string>
-    <string name="source_yuwell">Yuwell</string>
     <string name="src_yuwell_logout_error">User was logged out!</string>
     <string name="yuwell_force_logout_sent">Verification email sent, please check your mailbox!</string>
     <string name="yuwell_force_logout_info">After you have confirmed the logout, you can re-enable source here.</string>
