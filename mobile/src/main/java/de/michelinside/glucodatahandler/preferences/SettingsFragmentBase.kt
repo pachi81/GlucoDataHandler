@@ -346,6 +346,28 @@ class GeneralAdvancedSettingsFragment: SettingsFragmentBase(R.xml.pref_general_a
 class RangeSettingsFragment: SettingsFragmentBase(R.xml.pref_target_range) {}
 class UiSettingsFragment: SettingsFragmentBase(R.xml.pref_ui) {}
 
+class ScreensaverSettingsFragment: SettingsFragmentBase(R.xml.screensaver_settings) {
+    override fun initPreferences() {
+        Log.v(LOG_ID, "initPreferences called")
+        super.initPreferences()
+        updateStyleSummary()
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        super.onSharedPreferenceChanged(sharedPreferences, key)
+        if (key == Constants.SHARED_PREF_SCREENSAVER_STYLE) {
+            updateStyleSummary()
+        }
+    }
+
+    private fun updateStyleSummary() {
+        val widgetStylePref = findPreference<ListPreference>(Constants.SHARED_PREF_SCREENSAVER_STYLE)
+        if(widgetStylePref != null) {
+            widgetStylePref.summary = widgetStylePref.entry
+        }
+    }
+}
+
 class WidgetSettingsFragment: SettingsFragmentBase(R.xml.pref_widgets) {
 
     override fun initPreferences() {

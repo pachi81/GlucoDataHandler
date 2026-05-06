@@ -447,6 +447,12 @@
             </intent-filter>
         </receiver>
 
+        <activity
+            android:name=".preferences.ScreensaverSettingsActivity"
+            android:taskAffinity=""
+            android:excludeFromRecents="true">
+        </activity>
+
         <service
             android:name=".AODAccessibilityService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
@@ -493,6 +499,25 @@
                 android:name="android.service.notification.default_filter_types"
                 android:value="alerting|ongoing|silent" />
         </service>
+
+
+        <service
+            android:name=".widget.Screensaver"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_DREAM_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.dreams.DreamService" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <!-- Verweis auf die zusätzliche Info-Datei -->
+            <meta-data
+                android:name="android.service.dream"
+                android:resource="@xml/screensaver_info" />
+        </service>
+
     </application>
 
 </manifest>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dream xmlns:android="http://schemas.android.com/apk/res/android"
+    android:settingsActivity="de.michelinside.glucodatahandler.preferences.ScreensaverSettingsActivity"
+    android:previewImage="@drawable/chart_widget" />

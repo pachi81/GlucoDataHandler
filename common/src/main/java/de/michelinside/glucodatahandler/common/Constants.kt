@@ -277,6 +277,10 @@ object Constants {
     const val SHARED_PREF_AOD_WP_COLOURED = "aod_coloured"
     const val AOD_COLOUR = Color.LTGRAY
 
+    // screensaver
+    const val SHARED_PREF_SCREENSAVER_STYLE = "screensaver_style"
+    const val SHARED_PREF_SCREENSAVER_SIZE = "screensaver_size"
+
     // Alarm
     const val ALARM_SNOOZE_ACTION = "de.michelinside.glucodatahandler.SNOOZE"
     const val ALARM_STOP_NOTIFICATION_ACTION = "de.michelinside.glucodatahandler.STOP_NOTIFICATION"
