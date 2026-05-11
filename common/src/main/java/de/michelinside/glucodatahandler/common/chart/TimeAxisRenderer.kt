@@ -21,15 +21,15 @@ class TimeAxisRenderer(chart: LineChart) :
     // Custom method for calculating a "nice" interval at the
     // desired display time unit
     private fun calculateInterval(min: Float, max: Float, count: Int): Float {
-        val range = (max - min).toDouble()
+        val range = TimeValueFormatter.getRange(min, max)
 
-        val unit = TimeValueFormatter.getUnit(min, max)
+        val unit = TimeValueFormatter.getUnit(range)
         val axisScale = unit.factor
 
-        //Log.d(LOG_ID, "Calculate interval: $unit - scale: $axisScale - min: $min - max: $max - range: $range - count: $count")
+        //Log.v(LOG_ID, "Calculate interval: $unit - scale: $axisScale - min: $min - max: $max - range: $range - count: $count")
 
         // Find out how much spacing (in y value space) between axis values
-        val rawInterval = range / count / axisScale
+        val rawInterval = range.toDouble() / count / axisScale
         var interval: Float = Utils.roundToNextSignificant(rawInterval)
         // If granularity is enabled, then do not allow the interval to go below specified granularity.
         // This is used to avoid repeated values when rounding values for display.

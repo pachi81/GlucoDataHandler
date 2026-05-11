@@ -6,6 +6,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import com.github.mikephil.charting.formatter.ValueFormatter
+import de.michelinside.glucodatahandler.common.utils.Utils
 
 class TimeValueFormatter(private val mChart: LineChart) : ValueFormatter() {
     //private val formatMinutes: SimpleDateFormat = SimpleDateFormat("HH:mm", Locale.ENGLISH)
@@ -27,13 +28,19 @@ class TimeValueFormatter(private val mChart: LineChart) : ValueFormatter() {
             HOURS(60f),
             DAYS(60f * 24)
         }
-        fun getUnit(min: Float, max: Float): DisplayedTimeUnit {
+
+        // return range in full seconds
+        fun getRange(min: Float, max: Float): Int {
+            return Utils.round(max-min, 0).toInt()
+        }
+
+        fun getUnit(range: Int): DisplayedTimeUnit {
             // chart unit is minutes since custom epoch
-            if (max <= min) {
+            if (range < 0) {
                 return DisplayedTimeUnit.MINUTES // arbitrary fallback
             }
 
-            val range_hours = (max - min) / 60f
+            val range_hours = range / 60f
             return if (range_hours < 4) {
                 // When chart range is less than 4 hours, allow nice
                 // increments in minutes (e.g. 4:20, 4:40, 5:00)
@@ -73,7 +80,6 @@ class TimeValueFormatter(private val mChart: LineChart) : ValueFormatter() {
         }
     }
 
-
     override fun getFormattedValue(value: Float): String {
         val min = mChart.lowestVisibleX
         val max = mChart.highestVisibleX
@@ -91,7 +97,7 @@ class TimeValueFormatter(private val mChart: LineChart) : ValueFormatter() {
         val minute: Float = c.get(Calendar.MINUTE).toFloat()
         val isFirstHourOfDay = hour == 0F && minute <= 1F
 
-        val unit = getUnit(min, max)
+        val unit = getUnit(getRange(min, max))
 
         return if (unit == DisplayedTimeUnit.MINUTES) {
             if (isFirstHourOfDay) {
