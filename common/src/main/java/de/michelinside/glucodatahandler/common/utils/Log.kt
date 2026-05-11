@@ -27,6 +27,7 @@ object Log: SharedPreferences.OnSharedPreferenceChangeListener {
     private var lastClearTime = 0L
     private var lastSaveTime = 0L
     private val logBuffer = Collections.synchronizedList(mutableListOf<LogEntry>())
+    private var init = false
     private val maxLogBufferSize: Int get() {
         if(minLevel <= android.util.Log.DEBUG)
             return 50
@@ -57,10 +58,13 @@ object Log: SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     fun init(context: Context) {
-        val sharedPreferences = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this)
-        onSharedPreferenceChanged(sharedPreferences, null)
-        i(LOG_ID, "Logs init: logDuration=${Duration.ofMillis(logDuration.toLong()).toHours()}h - minLevel=${getPriorityString(minLevel)}")
+        if(!init) {
+            val sharedPreferences = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+            onSharedPreferenceChanged(sharedPreferences, null)
+            init = true
+            i(LOG_ID, "Logs init: logDuration=${Duration.ofMillis(logDuration.toLong()).toHours()}h - minLevel=${getPriorityString(minLevel)}")
+        }
     }
 
     fun close(context: Context) {
@@ -68,6 +72,7 @@ object Log: SharedPreferences.OnSharedPreferenceChangeListener {
         val sharedPreferences = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
         flushLogBuffer(wait = true)
+        init = false
     }
 
     fun v(tag: String, msg: String): Int {
@@ -138,9 +143,12 @@ object Log: SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     fun flushLogBuffer(wait: Boolean = false) {
-        if(!dbAccess.active) {
+        if(!dbAccess.active || !init) {
             // clear logs to prevent filling buffer with old entries
-            logBuffer.clear()
+            if(logBuffer.size >= maxLogBufferSize) {
+                logBuffer.clear()
+                d(LOG_ID, "Logbuffer cleared - max size: $maxLogBufferSize")
+            }
             return  // wait for database is ready
         }
         val entriesToSave = synchronized(logBuffer) {

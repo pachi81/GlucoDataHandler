@@ -128,6 +128,7 @@ object dbAccess {
                     migration_4_5
                 )
                 .build()
+            Log.flushLogBuffer()
             Log.i(LOG_ID, "Database created - version $version")
         } catch (exc: Exception) {
             Log.e(LOG_ID, "createDatabase exception: " + exc.toString() + ": " + exc.stackTraceToString() )

@@ -95,6 +95,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             if (!running || !foreground) {
                 try {
                     appSource = source
+                    Log.init(context)
                     SettingsMigrator.migrateSettings(context)
                     val serviceIntent = Intent(
                         context,
