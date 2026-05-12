@@ -25,6 +25,7 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.max
+import androidx.core.content.edit
 
 abstract class DataSourceTask(protected val enabledKey: String, protected val source: DataSource) : BackgroundTask() {
     protected var enabled = false
@@ -69,38 +70,107 @@ abstract class DataSourceTask(protected val enabledKey: String, protected val so
         )
         fun updateSettings(context: Context, bundle: Bundle) {
             val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-            with(sharedPref.edit()) {
-                putInt(Constants.SHARED_PREF_SOURCE_DELAY, bundle.getInt(Constants.SHARED_PREF_SOURCE_DELAY, -1))
-                if(bundle.containsKey(Constants.SHARED_PREF_SOURCE_INTERVAL_DEPRECATED) && !bundle.containsKey(Constants.SHARED_PREF_SOURCE_INTERVAL)) {
-                    putInt(Constants.SHARED_PREF_SOURCE_INTERVAL, bundle.getString(Constants.SHARED_PREF_SOURCE_INTERVAL_DEPRECATED, "1").toInt())
+            sharedPref.edit {
+                putInt(
+                    Constants.SHARED_PREF_SOURCE_DELAY,
+                    bundle.getInt(Constants.SHARED_PREF_SOURCE_DELAY, -1)
+                )
+                if (bundle.containsKey(Constants.SHARED_PREF_SOURCE_INTERVAL_DEPRECATED) && !bundle.containsKey(
+                        Constants.SHARED_PREF_SOURCE_INTERVAL
+                    )
+                ) {
+                    putInt(
+                        Constants.SHARED_PREF_SOURCE_INTERVAL,
+                        bundle.getString(Constants.SHARED_PREF_SOURCE_INTERVAL_DEPRECATED, "1")
+                            .toInt()
+                    )
                 } else {
-                    putInt(Constants.SHARED_PREF_SOURCE_INTERVAL, bundle.getInt(Constants.SHARED_PREF_SOURCE_INTERVAL, 1))
+                    putInt(
+                        Constants.SHARED_PREF_SOURCE_INTERVAL,
+                        bundle.getInt(Constants.SHARED_PREF_SOURCE_INTERVAL, 1)
+                    )
                 }
 
-                putString(Constants.SHARED_PREF_LIBRE_USER, bundle.getString(Constants.SHARED_PREF_LIBRE_USER, ""))
-                putString(Constants.SHARED_PREF_LIBRE_PASSWORD, bundle.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, ""))
-                putBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, bundle.getBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, false))
-                putBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, bundle.getBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, true))
-                putString(Constants.SHARED_PREF_LIBRE_SERVER, bundle.getString(Constants.SHARED_PREF_LIBRE_SERVER, "io"))
-                putString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, bundle.getString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, ""))
+                putString(
+                    Constants.SHARED_PREF_LIBRE_USER,
+                    bundle.getString(Constants.SHARED_PREF_LIBRE_USER, "")
+                )
+                putString(
+                    Constants.SHARED_PREF_LIBRE_PASSWORD,
+                    bundle.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, "")
+                )
+                putBoolean(
+                    Constants.SHARED_PREF_LIBRE_RECONNECT,
+                    bundle.getBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, false)
+                )
+                putBoolean(
+                    Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU,
+                    bundle.getBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, true)
+                )
+                putString(
+                    Constants.SHARED_PREF_LIBRE_SERVER,
+                    bundle.getString(Constants.SHARED_PREF_LIBRE_SERVER, "io")
+                )
+                putString(
+                    Constants.SHARED_PREF_LIBRE_PATIENT_ID,
+                    bundle.getString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, "")
+                )
 
-                putString(Constants.SHARED_PREF_NIGHTSCOUT_URL, bundle.getString(Constants.SHARED_PREF_NIGHTSCOUT_URL, ""))
-                putString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, bundle.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, ""))
-                putString(Constants.SHARED_PREF_NIGHTSCOUT_TOKEN, bundle.getString(Constants.SHARED_PREF_NIGHTSCOUT_TOKEN, ""))
-                putBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, bundle.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, true))
+                putString(
+                    Constants.SHARED_PREF_NIGHTSCOUT_URL,
+                    bundle.getString(Constants.SHARED_PREF_NIGHTSCOUT_URL, "")
+                )
+                putString(
+                    Constants.SHARED_PREF_NIGHTSCOUT_SECRET,
+                    bundle.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, "")
+                )
+                putString(
+                    Constants.SHARED_PREF_NIGHTSCOUT_TOKEN,
+                    bundle.getString(Constants.SHARED_PREF_NIGHTSCOUT_TOKEN, "")
+                )
+                putBoolean(
+                    Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB,
+                    bundle.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, true)
+                )
 
-                putString(Constants.SHARED_PREF_DEXCOM_SHARE_USER, bundle.getString(Constants.SHARED_PREF_DEXCOM_SHARE_USER, ""))
-                putString(Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD, bundle.getString(Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD, ""))
-                putString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, bundle.getString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "eu"))
-                putBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT, bundle.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT, false))
+                putString(
+                    Constants.SHARED_PREF_DEXCOM_SHARE_USER,
+                    bundle.getString(Constants.SHARED_PREF_DEXCOM_SHARE_USER, "")
+                )
+                putString(
+                    Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD,
+                    bundle.getString(Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD, "")
+                )
+                putString(
+                    Constants.SHARED_PREF_DEXCOM_SHARE_SERVER,
+                    bundle.getString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "eu")
+                )
+                putBoolean(
+                    Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT,
+                    bundle.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT, false)
+                )
 
-                putString(Constants.SHARED_PREF_MEDTRUM_USER, bundle.getString(Constants.SHARED_PREF_MEDTRUM_USER, ""))
-                putString(Constants.SHARED_PREF_MEDTRUM_PASSWORD, bundle.getString(Constants.SHARED_PREF_MEDTRUM_PASSWORD, ""))
-                putBoolean(Constants.SHARED_PREF_MEDTRUM_RECONNECT, bundle.getBoolean(Constants.SHARED_PREF_MEDTRUM_RECONNECT, false))
-                putString(Constants.SHARED_PREF_MEDTRUM_PATIENT_ID, bundle.getString(Constants.SHARED_PREF_MEDTRUM_PATIENT_ID, ""))
-                putString(Constants.SHARED_PREF_MEDTRUM_SERVER, bundle.getString(Constants.SHARED_PREF_MEDTRUM_SERVER, "eu"))
+                putString(
+                    Constants.SHARED_PREF_MEDTRUM_USER,
+                    bundle.getString(Constants.SHARED_PREF_MEDTRUM_USER, "")
+                )
+                putString(
+                    Constants.SHARED_PREF_MEDTRUM_PASSWORD,
+                    bundle.getString(Constants.SHARED_PREF_MEDTRUM_PASSWORD, "")
+                )
+                putBoolean(
+                    Constants.SHARED_PREF_MEDTRUM_RECONNECT,
+                    bundle.getBoolean(Constants.SHARED_PREF_MEDTRUM_RECONNECT, false)
+                )
+                putString(
+                    Constants.SHARED_PREF_MEDTRUM_PATIENT_ID,
+                    bundle.getString(Constants.SHARED_PREF_MEDTRUM_PATIENT_ID, "")
+                )
+                putString(
+                    Constants.SHARED_PREF_MEDTRUM_SERVER,
+                    bundle.getString(Constants.SHARED_PREF_MEDTRUM_SERVER, "eu")
+                )
 
-                apply()
             }
             InternalNotifier.notify(context, NotifySource.SOURCE_SETTINGS, null)
         }
@@ -152,6 +222,10 @@ abstract class DataSourceTask(protected val enabledKey: String, protected val so
             }
             return 0L
         }
+    }
+
+    override fun getDataSource(): DataSource {
+        return source
     }
 
     var lastState = SourceState.NONE
