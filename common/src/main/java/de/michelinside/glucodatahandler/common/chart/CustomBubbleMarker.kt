@@ -6,15 +6,19 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
+import android.graphics.RectF
 import android.text.format.DateUtils
 import android.widget.ImageView
 import de.michelinside.glucodatahandler.common.utils.Log
 import android.widget.TextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
+import com.github.mikephil.charting.charts.BarLineChartBase
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.listener.ChartTouchListener
+import com.github.mikephil.charting.listener.OnChartGestureListener
 import com.github.mikephil.charting.utils.MPPointF
 import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
@@ -23,17 +27,26 @@ import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import java.text.DateFormat
 import java.time.Duration
 import java.util.Date
+import android.view.MotionEvent
+import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.data.LineDataSet
 import androidx.core.graphics.withSave
 
 @SuppressLint("ViewConstructor")
-class CustomBubbleMarker(context: Context, private val showDate: Boolean, private val showDelta: Boolean) : MarkerView(context, R.layout.marker_layout) {
+class CustomBubbleMarker(context: Context, private val showDate: Boolean, private val showDelta: Boolean) : MarkerView(context, R.layout.marker_layout), OnChartGestureListener {
     private val LOG_ID = "GDH.Chart.BubbleMarker"
     private val arrowSize = 35
     private val arrowCircleOffset = 0f
     private var isGlucose = true
+    private var currentHighlight: Highlight? = null
+    private var isMarkerVisible = false
+    private var markerScreenX: Float? = null
+    private var lastHighlightedIndex: Int = -1
+    private var stationaryX: Float? = null
+    private val markerBounds = RectF()
 
     override fun refreshContent(e: Entry?, highlight: Highlight) {
-        Log.v(LOG_ID, "refreshContent - index ${highlight.dataSetIndex}")
+        Log.v(LOG_ID, "refreshContent - index ${highlight.dataSetIndex} - x ${e?.x}")
         try {
             isGlucose = highlight.dataSetIndex == 0
             e?.let {
@@ -79,6 +92,15 @@ class CustomBubbleMarker(context: Context, private val showDate: Boolean, privat
             Log.e(LOG_ID, "Exception in refreshContent", exc)
         }
         super.refreshContent(e, highlight)
+        isMarkerVisible = true
+        currentHighlight = highlight
+        // Store the index to track which data point is highlighted
+        lastHighlightedIndex = highlight.let {
+            val chart = chartView as? BarLineChartBase ?: return@let -1
+            val dataSet = chart.data?.dataSets?.get(0) as? LineDataSet ?: return@let -1
+            val entries = dataSet.values
+            entries.indexOfFirst { entry -> entry.x == highlight.x }
+        }
     }
 
     override fun getOffsetForDrawingAtPoint(posX: Float, posY: Float): MPPointF {
@@ -123,6 +145,10 @@ class CustomBubbleMarker(context: Context, private val showDate: Boolean, privat
             val width = width.toFloat()
             val height = height.toFloat()
             val offset = getOffsetForDrawingAtPoint(posX, posY)
+            markerScreenX = posX
+            val left = posX + offset.x
+            val top = posY + offset.y
+            markerBounds.set(left, top, left + width, top + height)
             canvas.withSave {
                 val path = Path()
 
@@ -171,5 +197,130 @@ class CustomBubbleMarker(context: Context, private val showDate: Boolean, privat
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Exception in getOffsetForDrawingAtPoint", exc)
         }
+    }
+
+    private fun findNearestIndex(dataSet: LineDataSet, xVal: Float): Int {
+        val entries = dataSet.values
+        if (entries.isEmpty()) return -1
+        var low = 0
+        var high = entries.size - 1
+        while (low <= high) {
+            val mid = (low + high) / 2
+            val midX = entries[mid].getX()
+            if (midX < xVal) {
+                low = mid + 1
+            } else if (midX > xVal) {
+                high = mid - 1
+            } else {
+                return mid
+            }
+        }
+        // Find closest
+        val left = if (high >= 0) high else 0
+        val right = if (low < entries.size) low else entries.size - 1
+        val leftDiff = Math.abs(entries[left].getX() - xVal)
+        val rightDiff = Math.abs(entries[right].getX() - xVal)
+        return if (leftDiff <= rightDiff) left else right
+    }
+
+    fun setMarkerVisible(visible: Boolean) {
+        isMarkerVisible = visible
+        if (!visible) {
+            currentHighlight = null
+            markerScreenX = null
+            lastHighlightedIndex = -1
+            stationaryX = null
+            markerBounds.setEmpty()
+        }
+    }
+
+    override fun onChartGestureStart(me: MotionEvent?, lastPerformedGesture: ChartTouchListener.ChartGesture?) {
+        if (isMarkerVisible && markerScreenX != null) {
+            stationaryX = markerScreenX
+            Log.v(LOG_ID, "onChartGestureStart - Lock stationaryX to $stationaryX")
+        }
+    }
+
+    override fun onChartGestureEnd(me: MotionEvent?, lastPerformedGesture: ChartTouchListener.ChartGesture?) {
+        stationaryX = null
+        Log.v(LOG_ID, "onChartGestureEnd - Unlock stationaryX")
+    }
+
+
+    override fun onChartScale(me: MotionEvent?, scaleX: Float, scaleY: Float) {
+        // Handle scale
+    }
+
+    override fun onChartTranslate(me: MotionEvent?, dX: Float, dY: Float) {
+        val xToUse = stationaryX ?: markerScreenX
+        Log.v(LOG_ID, "onChartTranslate: visible: $isMarkerVisible, dX: $dX, dY: $dY, xToUse: $xToUse, lastIndex: $lastHighlightedIndex")
+        if (isMarkerVisible && xToUse != null) {
+            try {
+                val chart = chartView as? BarLineChartBase ?: return
+                val transformer = chart.getTransformer(YAxis.AxisDependency.LEFT)
+                val values = transformer.getValuesByTouchPoint(xToUse, 0f)
+                val xVal = values.x.toFloat()
+
+                // Clamp xVal to the visible range
+                val visibleMinX = chart.lowestVisibleX
+                val visibleMaxX = chart.highestVisibleX
+                val clampedXVal = Math.max(visibleMinX, Math.min(xVal, visibleMaxX))
+
+                val dataSet = chart.data?.dataSets?.get(0) as? LineDataSet ?: return
+                val nearestIndex = findNearestIndex(dataSet, clampedXVal)
+                Log.v(LOG_ID, "Nearest: $nearestIndex for xVal: $xVal (clamped: $clampedXVal), visible range: [$visibleMinX, $visibleMaxX]")
+
+                if (nearestIndex >= 0) {
+                    // Check for borders before updating
+                    if(nearestIndex > lastHighlightedIndex && visibleMaxX.toInt() == chart.xChartMax.toInt()) {
+                        // right border reached, don't move marker further
+                        return
+                    } else if(nearestIndex < lastHighlightedIndex && visibleMinX.toInt() == chart.xChartMin.toInt()) {
+                        // left border reached, don't move marker further
+                        return
+                    }
+
+                    val entry = dataSet.getEntryForIndex(nearestIndex)
+                    val newHighlight = Highlight(entry.x, entry.y, 0)
+
+                    // Always update to keep marker on the data point under the finger
+                    // Only skip logging if it's the same highlight to reduce spam
+                    if (nearestIndex != lastHighlightedIndex) {
+                        Log.v(LOG_ID, "Set highlight to $newHighlight")
+                    }
+                    chart.highlightValue(newHighlight, false)
+                    lastHighlightedIndex = nearestIndex
+                }
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "Exception in onChartTranslate", exc)
+            }
+        }
+    }
+
+    override fun onChartLongPressed(me: MotionEvent) {
+        // Handle long press
+    }
+
+    override fun onChartDoubleTapped(me: MotionEvent) {
+        // Handle double tap
+    }
+
+    override fun onChartSingleTapped(me: MotionEvent) {
+        Log.v(LOG_ID, "tapped ${me.x} - ${me.y}")
+        if (isMarkerVisible && markerBounds.contains(me.x, me.y)) {
+            Log.v(LOG_ID, "Marker tapped - hiding")
+            val chart = chartView as? BarLineChartBase ?: return
+            chart.highlightValue(null)
+            setMarkerVisible(false)
+            // Prevent immediate re-highlighting by the chart's internal touch handler
+            chart.isHighlightPerTapEnabled = false
+            chart.postDelayed({
+                chart.isHighlightPerTapEnabled = true
+            }, 100)
+        }
+    }
+
+    override fun onChartFling(me1: MotionEvent, me2: MotionEvent, velocityX: Float, velocityY: Float) {
+        // Handle fling
     }
 }

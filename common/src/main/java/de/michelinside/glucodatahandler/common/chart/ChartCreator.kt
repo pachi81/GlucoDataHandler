@@ -39,6 +39,7 @@ import java.math.RoundingMode
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 import com.github.mikephil.charting.utils.Utils as ChartUtils
+import androidx.core.view.isVisible
 
 
 open class ChartCreator(protected val chart: GlucoseChart, protected val context: Context, protected val durationPref: String = "", protected val transparencyPref: String = ""): NotifierInterface,
@@ -85,11 +86,11 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
 
 
     val enabled: Boolean get() {
-        return chart.visibility == View.VISIBLE
+        return chart.isVisible
     }
 
     val paused: Boolean get() {
-        return dataSyncJob!!.isActive != true
+        return !dataSyncJob!!.isActive
     }
 
     private var graphPrefList = mutableSetOf(
@@ -364,6 +365,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             val mMarker = CustomBubbleMarker(context, showDateOnBubble, showDeltaOnBubble)
             mMarker.chartView = chart
             chart.marker = mMarker
+            chart.onChartGestureListener = mMarker
             chart.setOnChartValueSelectedListener(object: OnChartValueSelectedListener {
                 override fun onValueSelected(e: Entry?, h: Highlight?) {
                     if (BuildConfig.DEBUG)
@@ -375,12 +377,13 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
                 }
                 override fun onNothingSelected() {
                     Log.v(LOG_ID, "onNothingSelected")
+                    mMarker.setMarkerVisible(false)
                 }
             })
-            chart.setOnLongClickListener {
+            /*chart.setOnLongClickListener {
                 chart.highlightValue(null)
                 true
-            }
+            }*/
         }
         chart.axisRight.removeAllLimitLines()
 
@@ -457,7 +460,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
                 }
             }
             Log.d(LOG_ID, "dataSync done")
-        } catch (exc: CancellationException) {
+        } catch (_: CancellationException) {
             Log.d(LOG_ID, "dataSync cancelled")
         } catch (exc: Exception) {
             Log.e(LOG_ID, "dataSync exception: " + exc.message.toString() + "\n" + exc.stackTraceToString())
