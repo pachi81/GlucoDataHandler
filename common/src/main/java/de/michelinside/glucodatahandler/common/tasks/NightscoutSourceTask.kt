@@ -213,7 +213,7 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
             if(valueTime < firstValueTime)
                 return Pair(true, "")   // no new value
             val glucoExtras = Bundle()
-            setSgv(glucoExtras, jsonObject)
+            setSgv(glucoExtras, jsonObject, false)
             setRate(glucoExtras, jsonObject)
             glucoExtras.putLong(ReceiveData.TIME, valueTime)
             if(jsonObject.has("device"))
@@ -248,7 +248,7 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
                 }
                 val glucoExtras = Bundle()
                 glucoExtras.putLong(ReceiveData.TIME, jsonObject.getLong("datetime"))
-                setSgv(glucoExtras, jsonObject)
+                setSgv(glucoExtras, jsonObject, true)
                 setRate(glucoExtras, jsonObject)
                 if (jsonObject.has("device"))
                     glucoExtras.putString(ReceiveData.SERIAL, jsonObject.getString("device"))
@@ -273,14 +273,15 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
         return false
     }
 
-    private fun setSgv( bundle: Bundle, jsonObject: JSONObject) {
+    private fun setSgv( bundle: Bundle, jsonObject: JSONObject, fromPebble: Boolean) {
         val glucose = JsonUtils.getFloat("sgv", jsonObject)
         if (glucose.isNaN())
             throw NumberFormatException("Invalid sgv format '" + jsonObject.optString("sgv") + "'")
-        if (GlucoDataUtils.isMmolValue(glucose)) {
+        if (fromPebble && GlucoDataUtils.isMmolValue(glucose)) {
             bundle.putInt(ReceiveData.MGDL, GlucoDataUtils.mmolToMg(glucose).toInt())
             bundle.putFloat(ReceiveData.GLUCOSECUSTOM, glucose)
         } else {
+            // Nightscout always provides mg/dl raw values!
             bundle.putInt(ReceiveData.MGDL, glucose.toInt())
         }
     }
