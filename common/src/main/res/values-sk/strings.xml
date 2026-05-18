@@ -1028,5 +1028,9 @@ Tieto povolenia môžete kedykoľvek spravovať v nastaveniach aplikácie Health
     <string name="export_settings_info">Chystáte sa exportovať svoje nastavenia.\nProsím, nezdieľajte tento súbor s nikým, pretože môže obsahovať citlivé informácie, ako sú používateľské mená a heslá.\nPoznámka: Aj keď vývojár požiada o pomoc, zvyčajne vyžaduje iba vaše záznamy, nie nastavenia.\nChcete pokračovať v exporte?</string>
     <string name="pref_switch_standard_children_statistics">Použiť TITR pre deti</string>
     <string name="pref_switch_standard_children_statistics_summary">Používanie \"času v užšom rozsahu\" (TITR) s cieľovými hodnotami 70 – 140 mg/dl (3,9 – 7,8 mmol/l) sa v niektorých regiónoch odporúča pre malé deti.</string>
+
+    <string name="pref_source_librelinkup_5_info_summary">Abbott prepol LibreLinkUp na šifrovanú komunikáciu.\nAhľad ako sa predchádzajúce rozhranie vypne, GDH bude pravdepodobne prestávať fungovať.\nV súčasnosti nie je technické riešenie v dohľade.</string>
+    <string name="source_librelinkup_5_info_popup_title">Dôležitá poznámka týkajúca sa LibreLinkUp:</string>
+    <string name="source_librelinkup_5_info_popup">Abbott vydal verziu 5, ktorá používa nové šifrované rozhranie.\nAk Abbott vypne predchádzajúce rozhranie, komunikácia s GDH (a ďalšími aplikáciami tretích strán) bude pravdepodobne prerušená.\nV súčasnosti neexistuje technické riešenie na obídenie tohto nového šifrovania.\nOtázky týkajúce sa budúcej podpory základných funkcií, ako je integrácia s chytrými hodinkami, môžu odpovedať iba priamo podporou spoločnosti Abbott.</string>
 </resources>
 

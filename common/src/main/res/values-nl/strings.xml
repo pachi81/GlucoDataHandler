@@ -1026,4 +1026,8 @@ U kunt deze toestemmingen op elk moment beheren in de instellingen van de Health
     <string name="export_settings_info">U staat op het punt uw instellingen te exporteren.\nDeel dit bestand met niemand, aangezien het gevoelige informatie zoals gebruikersnamen en wachtwoorden kan bevatten.\nOpmerking: Zelfs als de ontwikkelaar om hulp vraagt, heeft hij normaal gesproken alleen uw logboeken nodig, niet uw instellingen.\nWilt u doorgaan met exporteren?</string>
     <string name="pref_switch_standard_children_statistics">TITR gebruiken voor kinderen</string>
     <string name="pref_switch_standard_children_statistics_summary">Het gebruik van \"Time in Tighter Range\" (TITR) met streefwaarden van 70–140 mg/dl (3,9–7,8 mmol/l) wordt in sommige regio\'s aanbevolen voor kleine kinderen.</string>
+
+    <string name="pref_source_librelinkup_5_info_summary">Abbott heeft LibreLinkUp overgeschakeld naar versleutelde communicatie.\nZodra de vorige interface wordt uitgeschakeld, zal GDH waarschijnlijk niet meer werken.\nEr is momenteel geen technische oplossing in zicht.</string>
+    <string name="source_librelinkup_5_info_popup_title">Belangrijke opmerking over LibreLinkUp:</string>
+    <string name="source_librelinkup_5_info_popup">Abbott heeft versie 5 uitgebracht, die een nieuwe, versleutelde interface gebruikt.\nAls Abbott de vorige interface uitschakelt, zal de communicatie met GDH (en andere apps van derden) waarschijnlijk worden onderbroken.\nEr is momenteel geen technische oplossing om deze nieuwe versleuteling te omzeilen.\nVragen over toekomstige ondersteuning van essentiële functies zoals smartwatch-integratie kunnen alleen rechtstreeks door Abbott-ondersteuning worden beantwoord.</string>
 </resources>

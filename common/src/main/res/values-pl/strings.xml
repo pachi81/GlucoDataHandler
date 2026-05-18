@@ -1030,4 +1030,8 @@
     <string name="pref_switch_standard_children_statistics">Używanie wskaźnika TITR dla dzieci</string>
     <string name="pref_switch_standard_children_statistics_summary">W niektórych miejscach dla małych dzieci zaleca się używanie wskaźnika TITR - czasu w wąskim zakresie, gdzie wartości docelowe to 70–140 mg/dl (3,9–7,8 mmol/l).</string>
 
+    <string name="pref_source_librelinkup_5_info_summary">Abbott has switched LibreLinkUp to encrypted communication.\nAs soon as the previous interface is shut down, GDH will likely stop working.\nThere is currently no technical solution in sight.</string>
+    <string name="source_librelinkup_5_info_popup_title">Important note regarding LibreLinkUp:</string>
+    <string name="source_librelinkup_5_info_popup">Abbott has released version 5, which uses a new, encrypted interface.\nIf Abbott shuts down the previous interface, communication with GDH (and other third-party apps) will likely be interrupted.\nCurrently, there is no technical solution to bypass this new encryption.\nQuestions regarding the future support of essential features like smartwatch integration can only be answered directly by Abbott support.</string>
+
 </resources>

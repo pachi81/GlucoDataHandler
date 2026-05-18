@@ -1017,4 +1017,9 @@ Sie können diese Berechtigungen jederzeit in den Health Connect App-Einstellung
     <string name="export_settings_info">Sie sind im Begriff, Ihre Einstellungen zu exportieren.\nBitte teilen Sie diese Datei mit niemandem, da sie sensible Informationen wie Benutzernamen und Passwörter enthalten kann.\nHinweis: Selbst wenn der Entwickler um Hilfe bittet, benötigt er normalerweise nur Ihre Logs, nicht Ihre Einstellungen.\nMöchten Sie mit dem Export fortfahren?</string>
     <string name="pref_switch_standard_children_statistics">TITR für Kinder verwenden</string>
     <string name="pref_switch_standard_children_statistics_summary">Die Verwendung von „Time in Tighter Range“ (TITR) mit Zielwerten von 70–140 mg/dl (3,9–7,8 mmol/l) wird für kleine Kinder in einigen Regionen empfohlen.</string>
+
+    <string name="pref_source_librelinkup_5_info_summary">Abbott hat LibreLinkUp auf eine verschlüsselte Kommunikation umgestellt.\nSobald die bisherige Schnittstelle abgeschaltet wird, wird GDH voraussichtlich nicht mehr funktionieren.\nEine Lösung ist derzeit technisch nicht absehbar.</string>
+    <string name="source_librelinkup_5_info_popup_title">Wichtiger Hinweis zu LibreLinkUp:</string>
+    <string name="source_librelinkup_5_info_popup">Abbott hat die Version 5 veröffentlicht, die eine neue, verschlüsselte Schnittstelle nutzt.\nSollte Abbott die bisherige Schnittstelle abschalten, wird die Kommunikation mit GDH (und anderen Drittanbieter Apps) voraussichtlich unterbrochen.\nAktuell gibt es technisch keine Lösung, um diese neue Verschlüsselung zu umgehen.\nFragen zur künftigen Unterstützung wichtiger Funktionen wie der Smartwatch-Anbindung können nur direkt durch den Support von Abbott beantwortet werden.</string>
+
 </resources>

@@ -1015,4 +1015,7 @@ Puoi gestire queste autorizzazioni in qualsiasi momento nelle impostazioni dell\
     <string name="pref_switch_standard_children_statistics">Utilizzo di TITR per i bambini</string>
     <string name="pref_switch_standard_children_statistics_summary">L\'uso del \"Time in Tighter Range\" (TITR) con target di 70–140 mg/dl (3,9–7,8 mmol/l) è raccomandato per i bambini piccoli in alcune regioni.</string>
 
+    <string name="pref_source_librelinkup_5_info_summary">Abbott ha cambiato LibreLinkUp a comunicazione crittografata.\nNon appena l\'interfaccia precedente verrà spenta, GDH probabilmente smetterà di funzionare.\nAttualmente non c\'è soluzione tecnica in vista.</string>
+    <string name="source_librelinkup_5_info_popup_title">Nota importante riguardante LibreLinkUp:</string>
+    <string name="source_librelinkup_5_info_popup">Abbott ha rilasciato la versione 5, che utilizza una nuova interfaccia crittografata.\nSe Abbott spegne l\'interfaccia precedente, la comunicazione con GDH (e altre app di terze parti) probabilmente verrà interrotta.\nAttualmente non esiste una soluzione tecnica per aggirare questa nuova crittografia.\nLe domande riguardanti il futuro supporto di funzioni essenziali come l\'integrazione smartwatch possono essere risposte solo direttamente dal supporto Abbott.</string>
 </resources>

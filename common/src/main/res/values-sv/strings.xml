@@ -1018,4 +1018,7 @@ Du kan hantera dessa behörigheter när som helst i Health Connect-appens instä
     <string name="pref_switch_standard_children_statistics">Använd TITR för barn</string>
     <string name="pref_switch_standard_children_statistics_summary">Användning av \"Time in Tighter Range\" (TITR) med målvärden på 70–140 mg/dl (3,9–7,8 mmol/l) rekommenderas för små barn i vissa regioner.</string>
 
+    <string name="pref_source_librelinkup_5_info_summary">Abbott har växlat LibreLinkUp till krypterad kommunikation.\nNär det tidigare gränssnittet stängs av kommer GDH förmodligen att sluta fungera.\nDet finns för närvarande ingen teknisk lösning i sikte.</string>
+    <string name="source_librelinkup_5_info_popup_title">Viktigt meddelande angående LibreLinkUp:</string>
+    <string name="source_librelinkup_5_info_popup">Abbott har släppt version 5, som använder ett nytt, krypterat gränssnitt.\nOm Abbott stänger av det tidigare gränssnittet kommer kommunikationen med GDH (och andra tredjepartsappar) förmodligen att avbrytas.\nFör närvarande finns det ingen teknisk lösning för att kringgå denna nya kryptering.\nFrågor angående framtida stöd för viktiga funktioner som smartwatch-integrering kan endast besvaras direkt av Abbotts support.</string>
 </resources>

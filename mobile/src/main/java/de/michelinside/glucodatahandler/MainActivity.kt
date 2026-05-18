@@ -432,6 +432,16 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     putString(Constants.SHARED_PREF_DISCLAIMER_SHOWN, BuildConfig.VERSION_NAME)
                 }
             }
+            if(ReceiveData.source == DataSource.LIBRELINK && !sharedPref.contains(Constants.SHARED_PREF_LLU_5_WARNING_SHOWN)) {
+                Dialogs.showOkDialog(this,
+                    CR.string.source_librelinkup_5_info_popup_title,
+                    CR.string.source_librelinkup_5_info_popup,
+                    null
+                )
+                sharedPref.edit {
+                    putBoolean(Constants.SHARED_PREF_LLU_5_WARNING_SHOWN, true)
+                }
+            }
             if(!sharedPref.contains(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU)) {
                 if(sharedPref.getBoolean(Constants.SHARED_PREF_LIBRE_ENABLED, false)) {
                     Dialogs.showOkCancelDialog(this,
