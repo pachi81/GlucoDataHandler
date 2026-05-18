@@ -17,6 +17,8 @@ import de.michelinside.glucodatahandler.common.utils.Utils
 import org.json.JSONArray
 import org.json.JSONObject
 import java.lang.NumberFormatException
+import java.math.RoundingMode
+import kotlin.math.min
 
 class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED, DataSource.NIGHTSCOUT) {
     companion object {
@@ -76,7 +78,7 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
     }
 
     private fun getGraphData(firstValueTime: Long): Boolean {
-        val count = Utils.getElapsedTimeMinute(firstValueTime)
+        val count = Utils.getElapsedTimeMinute(firstValueTime, RoundingMode.HALF_UP)
         Log.i(LOG_ID, "Getting up to $count graph data for time > ${Utils.getUiTimeStamp(firstValueTime)} - ($firstValueTime)")
         if(count > 0) {
             val (result, errorText) = handleEntriesResponse(httpGet(getUrl(GRAPHDATA_ENDPOINT.format(firstValueTime,count)), getHeader()), firstValueTime)
@@ -88,13 +90,14 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
     }
 
     override fun getValue() : Boolean {
-        val firstNeededValue = getFirstNeedGraphValueTime()
+        val firstNeededValue = getFirstNeedGraphValueTime(1, firstGetValue, true) // always use entries for getting data
         if (firstNeededValue > 0) {
             if(getGraphData(firstNeededValue) && !iob_cob_support) {
                 // data received, also no iob/cob to request
                 return true
             }
         }
+        Log.v(LOG_ID, "Requesting data from pebble endpoint (firstNeededValue: $firstNeededValue)")
         if (!handlePebbleResponse(httpGet(getUrl(PEBBLE_ENDPOINT), getHeader()))) {
             if (!hasIobCobSupport() || ReceiveData.getElapsedTimeMinute() >= getIntervalMinute()) {
                 // only check for new value, if there is no (otherwise it was only called for IOB/COB)
@@ -181,9 +184,7 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
                     val values = mutableListOf<GlucoseValue>()
                     for (i in 0 until jsonEntries.length()) {
                         val jsonEntry = jsonEntries.getJSONObject(i)
-                        var glucose = JsonUtils.getFloat("sgv", jsonEntry)
-                        if (GlucoDataUtils.isMmolValue(glucose))
-                            glucose = GlucoDataUtils.mmolToMg(glucose)
+                        val glucose = JsonUtils.getFloat("sgv", jsonEntry)
                         val time = jsonEntry.getLong("date")
                         if(GlucoDataUtils.isGlucoseValid(glucose) && time > 0 && time >= firstValueTime) {
                             values.add(GlucoseValue(time, glucose.toInt(), getRate(jsonEntry)))

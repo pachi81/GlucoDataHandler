@@ -38,7 +38,7 @@ abstract class DataSourceTask(protected val enabledKey: String, protected val so
     private var isFirstRequest = true  // first request after startup
     private var lastExecution = 0L
 
-    private val interval: Int get() {
+    protected val interval: Int get() {
         return max(minInterval, prefInterval)
     }
 
@@ -206,17 +206,19 @@ abstract class DataSourceTask(protected val enabledKey: String, protected val so
             return bundle
         }
 
-        fun getFirstNeedGraphValueTime(interval: Int, isFirstRequest: Boolean = false): Long {
+        fun getFirstNeedGraphValueTime(interval: Int, isFirstRequest: Boolean = false, forceReturnMinTime: Boolean = false): Long {
             val firstLastPair = dbAccess.getFirstLastTimestamp()
             val minTime = if(GlucoDataService.appSource == AppSource.AUTO_APP)
                 System.currentTimeMillis() - Constants.DB_MAX_DATA_GDA_TIME_MS     // only for delta calculation
             else
                 System.currentTimeMillis() - Constants.DB_MAX_DATA_WEAR_TIME_MS    // 24h for init the first time
+            Log.d(LOG_ID, "get first need value for first: ${Utils.getElapsedTimeMinute(firstLastPair.first)}, last: ${
+                Utils.getElapsedTimeMinute(firstLastPair.second)}, min: ${Utils.getElapsedTimeMinute(minTime)}")
             if(firstLastPair.first == 0L || (isFirstRequest && firstLastPair.first > minTime)) {
                 Log.i(LOG_ID, "First value is ${Utils.getElapsedTimeMinute(firstLastPair.first)} minutes old - try get older data on first request")
                 return minTime
             }
-            if(firstLastPair.second > 0L && Utils.getElapsedTimeMinute(firstLastPair.second) > interval) {
+            if(firstLastPair.second > 0L && (Utils.getElapsedTimeMinute(firstLastPair.second) > interval || forceReturnMinTime)) {
                 Log.i(LOG_ID, "Last value is ${Utils.getElapsedTimeMinute(firstLastPair.second)} minutes old - try get newer data")
                 return maxOf(firstLastPair.second + 30000, minTime)
             }
