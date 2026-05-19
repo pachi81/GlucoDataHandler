@@ -3,7 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
-project.ext.set("versionCode", 1032)
+project.ext.set("versionCode", 1033)
 project.ext.set("devVersion", 1)
 project.ext.set("versionName", "2.1")
 
