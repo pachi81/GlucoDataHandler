@@ -127,6 +127,8 @@ def mobileProjectDir = projectDir
 def mobileBuildDir = project.layout.buildDirectory
 
 android.applicationVariants.configureEach { variant ->
+    if (variant.buildType.name == 'debug') return // Skip debug variants
+
     def vName = variant.name // e.g., "dev_release"
     def vNameCap = vName.capitalize()
 

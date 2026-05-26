@@ -111,6 +111,8 @@ def wearProjectDir = projectDir
 def wearBuildDir = project.layout.buildDirectory
 
 android.applicationVariants.configureEach { variant ->
+    if (variant.buildType.name == 'debug') return // Skip debug variants
+
     def vName = variant.name // e.g., "release", "dev_release", "second"
     def vNameCap = vName.capitalize()
 
