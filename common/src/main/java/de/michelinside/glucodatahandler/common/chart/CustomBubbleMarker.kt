@@ -199,17 +199,23 @@ class CustomBubbleMarker(context: Context, private val showDate: Boolean, privat
         }
     }
 
-    private fun findNearestIndex(dataSet: LineDataSet, xVal: Float): Int {
+    private fun findNearestIndex(chart: BarLineChartBase<*>, dataSet: LineDataSet, xVal: Float): Int {
         val entries = dataSet.values
         if (entries.isEmpty()) return -1
+        
+        // Clamp xVal to the visible range to ensure we don't pick points off-screen
+        val visibleMinX = chart.lowestVisibleX
+        val visibleMaxX = chart.highestVisibleX
+        val clampedXVal = Math.max(visibleMinX, Math.min(xVal, visibleMaxX))
+
         var low = 0
         var high = entries.size - 1
         while (low <= high) {
             val mid = (low + high) / 2
             val midX = entries[mid].getX()
-            if (midX < xVal) {
+            if (midX < clampedXVal) {
                 low = mid + 1
-            } else if (midX > xVal) {
+            } else if (midX > clampedXVal) {
                 high = mid - 1
             } else {
                 return mid
@@ -218,9 +224,27 @@ class CustomBubbleMarker(context: Context, private val showDate: Boolean, privat
         // Find closest
         val left = if (high >= 0) high else 0
         val right = if (low < entries.size) low else entries.size - 1
-        val leftDiff = Math.abs(entries[left].getX() - xVal)
-        val rightDiff = Math.abs(entries[right].getX() - xVal)
-        return if (leftDiff <= rightDiff) left else right
+        
+        val leftEntry = entries[left]
+        val rightEntry = entries[right]
+        
+        // Further filter: if the closest points are outside the visible range, 
+        // find the closest one that IS visible.
+        val leftVisible = leftEntry.x >= visibleMinX && leftEntry.x <= visibleMaxX
+        val rightVisible = rightEntry.x >= visibleMinX && rightEntry.x <= visibleMaxX
+        
+        if (leftVisible && rightVisible) {
+            val leftDiff = Math.abs(leftEntry.x - clampedXVal)
+            val rightDiff = Math.abs(rightEntry.x - clampedXVal)
+            return if (leftDiff <= rightDiff) left else right
+        } else if (leftVisible) {
+            return left
+        } else if (rightVisible) {
+            return right
+        }
+        
+        // If neither are "visible" by strict range (rounding issues), return the clamped one
+        return if (Math.abs(leftEntry.x - clampedXVal) <= Math.abs(rightEntry.x - clampedXVal)) left else right
     }
 
     fun setMarkerVisible(visible: Boolean) {
@@ -264,13 +288,20 @@ class CustomBubbleMarker(context: Context, private val showDate: Boolean, privat
                 // Clamp xVal to the visible range
                 val visibleMinX = chart.lowestVisibleX
                 val visibleMaxX = chart.highestVisibleX
-                val clampedXVal = Math.max(visibleMinX, Math.min(xVal, visibleMaxX))
 
                 val dataSet = chart.data?.dataSets?.get(0) as? LineDataSet ?: return
-                val nearestIndex = findNearestIndex(dataSet, clampedXVal)
-                Log.v(LOG_ID, "Nearest: $nearestIndex for xVal: $xVal (clamped: $clampedXVal), visible range: [$visibleMinX, $visibleMaxX]")
+                val nearestIndex = findNearestIndex(chart, dataSet, xVal)
+                Log.v(LOG_ID, "Nearest: $nearestIndex for xVal: $xVal, visible range: [$visibleMinX, $visibleMaxX]")
 
                 if (nearestIndex >= 0) {
+                    val entry = dataSet.getEntryForIndex(nearestIndex)
+                    
+                    // Final safety check: if the nearest found entry is still outside visible range, don't update
+                    if (entry.x < visibleMinX || entry.x > visibleMaxX) {
+                        Log.v(LOG_ID, "Nearest entry x=${entry.x} is outside visible range, ignoring.")
+                        return
+                    }
+
                     // Check for borders before updating
                     if(nearestIndex > lastHighlightedIndex && visibleMaxX.toInt() == chart.xChartMax.toInt()) {
                         // right border reached, don't move marker further
@@ -280,8 +311,8 @@ class CustomBubbleMarker(context: Context, private val showDate: Boolean, privat
                         return
                     }
 
-                    val entry = dataSet.getEntryForIndex(nearestIndex)
                     val newHighlight = Highlight(entry.x, entry.y, 0)
+                    Log.v(LOG_ID, "New highlighted at x=${entry.x}, visible range: [$visibleMinX, $visibleMaxX]")
 
                     // Always update to keep marker on the data point under the finger
                     // Only skip logging if it's the same highlight to reduce spam
