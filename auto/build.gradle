@@ -7,7 +7,24 @@ project.ext.set("versionCode", 1033)
 project.ext.set("devVersion", 1)
 project.ext.set("versionName", "2.1")
 
+
+Properties properties = new Properties()
+if (project.rootProject.file('local.properties').exists()) {
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+}
+
 android {
+    signingConfigs {
+        release {
+            if (properties.containsKey('keystore.file')) {
+                storeFile file(properties.getProperty('keystore.file'))
+                storePassword properties.getProperty('keystore.password')
+                keyAlias properties.getProperty('keystore.alias')
+                keyPassword properties.getProperty('keystore.key.password')
+            }
+        }
+    }
+
     namespace 'de.michelinside.glucodataauto'
     compileSdk rootProject.compileSdk
 
@@ -32,6 +49,7 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "GlucoDataAuto"
+            signingConfig signingConfigs.release
         }
         dev_release {
             minifyEnabled true
@@ -50,7 +68,7 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "GDA Second"
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
         }
         applicationVariants.all {
                 // this method is use to rename your all apk weather
@@ -97,34 +115,76 @@ dependencies {
     implementation 'androidx.work:work-runtime:2.11.2'
 }
 
-afterEvaluate {
-    //noinspection ConfigurationAvoidance
-    def assembleRelease = tasks.getByPath(':auto:assembleRelease')
-    def copyAndroidApksPostBuild = tasks.register('copyAndroidApksPostBuild', Copy) {
-        dependsOn assembleRelease
-        from "${projectDir}/release"
-        include '**/*.apk'
-        into rootProject.releasePath
-    }
-    assembleRelease.finalizedBy(copyAndroidApksPostBuild)
+// --- Dynamic Post-Build Copy Logic (Groovy Version - Configuration Cache Compatible) ---
 
-    //noinspection ConfigurationAvoidance
-    def assembleDevRelease = tasks.getByPath(':auto:assembleDev_release')
-    def copyAndroidDevApksPostBuild = tasks.register('copyAndroidDevApksPostBuild', Copy) {
-        dependsOn assembleDevRelease
-        from "${projectDir}/dev_release"
-        include '**/*.apk'
-        into rootProject.releasePath
-    }
-    assembleDevRelease.finalizedBy(copyAndroidDevApksPostBuild)
+// Pre-calculate global values to avoid project state access in closures
+def releasePathObj = rootProject.ext.has("releasePath") ? rootProject.ext.get("releasePath") : null
+def globalReleasePath = (releasePathObj != null && releasePathObj.toString() != "null") ? releasePathObj.toString() : null
+def autoProjectDir = projectDir
+def autoBuildDir = project.layout.buildDirectory
 
-    //noinspection ConfigurationAvoidance
-    def assembleSecond = tasks.getByPath(':auto:assembleSecond')
-    def copyAndroidSecondApksPostBuild = tasks.register('copyAndroidSecondApksPostBuild', Copy) {
-        dependsOn assembleSecond
-        from "${projectDir}/second"
-        include '**/*.apk'
-        into rootProject.releasePath
+android.applicationVariants.configureEach { variant ->
+    if (variant.buildType.name == 'debug') return // Skip debug variants
+
+    def vName = variant.name // e.g., "release", "dev_release", "second"
+    def vNameCap = vName.capitalize()
+
+    // Capture the output directory now, so we don't need the 'variant' object inside tasks
+    def apkSourceFolder = variant.outputs.collect { it.outputFile.parentFile }
+
+    // 1. Register a Clean Task to clear old files before the build starts
+    def cleanTaskName = "cleanOutputsForAuto${vNameCap}"
+    tasks.register(cleanTaskName) {
+        group = "delivery"
+        doLast {
+            def foldersToClean = [
+                    new File(autoProjectDir, vName),
+                    new File(autoBuildDir.asFile.get(), "outputs/apk/${vName}")
+            ]
+            foldersToClean.each { folder ->
+                if (folder.exists()) {
+                    println "DEBUG: Cleaning old Auto outputs in ${folder.absolutePath}"
+                    folder.deleteDir()
+                    folder.mkdirs()
+                }
+            }
+        }
     }
-    assembleSecond.finalizedBy(copyAndroidSecondApksPostBuild)
+
+    // 2. Register APK Copy Task
+    def copyApkTaskName = "copyAuto${vNameCap}ApkToGlobal"
+    tasks.register(copyApkTaskName, Copy) {
+        group = "delivery"
+        description = "Copies the generated Auto APK for $vName to the global release path."
+
+        if (globalReleasePath != null && !globalReleasePath.isEmpty()) {
+            from apkSourceFolder
+            include "*.apk"
+            into file(globalReleasePath)
+
+            // Flatten structure: put .apk directly into target
+            eachFile { details -> details.path = details.name }
+
+            doLast {
+                println "DEBUG: Auto APK copy finished for ${vNameCap} to ${globalReleasePath}"
+            }
+        } else {
+            enabled = false
+        }
+    }
+
+    // 3. Task Wiring (Safe and Specific)
+    tasks.named("assemble${vNameCap}").configure {
+        dependsOn cleanTaskName
+        if (globalReleasePath != null && !globalReleasePath.isEmpty()) {
+            finalizedBy copyApkTaskName
+        }
+    }
+}
+
+// 4. Fix for internal metadata tasks to avoid race conditions
+tasks.configureEach { task ->
+    if (task.name.contains('ApkListingFileRedirect')) {
+        task.mustRunAfter tasks.matching { it.name.startsWith('copyAuto') }
+    }
 }
