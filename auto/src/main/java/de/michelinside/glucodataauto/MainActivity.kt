@@ -1,7 +1,6 @@
 package de.michelinside.glucodataauto
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -230,7 +229,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     private fun checkMissingPermissions() {
         if(sharedPref.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED) && sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)) {
-            if (!ReceiverManager.checkNotificationReceiverPermission(this, false)) {
+            if (!ReceiverManager.checkNotificationReceiverPermission(this, false, true)) {
                 Log.w(LOG_ID, "Missing notification reader permission!")
                 Dialogs.showOkCancelDialog(this,
                     resources.getString(CR.string.permission_missing_title),

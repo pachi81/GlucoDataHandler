@@ -203,9 +203,8 @@ object ReceiverManager {
         context.startActivity(intent)
     }
 
-    fun checkNotificationReceiverPermission(context: Context, requestPermission: Boolean): Boolean {
-        val notificationListeners = Settings.Secure.getString(context.contentResolver, "enabled_notification_listeners")
-        if(!notificationListeners.contains(context.packageName)) {
+    fun checkNotificationReceiverPermission(context: Context, requestPermission: Boolean, checkListener: Boolean): Boolean {
+        if(!NotificationReceiver.checkPermission(context, checkListener)) {
             if(requestPermission) {
                 requestNotificationReceiverPermission(context)
             }
@@ -219,7 +218,7 @@ object ReceiverManager {
             // default to false because reading notifications is a scary permission to give for no reason
             if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)) {
                 Log.i(LOG_ID, "Notification source enabled")
-                checkNotificationReceiverPermission(context, true)
+                checkNotificationReceiverPermission(context, true, false)
                 notificationReceiver = NotificationReceiver()
                 registerReceiver(context, notificationReceiver!!, IntentFilter())
             } else if(notificationReceiver!=null) {

@@ -19,6 +19,7 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 import de.michelinside.glucodatahandler.common.receiver.BroadcastServiceAPI
+import de.michelinside.glucodatahandler.common.receiver.NotificationReceiver
 import de.michelinside.glucodatahandler.common.receiver.ScreenEventReceiver
 import de.michelinside.glucodatahandler.common.tasks.BackgroundWorker
 import de.michelinside.glucodatahandler.common.tasks.SourceTaskService
@@ -147,8 +148,12 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
 
         fun checkServices(context: Context) {
             try {
-                if(created)
+                if(created) {
                     BackgroundWorker.checkServiceRunning(context)
+                    if(appSource != AppSource.WEAR_APP) {
+                        NotificationReceiver.verifyNotificationReceiver(context)
+                    }
+                }
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "checkServices exception: " + exc.message.toString())
             }

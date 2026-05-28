@@ -1,11 +1,14 @@
 package de.michelinside.glucodatahandler.common.receiver
 
+import android.content.ComponentName
+import android.content.Context
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
+import android.provider.Settings
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
-import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RemoteViews
@@ -18,10 +21,12 @@ import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import java.math.RoundingMode
 import kotlin.math.abs
+
 
 class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     private var parsedTextViews = mutableListOf<String>()
@@ -68,6 +73,69 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         const val defaultIobRegex = """(\d*\.?\d+)\s?([a-fh-z]\b|ie$)"""
         const val minimedIobRegex = """(\d*\.?\d+)\s?[^\d\s]$"""
         const val defaultCobRegex = """(\d+)\s?g\b"""
+
+        var lastNotificationTime = 0L
+            private set
+        var isConnected = false
+            private set
+
+        fun checkPermission(context: Context, checkListener: Boolean): Boolean {
+            val notificationListeners = Settings.Secure.getString(context.contentResolver, "enabled_notification_listeners")
+            if(!notificationListeners.contains(context.packageName)) {
+                Log.w(LOG_ID, "Permission not granted!")
+                return false
+            }
+            if(checkListener) {
+                checkListener(context)
+            }
+            return true
+        }
+
+        fun verifyNotificationReceiver(context: Context) {
+            val sharedPref = GlucoDataService.sharedPref?: context.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
+            if(sharedPref.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED) && sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)) {
+                Log.d(LOG_ID, "Verify notification receiver triggered.")
+                checkPermission(context, true)
+            }
+        }
+
+        private fun checkListener(context: Context) {
+            if(lastNotificationTime == 0L)  // not yet created!
+                return
+            Log.d(LOG_ID, "Check listener is working: connected=$isConnected - last notification=${
+                Utils.getUiTimeStamp(
+                    lastNotificationTime
+                )
+            }")
+            if(!isConnected || Utils.getElapsedTimeMinute(lastNotificationTime, RoundingMode.HALF_UP) >= 10) {
+                Log.w(LOG_ID, "Notification listener might not be working (connected: $isConnected) - last notification received at ${Utils.getUiTimeStamp(lastNotificationTime)} - try to restart it")
+                restartListener(context)
+            }
+        }
+
+        private fun restartListener(context: Context) {
+            try {
+                Log.w(LOG_ID, "Restarting notification listener service")
+                val pm = context.packageManager
+                val componentName =
+                    ComponentName(context, NotificationReceiver::class.java)
+
+                requestRebind(componentName)
+
+                pm.setComponentEnabledSetting(
+                    componentName,
+                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP
+                )
+
+                pm.setComponentEnabledSetting(
+                    componentName,
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP
+                )
+                lastNotificationTime = System.currentTimeMillis() // set to prevent to many restarts
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "Exception in restartListener: " + exc.toString())
+            }
+        }
     }
 
     private fun toRegex(regex: String): Regex {
@@ -421,10 +489,35 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         return false
     }
 
+    override fun onListenerConnected() {
+        super.onListenerConnected()
+        isConnected = true
+        Log.i(LOG_ID, "Listener service connected.")
+    }
+
+    override fun onListenerDisconnected() {
+        super.onListenerDisconnected()
+        isConnected = false
+        Log.e(LOG_ID, "Listener service disconnected!")
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        lastNotificationTime = if(ReceiveData.source == DataSource.NOTIFICATION) ReceiveData.time else System.currentTimeMillis()
+        Log.i(LOG_ID, "Listener service created.")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        isConnected = false
+        Log.e(LOG_ID, "Listener service destroyed!")
+    }
+
     override fun onNotificationPosted(statusBarNotification: StatusBarNotification?) {
         try {
             if (isRegistered()) {
                 statusBarNotification?.let { sbn ->
+                    lastNotificationTime = System.currentTimeMillis()
                     Log.d(LOG_ID, "New notification posted from ${sbn.packageName} - ongoing: ${sbn.isOngoing} (flags: ${sbn.notification?.flags}, prio: ${sbn.notification?.priority}) - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`})")
                     if(sbn.packageName == applicationContext.packageName)
                         return  // ignore notification from own app
