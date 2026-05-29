@@ -74,10 +74,9 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         const val minimedIobRegex = """(\d*\.?\d+)\s?[^\d\s]$"""
         const val defaultCobRegex = """(\d+)\s?g\b"""
 
-        var lastNotificationTime = 0L
-            private set
-        var isConnected = false
-            private set
+        private var lastNotificationTime = 0L
+        private var lastRestartListenerTime = 0L
+        private var isConnected = false
 
         fun checkPermission(context: Context, checkListener: Boolean): Boolean {
             val notificationListeners = Settings.Secure.getString(context.contentResolver, "enabled_notification_listeners")
@@ -107,8 +106,11 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                     lastNotificationTime
                 )
             }")
-            if(!isConnected || Utils.getElapsedTimeMinute(lastNotificationTime, RoundingMode.HALF_UP) >= 10) {
-                Log.w(LOG_ID, "Notification listener might not be working (connected: $isConnected) - last notification received at ${Utils.getUiTimeStamp(lastNotificationTime)} - try to restart it")
+            if((!isConnected || Utils.getElapsedTimeMinute(lastNotificationTime, RoundingMode.HALF_UP) >= 10)
+                && Utils.getElapsedTimeMinute(lastRestartListenerTime, RoundingMode.HALF_UP) >= 30) {
+                Log.w(LOG_ID, "Notification listener might not be working (connected: $isConnected) - last notification received at ${
+                    Utils.getUiTimeStamp(lastNotificationTime)} - last restart at ${Utils.getUiTimeStamp(lastRestartListenerTime)} - try to restart it")
+                lastRestartListenerTime = System.currentTimeMillis()  // prevent too many restarts
                 restartListener(context)
             }
         }
@@ -131,7 +133,6 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                     componentName,
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP
                 )
-                lastNotificationTime = System.currentTimeMillis() // set to prevent to many restarts
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "Exception in restartListener: " + exc.toString())
             }
