@@ -40,7 +40,7 @@ class IobCobComplication: IobCobComplicationsBase() {
 
 class IobComplication: IobCobComplicationsBase() {
     override fun getText(): PlainComplicationText = iobText(false)
-    override fun getIcon(): MonochromaticImage = iobIcon()
+    override fun getIcon(id: Int): MonochromaticImage = iobIcon()
     override fun getDescription(): String {
         return getDescriptionForContent(iob = true)
     }
@@ -48,7 +48,7 @@ class IobComplication: IobCobComplicationsBase() {
 
 class CobComplication: IobCobComplicationsBase() {
     override fun getText(): PlainComplicationText = cobText(false)
-    override fun getIcon(): MonochromaticImage = cobIcon()
+    override fun getIcon(id: Int): MonochromaticImage = cobIcon()
     override fun getDescription(): String {
         return getDescriptionForContent(cob = true)
     }

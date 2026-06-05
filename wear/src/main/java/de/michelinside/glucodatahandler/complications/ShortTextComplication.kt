@@ -12,14 +12,14 @@ open class ShortGlucoseComplication:  BgValueComplicationService() {
 }
 
 class ShortGlucoseWithIconComplication: BgValueComplicationService() {
-    override fun getIcon(): MonochromaticImage = glucoseIcon()
+    override fun getIcon(id: Int): MonochromaticImage = glucoseIcon()
     override fun getDescription(): String {
         return getDescriptionForContent(glucose = true)
     }
 }
 
 class ShortGlucoseWithTrendComplication: BgValueComplicationService() {
-    override fun getIcon(): MonochromaticImage = arrowIcon()
+    override fun getIcon(id: Int): MonochromaticImage = arrowIcon(id)
     override fun getDescription(): String {
         return getDescriptionForContent(glucose = true, trend = true)
     }
@@ -34,15 +34,15 @@ class ShortGlucoseWithDeltaComplication: ShortGlucoseComplication() {
 
 class ShortGlucoseWithDeltaAndTrendComplication: ShortGlucoseComplication() {
     override fun getTitle(): PlainComplicationText = deltaText()
-    override fun getIcon(): MonochromaticImage = arrowIcon()
-    override fun getLongTextComplicationData(): ComplicationData {
+    override fun getIcon(id: Int): MonochromaticImage = arrowIcon(id)
+    override fun getLongTextComplicationData(id: Int): ComplicationData {
         return LongTextComplicationData.Builder(
             plainText("Δ: " + ReceiveData.getDeltaAsString()),
             descriptionText()
         )
-            .setSmallImage(glucoseImage())
-            .setMonochromaticImage(getIcon())
-            .setTapAction(getTapAction())
+            .setSmallImage(glucoseImage(id))
+            .setMonochromaticImage(getIcon(id))
+            .setTapAction(getTapAction(id))
             .build()
     }
     override fun getDescription(): String {
@@ -51,7 +51,7 @@ class ShortGlucoseWithDeltaAndTrendComplication: ShortGlucoseComplication() {
 }
 
 open class ShortGlucoseWithTrendRangeComplication: BgValueComplicationService() {
-    override fun getRangeValueComplicationData(): ComplicationData {
+    override fun getRangeValueComplicationData(id: Int): ComplicationData {
         return RangedValueComplicationData.Builder(
             value = Utils.rangeValue( ReceiveData.rate, -4F, +4F),
             min = -4F,
@@ -60,8 +60,8 @@ open class ShortGlucoseWithTrendRangeComplication: BgValueComplicationService() 
         )
             .setTitle(getTitle())
             .setText(getText())
-            .setMonochromaticImage(getIcon())
-            .setTapAction(getTapAction())
+            .setMonochromaticImage(getIcon(id))
+            .setTapAction(getTapAction(id))
             .build()
     }
     override fun getDescription(): String {
@@ -77,14 +77,14 @@ open class ShortDeltaComplication: ShortGlucoseComplication() {
 }
 
 class ShortDeltaWithTrendComplication: ShortDeltaComplication() {
-    override fun getIcon(): MonochromaticImage = arrowIcon()
+    override fun getIcon(id: Int): MonochromaticImage = arrowIcon(id)
     override fun getDescription(): String {
         return getDescriptionForContent(delta = true, trend = true)
     }
 }
 
 class ShortDeltaWithIconComplication: ShortDeltaComplication() {
-    override fun getIcon(): MonochromaticImage = deltaIcon()
+    override fun getIcon(id: Int): MonochromaticImage = deltaIcon()
 }
 
 class OtherUnitComplication: BgValueComplicationService() {

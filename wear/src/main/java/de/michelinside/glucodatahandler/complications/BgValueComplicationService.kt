@@ -22,7 +22,6 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     protected val LOG_ID = "GDH.BgValueComplicationService"
     var descriptionResId: Int = CR.string.name
     protected lateinit var sharedPref: SharedPreferences
-    protected var instanceId = 0
 
     override fun onCreate() {
         try {
@@ -80,33 +79,32 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     }
 
     private fun getComplicationData(request: ComplicationRequest): ComplicationData? {
-        instanceId = request.complicationInstanceId
         return when(request.complicationType) {
-            ComplicationType.SHORT_TEXT -> getShortTextComplicationData()
-            ComplicationType.RANGED_VALUE -> getRangeValueComplicationData()
-            ComplicationType.LONG_TEXT -> getLongTextComplicationData()
-            ComplicationType.SMALL_IMAGE -> getSmallImageComplicationData()
-            ComplicationType.MONOCHROMATIC_IMAGE -> getIconComplicationData()
-            ComplicationType.PHOTO_IMAGE -> getLargeImageComplicationData()
+            ComplicationType.SHORT_TEXT -> getShortTextComplicationData(request.complicationInstanceId)
+            ComplicationType.RANGED_VALUE -> getRangeValueComplicationData(request.complicationInstanceId)
+            ComplicationType.LONG_TEXT -> getLongTextComplicationData(request.complicationInstanceId)
+            ComplicationType.SMALL_IMAGE -> getSmallImageComplicationData(request.complicationInstanceId)
+            ComplicationType.MONOCHROMATIC_IMAGE -> getIconComplicationData(request.complicationInstanceId)
+            ComplicationType.PHOTO_IMAGE -> getLargeImageComplicationData(request.complicationInstanceId)
             else -> {
-                Log.w(LOG_ID, "Unsupported type: " + request.complicationType)
+                Log.w(LOG_ID, "Unsupported type: ${request.complicationType} for id: ${request.complicationInstanceId}")
                 null
             }
         }
     }
 
-    private fun getShortTextComplicationData(): ComplicationData {
+    open fun getShortTextComplicationData(id: Int): ComplicationData {
         return ShortTextComplicationData.Builder(
             getText(),
             descriptionText()
         )
             .setTitle(getTitle())
-            .setMonochromaticImage(getIcon())
-            .setTapAction(getTapAction())
+            .setMonochromaticImage(getIcon(id))
+            .setTapAction(getTapAction(id))
             .build()
     }
 
-    open fun getRangeValueComplicationData(): ComplicationData {
+    open fun getRangeValueComplicationData(id: Int): ComplicationData {
         val value = ReceiveData.rawValue.toFloat()
         val max = 280F
         val colors = intArrayOf(ReceiveData.getGlucoseColor())
@@ -119,69 +117,69 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
         )
             .setTitle(getTitle())
             .setText(getText())
-            .setMonochromaticImage(getIcon())
-            .setTapAction(getTapAction())
+            .setMonochromaticImage(getIcon(id))
+            .setTapAction(getTapAction(id))
             .setColorRamp(colorRamp)
             .build()
     }
 
-    open fun getLongTextComplicationData(): ComplicationData {
+    open fun getLongTextComplicationData(id: Int): ComplicationData {
         return LongTextComplicationData.Builder(
             getText(),
             descriptionText()
         )
             .setTitle(getTitle())
-            .setSmallImage(arrowImage())
-            .setTapAction(getTapAction())
+            .setSmallImage(arrowImage(id))
+            .setTapAction(getTapAction(id))
             .build()
     }
 
-    private fun getSmallImageComplicationData(): ComplicationData {
+    open fun getSmallImageComplicationData(id: Int): ComplicationData {
         return SmallImageComplicationData.Builder (
-            smallImage = getImage()!!,
+            smallImage = getImage(id)!!,
             contentDescription = descriptionText()
         )
-            .setTapAction(getTapAction())
+            .setTapAction(getTapAction(id))
             .build()
     }
 
-    open fun getLargeImageComplicationData(): ComplicationData {
+    open fun getLargeImageComplicationData(id: Int): ComplicationData {
         return PhotoImageComplicationData.Builder (
-            photoImage = BitmapUtils.getGlucoseAsIcon("LargeImageComp_$instanceId", ReceiveData.getGlucoseColor(), true, 500,500),
+            photoImage = BitmapUtils.getGlucoseAsIcon("LargeImageComp_$id", ReceiveData.getGlucoseColor(), true, 500,500),
             contentDescription = descriptionText()
         )
-            .setTapAction(getTapAction())
+            .setTapAction(getTapAction(id))
             .build()
     }
 
-    open fun getIconComplicationData(): ComplicationData {
+    open fun getIconComplicationData(id: Int): ComplicationData {
         return MonochromaticImageComplicationData.Builder (
-            getIcon()!!,
+            getIcon(id)!!,
             descriptionText()
         )
-            .setTapAction(getTapAction())
+            .setTapAction(getTapAction(id))
             .build()
     }
 
-    open fun getIcon(): MonochromaticImage? = null
+    open fun getIcon(id: Int): MonochromaticImage? = null
     open fun getTitle(): PlainComplicationText? = null
     open fun getText(): PlainComplicationText = glucoseText()
-    open fun getImage(): SmallImage? = null
+    open fun getImage(id: Int): SmallImage? = null
 
-    open fun getTapAction(useExternalApp: Boolean = true): PendingIntent? {
+    open fun getTapAction(id: Int, useExternalApp: Boolean = true): PendingIntent? {
         val action = sharedPref.getString(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION, null)
         if(action != null) {
             if(action == Constants.ACTION_GRAPH) {
                 return PackageUtils.getAppIntent(
                     applicationContext,
                     GraphActivity::class.java,
-                    instanceId
+                    id
                 )
             }
-            return PackageUtils.getTapActionIntent(this, action, instanceId)
+            return PackageUtils.getTapActionIntent(this, action, id)
         } else if (BuildConfig.DEBUG) {
             // for debug create dummy broadcast (to check in emulator)
-            return PendingIntent.getBroadcast(this, instanceId, GlucoDataUtils.getDummyGlucodataIntent(false), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+            return PendingIntent.getBroadcast(this, id, GlucoDataUtils.getDummyGlucodataIntent(false), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         }
         return null
     }
@@ -243,10 +241,10 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     open fun descriptionText(): PlainComplicationText =
         plainText(getDescription())
 
-    fun arrowIcon(): MonochromaticImage =
+    fun arrowIcon(id: Int): MonochromaticImage =
         MonochromaticImage.Builder(
-            image = BitmapUtils.getRateAsIcon("arrowIcon_$instanceId", color = Color.WHITE)
-        ).setAmbientImage(BitmapUtils.getRateAsIcon("arrowIcon_mono_$instanceId", color = Color.WHITE)).build()
+            image = BitmapUtils.getRateAsIcon("arrowIcon_$id", color = Color.WHITE)
+        ).setAmbientImage(BitmapUtils.getRateAsIcon("arrowIcon_mono_$id", color = Color.WHITE)).build()
 
     fun glucoseIcon(): MonochromaticImage =
         MonochromaticImage.Builder(
@@ -265,55 +263,55 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
         ).build()
 
 
-    fun glucoseImage(small: Boolean = false): SmallImage {
+    fun glucoseImage(id: Int, small: Boolean = false): SmallImage {
         return SmallImage.Builder(
-            image = BitmapUtils.getGlucoseAsIcon("glucoseImage_$instanceId", ReceiveData.getGlucoseColor(), true, resizeFactor = if(small) 0.5F else 1.0F ),
+            image = BitmapUtils.getGlucoseAsIcon("glucoseImage_$id", ReceiveData.getGlucoseColor(), true, resizeFactor = if(small) 0.5F else 1.0F ),
             type = SmallImageType.PHOTO
-        ).setAmbientImage(ambientGlucoseAsIcon(forImage = true, small = small))
+        ).setAmbientImage(ambientGlucoseAsIcon(id, forImage = true, small = small))
             .build()
     }
 
-    fun ambientGlucoseAsIcon(forImage: Boolean = false, small: Boolean = false): Icon? {
+    fun ambientGlucoseAsIcon(id: Int, forImage: Boolean = false, small: Boolean = false): Icon? {
         if (sharedPref.getBoolean(Constants.SHARED_PREF_WEAR_COLORED_AOD, false))
             return null
-        return BitmapUtils.getGlucoseAsIcon("ambientGlucoseImage_$instanceId", color = Color.WHITE, roundTarget = forImage, resizeFactor = if(small) 0.5F else 1.0F)
+        return BitmapUtils.getGlucoseAsIcon("ambientGlucoseImage_$id", color = Color.WHITE, roundTarget = forImage, resizeFactor = if(small) 0.5F else 1.0F)
     }
 
-    fun arrowImage(small: Boolean = false): SmallImage {
+    fun arrowImage(id: Int, small: Boolean = false): SmallImage {
         return  SmallImage.Builder(
             image = BitmapUtils.getRateAsIcon(
-                "arrowImage_$instanceId",
+                "arrowImage_$id",
                 ReceiveData.getGlucoseColor(),
                 resizeFactor = if(small) 0.6F else 1.0F
             ),
             type = SmallImageType.PHOTO
         )
-            .setAmbientImage(ambientArrowIcon(small))
+            .setAmbientImage(ambientArrowIcon(id, small))
             .build()
     }
 
-    fun ambientArrowIcon(small: Boolean = false): Icon? {
+    fun ambientArrowIcon(id: Int, small: Boolean = false): Icon? {
         if (sharedPref.getBoolean(Constants.SHARED_PREF_WEAR_COLORED_AOD, false))
             return null
         return BitmapUtils.getRateAsIcon(
-            "ambientArrowIcon_$instanceId",
+            "ambientArrowIcon_$id",
             color = Color.WHITE,
             resizeFactor = if(small) 0.6F else 1.0F
         )
     }
 
-    fun getGlucoseTrendImage(small: Boolean = false): SmallImage {
+    fun getGlucoseTrendImage(id: Int, small: Boolean = false): SmallImage {
         return  SmallImage.Builder(
-            image = BitmapUtils.getGlucoseTrendIcon("glucoseTrendIcon_$instanceId", ReceiveData.getGlucoseColor(), small = small),
+            image = BitmapUtils.getGlucoseTrendIcon("glucoseTrendIcon_$id", ReceiveData.getGlucoseColor(), small = small),
             type = SmallImageType.PHOTO
-        ).setAmbientImage(ambientGlucoseTrendImage())
+        ).setAmbientImage(ambientGlucoseTrendImage(id, small))
             .build()
     }
 
-    fun ambientGlucoseTrendImage(small: Boolean = false): Icon? {
+    fun ambientGlucoseTrendImage(id: Int, small: Boolean = false): Icon? {
         if (sharedPref.getBoolean(Constants.SHARED_PREF_WEAR_COLORED_AOD, false))
             return null
-        return BitmapUtils.getGlucoseTrendIcon("glucoseTrendIcon_mono_$instanceId", Color.WHITE, small = small)
+        return BitmapUtils.getGlucoseTrendIcon("glucoseTrendIcon_mono_$id", Color.WHITE, small = small)
     }
 
 }
