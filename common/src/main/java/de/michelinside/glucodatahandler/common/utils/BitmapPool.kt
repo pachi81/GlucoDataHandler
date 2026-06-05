@@ -32,7 +32,7 @@ object BitmapPool {
                 if (bitmap != null) {
                     bitmapList.remove(bitmap)
                     Log.d(LOG_ID, "Bitmap reused for dimensions: $dimensionKey (new size: ${bitmapList.size})")
-                    return BitmapUtils.clearBitmap(bitmap)
+                    return bitmap
                 }
             }
         }
@@ -52,9 +52,8 @@ object BitmapPool {
             if (!bitmap.isRecycled) {
                 val bitmapList = pool.getOrPut(dimensionKey) { mutableListOf() }
                 if (bitmapList.size < maxSizePerDimension) {
-                    // Do not clear the bitmap before returning it to the pool,
-                    // as it might still be used for rendering (especially on Samsung devices)
-                    bitmapList.add(bitmap)
+                    // Clear the bitmap before returning it to the pool
+                    bitmapList.add(BitmapUtils.clearBitmap(bitmap))
                     Log.d(
                         LOG_ID,
                         "Bitmap returned to pool for dimensions: $dimensionKey (new size: ${bitmapList.size})"
