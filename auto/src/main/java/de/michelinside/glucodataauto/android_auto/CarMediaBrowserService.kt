@@ -345,50 +345,52 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     @SuppressLint("InflateParams")
     private fun getBackgroundImage(): Bitmap? {
         val coloredCover = sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_COLORED, true)
+        val width = 600
+        val height = 1000
         try {
-            if(ChartBitmapHandler.hasBitmap(this.javaClass.simpleName)) {
-                Log.i(LOG_ID, "Create bitmap")
-                val lockscreenView = LayoutInflater.from(this).inflate(R.layout.media_layout, null)
-                val txtBgValue: TextView = lockscreenView.findViewById(R.id.glucose)
-                val viewIcon: ImageView = lockscreenView.findViewById(R.id.trendImage)
+            val layoutId = if(ChartBitmapHandler.hasBitmap(this.javaClass.simpleName)) 
+                R.layout.media_layout else R.layout.media_layout_no_graph
+            
+            Log.i(LOG_ID, "Create bitmap for layout: ${if(layoutId == R.layout.media_layout) "with graph" else "no graph"}")
+            val lockscreenView = LayoutInflater.from(this).inflate(layoutId, null)
+            val txtBgValue: TextView = lockscreenView.findViewById(R.id.glucose)
+            val viewIcon: ImageView = lockscreenView.findViewById(R.id.trendImage)
+
+            txtBgValue.text = ReceiveData.getGlucoseAsString()
+            if(coloredCover)
+                txtBgValue.setTextColor(ReceiveData.getGlucoseColor())
+            else
+                txtBgValue.setTextColor(Color.WHITE)
+            
+            if (ReceiveData.isObsoleteShort() && !ReceiveData.isObsoleteLong()) {
+                txtBgValue.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+            } else {
+                txtBgValue.paintFlags = 0
+            }
+            viewIcon.setImageIcon(BitmapUtils.getRateAsIcon(LOG_ID +"_trend", color = if(coloredCover) null else Color.WHITE,  width = 400, height = 400))
+
+            if (layoutId == R.layout.media_layout) {
                 val graphImage: ImageView = lockscreenView.findViewById(R.id.graphImage)
-
-
-                txtBgValue.text = ReceiveData.getGlucoseAsString()
-                if(coloredCover)
-                    txtBgValue.setTextColor(ReceiveData.getGlucoseColor())
-                else
-                    txtBgValue.setTextColor(Color.WHITE)
-                if (ReceiveData.isObsoleteShort() && !ReceiveData.isObsoleteLong()) {
-                    txtBgValue.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-                } else {
-                    txtBgValue.paintFlags = 0
-                }
-                viewIcon.setImageIcon(BitmapUtils.getRateAsIcon(LOG_ID +"_trend", color = if(coloredCover) null else Color.WHITE,  width = 400, height = 400))
-
                 Log.d(LOG_ID, "Update graphImage bitmap")
-                lockscreenView.measure(
-                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
-                Log.d(LOG_ID, "Mesasured width ${lockscreenView.measuredWidth} and height ${lockscreenView.measuredHeight} for chart")
                 graphImage.setImageBitmap(ChartBitmapHandler.getBitmap())
                 if (!coloredCover) {
                     graphImage.setColorFilter(Color.WHITE)
                 }
-                graphImage.requestLayout()
-
-                lockscreenView.measure(
-                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
-                lockscreenView.layout(0, 0, lockscreenView.measuredWidth, lockscreenView.measuredHeight)
-                Log.d(LOG_ID, "Mesasured width ${lockscreenView.measuredWidth} and height ${lockscreenView.measuredHeight}")
-                curBitmap = BitmapUtils.loadBitmapFromView(lockscreenView, curBitmap)
-                return curBitmap
             }
+
+            lockscreenView.measure(
+                View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY))
+            lockscreenView.layout(0, 0, width, height)
+            
+            Log.d(LOG_ID, "Rendered bitmap: ${lockscreenView.measuredWidth}x${lockscreenView.measuredHeight}")
+            curBitmap = BitmapUtils.loadBitmapFromView(lockscreenView, curBitmap)
+            return curBitmap
+            
         } catch (e: Exception) {
             Log.e(LOG_ID, "Error creating bitmap", e)
         }
-        return BitmapUtils.getGlucoseTrendBitmap( color = if(coloredCover) null else Color.WHITE, width = 400, height = 400)
+        return BitmapUtils.getGlucoseTrendBitmap( color = if(coloredCover) null else Color.WHITE, width = width, height = height)
     }
 
     fun setItem() {
