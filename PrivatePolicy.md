@@ -1,6 +1,6 @@
 # Privacy Policy
 
-Last updated: March 19, 2026
+Last updated: May 22, 2024
 
 This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your information when You use the Service and tells You about Your privacy rights and how the law protects You.
 
@@ -58,6 +58,8 @@ For the purposes of this Privacy Policy:
 #### Personal Data
 
 While using Our Service, We may ask You to provide Us with certain personally identifiable information that can be used to contact or identify You. Personally identifiable information may include, but is not limited to:
+- **Email address:** Used solely for authentication with third-party glucose data providers (e.g., LibreLinkUp, Dexcom and Medtrum).
+- **Device and other IDs:** Used for technical synchronization between devices (e.g. phone and watch) and for maintaining secure connections to data sources.
 
 #### Health Data
 Our Application accesses and processes health information to provide its core functionality. Specifically:
@@ -82,6 +84,7 @@ We may also collect information that Your browser sends whenever You visit Our S
 ### Use of Your Personal Data
 
 The Company may use Personal Data for the following purposes:
+- **To provide access to third-party services:** Your email address and credentials are used to establish a connection to your chosen glucose data source. These credentials are stored locally on your device and are never transmitted to our own servers.
 - **To sync with Health Connect:** If you enable the Health Connect integration, the Application will transmit blood glucose records to the Google Health Connect digital repository on your device.
 - __To provide and maintain our Service__, including to monitor the usage of our Service.
 - __To manage Your Account:__ to manage Your registration as a user of the Service. The Personal Data You provide can give You access to different functionalities of the Service that are available to You as a registered user.
