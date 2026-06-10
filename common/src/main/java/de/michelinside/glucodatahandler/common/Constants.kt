@@ -241,19 +241,6 @@ object Constants {
     const val SHARED_PREF_MEDTRUM_PATIENT_ID="source_medtrum_patient_id"
     const val SHARED_PREF_MEDTRUM_SERVER="source_medtrum_server"
 
-    const val SHARED_PREF_YUWELL_ENABLED="source_yuwell_enabled"
-    const val SHARED_PREF_YUWELL_USER="source_yuwell_user"
-    const val SHARED_PREF_YUWELL_PASSWORD="source_yuwell_password"
-    const val SHARED_PREF_YUWELL_RECONNECT="source_yuwell_reconnect"
-    const val SHARED_PREF_YUWELL_PATIENT_ID="source_yuwell_patient_id"
-    const val SHARED_PREF_YUWELL_TOKEN="source_yuwell_token"
-    const val SHARED_PREF_YUWELL_TOKEN_EXPIRE="source_yuwell_token_expire"
-    const val SHARED_PREF_YUWELL_REFRESH_TOKEN="source_yuwell_refresh_token"
-    const val SHARED_PREF_YUWELL_REFRESH_TOKEN_EXPIRE="source_yuwell_refresh_token_expire"
-    const val SHARED_PREF_YUWELL_USER_ID="source_yuwell_user_id"
-    const val SHARED_PREF_YUWELL_LAST_GLUCOSE_ID="source_yuwell_last_glucose_id"
-    const val SHARED_PREF_YUWELL_LAST_BG_I_COUNT="source_yuwell_last_bg_i_count"
-
     const val SHARED_PREF_DUMMY_VALUES = "dummy_values"
 
     const val SHARED_PREF_LOCKSCREEN_WP_ENABLED = "lockscreen_enabled"

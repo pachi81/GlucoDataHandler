@@ -42,12 +42,6 @@
             app:fragment="de.michelinside.glucodatahandler.common.preferences.SourceMedtrum"
             app:iconSpaceReserved="false" />
         <Preference
-            android:key="source_yuwell_enabled"
-            android:title="@string/src_cat_yuwell"
-            android:summary="@string/src_yuwell_summary"
-            app:fragment="de.michelinside.glucodatahandler.common.preferences.SourceYuwell"
-            app:iconSpaceReserved="false" />
-        <Preference
             android:key="src_ns_enabled"
             android:title="@string/src_cat_nightscout"
             android:summary="@string/src_ns_summary"

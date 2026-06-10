@@ -88,7 +88,6 @@ import androidx.core.net.toUri
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 import de.michelinside.glucodatahandler.common.service.ReceiverManager
 import de.michelinside.glucodatahandler.common.service.WearPhoneManager
-import de.michelinside.glucodatahandler.common.tasks.YuwellSourceTask
 import de.michelinside.glucodatahandler.healthconnect.HealthConnectState
 import de.michelinside.glucodatahandler.transfer.NightscoutUploader
 
@@ -908,52 +907,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                         onClickListener
                     )
                 )
-            }
-            if(SourceStateData.lastState == SourceState.ERROR && SourceStateData.lastSource == DataSource.YUWELL) {
-
-                if(!sharedPref.getBoolean(Constants.SHARED_PREF_YUWELL_ENABLED, false)) {
-                    // Yuwell error exists, but not enabled -> only occurs after error 208 -> re-enable Yuwell
-                    val onReeanbleListener = OnClickListener {
-                        try {
-                            sharedPref.edit {
-                                putBoolean(Constants.SHARED_PREF_YUWELL_ENABLED, true)
-                            }
-                            update()
-                        } catch (exc: Exception) {
-                            Log.e(LOG_ID, "Yuwell reenable exception: " + exc.message.toString() )
-                        }
-                    }
-
-                    tableConnections.addView(
-                        createRow(
-                            resources.getString(CR.string.yuwell_reenable_source),
-                            onReeanbleListener
-                        )
-                    )
-                }
-
-                if(msg.startsWith("208")) {
-                    val onClickListener = OnClickListener {
-                        try {
-                            Dialogs.showOkCancelDialog(this,
-                                CR.string.yuwell_force_logout_title,
-                                CR.string.yuwell_force_logout_message,
-                                { _, _ ->
-                                    YuwellSourceTask.forceLogout()
-                                },
-                                null)
-                        } catch (exc: Exception) {
-                            Log.e(LOG_ID, "Yuwell force logout exception: " + exc.message.toString() )
-                        }
-                    }
-
-                    tableConnections.addView(
-                        createRow(
-                            resources.getString(CR.string.yuwell_trigger_force_logout),
-                            onClickListener
-                        )
-                    )
-                }
             }
             tableConnections.addView(createRow(CR.string.request_timestamp, Utils.getUiTimeStamp(SourceStateData.lastStateTime)))
         }

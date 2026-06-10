@@ -1005,23 +1005,6 @@
 
     <string name="gda_foreground_summary">Opcjonalny tryb diagnostyczny, który stabilizuje połączenie z Android Auto poprzez zapobieganie zamykaniu aplikacji w tle. Usługa pozostaje nieaktywna bez aktywnego połączenia, a powiadomienie można łatwo usunąć przesuwając palcem od wersji Android 14.</string>
 
-    <string name="src_yuwell_summary">Zdalne śledzenie aplikacji Yuwell Anytime.</string>
-    <string name="pref_source_yuwell_info">Konfiguracja śledzenia Yuwell Anytime</string>
-    <string name="pref_source_yuwell_info_summary">- Zainstaluj aplikację Anytime Follow\n- Zarejestruj użytkownika\n- Zaproś użytkownika z aplikacji Yuwell Anytime\n- Zaakceptuj zaproszenie w zakładce „Powiadomienia”\n- WAŻNE: Następnie wyloguj tego użytkownika!</string>
-    <string name="src_yuwell_patient_summary">Pacjent do śledzenia.</string>
-    <string name="src_yuwell_user_summary">Nazwa użytkownika konta Anytime Follow.</string>
-    <string name="src_yuwell_password_summary">Hasło do konta Anytime Follow.</string>
-    <string name="src_yuwell_enabled_summary">Włącz śledzenie Yuwell Anytime.</string>
-    <string name="src_yuwell_logout_error">Użytkownik został wylogowany!</string>
-    <string name="yuwell_force_logout_sent">Wysłano e-mail weryfikacyjny, sprawdź swoją skrzynkę pocztową!</string>
-    <string name="yuwell_force_logout_info">Po potwierdzeniu wylogowania możesz ponownie włączyć źródło tutaj.</string>
-    <string name="yuwell_trigger_force_logout">Naciśnij tutaj, aby wymusić wylogowanie bieżącego użytkownika z innej aplikacji.</string>
-    <string name="yuwell_force_logout_title">Wymuś wylogowanie</string>
-    <string name="yuwell_force_logout_message">Jeśli wymusisz wylogowanie użytkownika, otrzymasz później e-mail weryfikacyjny. Musisz potwierdzić wylogowanie w wiadomości e-mail.</string>
-
-    <string name="yuwell_reenable_source">Naciśnij tutaj, aby ponownie włączyć źródło Yuwell.</string>
-    <string name="yuwell_logged_in_to_other_app">Konto jest już aktywne na innym urządzeniu.</string>
-    <string name="yuwell_log_out_message">Źródło Yuwell wyłączone! Aby korzystać z tego konta tutaj, należy najpierw wylogować się z innej aplikacji.</string>
     <string name="restart_libre_app">Zrestartuj telefon lub aplikację Libre.</string>
 
     <string name="alarm_wear_no_alarm_while_charging">Brak alarmu podczas ładowania</string>

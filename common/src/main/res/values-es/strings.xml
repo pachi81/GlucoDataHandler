@@ -1000,23 +1000,6 @@ Puedes gestionar estos permisos en cualquier momento en la configuración de la 
 
     <string name="gda_foreground_summary">Modo de solución de problemas opcional que estabiliza la conexión de Android Auto evitando que la aplicación se cierre en segundo plano. El servicio permanece inactivo sin una conexión activa y la notificación se puede descartar fácilmente deslizando a partir de Android 14.</string>
 
-    <string name="src_yuwell_summary">Seguir de forma remota la aplicación Yuwell Anytime.</string>
-    <string name="pref_source_yuwell_info">Configurar Yuwell Anytime Follow</string>
-    <string name="pref_source_yuwell_info_summary">- Instala la aplicación Anytime Follow\n- Registra un usuario\n- Invita al usuario desde la aplicación Yuwell Anytime\n- Acepta la invitación en la pestaña \'Notificaciones\'\n- IMPORTANTE: ¡Cierra la sesión de este usuario después!</string>
-    <string name="src_yuwell_patient_summary">Paciente a seguir.</string>
-    <string name="src_yuwell_user_summary">Nombre de usuario para la cuenta de Anytime Follow.</string>
-    <string name="src_yuwell_password_summary">Contraseña para la cuenta de Anytime Follow.</string>
-    <string name="src_yuwell_enabled_summary">Activar seguimiento de Yuwell Anytime.</string>
-    <string name="src_yuwell_logout_error">¡Se cerró la sesión del usuario!</string>
-    <string name="yuwell_force_logout_sent">¡Correo de verificación enviado, por favor revisa tu buzón!</string>
-    <string name="yuwell_force_logout_info">Después de confirmar el cierre de sesión, puedes volver a habilitar la fuente aquí.</string>
-    <string name="yuwell_trigger_force_logout">Pulsa aquí para forzar el cierre de sesión del usuario actual en la otra aplicación.</string>
-    <string name="yuwell_force_logout_title">Forzar cierre de sesión</string>
-    <string name="yuwell_force_logout_message">Si activas un cierre de sesión forzado del usuario, recibirás un correo de verificación después.\nDebes confirmar el cierre de sesión en el correo electrónico.</string>
-
-    <string name="yuwell_reenable_source">Pulsa aquí para volver a habilitar la fuente Yuwell.</string>
-    <string name="yuwell_logged_in_to_other_app">La cuenta ya está activa en otro dispositivo.</string>
-    <string name="yuwell_log_out_message">¡Fuente Yuwell desactivada! Por favor, cierra sesión en la otra aplicación primero para usar esta cuenta aquí.</string>
     <string name="restart_libre_app">Por favor, reinicia tu teléfono o la aplicación Libre.</string>
     <string name="alarm_wear_no_alarm_while_charging">Sin alarma durante la carga</string>
     <string name="alarm_wear_no_alarm_while_charging_summary">No se activa ninguna alarma en el reloj mientras se está cargando.</string>

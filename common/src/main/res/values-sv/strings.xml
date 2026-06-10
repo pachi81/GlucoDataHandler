@@ -994,23 +994,6 @@ Du kan hantera dessa behörigheter när som helst i Health Connect-appens instä
 
     <string name="gda_foreground_summary">Valfritt felsökningsläge som stabiliserar Android Auto-anslutningen genom att förhindra att appen avslutas i bakgrunden. Tjänsten förblir inaktiv utan en aktiv anslutning, och aviseringen kan enkelt swipas bort från och med Android 14.</string>
 
-    <string name="src_yuwell_summary">Följ Yuwell Anytime-appen på distans.</string>
-    <string name="pref_source_yuwell_info">Ställ in Yuwell Anytime Follow</string>
-    <string name="pref_source_yuwell_info_summary">- Installera Anytime Follow-appen\n- Registrera en användare\n- Bjud in användaren från Yuwell Anytime-appen\n- Acceptera inbjudan under fliken \'Aviseringar\'\n- VIKTIGT: Logga ut den här användaren efteråt!</string>
-    <string name="src_yuwell_patient_summary">Patient som ska följas.</string>
-    <string name="src_yuwell_user_summary">Användarnamn för Anytime Follow-kontot.</string>
-    <string name="src_yuwell_password_summary">Lösenord för Anytime Follow-kontot.</string>
-    <string name="src_yuwell_enabled_summary">Aktivera följning av Yuwell Anytime.</string>
-    <string name="src_yuwell_logout_error">Användaren loggades ut!</string>
-    <string name="yuwell_force_logout_sent">Verifierings-e-post har skickats, kontrollera din inkorg!</string>
-    <string name="yuwell_force_logout_info">När du har bekräftat utloggningen kan du återaktivera källan här.</string>
-    <string name="yuwell_trigger_force_logout">Tryck här för att tvinga utloggning av den aktuella användaren från den andra appen.</string>
-    <string name="yuwell_force_logout_title">Tvinga utloggning</string>
-    <string name="yuwell_force_logout_message">Om du utlöser en tvingad utloggning av användaren kommer du att få en e-postverifiering efteråt.\nDu måste bekräfta utloggningen i e-postmeddelandet.</string>
-
-    <string name="yuwell_reenable_source">Tryck här för att återaktivera Yuwell-källan.</string>
-    <string name="yuwell_logged_in_to_other_app">Kontot är redan aktivt på en annan enhet.</string>
-    <string name="yuwell_log_out_message">Yuwell-källan är inaktiverad! Logga ut från den andra appen först för att använda det här kontot här.</string>
     <string name="restart_libre_app">Starta om telefonen eller Libre-appen.</string>
     <string name="alarm_wear_no_alarm_while_charging">Inget larm vid laddning</string>
     <string name="alarm_wear_no_alarm_while_charging_summary">Inget larm utlöses på klockan medan den laddas.</string>

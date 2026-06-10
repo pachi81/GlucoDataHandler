@@ -995,23 +995,6 @@ GlucoDataHandler 只會將血糖數據寫入健康連結，除非您明確授予
 
     <string name="gda_foreground_summary">選填的疑難排解模式，透過防止應用程式在背景遭終止來穩定 Android Auto 連線。在沒有活動連線時，此服務將保持停用狀態；從 Android 14 開始，可以輕鬆滑動移除通知。</string>
 
-    <string name="src_yuwell_summary">遠端追蹤 Yuwell Anytime 程式。</string>
-    <string name="pref_source_yuwell_info">設定 Yuwell Anytime Follow</string>
-    <string name="pref_source_yuwell_info_summary">- 安裝 Anytime Follow 程式\n- 註冊使用者\n- 從 Yuwell Anytime 程式邀請該使用者\n- 在「通知」分頁中接受邀請\n- 重要提示：之後請務必登出該使用者！</string>
-    <string name="src_yuwell_patient_summary">要追蹤的患者。</string>
-    <string name="src_yuwell_user_summary">Anytime Follow 帳戶的使用者名稱。</string>
-    <string name="src_yuwell_password_summary">Anytime Follow 帳戶的密碼。</string>
-    <string name="src_yuwell_enabled_summary">啟用 Yuwell Anytime 追蹤。</string>
-    <string name="src_yuwell_logout_error">使用者已登出！</string>
-    <string name="yuwell_force_logout_sent">驗證電子郵件已傳送，請檢查您的信箱！</string>
-    <string name="yuwell_force_logout_info">在您確認登出後，您可以在此處重新啟用資料來源。</string>
-    <string name="yuwell_trigger_force_logout">按一下此處以強制目前的用戶從其他程式中登出。</string>
-    <string name="yuwell_force_logout_title">強制登出</string>
-    <string name="yuwell_force_logout_message">如果您觸發使用者的強制登出，您之後將會收到電子郵件驗證。\n您必須在郵件中確認登出。</string>
-
-    <string name="yuwell_reenable_source">按一下此處以重新啟用 Yuwell 資料來源。</string>
-    <string name="yuwell_logged_in_to_other_app">帳戶已在其他裝置上啟用。</string>
-    <string name="yuwell_log_out_message">Yuwell 資料來源已停用！請先登出其他程式，以便在此處使用此帳戶。</string>
     <string name="restart_libre_app">請重新啟動手機或 Libre 程式。</string>
     <string name="alarm_wear_no_alarm_while_charging">充電時不發出警報</string>
     <string name="alarm_wear_no_alarm_while_charging_summary">手錶充電時不會觸發警報。</string>
