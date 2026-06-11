@@ -704,4 +704,23 @@ object Utils {
         return regex.find(valueToParse.replace(",", ".").trim().lowercase())?.groupValues
     }
 
+    fun replaceSensitiveData(body: String?, sensitivData: MutableSet<String>): String {
+        try {
+            if(body == null)
+                return "<null>"
+            var result = body.take(1100)
+            sensitivData.forEach {
+                val groups = Regex("\"$it\":\"(.*?)\"").find(result)?.groupValues
+                if(!groups.isNullOrEmpty() && groups.size > 1 && groups[1].isNotEmpty()) {
+                    val replaceValue = groups[0].replace(groups[1], "---")
+                    result = result.replace(groups[0], replaceValue)
+                }
+            }
+            return result.take(1000)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "replaceSensitiveData exception: " + exc.toString() )
+            return "<err>"
+        }
+    }
+
 }

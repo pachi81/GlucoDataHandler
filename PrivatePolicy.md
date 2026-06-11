@@ -1,6 +1,6 @@
 # Privacy Policy
 
-Last updated: March 19, 2026
+Last updated: May 22, 2024
 
 This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your information when You use the Service and tells You about Your privacy rights and how the law protects You.
 
@@ -58,6 +58,8 @@ For the purposes of this Privacy Policy:
 #### Personal Data
 
 While using Our Service, We may ask You to provide Us with certain personally identifiable information that can be used to contact or identify You. Personally identifiable information may include, but is not limited to:
+- **Email address:** Used solely for authentication with third-party glucose data providers (e.g., LibreLinkUp, Dexcom and Medtrum).
+- **Device and other IDs:** Used for technical synchronization between devices (e.g. phone and watch) and for maintaining secure connections to data sources.
 
 #### Health Data
 Our Application accesses and processes health information to provide its core functionality. Specifically:
@@ -65,6 +67,11 @@ Our Application accesses and processes health information to provide its core fu
 - **Purpose:** This data is used solely to provide you with a consolidated view of your glucose levels and to allow other health applications you use to access this information via Health Connect.
 - **Storage:** These health data are processed locally on your device. We do not upload your health data to our own servers or any third-party servers other than Google Health Connect (only upon your activation).
 
+#### Accessibility Service API
+Our Application uses the **AccessibilityService API** to provide the following feature:
+- **Always-On-Display (AOD) Overlay:** The service is used to detect when the device is in lock screen or AOD mode to overlay glucose information. This allows users to view their glucose levels without waking the device.
+- **Data Collection:** We do **not** use the AccessibilityService API to collect, store, or share any personal or sensitive user data. All processing occurs locally on your device.
+- **Activation:** The use of this service is optional and must be explicitly enabled by the user in the Android Accessibility settings after a prominent disclosure is shown within the application.
 
 #### Usage Data
 
@@ -82,6 +89,7 @@ We may also collect information that Your browser sends whenever You visit Our S
 ### Use of Your Personal Data
 
 The Company may use Personal Data for the following purposes:
+- **To provide access to third-party services:** Your email address and credentials are used to establish a connection to your chosen glucose data source. These credentials are stored locally on your device and are never transmitted to our own servers.
 - **To sync with Health Connect:** If you enable the Health Connect integration, the Application will transmit blood glucose records to the Google Health Connect digital repository on your device.
 - __To provide and maintain our Service__, including to monitor the usage of our Service.
 - __To manage Your Account:__ to manage Your registration as a user of the Service. The Personal Data You provide can give You access to different functionalities of the Service that are available to You as a registered user.

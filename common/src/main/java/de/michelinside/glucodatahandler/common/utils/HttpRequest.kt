@@ -155,7 +155,13 @@ class HttpRequest {
                 Log.e(LOG_ID, "Error received: $lastError")
             }
         } else {
-            lastResponse = conn.inputStream.bufferedReader().use { it.readText() }
+            val inputStream = if (conn.contentEncoding?.lowercase() == "gzip") {
+                java.util.zip.GZIPInputStream(conn.inputStream)
+            } else {
+                conn.inputStream
+            }
+
+            lastResponse = inputStream.bufferedReader().use { it.readText() }
         }
     }
 

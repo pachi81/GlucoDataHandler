@@ -11,6 +11,7 @@ import de.michelinside.glucodataauto.R
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodataauto.android_auto.CarMediaPlayer
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 
@@ -24,8 +25,8 @@ class GDASpeakSettingsFragment: SettingsFragmentBase(R.xml.pref_gda_speak) {
                 CarMediaPlayer.play(requireContext())
             } else {
                 var text = ReceiveData.getAsText(requireContext(), true, false)
-                if(!GlucoDataServiceAuto.patientName.isNullOrEmpty()) {
-                    text = "${GlucoDataServiceAuto.patientName}, $text"
+                if(!GlucoDataService.patientName.isNullOrEmpty()) {
+                    text = "${GlucoDataService.patientName}, $text"
                 }
                 TextToSpeechUtils.speak(text)
             }

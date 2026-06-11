@@ -1,11 +1,14 @@
 package de.michelinside.glucodatahandler.common.receiver
 
+import android.content.ComponentName
+import android.content.Context
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
+import android.provider.Settings
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
-import de.michelinside.glucodatahandler.common.utils.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RemoteViews
@@ -18,10 +21,12 @@ import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import java.math.RoundingMode
 import kotlin.math.abs
+
 
 class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     private var parsedTextViews = mutableListOf<String>()
@@ -38,6 +43,8 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     private val trendRegex = "([→↗↑↘↓⇈⇊])".toRegex()
     private val receivedNotifications = mutableListOf<StatusBarNotification>()
     private val intervalCheckTimeSpan = 10 // seconds -> from interval-timespan until interval+timespan
+    private var isOutOfSync = true  // initially out of sync to accept first notifications
+    private val minNotificationInterval = 2 // seconds -> minimum interval between notifications in out-of-sync mode
 
 
     companion object {
@@ -63,16 +70,95 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         )
 
         const val defaultGlucoseRegex = """(?:^|\s)(\d+(\.\d)?)(?=\s|\p{S}|$)"""
-        const val defaultIobRegex = """(\d*\.?\d+)\s?[a-fh-z]\b"""
+        const val defaultIobRegex = """(\d*\.?\d+)\s?([a-fh-z]\b|ie$)"""
+        const val minimedIobRegex = """(\d*\.?\d+)\s?[^\d\s]$"""
         const val defaultCobRegex = """(\d+)\s?g\b"""
+
+        private var lastNotificationTime = 0L
+        private var lastRestartListenerTime = 0L
+        private var isConnected = false
+
+        fun checkPermission(context: Context, checkListener: Boolean): Boolean {
+            val notificationListeners = Settings.Secure.getString(context.contentResolver, "enabled_notification_listeners")
+            if(!notificationListeners.contains(context.packageName)) {
+                Log.w(LOG_ID, "Permission not granted!")
+                return false
+            }
+            if(checkListener) {
+                checkListener(context)
+            }
+            return true
+        }
+
+        fun verifyNotificationReceiver(context: Context) {
+            val sharedPref = GlucoDataService.sharedPref?: context.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
+            if(sharedPref.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED) && sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)) {
+                Log.d(LOG_ID, "Verify notification receiver triggered.")
+                checkPermission(context, true)
+            }
+        }
+
+        private fun checkListener(context: Context) {
+            if(lastNotificationTime == 0L)  // not yet created!
+                return
+            Log.d(LOG_ID, "Check listener is working: connected=$isConnected - last notification=${
+                Utils.getUiTimeStamp(
+                    lastNotificationTime
+                )
+            }")
+            if((!isConnected || Utils.getElapsedTimeMinute(lastNotificationTime, RoundingMode.HALF_UP) >= 10)
+                && Utils.getElapsedTimeMinute(lastRestartListenerTime, RoundingMode.HALF_UP) >= 30) {
+                Log.w(LOG_ID, "Notification listener might not be working (connected: $isConnected) - last notification received at ${
+                    Utils.getUiTimeStamp(lastNotificationTime)} - last restart at ${Utils.getUiTimeStamp(lastRestartListenerTime)} - try to restart it")
+                lastRestartListenerTime = System.currentTimeMillis()  // prevent too many restarts
+                restartListener(context)
+            }
+        }
+
+        private fun restartListener(context: Context) {
+            try {
+                Log.w(LOG_ID, "Restarting notification listener service")
+                val pm = context.packageManager
+                val componentName =
+                    ComponentName(context, NotificationReceiver::class.java)
+
+                requestRebind(componentName)
+
+                pm.setComponentEnabledSetting(
+                    componentName,
+                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP
+                )
+
+                pm.setComponentEnabledSetting(
+                    componentName,
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP
+                )
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "Exception in restartListener: " + exc.toString())
+            }
+        }
+    }
+
+    private fun toRegex(regex: String): Regex {
+        return regex.toRegex(setOf(RegexOption.IGNORE_CASE, RegexOption.CANON_EQ))
     }
 
     private fun getRegex(key: String, defaultRegex: String): Regex {
         val sharedPref = GlucoDataService.sharedPref?: applicationContext.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
         val regex = sharedPref.getString(key, defaultRegex)
         if(regex.isNullOrEmpty())
-            return defaultRegex.toRegex(RegexOption.IGNORE_CASE)
-        return regex.toRegex(RegexOption.IGNORE_CASE)
+            return toRegex(defaultRegex)
+        return toRegex(regex)
+    }
+
+    private fun getIobRegex(packageName: String, sharedPref: SharedPreferences?): Regex {
+        val regexValue = sharedPref?.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX, "")
+        if(!regexValue.isNullOrEmpty())
+            return toRegex(regexValue)
+
+        if(packageName.lowercase().startsWith("com.medtronic."))  // MiniMed
+            return toRegex(minimedIobRegex)
+        return toRegex(defaultIobRegex)
     }
 
     private val glucoseRegex: Regex get() {
@@ -186,6 +272,8 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             return true
         if(packageName.lowercase().startsWith("com.microtech.aidexx.diaexport."))  // DiaExpert
             return true
+        if(packageName.lowercase().startsWith("com.isens.csair"))  // Caresense Air
+            return true
 
         if(onGoingNotificationPackage == packageName)
             return true
@@ -198,6 +286,8 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         if(packageName.lowercase().startsWith("com.camdiab."))  // CamAPS FX
             return true
         if(packageName.lowercase().startsWith("com.signos."))  // Signos (uses Dexcom Sensor)
+            return true
+        if(packageName.lowercase().startsWith("com.isens.csair"))  // Caresense Air
             return true
         return false
     }
@@ -320,7 +410,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             val minDiff = 50
             val diffValueTime = (sbn.postTime - ReceiveData.time)/1000 // in seconds
             val diffNotifyTime = (sbn.postTime - lastValueNotificationTime)/1000 // in seconds
-            Log.i(LOG_ID, "New notification from ${sbn.packageName} - ongoing: ${sbn.isOngoing} (flags: ${sbn.notification?.flags}, prio: ${sbn.notification?.priority}) - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`}) - diff notify: $diffNotifyTime, diff recv value: $diffValueTime")
+            Log.i(LOG_ID, "New notification from ${sbn.packageName} - ongoing: ${sbn.isOngoing} (flags: ${sbn.notification?.flags}, prio: ${sbn.notification?.priority}) - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`}) - diff notify: $diffNotifyTime, diff recv value: $diffValueTime - outOfSync: $isOutOfSync")
             if(diffNotifyTime <= 0L)
                 return false
             if(!sbn.isOngoing && hasOngoingNotification(sbn.packageName))
@@ -328,16 +418,39 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             if(isSpecialNotification(sbn))
                 return false
             val interval = getInterval(sbn.packageName, sharedPref)
+
+            // Handle out-of-sync mode: accept all notifications with minimum interval, regardless of value changes
+            if(isOutOfSync && interval >= 3) {
+                Log.i(LOG_ID, "Out of sync mode active - checking minimum interval of ${minNotificationInterval}s (diff: $diffNotifyTime)")
+                if(diffNotifyTime >= minNotificationInterval) {
+                    // In out-of-sync mode, ignore duplicate values like in normal mode
+                    updateOnlyChangedValue = true
+                    return true
+                }
+                Log.i(LOG_ID, "Ignoring notification - minimum interval not reached")
+                return false
+            }
+
+            // Normal sync mode
             if(interval > 1) {
                 Log.i(LOG_ID, "Handle $interval min notification - lastValueChanged: $lastValueChanged - diff: $diffValueTime")
                 stopWaitThread()
+
+                // Check if out-of-sync should be activated: time jump > interval + 1 minute
+                val intervalTimeSec = interval * 60
+                val outOfSyncThreshold = intervalTimeSec + 60
+                if(diffValueTime > outOfSyncThreshold) {
+                    Log.i(LOG_ID, "Activating out-of-sync mode! Time jump detected: $diffValueTime > $outOfSyncThreshold")
+                    isOutOfSync = true
+                    return true
+                }
+
                 /*
                     - time to ignore notifications: 60s if the last value was not a new one and 180s if the last value was a new one
                     - until 250s only update for changed values
                     - after 250s wait until 315s for a newer notification if the value has not changed - if there is no new one, use this one
                     - after 310s use the value
                  */
-                val intervalTimeSec = interval*60
                 val ignoreTime = if(lastValueChanged) (intervalTimeSec-60) else 60
                 if(diffValueTime<=ignoreTime) {
                     Log.i(LOG_ID, "Ignoring notification")
@@ -377,10 +490,35 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         return false
     }
 
+    override fun onListenerConnected() {
+        super.onListenerConnected()
+        isConnected = true
+        Log.i(LOG_ID, "Listener service connected.")
+    }
+
+    override fun onListenerDisconnected() {
+        super.onListenerDisconnected()
+        isConnected = false
+        Log.e(LOG_ID, "Listener service disconnected!")
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        lastNotificationTime = if(ReceiveData.source == DataSource.NOTIFICATION) ReceiveData.time else System.currentTimeMillis()
+        Log.i(LOG_ID, "Listener service created.")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        isConnected = false
+        Log.e(LOG_ID, "Listener service destroyed!")
+    }
+
     override fun onNotificationPosted(statusBarNotification: StatusBarNotification?) {
         try {
             if (isRegistered()) {
                 statusBarNotification?.let { sbn ->
+                    lastNotificationTime = System.currentTimeMillis()
                     Log.d(LOG_ID, "New notification posted from ${sbn.packageName} - ongoing: ${sbn.isOngoing} (flags: ${sbn.notification?.flags}, prio: ${sbn.notification?.priority}) - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`})")
                     if(sbn.packageName == applicationContext.packageName)
                         return  // ignore notification from own app
@@ -488,7 +626,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
 
     private fun parseIobValue(sbn: StatusBarNotification, sharedPref: SharedPreferences): Float {
         if(sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_ENABLED, true)) {
-            val regex = iobRegex
+            val regex = getIobRegex(sbn.packageName, sharedPref)
             Log.i(LOG_ID, "using IOB regex $regex")
             return parseValueFromNotification(sbn, true, regex)
 
@@ -505,13 +643,23 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         return Float.NaN
     }
 
+    private fun hasUnit(value: String?): Boolean {
+        if(!value.isNullOrEmpty()) {
+            return value.lowercase().contains("mmol") || value.lowercase().contains("mg")
+        }
+        return false
+    }
+
     private fun parseString(value: String?, regex: Regex, isIobCob: Boolean, needsUnit: Boolean): Float? {
         try {
             Log.d(LOG_ID, "Parsing string '$value' with regex '$regex' (isIobCob: $isIobCob - needsUnit: $needsUnit)")
             if(!value.isNullOrEmpty()) {
-                if(!isIobCob && needsUnit) {
-                    if(!value.lowercase().contains("mmol") && !value.lowercase().contains("mg")) {
+                if(needsUnit) {
+                    if(!isIobCob && !hasUnit(value)) {
                         Log.d(LOG_ID, "Ignoring value $value without unit")
+                        return null
+                    } else if(isIobCob && hasUnit(value)) {
+                        Log.d(LOG_ID, "Ignoring value $value with unit for IOB/COB")
                         return null
                     }
                 }
@@ -553,7 +701,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         // Extract data from notification extras as needed
         val title = extras?.getCharSequence("android.title")?.toString()
         val text = extras?.getCharSequence("android.text")?.toString()
-        val needsUnit = if(isIobCob) false else hasValueWithUnit(sbn.packageName, GlucoDataService.sharedPref!!)
+        val needsUnit = hasValueWithUnit(sbn.packageName, GlucoDataService.sharedPref!!)
         Log.i(LOG_ID, "extracted title `$title` and text `$text` check for unit: $needsUnit")
 
         if(!title.isNullOrEmpty()) {
@@ -686,7 +834,12 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         if(mgVal >= Constants.GLUCOSE_MIN_VALUE && mgVal <= Constants.GLUCOSE_MAX_VALUE) {
             if(ReceiveData.getElapsedTimeMinute(RoundingMode.HALF_UP) > 0) {
                 val delta = (mgVal - ReceiveData.rawValue).toFloat() / ReceiveData.getElapsedTimeMinute(RoundingMode.HALF_UP)
-                val maxDelta = if(updateOnlyChangedValue) 10F else 40F
+                // In out-of-sync mode, allow larger delta values since sensor was out of reach
+                val maxDelta = when {
+                    isOutOfSync -> 100F  // larger tolerance during out-of-sync recovery
+                    updateOnlyChangedValue -> 10F
+                    else -> 40F
+                }
                 if(abs(delta) > maxDelta) {
                     Log.i(LOG_ID, "Ignoring value notification with delta: $delta (max: $maxDelta)")
                     return false
@@ -698,7 +851,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     }
 
     private fun handleGlucoseValue(glucoseValue: Float, rate: Float, sbn: StatusBarNotification) {
-        Log.i(LOG_ID, "Extracted glucose value: $glucoseValue and rate $rate from time: ${Utils.getUiTimeStamp(sbn.postTime)}")
+        Log.i(LOG_ID, "Extracted glucose value: $glucoseValue and rate $rate from time: ${Utils.getUiTimeStamp(sbn.postTime)} - outOfSync: $isOutOfSync")
         if(updateOnlyChangedValue && glucoseValue == lastValue) {
             Log.i(LOG_ID, "Ignoring value notification with same value: $glucoseValue")
         } else if (validGlucoseValue(glucoseValue)) {
@@ -721,6 +874,13 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             glucoExtras.putInt(ReceiveData.ALARM, 0)
             ReceiveData.handleIntent(applicationContext, DataSource.NOTIFICATION, glucoExtras)
             SourceStateData.setState(DataSource.NOTIFICATION, SourceState.NONE)
+            
+            // Deactivate out-of-sync mode only when value has changed and was successfully processed
+            if(isOutOfSync && lastValueChanged) {
+                Log.i(LOG_ID, "Value changed detected in out-of-sync mode - deactivating out-of-sync")
+                isOutOfSync = false
+            }
+            
             if(sbn.isOngoing && !hasOngoingNotification(sbn.packageName)) {
                 Log.i(LOG_ID, "Valid glucose value received with ongoing notification from ${sbn.packageName}")
                 onGoingNotificationPackage = sbn.packageName

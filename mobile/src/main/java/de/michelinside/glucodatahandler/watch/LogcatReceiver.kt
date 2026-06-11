@@ -9,10 +9,10 @@ import android.widget.Toast
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.ChannelClient
 import com.google.android.gms.wearable.Wearable
-import de.michelinside.glucodatahandler.GlucoDataServiceMobile
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
+import de.michelinside.glucodatahandler.common.service.WearPhoneManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -129,7 +129,7 @@ object LogcatReceiver : ChannelClient.ChannelCallback() {
             finished = false
             channel = null
             registerChannel(context, uri)
-            GlucoDataServiceMobile.sendLogcatRequest()
+            WearPhoneManager.sendLogcatRequest()
             waitFor(context)
         }
     }

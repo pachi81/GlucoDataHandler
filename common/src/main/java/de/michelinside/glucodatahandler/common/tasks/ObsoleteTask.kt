@@ -17,7 +17,7 @@ class ObsoleteTask : BackgroundTask() {
         return obsoleteTime.toLong()
     }
 
-    override fun execute(context: Context) {
+    override fun execute(context: Context, force: Boolean) {
         Handler(context.mainLooper).post {
             Log.d(LOG_ID, "send obsolete notifier")
             InternalNotifier.notify(context, NotifySource.OBSOLETE_VALUE, null)

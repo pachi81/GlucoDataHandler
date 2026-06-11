@@ -99,7 +99,7 @@ class ComplicationsTapActionActivity : AppCompatActivity() {
     }
 
 
-    private fun createRadioButtons(group: RadioGroup, list: HashMap<String, String>, all: Boolean, sort: Boolean): RadioButton? {
+    private fun createRadioButtons(group: RadioGroup, list: Map<String, String>, all: Boolean, sort: Boolean): RadioButton? {
         var current: RadioButton? = null
         val map = if(sort) {
             list.toList()

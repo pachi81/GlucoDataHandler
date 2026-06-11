@@ -213,6 +213,8 @@ class TransferNightscoutFragment: SettingsFragmentBase(R.xml.pref_transfer_night
                 switchNightscout.isEnabled = url.isNotEmpty() && url.isNotEmpty()
                 if(!switchNightscout.isEnabled)
                     switchNightscout.isChecked = false
+
+                setSummary(Constants.SHARED_PREF_NIGHTSCOUT_UPLOAD_URL, CR.string.src_ns_url_summary)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())

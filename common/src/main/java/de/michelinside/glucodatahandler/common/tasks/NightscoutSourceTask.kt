@@ -17,6 +17,8 @@ import de.michelinside.glucodatahandler.common.utils.Utils
 import org.json.JSONArray
 import org.json.JSONObject
 import java.lang.NumberFormatException
+import java.math.RoundingMode
+import kotlin.math.min
 
 class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED, DataSource.NIGHTSCOUT) {
     companion object {
@@ -76,7 +78,7 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
     }
 
     private fun getGraphData(firstValueTime: Long): Boolean {
-        val count = Utils.getElapsedTimeMinute(firstValueTime)
+        val count = Utils.getElapsedTimeMinute(firstValueTime, RoundingMode.HALF_UP)
         Log.i(LOG_ID, "Getting up to $count graph data for time > ${Utils.getUiTimeStamp(firstValueTime)} - ($firstValueTime)")
         if(count > 0) {
             val (result, errorText) = handleEntriesResponse(httpGet(getUrl(GRAPHDATA_ENDPOINT.format(firstValueTime,count)), getHeader()), firstValueTime)
@@ -88,13 +90,14 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
     }
 
     override fun getValue() : Boolean {
-        val firstNeededValue = getFirstNeedGraphValueTime()
+        val firstNeededValue = getFirstNeedGraphValueTime(1, firstGetValue, true) // always use entries for getting data
         if (firstNeededValue > 0) {
             if(getGraphData(firstNeededValue) && !iob_cob_support) {
                 // data received, also no iob/cob to request
                 return true
             }
         }
+        Log.v(LOG_ID, "Requesting data from pebble endpoint (firstNeededValue: $firstNeededValue)")
         if (!handlePebbleResponse(httpGet(getUrl(PEBBLE_ENDPOINT), getHeader()))) {
             if (!hasIobCobSupport() || ReceiveData.getElapsedTimeMinute() >= getIntervalMinute()) {
                 // only check for new value, if there is no (otherwise it was only called for IOB/COB)
@@ -181,12 +184,10 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
                     val values = mutableListOf<GlucoseValue>()
                     for (i in 0 until jsonEntries.length()) {
                         val jsonEntry = jsonEntries.getJSONObject(i)
-                        var glucose = JsonUtils.getFloat("sgv", jsonEntry)
-                        if (GlucoDataUtils.isMmolValue(glucose))
-                            glucose = GlucoDataUtils.mmolToMg(glucose)
+                        val glucose = JsonUtils.getFloat("sgv", jsonEntry)
                         val time = jsonEntry.getLong("date")
                         if(GlucoDataUtils.isGlucoseValid(glucose) && time > 0 && time >= firstValueTime) {
-                            values.add(GlucoseValue(time, glucose.toInt()))
+                            values.add(GlucoseValue(time, glucose.toInt(), getRate(jsonEntry)))
                             if(time > lastTime) {
                                 lastTime = time
                                 lastValueIndex = i
@@ -213,7 +214,7 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
             if(valueTime < firstValueTime)
                 return Pair(true, "")   // no new value
             val glucoExtras = Bundle()
-            setSgv(glucoExtras, jsonObject)
+            setSgv(glucoExtras, jsonObject, false)
             setRate(glucoExtras, jsonObject)
             glucoExtras.putLong(ReceiveData.TIME, valueTime)
             if(jsonObject.has("device"))
@@ -248,7 +249,7 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
                 }
                 val glucoExtras = Bundle()
                 glucoExtras.putLong(ReceiveData.TIME, jsonObject.getLong("datetime"))
-                setSgv(glucoExtras, jsonObject)
+                setSgv(glucoExtras, jsonObject, true)
                 setRate(glucoExtras, jsonObject)
                 if (jsonObject.has("device"))
                     glucoExtras.putString(ReceiveData.SERIAL, jsonObject.getString("device"))
@@ -273,27 +274,32 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
         return false
     }
 
-    private fun setSgv( bundle: Bundle, jsonObject: JSONObject) {
+    private fun setSgv( bundle: Bundle, jsonObject: JSONObject, fromPebble: Boolean) {
         val glucose = JsonUtils.getFloat("sgv", jsonObject)
         if (glucose.isNaN())
             throw NumberFormatException("Invalid sgv format '" + jsonObject.optString("sgv") + "'")
-        if (GlucoDataUtils.isMmolValue(glucose)) {
+        if (fromPebble && GlucoDataUtils.isMmolValue(glucose)) {
             bundle.putInt(ReceiveData.MGDL, GlucoDataUtils.mmolToMg(glucose).toInt())
             bundle.putFloat(ReceiveData.GLUCOSECUSTOM, glucose)
         } else {
+            // Nightscout always provides mg/dl raw values!
             bundle.putInt(ReceiveData.MGDL, glucose.toInt())
         }
     }
 
     private fun setRate( bundle: Bundle, jsonObject: JSONObject) {
+        bundle.putFloat(ReceiveData.RATE, getRate(jsonObject))
+    }
+
+    private fun getRate(jsonObject: JSONObject): Float {
         if (jsonObject.has("trend"))
-            bundle.putFloat(ReceiveData.RATE, getRateFromTrend(jsonObject.getInt("trend")))
+            return getRateFromTrend(jsonObject.getInt("trend"))
         else if (jsonObject.has("direction"))
-            bundle.putFloat(ReceiveData.RATE, GlucoDataUtils.getRateFromLabel(jsonObject.getString("direction")))
+            return GlucoDataUtils.getRateFromLabel(jsonObject.getString("direction"))
         else {
             Log.w(LOG_ID, "Missing direction/trend in response: " + jsonObject)
-            bundle.putFloat(ReceiveData.RATE, Float.NaN)
         }
+        return Float.NaN
     }
 
     private fun getRateFromTrend(trend: Int): Float {

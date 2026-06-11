@@ -84,62 +84,22 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.core:core-ktx:1.17.0'
-    implementation 'com.google.android.gms:play-services-wearable:19.0.0'
+    implementation 'androidx.core:core-ktx:1.18.0'
+    implementation 'com.google.android.gms:play-services-wearable:20.0.1'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.4.0'
-    implementation 'androidx.wear:wear:1.3.0'
+    implementation 'androidx.wear:wear:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     implementation project(path: ':common')
     implementation 'androidx.wear.watchface:watchface-complications-data-source-ktx:1.2.1'
     implementation 'androidx.wear.watchface:watchface-complications-rendering:1.2.1'
     implementation 'androidx.appcompat:appcompat-resources:1.7.1'
-    implementation 'com.google.android.material:material:1.13.0'
+    implementation 'com.google.android.material:material:1.14.0'
     implementation 'androidx.appcompat:appcompat:1.7.1'
-    implementation 'androidx.work:work-runtime:2.11.0'
+    implementation 'androidx.work:work-runtime:2.11.2'
     implementation "androidx.core:core-splashscreen:1.2.0"
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
-}
-
-def registerPostBuildCopy(String taskName, String triggerTaskName, String buildSubPath, String localDest, boolean isAab) {
-    def buildDir = layout.buildDirectory.dir(buildSubPath)
-    def localDir = file(localDest)
-    def globalPath = rootProject.releasePath.toString()
-    def vCode = rootProject.versionCode.toString()
-    def pattern = isAab ? "**/*.aab" : "**/*.apk"
-
-    def localTask = tasks.register(taskName, Copy) {
-        from buildDir
-        include pattern
-        into localDir
-    }
-
-    def globalTask = tasks.register("${taskName}Global", Copy) {
-        from buildDir
-        include pattern
-        into isAab ? new File(globalPath, "Playstore/$vCode") : new File(globalPath)
-    }
-
-    tasks.matching { it.name == triggerTaskName }.configureEach {
-        finalizedBy localTask, globalTask
-    }
-}
-
-def registerPostBuildCopyInt(String taskName, String triggerTaskName, String localSource, boolean isAab) {
-    def globalPath = rootProject.releasePath.toString()
-    def vCode = rootProject.versionCode.toString()
-    def pattern = isAab ? "**/*.aab" : "**/*.apk"
-
-    def intTask = tasks.register(taskName, Copy) {
-        from "${projectDir}/${localSource}"
-        include pattern
-        into isAab ? new File(globalPath, "Playstore/$vCode") : new File(globalPath)
-    }
-
-    tasks.matching { it.name == triggerTaskName }.configureEach {
-        finalizedBy intTask
-    }
 }
 
 // --- Dynamic Post-Build Copy Logic (Groovy Version - Configuration Cache Compatible) ---
@@ -151,6 +111,8 @@ def wearProjectDir = projectDir
 def wearBuildDir = project.layout.buildDirectory
 
 android.applicationVariants.configureEach { variant ->
+    if (variant.buildType.name == 'debug') return // Skip debug variants
+
     def vName = variant.name // e.g., "release", "dev_release", "second"
     def vNameCap = vName.capitalize()
 

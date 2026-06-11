@@ -41,17 +41,20 @@ class ExportImportSettingsFragment: SettingsFragmentBase(R.xml.pref_export_impor
 
             val prefExportSettings = findPreference<Preference>(Constants.SHARED_PREF_EXPORT_SETTINGS)
             prefExportSettings!!.setOnPreferenceClickListener {
-                val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
-                    addCategory(Intent.CATEGORY_OPENABLE)
-                    type = "text/plain"
-                    val currentDateandTime = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(
-                        Date()
-                    )
-                    val fileName = (if(Constants.IS_SECOND) "GDH_SECOND_" else "GDH_") + "phone_settings_" + currentDateandTime
-                    putExtra(Intent.EXTRA_TITLE, fileName)
-                    putExtra(DocumentsContract.EXTRA_INITIAL_URI, downloadUri)
-                }
-                startActivityForResult(intent, EXPORT_PHONE_SETTINGS)
+                Dialogs.showOkCancelDialog(requireContext(), CR.string.pref_export_settings, CR.string.export_settings_info,
+                    { _, _ ->
+                        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                            addCategory(Intent.CATEGORY_OPENABLE)
+                            type = "text/plain"
+                            val currentDateandTime = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(
+                                Date()
+                            )
+                            val fileName = (if(Constants.IS_SECOND) "GDH_SECOND_" else "GDH_") + "phone_settings_" + currentDateandTime
+                            putExtra(Intent.EXTRA_TITLE, fileName)
+                            putExtra(DocumentsContract.EXTRA_INITIAL_URI, downloadUri)
+                        }
+                        startActivityForResult(intent, EXPORT_PHONE_SETTINGS)
+                    }, null)
                 true
             }
             val prefImportSettings = findPreference<Preference>(Constants.SHARED_PREF_IMPORT_SETTINGS)

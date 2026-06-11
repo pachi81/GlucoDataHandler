@@ -33,7 +33,7 @@ class ElapsedTimeTask : BackgroundTask() {
         else 0
     }
 
-    override fun execute(context: Context) {
+    override fun execute(context: Context, force: Boolean) {
         Handler(context.mainLooper).post {
             Log.d(LOG_ID, "send time notifier")
             InternalNotifier.notify(context, NotifySource.TIME_VALUE, null)

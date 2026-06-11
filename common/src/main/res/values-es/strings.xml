@@ -493,7 +493,6 @@
     <string name="activity_large_arrow_icon_summary">Por favor, desactiva esta configuración si la flecha de tendencia es demasiado grande y se corta.</string>
     <string name="pref_cat_ui_settings">Interfaz de usuario</string>
     <string name="gda_foreground_info">GlucoDataAuto se está ejecutando</string>
-    <string name="gda_foreground_summary">Actívalo solo si estás usando una fuente de seguidor y solo notificaciones de Android Auto.\nEsto evita que Android cierre esta aplicación mientras no esté conectado a Android Auto, por lo que la aplicación no puede reconocer la conexión a Android Auto.\nEn lugar de habilitar esta configuración, también puedes abrir la aplicación en Android Auto una vez, si estás conectado.</string>
     <string name="battery_optimization_disabled">La optimización de batería está habilitada!\nPulsa aquí para desactivarlo.</string>
     <string name="gda_source_follower_info_summary">Si estás usando una fuente de seguidor, la aplicación puede no iniciarse mientras estés conectado a Android Auto, si solo usas notificaciones de Android Auto.\nPara asegurarte de que la aplicación detecte la conexión de Android Auto, tienes que desactivar la optimización de batería.\nSi aún no funciona, también puedes habilitar el modo de primer plano o tienes que abrir la aplicación en Android Auto una vez, cuando esté conectado a Android Auto.</string>
     <string name="gda_help_aa_title">Configurar Android Auto</string>
@@ -998,4 +997,18 @@ Puedes gestionar estos permisos en cualquier momento en la configuración de la 
 
     <string name="xdrip_open_server_api_secret_summary">Secreto de API opcional para proteger el acceso. Si se configura, este secreto debe establecerse también en la aplicación cliente para acceder a los datos.</string>
     <string name="pref_xdrip_server_summary">Proporciona un servidor web local en el puerto 17580 que emula el servicio web de xDrip+, el cual puede ser utilizado por varios servicios externos, esferas de reloj y aplicaciones.</string>
+
+    <string name="gda_foreground_summary">Modo de solución de problemas opcional que estabiliza la conexión de Android Auto evitando que la aplicación se cierre en segundo plano. El servicio permanece inactivo sin una conexión activa y la notificación se puede descartar fácilmente deslizando a partir de Android 14.</string>
+
+    <string name="restart_libre_app">Por favor, reinicia tu teléfono o la aplicación Libre.</string>
+    <string name="alarm_wear_no_alarm_while_charging">Sin alarma durante la carga</string>
+    <string name="alarm_wear_no_alarm_while_charging_summary">No se activa ninguna alarma en el reloj mientras se está cargando.</string>
+    <string name="export_settings_info">Estás a punto de exportar tus ajustes.\nPor favor, no compartas este archivo con nadie, ya que puede contener información sensible como nombres de usuario y contraseñas.\nNota: Incluso si el desarrollador solicita ayuda, normalmente solo necesita tus registros (logs), no tus ajustes.\n¿Quieres continuar con la exportación?</string>
+    <string name="pref_switch_standard_children_statistics">Usar TITR para niños</string>
+    <string name="pref_switch_standard_children_statistics_summary">El uso de "Tiempo en Rango más Estrecho" (TITR) con objetivos de 70–140 mg/dl (3.9–7.8 mmol/l) se recomienda para niños pequeños en algunas regiones.</string>
+    <string name="pref_source_librelinkup_5_info_summary">Abbott ha cambiado LibreLinkUp a comunicación cifrada.\nUna vez que la interfaz anterior se cierre, GDH probablemente dejará de funcionar.\nActualmente no hay solución técnica a la vista.</string>
+    <string name="source_librelinkup_5_info_popup_title">Nota importante sobre LibreLinkUp:</string>
+    <string name="source_librelinkup_5_info_popup">Abbott ha lanzado la versión 5, que utiliza una nueva interfaz cifrada.\nSi Abbott cierra la interfaz anterior, la comunicación con GDH (y otras aplicaciones de terceros) probablemente se interrumpirá.\nActualmente, no hay solución técnica para eludir este nuevo cifrado.\nLas preguntas sobre la compatibilidad futura de características esenciales como la integración con smartwatch solo pueden ser respondidas directamente por el soporte de Abbott.</string>
+    <string name="accessibility_prominent_disclosure_title">Divulgación destacada: Soporte para Pantalla siempre activa (AOD)</string>
+    <string name="accessibility_prominent_disclosure_message">Esta aplicación utiliza la API AccessibilityService para mostrar información sobre la glucosa encima de la Pantalla siempre activa (AOD) del sistema.\n\n<b>Cómo funciona:</b>\nEl servicio se utiliza para detectar la pantalla de bloqueo y superponer una vista personalizada con sus datos de glucosa en la pantalla AOD, de modo que pueda ver sus niveles sin despertar su dispositivo.\n\n<b>Privacidad de datos:</b>\nEste servicio NO recopila, almacena ni comparte ningún dato personal. Funciona de forma puramente local en su dispositivo para proporcionar esta funcionalidad de superposición.\n\nPara habilitar esta función, se le redirigirá a la configuración de accesibilidad de Android.</string>
 </resources>

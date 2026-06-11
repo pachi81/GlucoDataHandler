@@ -16,7 +16,7 @@ open class TimeComplicationBase : BgValueComplicationService() {
 }
 
 class LongGlucoseWithDeltaAndTrendAndTimeComplication: TimeComplicationBase() {
-    override fun getLongTextComplicationData(): ComplicationData {
+    override fun getLongTextComplicationData(id: Int): ComplicationData {
         val text: PlainComplicationText
         val title: PlainComplicationText
         if(GlucoDataService.patientName.isNullOrEmpty()) {
@@ -32,8 +32,8 @@ class LongGlucoseWithDeltaAndTrendAndTimeComplication: TimeComplicationBase() {
             descriptionText()
         )
             .setTitle(title)
-            .setSmallImage(getGlucoseTrendImage())
-            .setTapAction(getTapAction())
+            .setSmallImage(getGlucoseTrendImage(id))
+            .setTapAction(getTapAction(id))
             .build()
     }
     override fun getDescription(): String {
@@ -42,15 +42,15 @@ class LongGlucoseWithDeltaAndTrendAndTimeComplication: TimeComplicationBase() {
 }
 
 class LongGlucoseWithDeltaAndTrendIconAndTimeComplication: TimeComplicationBase() {
-    override fun getLongTextComplicationData(): ComplicationData {
+    override fun getLongTextComplicationData(id: Int): ComplicationData {
         return LongTextComplicationData.Builder(
             plainText("Δ: " + ReceiveData.getDeltaAsString()),
             descriptionText()
         )
             .setTitle(timeText())
-            .setSmallImage(glucoseImage())
-            .setMonochromaticImage(arrowIcon())
-            .setTapAction(getTapAction())
+            .setSmallImage(glucoseImage(id))
+            .setMonochromaticImage(arrowIcon(id))
+            .setTapAction(getTapAction(id))
             .build()
     }
     override fun getDescription(): String {
@@ -60,9 +60,9 @@ class LongGlucoseWithDeltaAndTrendIconAndTimeComplication: TimeComplicationBase(
 
 class TimeStampComplication: TimeComplicationBase() {
     override fun getText(): PlainComplicationText = timeText(true)
-    override fun getIcon(): MonochromaticImage = glucoseIcon()
+    override fun getIcon(id: Int): MonochromaticImage = glucoseIcon()
 
-    override fun getRangeValueComplicationData(): ComplicationData {
+    override fun getRangeValueComplicationData(id: Int): ComplicationData {
         val time = Date(ReceiveData.time)
 
         val value = if (ReceiveData.isObsoleteTime(3600)) 0F else (time.minutes * 60 + time.seconds).toFloat()
@@ -73,7 +73,7 @@ class TimeStampComplication: TimeComplicationBase() {
             contentDescription = descriptionText(),
         )
             .setText(getText())
-            .setMonochromaticImage(getIcon())
+            .setMonochromaticImage(getIcon(id))
             .build()
     }
     override fun getDescription(): String {

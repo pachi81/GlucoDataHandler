@@ -36,4 +36,6 @@
     <string name="watch_id_html_label">ID of the watch</string>
     <string name="watch_name_label">Watch name</string>
     <string name="watch_name_html_label">Name of the watch</string>
+    <string name="battery_charging_label">Charging</string>
+    <string name="battery_charging_html_label">Battery charging status of the watch</string>
 </resources>

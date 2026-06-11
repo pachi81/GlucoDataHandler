@@ -1,7 +1,6 @@
 package de.michelinside.glucodatahandler.common
 
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import de.michelinside.glucodatahandler.common.utils.Log
 import com.google.android.gms.tasks.Tasks
@@ -21,6 +20,8 @@ import java.math.RoundingMode
 import java.text.DateFormat
 import java.util.*
 import kotlin.coroutines.cancellation.CancellationException
+import androidx.core.net.toUri
+import androidx.core.content.edit
 
 
 enum class Command {
@@ -62,7 +63,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
 
     companion object {
         private var connectedNodes = Collections.synchronizedMap(mutableMapOf<String,Node>())
-        private val nodeBatteryLevel = Collections.synchronizedMap(mutableMapOf<String,Int>())
+        private val nodeBatteryLevel = Collections.synchronizedMap(mutableMapOf<String, Pair<Int,Int>>())
         private val nodeVersions = Collections.synchronizedMap(mutableMapOf<String,Int>())
         private val noDataReceived = Collections.synchronizedSet(mutableSetOf<String>())
         private val noDataSend = Collections.synchronizedSet(mutableSetOf<String>())
@@ -78,14 +79,18 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         private val notConnectedNodes: Set<String> get() = noDataReceived + noDataSend
         val connectionError: Boolean get() = notConnectedNodes.isNotEmpty() && connectRetries > 3
 
-        fun getBatterLevels(addMissing: Boolean = true): List<Int> {
-            val batterLevels = mutableListOf<Int>()
+        val watchCharging: Boolean get() {
+            return nodeBatteryLevel.all { BatteryReceiver.isCharging(it.value.second) }
+        }
+
+        fun getBatterLevels(addMissing: Boolean = true): List<Pair<Int,Int>> {
+            val batterLevels = mutableListOf<Pair<Int,Int>>()
             connectedNodes.forEach { node ->
                 (if (nodeBatteryLevel.containsKey(node.key)) {
                     batterLevels.add(nodeBatteryLevel.getValue(node.key))
                 }
                 else if (addMissing) {
-                    batterLevels.add(-1)
+                    batterLevels.add(Pair(-1,-1))
                 } else {})
             }
             return batterLevels
@@ -100,16 +105,17 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             }
         }
 
-        fun getNodeConnectionStates(context: Context, addMissing: Boolean = true): Map<String, Int> {
-            val connectionStates = mutableMapOf<String, Int>()
+        fun getNodeConnectionStates(context: Context, addMissing: Boolean = true): Map<String, Pair<Int, Int>> {
+            val connectionStates = mutableMapOf<String, Pair<Int, Int>>()
             connectedNodes.forEach { node ->
                 (
                     if (nodeBatteryLevel.containsKey(node.key)) {
-                        val level = nodeBatteryLevel.getValue(node.key)
-                        connectionStates[getDisplayName(node.value)] = if (level > 0) level else 0
+                        val level = nodeBatteryLevel.getValue(node.key).first
+                        val status = nodeBatteryLevel.getValue(node.key).second
+                        connectionStates[getDisplayName(node.value)] = if (level > 0) Pair(level,status) else Pair(0,-1)
                     }
                     else if (addMissing) {
-                        connectionStates[getDisplayName(node.value)] = -1
+                        connectionStates[getDisplayName(node.value)] = Pair(-1, -1)
                     } else {}
                 )
             }
@@ -117,15 +123,15 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
 
         }
 
-        fun getNodeBatteryLevel(nodeId: String, addMissing: Boolean = true): Map<String, Int> {
-            val nodeBatterLevels = mutableMapOf<String, Int>()
+        fun getNodeBatteryLevel(nodeId: String, addMissing: Boolean = true): Map<String, Pair<Int,Int>> {
+            val nodeBatterLevels = mutableMapOf<String, Pair<Int,Int>>()
             val node = connectedNodes[nodeId]
             if (node != null) {
                 if (nodeBatteryLevel.containsKey(nodeId)) {
                     nodeBatterLevels[getDisplayName(node)] = nodeBatteryLevel.getValue(nodeId)
                 }
                 else if (addMissing) {
-                    nodeBatterLevels[getDisplayName(node)] = -1
+                    nodeBatterLevels[getDisplayName(node)] = Pair(-1, -1)
                 }
             }
             return nodeBatterLevels
@@ -143,7 +149,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         Wearable.getMessageClient(context).addListener(this)
         Log.d(LOG_ID, "MessageClient added")
         Wearable.getCapabilityClient(context).addListener(this,
-            Uri.parse("wear://"),
+            "wear://".toUri(),
             CapabilityClient.FILTER_REACHABLE)
         Log.d(LOG_ID, "CapabilityClient added")
         checkForConnectedNodes()
@@ -168,9 +174,11 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         openConnection()
         if (sendSettings) {
             filter.add(NotifySource.TASKER_SETTINGS)
-            filter.add(NotifySource.SETTINGS)   // only send setting changes from phone to wear!
+            filter.add(NotifySource.SETTINGS)
             filter.add(NotifySource.SOURCE_SETTINGS)
             filter.add(NotifySource.ALARM_SETTINGS)
+        } else {
+            filter.add(NotifySource.WATCH_SETTINGS)
         }
         InternalNotifier.addNotifier(this.context, this, filter)
     }
@@ -336,12 +344,13 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
     }
 
 
-    private fun setNodeBatteryLevel(nodeId: String, level: Int) {
-        if (level >= 0 && (!nodeBatteryLevel.containsKey(nodeId) || nodeBatteryLevel.getValue(nodeId) != level )) {
-            Log.d(LOG_ID, "Setting new battery level for node " + nodeId + ": " + level + "%")
-            nodeBatteryLevel[nodeId] = level
+    private fun setNodeBatteryLevel(nodeId: String, level: Int, status: Int) {
+        if (level >= 0 && (!nodeBatteryLevel.containsKey(nodeId) || nodeBatteryLevel.getValue(nodeId).first != level || nodeBatteryLevel.getValue(nodeId).second != status )) {
+            Log.d(LOG_ID, "Setting new battery level for node $nodeId: ${level}% - status: $status")
+            nodeBatteryLevel[nodeId] = Pair(level, status)
             val extra = Bundle()
             extra.putInt(BatteryReceiver.LEVEL, level)
+            extra.putInt(BatteryReceiver.STATUS, status)
             extra.putString(Constants.EXTRA_NODE_ID, nodeId)
             InternalNotifier.notify(context, NotifySource.NODE_BATTERY_LEVEL, extra)
         }
@@ -353,6 +362,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             NotifySource.CAPILITY_INFO -> Constants.REQUEST_DATA_MESSAGE_PATH
             NotifySource.TASKER_SETTINGS -> Constants.TASKER_SETTINGS_INTENT_MESSAGE_PATH
             NotifySource.SETTINGS -> Constants.GENERAL_SETTINGS_INTENT_MESSAGE_PATH
+            NotifySource.WATCH_SETTINGS -> Constants.GENERAL_SETTINGS_INTENT_MESSAGE_PATH
             NotifySource.SOURCE_SETTINGS -> Constants.SOURCE_SETTINGS_INTENT_MESSAGE_PATH
             NotifySource.ALARM_SETTINGS -> Constants.ALARM_SETTINGS_INTENT_MESSAGE_PATH
             NotifySource.LOGCAT_REQUEST -> Constants.REQUEST_LOGCAT_MESSAGE_PATH
@@ -381,6 +391,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     extras.putInt(Constants.VERSION_CODE, BuildConfig.BASE_VERSION)  // add current version to bundle
                     if (dataSource != NotifySource.BATTERY_LEVEL && BatteryReceiver.batteryPercentage >= 0) {
                         extras.putInt(BatteryReceiver.LEVEL, BatteryReceiver.batteryPercentage)
+                        extras.putInt(BatteryReceiver.STATUS, BatteryReceiver.batteryStatus)
                     }
                     if (dataSource == NotifySource.CAPILITY_INFO) {
                         extras.putBundle(Constants.ALARM_EXTRA_BUNDLE, AlarmHandler.getExtras())
@@ -466,9 +477,13 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             Log.i(LOG_ID, "Node with id " + nodeId + " connected!")
             if(notConnectedNodes.isEmpty())
                 removeTimer()
-            if (GlucoDataService.appSource == AppSource.PHONE_APP) {
-                Log.i(LOG_ID, "Send settings to watch $nodeId")
+            val settings = GlucoDataService.getSettings()
+            if(settings != null) {
+                Log.i(LOG_ID, "Send settings to $nodeId")
                 sendMessage(NotifySource.SETTINGS, GlucoDataService.getSettings(), filterReceiverId = nodeId)
+            }
+            if (GlucoDataService.appSource == AppSource.PHONE_APP) {
+                Log.i(LOG_ID, "Send additional settings to watch $nodeId")
                 sendMessage(NotifySource.SOURCE_SETTINGS, DataSourceTask.getSettingsBundle(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)), filterReceiverId = nodeId)
                 sendMessage(NotifySource.ALARM_SETTINGS, AlarmHandler.getSettings(), filterReceiverId = nodeId)
                 if(cleanUpDbOnWatchConnected) {
@@ -497,6 +512,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 commandBundle.putBundle(Constants.COMMAND_BUNDLE, extras)
                 if(BatteryReceiver.batteryPercentage >= 0) {
                     commandBundle.putInt(BatteryReceiver.LEVEL, BatteryReceiver.batteryPercentage)
+                    commandBundle.putInt(BatteryReceiver.STATUS, BatteryReceiver.batteryStatus)
                 }
             }
             connectedNodes.forEach { node ->
@@ -584,9 +600,11 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
 
                 if (extras.containsKey(BatteryReceiver.LEVEL)) {
                     val level = extras.getInt(BatteryReceiver.LEVEL, -1)
+                    val status = extras.getInt(BatteryReceiver.STATUS, -1)
                     Log.d(LOG_ID, "Battery level received for node " + p0.sourceNodeId + ": " + level + "%")
-                    setNodeBatteryLevel(p0.sourceNodeId, level)
+                    setNodeBatteryLevel(p0.sourceNodeId, level, status)
                     extras.remove(BatteryReceiver.LEVEL)
+                    extras.remove(BatteryReceiver.STATUS)
                 }
 
                 if(p0.path.contains(Constants.COMMAND_PATH)) {
@@ -611,8 +629,10 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                         if (GlucoDataService.appSource == AppSource.PHONE_APP && connectedNodes.size > 1) {
                             Log.d(LOG_ID, "Forward glucodata values to other connected nodes")
                             val newExtras = extras
-                            if(newExtras.containsKey(BatteryReceiver.LEVEL))  // remove it, because the one from the phone must be used!
+                            if(newExtras.containsKey(BatteryReceiver.LEVEL)) {  // remove it, because the one from the phone must be used!
                                 newExtras.remove(BatteryReceiver.LEVEL)
+                                newExtras.remove(BatteryReceiver.STATUS)
+                            }
                             sendMessage(NotifySource.BROADCAST, extras, p0.sourceNodeId)
                         }
                     }
@@ -623,7 +643,8 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                         if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
                             Log.d(LOG_ID, "Glucose settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(extras))
                         GlucoDataService.setSettings(context, extras)
-                        InternalNotifier.notify(context, NotifySource.SETTINGS, extras)
+                        if(GlucoDataService.appSource == AppSource.WEAR_APP)
+                            InternalNotifier.notify(context, NotifySource.SETTINGS, extras)
                     }
                 }
 
@@ -649,23 +670,26 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     extras.remove(Constants.SOURCE_SETTINGS_BUNDLE)
                     extras.remove(Constants.ALARM_SETTINGS_BUNDLE)
                     extras.remove(BatteryReceiver.LEVEL)
+                    extras.remove(BatteryReceiver.STATUS)
                     extras.remove(Constants.VERSION_CODE)
                     if (!extras.isEmpty) {
                         // this section should only be called for Tasker settings which are only Booleans at the moment
                         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                         val keys = extras.keySet()
                         Log.d(LOG_ID, keys.size.toString() + " settings received")
-                        with(sharedPref.edit()) {
+                        sharedPref.edit {
                             keys.forEach {
                                 try {
                                     val value = extras.getBoolean(it)
                                     Log.d(LOG_ID, "Setting tasker value " + value + " for " + it)
-                                        putBoolean(it, value)
+                                    putBoolean(it, value)
                                 } catch (exc: ClassCastException) {
-                                    Log.w(LOG_ID,"Getting value for key " + it + " caused exception: " + exc.message)
+                                    Log.w(
+                                        LOG_ID,
+                                        "Getting value for key " + it + " caused exception: " + exc.message
+                                    )
                                 }
                             }
-                            apply()
                         }
                         InternalNotifier.notify(context, NotifySource.SETTINGS, extras)
                     }

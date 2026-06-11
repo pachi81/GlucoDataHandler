@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -40,6 +39,9 @@ import kotlin.collections.plus
 import kotlin.collections.set
 import kotlin.collections.toTypedArray
 import de.michelinside.glucodatahandler.common.R as CR
+import androidx.core.content.edit
+import androidx.core.net.toUri
+import de.michelinside.glucodatahandler.common.service.WearPhoneManager
 
 abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragmentCompatBase(), SharedPreferences.OnSharedPreferenceChangeListener {
     protected val LOG_ID = "GDH.SettingsFragmentBase"
@@ -66,9 +68,8 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
                     if (pref != null) {
                         pref.isChecked = true
                     }
-                    with(preferenceManager.sharedPreferences!!.edit()) {
+                    preferenceManager.sharedPreferences!!.edit {
                         putBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, true)
-                        apply()
                     }
                 }
             }
@@ -116,9 +117,8 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
                         if (pref != null) {
                             pref.isChecked = false
                         }
-                        with(preferenceManager.sharedPreferences!!.edit()) {
+                        preferenceManager.sharedPreferences!!.edit {
                             putBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, false)
-                            apply()
                         }
                         requestOverlayPermission()
                     } else if (!sharedPreferences.getBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, false)) {
@@ -149,7 +149,7 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
         try {
             val intent = Intent(
                 Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                Uri.parse("package:" + requireContext().packageName)
+                ("package:" + requireContext().packageName).toUri()
             )
             intent.putExtra(Settings.EXTRA_APP_PACKAGE,requireContext().packageName)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -179,6 +179,15 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
         val pwdPref = findPreference<EditTextPreference>(prefName)
         pwdPref?.setOnBindEditTextListener {editText ->
             editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        }
+    }
+
+
+    protected fun setSummary(key: String, defaultResId: Int) {
+        val pref = findPreference<Preference>(key)
+        if(pref != null) {
+            val value = preferenceManager.sharedPreferences!!.getString(key, "")!!.trim()
+            pref.summary = value.ifEmpty { resources.getString(defaultResId) }
         }
     }
 
@@ -226,6 +235,8 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_IOB_SUPPORT, Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_ENABLED, Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED)
 
             setEnableState<EditTextPreference>(sharedPreferences, Constants.SHARED_PREF_XDRIP_SERVER_API_SECRET, Constants.SHARED_PREF_XDRIP_OPEN_SERVER)
+
+            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_STANDARD_CHILDREN_STATISTICS, Constants.SHARED_PREF_STANDARD_STATISTICS)
 
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())
@@ -321,7 +332,8 @@ class GeneralAdvancedSettingsFragment: SettingsFragmentBase(R.xml.pref_general_a
         try {
             super.onSharedPreferenceChanged(sharedPreferences, key)
             when (key) {
-                Constants.SHARED_PREF_STANDARD_STATISTICS -> {
+                Constants.SHARED_PREF_STANDARD_STATISTICS,
+                Constants.SHARED_PREF_STANDARD_CHILDREN_STATISTICS -> {
                     GlucoseStatistics.reset()
                 }
             }
@@ -333,6 +345,28 @@ class GeneralAdvancedSettingsFragment: SettingsFragmentBase(R.xml.pref_general_a
 
 class RangeSettingsFragment: SettingsFragmentBase(R.xml.pref_target_range) {}
 class UiSettingsFragment: SettingsFragmentBase(R.xml.pref_ui) {}
+
+class ScreensaverSettingsFragment: SettingsFragmentBase(R.xml.screensaver_settings) {
+    override fun initPreferences() {
+        Log.v(LOG_ID, "initPreferences called")
+        super.initPreferences()
+        updateStyleSummary()
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        super.onSharedPreferenceChanged(sharedPreferences, key)
+        if (key == Constants.SHARED_PREF_SCREENSAVER_STYLE) {
+            updateStyleSummary()
+        }
+    }
+
+    private fun updateStyleSummary() {
+        val widgetStylePref = findPreference<ListPreference>(Constants.SHARED_PREF_SCREENSAVER_STYLE)
+        if(widgetStylePref != null) {
+            widgetStylePref.summary = widgetStylePref.entry
+        }
+    }
+}
 
 class WidgetSettingsFragment: SettingsFragmentBase(R.xml.pref_widgets) {
 
@@ -411,7 +445,9 @@ class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen)  {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             val enabled = (AODAccessibilityService.isAccessibilitySettingsEnabled(requireContext()))
             Log.i(LOG_ID, "Accessibility permission: $enabled")
-            preferenceManager.sharedPreferences?.edit()?.putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, enabled)?.apply()
+            preferenceManager.sharedPreferences?.edit {
+                putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, enabled)
+            }
             val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_AOD_WP_ENABLED)
             if (pref != null)
                 pref.isChecked = enabled
@@ -421,8 +457,9 @@ class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen)  {
         val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_AOD_WP_ENABLED)
         if (pref != null && pref.isChecked) {
             if (!AODAccessibilityService.isAccessibilitySettingsEnabled(requireContext())) {
-                preferenceManager.sharedPreferences?.edit()
-                    ?.putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)?.apply()
+                preferenceManager.sharedPreferences?.edit {
+                    putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)
+                }
                 pref.isChecked = false
             }
         }
@@ -433,8 +470,8 @@ class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen)  {
             val enabled = AODAccessibilityService.isAccessibilitySettingsEnabled(requireContext())
             if (!enabled) {
                 Dialogs.showOkCancelDialog(requireContext(),
-                    resources.getString(CR.string.permission_missing_title),
-                    resources.getString(CR.string.aod_permission_info),
+                    resources.getString(CR.string.accessibility_prominent_disclosure_title),
+                    resources.getString(CR.string.accessibility_prominent_disclosure_message),
                     { _, _ ->
                         val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
                         accessibilitySettingsLauncher.launch(intent)
@@ -466,13 +503,13 @@ class WatchWearOsFragment: SettingsFragmentBase(R.xml.pref_watch_wearos) {
         Log.v(LOG_ID, "initPreferences called")
         val prefCheckWearOS = findPreference<Preference>(Constants.SHARED_PREF_CHECK_WEAR_OS_CONNECTION)
         prefCheckWearOS!!.setOnPreferenceClickListener {
-            GlucoDataService.checkForConnectedNodes()
+            WearPhoneManager.checkForConnectedNodes()
             true
         }
 
         val prefResetWearOS = findPreference<Preference>(Constants.SHARED_PREF_RESET_WEAR_OS_CONNECTION)
         prefResetWearOS!!.setOnPreferenceClickListener {
-            GlucoDataService.resetWearPhoneConnection()
+            WearPhoneManager.resetWearPhoneConnection()
             true
         }
     }

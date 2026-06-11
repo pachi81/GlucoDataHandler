@@ -491,7 +491,6 @@
     <string name="activity_large_arrow_icon_summary">如趨勢箭頭太大導致被裁切請停用此設定</string>
     <string name="pref_cat_ui_settings">使用者介面</string>
     <string name="gda_foreground_info">GlucoDataAuto 執行中</string>
-    <string name="gda_foreground_summary">僅在您使用追蹤器資料來源且只使用 Android Auto 通知時才啟用\n這可以避免 Android 未連線到 Android Auto 時就將程式關閉，導致程式無法偵測 Android Auto 連線\n除了啟用此選項外，也可以在連線時於 Android Auto 中手動開啟程式一次</string>
     <string name="battery_optimization_disabled">已啟用電池最佳化！\n按這裡停用</string>
     <string name="gda_source_follower_info_summary">如果您使用追蹤器資料來源且只使用 Android Auto 通知時，程式可能無法在連線 Android Auto 時自動啟動\n若要確保程式能偵測 Android Auto 連線，必須停用電池最佳化\n如果仍然無法運作，也可以啟用前景模式，或在連線時於 Android Auto 中手動開啟程式一次</string>
     <string name="gda_help_aa_title">設定 Android Auto</string>
@@ -993,4 +992,19 @@ GlucoDataHandler 只會將血糖數據寫入健康連結，除非您明確授予
 
     <string name="xdrip_open_server_api_secret_summary">用於保護存取的選填 API 密鑰。如果已設定，則必須在用戶端程式中設定相同的密鑰才能存取資料。</string>
     <string name="pref_xdrip_server_summary">在連接埠 17580 提供模擬 xDrip+ 網頁服務的本機網頁伺服器，可供各種外部服務、錶盤和應用程式使用。</string>
+
+    <string name="gda_foreground_summary">選填的疑難排解模式，透過防止應用程式在背景遭終止來穩定 Android Auto 連線。在沒有活動連線時，此服務將保持停用狀態；從 Android 14 開始，可以輕鬆滑動移除通知。</string>
+
+    <string name="restart_libre_app">請重新啟動手機或 Libre 程式。</string>
+    <string name="alarm_wear_no_alarm_while_charging">充電時不發出警報</string>
+    <string name="alarm_wear_no_alarm_while_charging_summary">手錶充電時不會觸發警報。</string>
+    <string name="export_settings_info">您即將匯出設定。\n請勿與任何人分享此檔案，因為其中可能包含使用者名稱和密碼等敏感資訊。\n注意：即使開發者請求協助，他通常也只需要您的記錄檔，而不是設定。\n您確定要繼續匯出設定嗎？</string>
+    <string name="pref_switch_standard_children_statistics">對兒童使用 TITR</string>
+    <string name="pref_switch_standard_children_statistics_summary">在某些地區，建議幼童使用目標範圍為 70–140 mg/dl (3.9–7.8 mmol/l) 的「更窄目標範圍時間」(TITR)。</string>
+
+    <string name="pref_source_librelinkup_5_info_summary">Abbott 已將 LibreLinkUp 切換至加密通訊。\n一旦先前的介面關閉，GDH 將可能無法運作。\n目前尚無技術解決方案。</string>
+    <string name="source_librelinkup_5_info_popup_title">關於 LibreLinkUp 的重要提示：</string>
+    <string name="source_librelinkup_5_info_popup">Abbott 發佈了版本 5，採用新的加密介面。\n如果 Abbott 關閉先前的介面，與 GDH（及其他第三方應用程式）的通訊將可能中斷。\n目前尚無技術方案可繞過此新加密。\n關於未來是否支援必要功能（例如智慧手錶整合）的問題，只能由 Abbott 支援團隊直接回答。</string>
+    <string name="accessibility_prominent_disclosure_title">重要聲明：支援永遠顯示 (AOD)</string>
+    <string name="accessibility_prominent_disclosure_message">此應用程式使用 AccessibilityService API 在系統永遠顯示 (AOD) 之上顯示血糖資訊。\n\n<b>運作方式：</b>\n此服務用於偵測鎖定畫面，並在 AOD 畫面上覆蓋血糖數據的自訂視圖，讓您無需喚醒裝置即可查看血糖數值。\n\n<b>數據隱私：</b>\n此服務不會收集、儲存或分享任何個人數據。它完全在您的裝置上本地運行，以提供此覆蓋功能。\n\n若要啟用此功能，您將被重新導向至 Android 協助工具設定。</string>
 </resources>

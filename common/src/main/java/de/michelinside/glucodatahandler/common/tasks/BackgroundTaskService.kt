@@ -11,6 +11,7 @@ import android.os.Bundle
 import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
@@ -28,6 +29,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
     private val DEFAULT_DELAY_MS = 3000L
 
     private var backgroundTaskList = mutableListOf<BackgroundTask>()
+    private var taskSources = mutableSetOf<DataSource>()
     private var curInterval = -1L
     private var curDelay = -1L
     private var context: Context? = null
@@ -59,9 +61,12 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
 
     private fun initBackgroundTasks() {
         backgroundTaskList = getBackgroundTasks()
+        taskSources.clear()
 
         backgroundTaskList.forEach {
             it.checkPreferenceChanged(sharedPref, null, context!!)
+            if(it.getDataSource() != DataSource.NONE)
+                taskSources.add(it.getDataSource())
         }
     }
 
@@ -72,8 +77,9 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                         + " - lastElapsedMinute=" + lastElapsedMinute
                         + " - elapsedAlarmTime=" + Utils.getElapsedTimeMinute(alarmTime)
                         + " - elapsedIobCobTimeMinute=" + Utils.getElapsedTimeMinute(task.getLastIobCobTime(), RoundingMode.HALF_UP)
-                        + " - interval=" + task.getIntervalMinute())
-                if (elapsedTimeMinute != 0L) {
+                        + " - interval=" + task.getIntervalMinute()
+                        + " - IOB/COB=" + task.hasIobCobSupport())
+                if (elapsedTimeMinute != 0L && elapsedTimeMinute != lastElapsedMinute) {
                     if (lastElapsedMinute < 0 && initialExecution) {
                         Log.i(LOG_ID, "Trigger initial task execution")
                         return true   // trigger initial execution
@@ -97,12 +103,13 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                         + " - lastElapsedMinute=" + lastElapsedMinute
                         + " - elapsedIobCobTimeMinute=" + Utils.getElapsedTimeMinute(task.getLastIobCobTime(), RoundingMode.HALF_UP)
                         + " - interval=" + task.getIntervalMinute()
-                        + " - active=" + task.active(elapsedTimeMinute))
+                        + " - active=" + task.active(elapsedTimeMinute)
+                        + " - IOB/COB=" + task.hasIobCobSupport())
             } else {
                 Log.d(LOG_ID, "Task " + task.javaClass.simpleName + " is not active")
             }
         } else {
-            Log.v(LOG_ID,"checkExecution: " + "elapsedTimeMinute=" + elapsedTimeMinute
+            Log.d(LOG_ID,"checkExecution: " + "elapsedTimeMinute=" + elapsedTimeMinute
                     + " - lastElapsedMinute=" + lastElapsedMinute
                     + " - elapsedIobCobTimeMinute=" + elapsedIobCobTimeMinute)
             if ((lastElapsedMinute != elapsedTimeMinute && elapsedTimeMinute != 0L)) {
@@ -122,7 +129,8 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
     }
 
     private fun isRunning(): Boolean {
-        if(runningThread!=null && runningThread!!.isAlive()) {
+        if(runningThread!=null && runningThread!!.isAlive) {
+            Log.d(LOG_ID, "Thread still active with ID ${runningThread?.id}")
             return true
         }
         return false
@@ -148,7 +156,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                                             LOG_ID,
                                             "execute after " + elapsedTimeMinute + " min: " + it.javaClass.simpleName
                                         )
-                                        it.execute(context!!)
+                                        it.execute(context!!, force)
                                     } catch(ex:InterruptedException) {
                                         Log.e(LOG_ID,"execute task " + it.javaClass.simpleName + " interrupted: " + ex)
                                         it.interrupt()
@@ -160,6 +168,8 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                             }
                             // restart timer in case of interval has changed to short or long one and to update lastElapsedMinute
                             startTimer()
+                            Log.v(LOG_ID, "Sleeping")
+                            Thread.sleep(10000)
                         } catch (ex: Exception) {
                             Log.e(LOG_ID, "exception while executing tasks: " + ex)
                         }
@@ -221,7 +231,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                 }
                 curInterval = newInterval
                 curDelay = newDelay
-                if(triggerExecute && initialExecution && elapsedTimeMinute >= 1) {
+                if(triggerExecute && initialExecution && elapsedTimeMinute >= 1 && !isRunning()) {
                     Log.i(LOG_ID, "Trigger initial execution")
                     executeTasks(true)
                 } else if (curInterval > 0) {
@@ -359,7 +369,11 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
-            Log.d(LOG_ID, "OnNotifyData for source " + dataSource.toString())
+            Log.d(LOG_ID, "OnNotifyData for source $dataSource with current source ${ReceiveData.source}")
+            if(dataSource == NotifySource.BROADCAST && taskSources.contains(ReceiveData.source)) {
+                Log.v(LOG_ID, "Ignoring internal send broadcast!")
+                return
+            }
             if (!isRunning()) {  // check only if for not already in execution
                 if(mutableSetOf(NotifySource.BROADCAST, NotifySource.MESSAGECLIENT).contains(dataSource))
                     executeTasks(ReceiveData.time == 0L)    // check for additional IOB - COB content or restart time

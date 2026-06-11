@@ -29,6 +29,27 @@
             app:layout_boxedEdges="all">
 
             <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchNoAlarmCharging"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/alarm_wear_no_alarm_while_charging"
+                android:textAlignment="viewStart" />
+
+            <TextView
+                android:id="@+id/txtNoAlarmCharging"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/alarm_wear_no_alarm_while_charging_summary"
+                android:textAlignment="textStart"
+                android:textSize="16sp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@android:color/darker_gray"
+                android:importantForAccessibility="no"
+                android:layout_marginVertical="10dp"/>
+
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switchVibration"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

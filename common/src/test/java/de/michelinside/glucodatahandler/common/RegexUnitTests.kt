@@ -11,8 +11,26 @@ import org.junit.Before
 import org.junit.Test
 
 class RegexUnitTests {
-    private fun getFloatFromRegex(regex: Regex, input: String): Float? {
+    private fun getFloatFromRegex(regexVal: String, input: String): Float? {
+        val regex = regexVal.toRegex(RegexOption.IGNORE_CASE)
         return Utils.parseRegexGroupValues(input, regex)?.get(1)?.toFloatOrNull()
+    }
+
+    private fun testRegexValues(regexVal: String, validValues: Map<String, Float>, invalidValues: List<String>) {
+        validValues.forEach { (value, expected) ->
+            Assert.assertEquals(
+                "Value '$value' with regex '$regexVal'",
+                expected,
+                getFloatFromRegex(regexVal, value)
+            )
+        }
+
+        invalidValues.forEach { value ->
+            Assert.assertNull(
+                "Value '$value' with regex '$regexVal'",
+                getFloatFromRegex(regexVal, value)
+            )
+        }
     }
 
     @Before
@@ -34,7 +52,6 @@ class RegexUnitTests {
 
     @Test
     fun testGlucoseRegex() {
-        val regex = NotificationReceiver.defaultGlucoseRegex.toRegex(RegexOption.IGNORE_CASE)
         val validValues = mapOf(
             "123" to 123F,
             "123.4" to 123.4F,
@@ -83,34 +100,23 @@ class RegexUnitTests {
             "12.324"
         )
 
-        validValues.forEach { (value, expected) ->
-            Assert.assertEquals(
-                "Value '$value' with regex '${NotificationReceiver.defaultGlucoseRegex}'",
-                expected,
-                getFloatFromRegex(regex, value)
-            )
+        testRegexValues(NotificationReceiver.defaultGlucoseRegex, validValues, invalidValues)
+
+        validValues.forEach { (value, _) ->
             Assert.assertNull(
                 "Value '$value' with cob regex '${NotificationReceiver.defaultCobRegex}'",
-                getFloatFromRegex(regex, value)
+                getFloatFromRegex(NotificationReceiver.defaultCobRegex, value)
             )
             Assert.assertNull(
                 "Value '$value' with IOB regex '${NotificationReceiver.defaultIobRegex}'",
-                getFloatFromRegex(regex, value)
-            )
-        }
-
-        invalidValues.forEach { value ->
-            Assert.assertNull(
-                "Value '$value' with regex '${NotificationReceiver.defaultGlucoseRegex}'",
-                getFloatFromRegex(regex, value)
+                getFloatFromRegex(NotificationReceiver.defaultIobRegex, value)
             )
         }
     }
 
     @Test
     fun testIobRegex() {
-        val regex = NotificationReceiver.defaultIobRegex.toRegex(RegexOption.IGNORE_CASE)
-        val validValues = mapOf(
+        val validValues = mutableMapOf(
             "IOB: 123 U" to 123F,
             "IOB: 123.4 U" to 123.4F,
             "IOB: 123.45 E" to 123.45F,
@@ -123,7 +129,8 @@ class RegexUnitTests {
             "4U" to 4F,
             "4,12 U" to 4.12F,
             "4.123 E" to 4.123F,
-            "4 j" to 4F
+            "4 j" to 4F,
+            "4.123 IE" to 4.123F
         )
 
         val invalidValues = listOf(
@@ -144,29 +151,56 @@ class RegexUnitTests {
             "5 G",
             "4.123 EU",
             "11.6 mmol",
-            "123 mg/dl"
+            "123 mg/dl",
+            "1.01 IE/h"
         )
 
-        validValues.forEach { (value, expected) ->
-            Assert.assertEquals(
-                "Value '$value' with regex '${NotificationReceiver.defaultIobRegex}'",
-                expected,
-                getFloatFromRegex(regex, value)
-            )
-        }
+        testRegexValues(NotificationReceiver.defaultIobRegex, validValues, invalidValues)
+    }
 
-        invalidValues.forEach { value ->
-            Assert.assertNull(
-                "Value '$value' with regex '${NotificationReceiver.defaultIobRegex}'",
-                getFloatFromRegex(regex, value)
-            )
-        }
+    @Test
+    fun testMinimedIobRegex() {
+        val validValues = mutableMapOf(
+            "IOB: 123 U" to 123F,
+            "IOB: 123.4 U" to 123.4F,
+            "IOB: 123.45 E" to 123.45F,
+            "123 U" to 123F,
+            "123.4 j" to 123.4F,
+            "IOB: 4.1234 U" to 4.1234F,
+            "IOB: 4,1 U" to 4.1F,
+            "IOB: 12.0U" to 12.0F,
+            "IOB: 0,0U" to 0.0F,
+            "4U" to 4F,
+            "4,12 U" to 4.12F,
+            "4.123 Ü" to 4.123F,
+            "4.123 ä" to 4.123F,
+            "4 j" to 4F
+        )
+
+        val invalidValues = listOf(
+            "",
+            "abc",
+            "12bc",
+            "bc12",
+            "21:45",
+            "423",
+            "43.4",
+            "123 mg/dl",
+            "123.4 mmol/l",
+            "IOB: 4.1234",
+            "IOB: 4,1",
+            "IOB: 12.0",
+            "IOB: 10:23",
+            "4.123 EU",
+            "11.6 mmol",
+            "123 mg/dl"
+        )
+        testRegexValues(NotificationReceiver.minimedIobRegex, validValues, invalidValues)
     }
 
 
     @Test
     fun testCobRegex() {
-        val regex = NotificationReceiver.defaultCobRegex.toRegex(RegexOption.IGNORE_CASE)
         val validValues = mapOf(
             "COB: 12 g" to 12F,
             "COB: 3g" to 3F,
@@ -184,30 +218,17 @@ class RegexUnitTests {
             "11.6 mmol",
             "123 mg/dl"
         )
+        testRegexValues(NotificationReceiver.defaultCobRegex, validValues, invalidValues)
 
-        validValues.forEach { (value, expected) ->
-            Assert.assertEquals(
-                "Value '$value' with regex '${NotificationReceiver.defaultCobRegex}'",
-                expected,
-                getFloatFromRegex(regex, value)
-            )
-        }
-
-        invalidValues.forEach { value ->
-            Assert.assertNull(
-                "Value '$value' with regex '${NotificationReceiver.defaultCobRegex}'",
-                getFloatFromRegex(regex, value)
-            )
-        }
     }
 
 
     @Test
     fun testRegexWithUnit() {
 
-        val regex = NotificationReceiver.defaultGlucoseRegex.toRegex(RegexOption.IGNORE_CASE)
-        val cobRegex = NotificationReceiver.defaultCobRegex.toRegex(RegexOption.IGNORE_CASE)
-        val iobRegex = NotificationReceiver.defaultIobRegex.toRegex(RegexOption.IGNORE_CASE)
+        val regex = NotificationReceiver.defaultGlucoseRegex
+        val cobRegex = NotificationReceiver.defaultCobRegex
+        val iobRegex = NotificationReceiver.defaultIobRegex
 
         val validValues = mapOf(
             "123 mg/dl" to 123F,
@@ -225,16 +246,16 @@ class RegexUnitTests {
         validValues.forEach { (value, expected) ->
             Assert.assertTrue(value.lowercase().contains("mmol") || value.lowercase().contains("mg"))
             Assert.assertEquals(
-                "Value '$value' with regex '${NotificationReceiver.defaultGlucoseRegex}'",
+                "Value '$value' with regex '$regex'",
                 expected,
                 getFloatFromRegex(regex, value)
             )
             Assert.assertNull(
-                "Value '$value' with cob regex '${NotificationReceiver.defaultCobRegex}'",
+                "Value '$value' with cob regex '$cobRegex'",
                 getFloatFromRegex(cobRegex, value)
             )
             Assert.assertNull(
-                "Value '$value' with IOB regex '${NotificationReceiver.defaultIobRegex}'",
+                "Value '$value' with IOB regex '$iobRegex'",
                 getFloatFromRegex(iobRegex, value)
             )
         }

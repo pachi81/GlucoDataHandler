@@ -33,6 +33,7 @@ import de.michelinside.glucodatahandler.common.notification.AlarmState
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
+import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 import de.michelinside.glucodatahandler.common.receiver.ScreenEventReceiver
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
@@ -41,9 +42,12 @@ import de.michelinside.glucodatahandler.settings.SettingsActivity
 import de.michelinside.glucodatahandler.settings.SourcesActivity
 import de.michelinside.glucodatahandler.settings.WatchfacesActivity
 import java.text.DateFormat
+import java.text.DecimalFormat
 import java.time.Duration
 import java.util.Date
 import kotlin.time.Duration.Companion.days
+import androidx.core.content.edit
+import de.michelinside.glucodatahandler.common.service.WearPhoneManager
 
 class WearActivity : AppCompatActivity(), NotifierInterface {
 
@@ -174,7 +178,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
 
             if(requestPermission())
                 GlucoDataServiceWear.start(this.applicationContext)
-            PackageUtils.updatePackages(this.applicationContext)
+            PackageUtils.updatePackages(this.applicationContext, false)
             checkUncaughtException()
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
@@ -219,7 +223,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 requestNotificationPermission = false
                 GlucoDataServiceWear.start(this.applicationContext)
             }
-            GlucoDataService.checkForConnectedNodes(true)
+            WearPhoneManager.checkForConnectedNodes(true)
             chartBitmap.resume()
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
@@ -242,21 +246,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 return false
             }
         }
-        requestExactAlarmPermission()
         return true
-    }
-
-    private fun requestExactAlarmPermission() {
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                if (!Utils.canScheduleExactAlarms(this.applicationContext)) {
-                    Log.i(LOG_ID, "Request exact alarm permission...")
-                    startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
-                }
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "requestExactAlarmPermission exception: " + exc.message.toString() )
-        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -322,10 +312,15 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                     AlarmState.DISABLED -> {
                         val lastState = sharedPref.getInt(Constants.SHARED_PREF_WEAR_LAST_ALARM_STATE, 1)
                         Log.d(LOG_ID, "Last alarm state $lastState")
-                        with(sharedPref.edit()) {
-                            putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, (lastState and 1) == 1)
-                            putBoolean(Constants.SHARED_PREF_NOTIFICATION_VIBRATE, (lastState and 2) == 2)
-                            apply()
+                        sharedPref.edit {
+                            putBoolean(
+                                Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED,
+                                (lastState and 1) == 1
+                            )
+                            putBoolean(
+                                Constants.SHARED_PREF_NOTIFICATION_VIBRATE,
+                                (lastState and 2) == 2
+                            )
                         }
                     }
                     AlarmState.INACTIVE,
@@ -336,11 +331,10 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                         if(sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION_VIBRATE, false))
                             lastState = lastState or 2
                         Log.d(LOG_ID, "Saving last alarm state $lastState")
-                        with(sharedPref.edit()) {
+                        sharedPref.edit {
                             putInt(Constants.SHARED_PREF_WEAR_LAST_ALARM_STATE, lastState)
                             putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
                             putBoolean(Constants.SHARED_PREF_NOTIFICATION_VIBRATE, false)
-                            apply()
                         }
                     }
                     AlarmState.ALARM -> {
@@ -350,18 +344,16 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                         if(AlarmHandler.inactiveAutoReenable)
                             AlarmHandler.disableInactiveTime()
                         else {
-                            with(sharedPref.edit()) {
+                            sharedPref.edit {
                                 putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
-                                apply()
                             }
                         }
                     }
                 }
             } else {
                 Log.w(LOG_ID, "Alarm channel inactive!")
-                with(sharedPref.edit()) {
+                sharedPref.edit {
                     putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
-                    apply()
                 }
             }
             updateAlarmIcon()
@@ -375,9 +367,8 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
         try {
             if(!AlarmNotificationWear.channelActive(this.applicationContext)) {
                 Log.w(LOG_ID, "Alarm channel inactive!")
-                with(sharedPref.edit()) {
+                sharedPref.edit {
                     putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
-                    apply()
                 }
             }
             val state = AlarmNotificationBase.currentAlarmState
@@ -463,29 +454,49 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
         if (WearPhoneConnection.nodesConnected) {
             if (WearPhoneConnection.connectionError) {
                 val onResetClickListener = View.OnClickListener {
-                    GlucoDataService.resetWearPhoneConnection()
+                    WearPhoneManager.resetWearPhoneConnection()
                 }
                 tableConnections.addView(createRow(CR.string.source_phone, resources.getString(CR.string.detail_reset_connection), onResetClickListener))
             } else {
                 val onCheckClickListener = View.OnClickListener {
-                    GlucoDataService.checkForConnectedNodes(false)
+                    WearPhoneManager.checkForConnectedNodes(false)
                 }
                 val states = WearPhoneConnection.getNodeConnectionStates(this.applicationContext)
                 if(states.size == 1 ) {
                     val state = states.values.first()
-                    if(state > 0)
-                        tableConnections.addView(createRow(CR.string.source_phone, "$state%", onCheckClickListener))
-                    else if(state == 0)
+                    if(state.first > 0) {
+                        val isCharhing = BatteryReceiver.isCharging(state.second)
+                        var value = "${DecimalFormat("#.#").format(state.first)}%"
+                        if(isCharhing)
+                            value += " ⚡"
+                        tableConnections.addView(
+                            createRow(
+                                CR.string.source_phone,
+                                value,
+                                onCheckClickListener
+                            )
+                        )
+                    } else if(state.first == 0)
                         tableConnections.addView(createRow(CR.string.source_phone, resources.getString(CR.string.state_connected), onCheckClickListener))
-                    else if(state == -1)
+                    else if(state.first == -1)
                         tableConnections.addView(createRow(CR.string.source_phone, resources.getString(CR.string.state_await_data), onCheckClickListener))
                 } else {
                     states.forEach { (name, state) ->
-                        if(state > 0)
-                            tableConnections.addView(createRow(name, "$state%", onCheckClickListener))
-                        else if(state == 0)
+                        if(state.first > 0) {
+                            val isCharhing = BatteryReceiver.isCharging(state.second)
+                            var value = "${DecimalFormat("#.#").format(state.first)}%"
+                            if (isCharhing)
+                                value += " ⚡"
+                            tableConnections.addView(
+                                createRow(
+                                    name,
+                                    value,
+                                    onCheckClickListener
+                                )
+                            )
+                        } else if(state.first == 0)
                             tableConnections.addView(createRow(name, resources.getString(CR.string.state_connected), onCheckClickListener))
-                        else if(state == -1)
+                        else if(state.first == -1)
                             tableConnections.addView(createRow(name, resources.getString(CR.string.state_await_data), onCheckClickListener))
                     }
                 }
@@ -612,9 +623,8 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             val excMsg = sharedPref.getString(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_MESSAGE, "") ?: ""
             val time = sharedPref.getLong(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_TIME, 0)
             Log.e(LOG_ID, "Uncaught exception detected at ${DateFormat.getDateTimeInstance().format(Date(time))}: $excMsg")
-            with(sharedPref.edit()) {
+            sharedPref.edit {
                 putBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, false)
-                apply()
             }
         }
     }

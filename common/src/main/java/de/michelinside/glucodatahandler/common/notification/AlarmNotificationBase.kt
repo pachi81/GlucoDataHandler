@@ -18,6 +18,7 @@ import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.Command
 import de.michelinside.glucodatahandler.common.Constants
@@ -26,12 +27,14 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.service.WearPhoneManager
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.utils.WakeLockHelper
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.read
 import kotlin.concurrent.write
 import de.michelinside.glucodatahandler.common.R as CR
+import androidx.core.net.toUri
 
 
 abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -237,7 +240,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     curAlarmTime = 0
                     curTestAlarmType = AlarmType.NONE
                     if(!fromClient)
-                        GlucoDataService.sendCommand(Command.STOP_ALARM)
+                        WearPhoneManager.sendCommand(Command.STOP_ALARM)
                     updateAlarmState(GlucoDataService.context!!)
                     InternalNotifier.notify(GlucoDataService.context!!, NotifySource.NOTIFICATION_STOPPED, null)
                 }
@@ -252,7 +255,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         Log.d(LOG_ID, "stopForLockscreenSnooze called")
         stopVibrationAndSound()
         stopTrigger()
-        GlucoDataService.sendCommand(Command.STOP_ALARM)
+        WearPhoneManager.sendCommand(Command.STOP_ALARM)
     }
 
     fun stopVibrationAndSound() {
@@ -664,6 +667,20 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         return audioManager.ringerMode
     }
 
+    private fun getRealRingMode(context: Context): Int {
+        if(audioManager.ringerMode <= 0) {
+            try {
+                val systemRingerMode = Settings.Global.getInt(context.contentResolver, "mode_ringer", -1)
+                Log.d(LOG_ID, "Getting system ringer mode $systemRingerMode - AudioManager=${audioManager.ringerMode}")
+                if(systemRingerMode > 0)
+                    return systemRingerMode
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "Error getting system ringer mode: $exc")
+            }
+        }
+        return audioManager.ringerMode
+    }
+
     protected fun checkCreateSound(alarmType: AlarmType, context: Context) {
         try {
             Log.v(LOG_ID, "checkCreateSound called for force sound=$forceSound - vibration=$forceVibration - DnD=${Channels.getNotificationManager().currentInterruptionFilter} - ringmode=${audioManager.ringerMode}")
@@ -684,9 +701,8 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                                 targetRingerMode = soundMode.ringerMode
                             }
                         }
-                        Log.d(LOG_ID, "Check force sound for soundMode=$soundMode - targetRinger=$targetRingerMode - currentRinger=${audioManager.ringerMode}")
                         if (targetRingerMode > audioManager.ringerMode ) {
-                            lastRingerMode = audioManager.ringerMode
+                            lastRingerMode = getRealRingMode(context)  // set to real mode, which may differ from ringerMode
                             Log.d(LOG_ID, "Set cur ringer mode $lastRingerMode to $targetRingerMode")
                             audioManager.ringerMode = targetRingerMode
                         }
@@ -826,7 +842,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             val path = alarmType.setting.customSoundPath
             if(path.isEmpty())
                 return null
-            return Uri.parse(path)
+            return path.toUri()
         }
         return getDefaultAlarm(alarmType, context)
     }
@@ -847,7 +863,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
 
     protected fun getUri(resId: Int, context: Context): Uri {
         val uri = "android.resource://" + context.packageName + "/" + resId
-        return Uri.parse(uri)
+        return uri.toUri()
     }
 
     private fun getVibrationPattern(alarmType: AlarmType): LongArray? {
@@ -891,7 +907,8 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME,
         Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME,
         Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS,
-        Constants.SHARED_PREF_ALARM_INACTIVE_AUTO_RE_ENABLE
+        Constants.SHARED_PREF_ALARM_INACTIVE_AUTO_RE_ENABLE,
+        Constants.SHARED_PREF_WEAR_NO_ALARM_WHILE_CHARGING
     )
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
@@ -1036,7 +1053,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             when(TriggerAction.valueOf(action)) {
                 TriggerAction.TEST_ALARM -> {
                     executeTest(alarmType, context)
-                    GlucoDataService.sendCommand(Command.TEST_ALARM, extras)
+                    WearPhoneManager.sendCommand(Command.TEST_ALARM, extras)
                 }
                 TriggerAction.START_ALARM_SOUND -> {
                     val duration = startSound(alarmType, context, true)

@@ -66,12 +66,13 @@ open class BatteryLevelComplicationBase(val type: BatteryLevelType): SuspendingC
         }
     }
 
-    protected fun getUnit(): String {
+    protected fun getUnit(status: Int): String {
         val sharedPref = applicationContext.getSharedPreferences(Constants.SHARED_PREF_TAG,
             MODE_PRIVATE
         )
-        if(sharedPref.getBoolean(Constants.SHARED_PREF_SHOW_BATTERY_PERCENT, true))
-            return "%"
+        if(sharedPref.getBoolean(Constants.SHARED_PREF_SHOW_BATTERY_PERCENT, true)) {
+            return if(BatteryReceiver.isCharging(status)) "⚡" else "%"
+        }
         return ""
     }
 
@@ -117,14 +118,14 @@ open class BatteryLevelComplicationBase(val type: BatteryLevelType): SuspendingC
     }
 
     open fun getText(): PlainComplicationText =
-        plainText("⌚" + BatteryReceiver.batteryPercentage.toString() + getUnit())
+        plainText("⌚" + BatteryReceiver.batteryPercentage.toString() + getUnit(BatteryReceiver.batteryStatus))
     open fun getIcon(): MonochromaticImage? = null
     open fun getTitle(): PlainComplicationText? = null
 
     fun getPhoneBatteryDescr(force: Boolean): String {
         val level = getPhoneLevel()
         if (level != null) {
-            return resources.getString(CR.string.source_phone) + " " + level.toString() + getUnit()
+            return resources.getString(CR.string.source_phone) + " " + level.first.toString() + getUnit(level.second)
         } else if (force) {
             return resources.getString(CR.string.source_phone) + " " + resources.getString(CR.string.not_available)
         }
@@ -133,7 +134,7 @@ open class BatteryLevelComplicationBase(val type: BatteryLevelType): SuspendingC
 
     fun getWatchBatteryDescr(): String {
         if(BatteryReceiver.batteryPercentage > 0)
-            return resources.getString(CR.string.source_wear) + " " + BatteryReceiver.batteryPercentage.toString() + getUnit()
+            return resources.getString(CR.string.source_wear) + " " + BatteryReceiver.batteryPercentage.toString() + getUnit(BatteryReceiver.batteryStatus)
         return resources.getString(CR.string.source_wear) + " " + resources.getString(CR.string.not_available)
     }
 
@@ -158,9 +159,9 @@ open class BatteryLevelComplicationBase(val type: BatteryLevelType): SuspendingC
     protected fun plainText(text: CharSequence): PlainComplicationText =
         PlainComplicationText.Builder(text).build()
 
-    protected fun getPhoneLevel(): Int? {
+    protected fun getPhoneLevel(): Pair<Int,Int>? {
         val levels = WearPhoneConnection.getBatterLevels()
-        if (levels.isNotEmpty() && levels[0] > 0) {
+        if (levels.isNotEmpty() && levels[0].first > 0) {
             return levels[0]
         }
         return null
@@ -173,7 +174,7 @@ class BatteryLevelComplication: BatteryLevelComplicationBase(BatteryLevelType.PH
     override fun getTitle(): PlainComplicationText? {
         val level = getPhoneLevel()
         if (level != null) {
-            return plainText("\uD83D\uDCF1" + level.toString() + getUnit())
+            return plainText("\uD83D\uDCF1" + level.first.toString() + getUnit(level.second))
         }
         return null
     }
@@ -184,8 +185,8 @@ class WatchBatteryLevelComplication: BatteryLevelComplicationBase(BatteryLevelTy
 
     override fun getText(): PlainComplicationText {
         if(BatteryReceiver.batteryPercentage > 0)
-            return plainText(BatteryReceiver.batteryPercentage.toString() + getUnit())
-        return plainText("--${getUnit()}")
+            return plainText(BatteryReceiver.batteryPercentage.toString() + getUnit(BatteryReceiver.batteryStatus))
+        return plainText("--${getUnit(-1)}")
     }
 
     override fun getIcon(): MonochromaticImage =
@@ -198,15 +199,15 @@ class PhoneBatteryLevelComplication: BatteryLevelComplicationBase(BatteryLevelTy
     override fun getText(): PlainComplicationText {
         val level = getPhoneLevel()
         if (level != null) {
-            return plainText(level.toString() + getUnit())
+            return plainText(level.first.toString() + getUnit(level.second))
         }
-        return plainText("---${getUnit()}")
+        return plainText("---${getUnit(-1)}")
     }
 
     override fun getRangeValue(): Float {
         val level = getPhoneLevel()
         if (level != null) {
-            return level.toFloat()
+            return level.first.toFloat()
         }
         return 0F
     }

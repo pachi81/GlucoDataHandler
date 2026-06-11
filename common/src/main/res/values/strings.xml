@@ -44,7 +44,6 @@
     <string name="video_tutorial_juggluco" translatable="false">https://youtu.be/evS5rXDiciY?si=DTxlGYhYm-nNboHl</string>
 
 
-
     <string name="vibrate_pattern_super_mario" translatable="false">Super Mario</string>
     <string name="vibrate_pattern_turtles" translatable="false">Turtles</string>
     <string name="vibrate_pattern_final_fantasy" translatable="false">Final Fantasy</string>
@@ -67,6 +66,8 @@
     <string name="pref_source_eversense_info" translatable="false">Eversense (ESEL)/Dexcom BYODA (xDrip+)</string>
     <string name="pref_source_dexcom_byoda_info" translatable="false">Dexcom BYODA (AAPS)</string>
     <string name="pref_source_libre_patched" translatable="false">Libre patched app</string>
+
+    <string name="hba1c" translatable="false">Hba1c</string>
 
     <!-- start of resources -->
 
@@ -557,7 +558,6 @@
     <string name="activity_large_arrow_icon_summary">Please disable this setting, if the trend arrow is too big or cropped.</string>
     <string name="pref_cat_ui_settings">User interface</string>
     <string name="gda_foreground_info">GlucoDataAuto is running</string>
-    <string name="gda_foreground_summary">Only enable it, if you are using a follower source and Android Auto notifications only.\nThis prevents Android from closing this app, while not connected to Android Auto, so the app can not recognize the Android Auto connection.\nInstead of enabling this setting, you can also open the app in Android Auto once, if you are connected.</string>
     <string name="battery_optimization_disabled">Battery optimization is enabled!\nPress here to disable it.</string>
     <string name="gda_source_follower_info_summary">If you are using a follower source, the app may not be started while connected to Android Auto, if you are using Android Auto Notifications only.\nTo make sure the app detects Android Auto connection you have to disable battery optimization.\nIf it still does not work, you can also enable foreground mode or you have to open the app in Android Auto once, if it is connected to Android Auto.</string>
     <string name="gda_help_aa_title">Setup Android Auto</string>
@@ -1064,5 +1064,21 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="xdrip_open_server_api_secret_summary">Optional API secret to protect access. If configured, the same secret must be set in the client app to access the data.</string>
     <string name="pref_xdrip_server_summary">Provides a local web server on port 17580 that emulates xDrip+ web service, which can be used by various external services, watchfaces, and apps.</string>
 
+    <!-- v2.4 -->
 
+    <string name="gda_foreground_summary">Optional troubleshooting mode that stabilizes the Android Auto connection by preventing the app from being killed in the background. The service remains inactive without an active connection, and the notification can be easily swiped away starting with Android 14.</string>
+
+    <string name="restart_libre_app">Please restart your phone or the Libre app.</string>
+    <string name="alarm_wear_no_alarm_while_charging">No alarm while charging</string>
+    <string name="alarm_wear_no_alarm_while_charging_summary">No alarm is triggered on watch while charging it.</string>
+    <string name="export_settings_info">You are about to export your settings.\nPlease do not share this file with anyone, as it may contain sensitive information like usernames and passwords.\nNote: Even if the developer asks for help, he usually only requires your logs, not your settings.\nDo you want to proceed with the export?</string>
+    <string name="pref_switch_standard_children_statistics">Using TITR for children</string>
+    <string name="pref_switch_standard_children_statistics_summary">Using Time in Tighter Range (TITR) with targets of 70–140 mg/dl (3.9–7.8 mmol/l) is recommended for small children in some regions.</string>
+
+    <string name="pref_source_librelinkup_5_info_summary">Abbott has switched LibreLinkUp to encrypted communication.\nAs soon as the previous interface is shut down, GDH will likely stop working.\nThere is currently no technical solution in sight.</string>
+    <string name="source_librelinkup_5_info_popup_title">Important note regarding LibreLinkUp:</string>
+    <string name="source_librelinkup_5_info_popup">Abbott has released version 5, which uses a new, encrypted interface.\nIf Abbott shuts down the previous interface, communication with GDH (and other third-party apps) will likely be interrupted.\nCurrently, there is no technical solution to bypass this new encryption.\nQuestions regarding the future support of essential features like smartwatch integration can only be answered directly by Abbott support.</string>
+
+    <string name="accessibility_prominent_disclosure_title">Prominent Disclosure: Always-On-Display (AOD) Support</string>
+    <string name="accessibility_prominent_disclosure_message">This app uses the AccessibilityService API to display glucose information on top of the system Always-On-Display (AOD).\n\n<b>How it works:</b>\nThe service is used to detect the lock screen and overlay a custom view with your glucose data on the AOD screen, so you can see your levels without waking your device.\n\n<b>Data Privacy:</b>\nThis service does NOT collect, store, or share any personal data. It operates purely locally on your device to provide this overlay functionality.\n\nTo enable this feature, you will be redirected to the Android Accessibility settings.</string>
 </resources>

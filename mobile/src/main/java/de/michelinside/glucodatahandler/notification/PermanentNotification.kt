@@ -214,7 +214,10 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         if((Build.VERSION.SDK_INT < Build.VERSION_CODES.S && !withGraph) || GlucoDataService.patientName.isNullOrEmpty()) {
             remoteViews.setViewVisibility(R.id.patient_name, View.GONE)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                remoteViews.setViewLayoutWidth(R.id.glucose, if(ReceiveData.getGlucoseAsString().length <= 2) 50F else 55F, TypedValue.COMPLEX_UNIT_DIP)
+                if(ReceiveData.isIobCobObsolete())
+                    remoteViews.setViewLayoutWidth(R.id.glucose, if(ReceiveData.getGlucoseAsString().length <= 2) 50F else 55F, TypedValue.COMPLEX_UNIT_DIP)
+                else  // smaller size, if IOB, COB is visible
+                    remoteViews.setViewLayoutWidth(R.id.glucose, if(ReceiveData.getGlucoseAsString().length <= 2) 40F else 45F, TypedValue.COMPLEX_UNIT_DIP)
             }
         } else {
             remoteViews.setViewVisibility(R.id.patient_name, View.VISIBLE)
@@ -239,6 +242,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             remoteViews.setViewVisibility(R.id.iobText, View.GONE)
             remoteViews.setViewVisibility(R.id.cobText, View.GONE)
         } else {
+            remoteViews.setTextViewTextSize(R.id.deltaText, TypedValue.COMPLEX_UNIT_DIP, 14F)  // use smaller size for delta
             remoteViews.setTextViewText(R.id.iobText, "💉 ${ReceiveData.getIobAsString()}")
             remoteViews.setViewVisibility(R.id.iobText, View.VISIBLE)
             if (ReceiveData.cob.isNaN()) {
@@ -261,7 +265,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     }
 
     fun getNotification(withContent: Boolean, iconKey: String, channel: ChannelType, customLayout: Boolean) : Notification {
-        Log.d(LOG_ID, "getNotification withContent=$withContent - channel=${channel} - customLayout=$customLayout")
+        Log.d(LOG_ID, "getNotification withContent=$withContent - channel=${channel} - customLayout=$customLayout - iconKey=$iconKey")
         val notificationBuilder = getNotificationBuilder(channel)
         val notificationBuild = notificationBuilder!!
             .setSmallIcon(getStatusBarIcon(iconKey))

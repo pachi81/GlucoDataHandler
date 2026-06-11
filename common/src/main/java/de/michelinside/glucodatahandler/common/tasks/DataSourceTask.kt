@@ -25,11 +25,12 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.max
+import androidx.core.content.edit
 
-abstract class DataSourceTask(private val enabledKey: String, protected val source: DataSource) : BackgroundTask() {
-    private var enabled = false
-    private var prefInterval = 1L
-    protected open var minInterval = 1L
+abstract class DataSourceTask(protected val enabledKey: String, protected val source: DataSource) : BackgroundTask() {
+    protected var enabled = false
+    private var prefInterval = 1
+    protected open var minInterval = 1
     private var delaySec = 10L
     private var httpRequest = HttpRequest()
     protected var retry = false
@@ -37,7 +38,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     private var isFirstRequest = true  // first request after startup
     private var lastExecution = 0L
 
-    private val interval: Long get() {
+    protected val interval: Int get() {
         return max(minInterval, prefInterval)
     }
 
@@ -69,41 +70,115 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         )
         fun updateSettings(context: Context, bundle: Bundle) {
             val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-            with(sharedPref.edit()) {
-                putInt(Constants.SHARED_PREF_SOURCE_DELAY, bundle.getInt(Constants.SHARED_PREF_SOURCE_DELAY, -1))
-                putString(Constants.SHARED_PREF_SOURCE_INTERVAL, bundle.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1"))
+            sharedPref.edit {
+                putInt(
+                    Constants.SHARED_PREF_SOURCE_DELAY,
+                    bundle.getInt(Constants.SHARED_PREF_SOURCE_DELAY, -1)
+                )
+                if (bundle.containsKey(Constants.SHARED_PREF_SOURCE_INTERVAL_DEPRECATED) && !bundle.containsKey(
+                        Constants.SHARED_PREF_SOURCE_INTERVAL
+                    )
+                ) {
+                    putInt(
+                        Constants.SHARED_PREF_SOURCE_INTERVAL,
+                        bundle.getString(Constants.SHARED_PREF_SOURCE_INTERVAL_DEPRECATED, "1")
+                            .toInt()
+                    )
+                } else {
+                    putInt(
+                        Constants.SHARED_PREF_SOURCE_INTERVAL,
+                        bundle.getInt(Constants.SHARED_PREF_SOURCE_INTERVAL, 1)
+                    )
+                }
 
-                putString(Constants.SHARED_PREF_LIBRE_USER, bundle.getString(Constants.SHARED_PREF_LIBRE_USER, ""))
-                putString(Constants.SHARED_PREF_LIBRE_PASSWORD, bundle.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, ""))
-                putBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, bundle.getBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, false))
-                putBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, bundle.getBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, true))
-                putString(Constants.SHARED_PREF_LIBRE_SERVER, bundle.getString(Constants.SHARED_PREF_LIBRE_SERVER, "io"))
-                putString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, bundle.getString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, ""))
+                putString(
+                    Constants.SHARED_PREF_LIBRE_USER,
+                    bundle.getString(Constants.SHARED_PREF_LIBRE_USER, "")
+                )
+                putString(
+                    Constants.SHARED_PREF_LIBRE_PASSWORD,
+                    bundle.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, "")
+                )
+                putBoolean(
+                    Constants.SHARED_PREF_LIBRE_RECONNECT,
+                    bundle.getBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, false)
+                )
+                putBoolean(
+                    Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU,
+                    bundle.getBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, true)
+                )
+                putString(
+                    Constants.SHARED_PREF_LIBRE_SERVER,
+                    bundle.getString(Constants.SHARED_PREF_LIBRE_SERVER, "io")
+                )
+                putString(
+                    Constants.SHARED_PREF_LIBRE_PATIENT_ID,
+                    bundle.getString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, "")
+                )
 
-                putString(Constants.SHARED_PREF_NIGHTSCOUT_URL, bundle.getString(Constants.SHARED_PREF_NIGHTSCOUT_URL, ""))
-                putString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, bundle.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, ""))
-                putString(Constants.SHARED_PREF_NIGHTSCOUT_TOKEN, bundle.getString(Constants.SHARED_PREF_NIGHTSCOUT_TOKEN, ""))
-                putBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, bundle.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, true))
+                putString(
+                    Constants.SHARED_PREF_NIGHTSCOUT_URL,
+                    bundle.getString(Constants.SHARED_PREF_NIGHTSCOUT_URL, "")
+                )
+                putString(
+                    Constants.SHARED_PREF_NIGHTSCOUT_SECRET,
+                    bundle.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, "")
+                )
+                putString(
+                    Constants.SHARED_PREF_NIGHTSCOUT_TOKEN,
+                    bundle.getString(Constants.SHARED_PREF_NIGHTSCOUT_TOKEN, "")
+                )
+                putBoolean(
+                    Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB,
+                    bundle.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, true)
+                )
 
-                putString(Constants.SHARED_PREF_DEXCOM_SHARE_USER, bundle.getString(Constants.SHARED_PREF_DEXCOM_SHARE_USER, ""))
-                putString(Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD, bundle.getString(Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD, ""))
-                putString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, bundle.getString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "eu"))
-                putBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT, bundle.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT, false))
+                putString(
+                    Constants.SHARED_PREF_DEXCOM_SHARE_USER,
+                    bundle.getString(Constants.SHARED_PREF_DEXCOM_SHARE_USER, "")
+                )
+                putString(
+                    Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD,
+                    bundle.getString(Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD, "")
+                )
+                putString(
+                    Constants.SHARED_PREF_DEXCOM_SHARE_SERVER,
+                    bundle.getString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "eu")
+                )
+                putBoolean(
+                    Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT,
+                    bundle.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT, false)
+                )
 
-                putString(Constants.SHARED_PREF_MEDTRUM_USER, bundle.getString(Constants.SHARED_PREF_MEDTRUM_USER, ""))
-                putString(Constants.SHARED_PREF_MEDTRUM_PASSWORD, bundle.getString(Constants.SHARED_PREF_MEDTRUM_PASSWORD, ""))
-                putBoolean(Constants.SHARED_PREF_MEDTRUM_RECONNECT, bundle.getBoolean(Constants.SHARED_PREF_MEDTRUM_RECONNECT, false))
-                putString(Constants.SHARED_PREF_MEDTRUM_PATIENT_ID, bundle.getString(Constants.SHARED_PREF_MEDTRUM_PATIENT_ID, ""))
-                putString(Constants.SHARED_PREF_MEDTRUM_SERVER, bundle.getString(Constants.SHARED_PREF_MEDTRUM_SERVER, "eu"))
+                putString(
+                    Constants.SHARED_PREF_MEDTRUM_USER,
+                    bundle.getString(Constants.SHARED_PREF_MEDTRUM_USER, "")
+                )
+                putString(
+                    Constants.SHARED_PREF_MEDTRUM_PASSWORD,
+                    bundle.getString(Constants.SHARED_PREF_MEDTRUM_PASSWORD, "")
+                )
+                putBoolean(
+                    Constants.SHARED_PREF_MEDTRUM_RECONNECT,
+                    bundle.getBoolean(Constants.SHARED_PREF_MEDTRUM_RECONNECT, false)
+                )
+                putString(
+                    Constants.SHARED_PREF_MEDTRUM_PATIENT_ID,
+                    bundle.getString(Constants.SHARED_PREF_MEDTRUM_PATIENT_ID, "")
+                )
+                putString(
+                    Constants.SHARED_PREF_MEDTRUM_SERVER,
+                    bundle.getString(Constants.SHARED_PREF_MEDTRUM_SERVER, "eu")
+                )
 
-                apply()
             }
             InternalNotifier.notify(context, NotifySource.SOURCE_SETTINGS, null)
         }
         fun getSettingsBundle(sharedPref: SharedPreferences): Bundle {
             val bundle = Bundle()
             bundle.putInt(Constants.SHARED_PREF_SOURCE_DELAY, sharedPref.getInt(Constants.SHARED_PREF_SOURCE_DELAY, -1))
-            bundle.putString(Constants.SHARED_PREF_SOURCE_INTERVAL, sharedPref.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1"))
+            bundle.putString(Constants.SHARED_PREF_SOURCE_INTERVAL_DEPRECATED, sharedPref.getInt(Constants.SHARED_PREF_SOURCE_INTERVAL, 1).toString())
+            bundle.putInt(Constants.SHARED_PREF_SOURCE_INTERVAL, sharedPref.getInt(Constants.SHARED_PREF_SOURCE_INTERVAL, 1))
 
             bundle.putString(Constants.SHARED_PREF_LIBRE_USER, sharedPref.getString(Constants.SHARED_PREF_LIBRE_USER, ""))
             bundle.putString(Constants.SHARED_PREF_LIBRE_PASSWORD, sharedPref.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, ""))
@@ -131,22 +206,28 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             return bundle
         }
 
-        fun getFirstNeedGraphValueTime(interval: Long, isFirstRequest: Boolean = false): Long {
+        fun getFirstNeedGraphValueTime(interval: Int, isFirstRequest: Boolean = false, forceReturnMinTime: Boolean = false): Long {
             val firstLastPair = dbAccess.getFirstLastTimestamp()
             val minTime = if(GlucoDataService.appSource == AppSource.AUTO_APP)
                 System.currentTimeMillis() - Constants.DB_MAX_DATA_GDA_TIME_MS     // only for delta calculation
             else
                 System.currentTimeMillis() - Constants.DB_MAX_DATA_WEAR_TIME_MS    // 24h for init the first time
+            Log.d(LOG_ID, "get first need value for first: ${Utils.getElapsedTimeMinute(firstLastPair.first)}, last: ${
+                Utils.getElapsedTimeMinute(firstLastPair.second)}, min: ${Utils.getElapsedTimeMinute(minTime)}")
             if(firstLastPair.first == 0L || (isFirstRequest && firstLastPair.first > minTime)) {
                 Log.i(LOG_ID, "First value is ${Utils.getElapsedTimeMinute(firstLastPair.first)} minutes old - try get older data on first request")
                 return minTime
             }
-            if(firstLastPair.second > 0L && Utils.getElapsedTimeMinute(firstLastPair.second) > interval) {
+            if(firstLastPair.second > 0L && (Utils.getElapsedTimeMinute(firstLastPair.second) > interval || forceReturnMinTime)) {
                 Log.i(LOG_ID, "Last value is ${Utils.getElapsedTimeMinute(firstLastPair.second)} minutes old - try get newer data")
                 return maxOf(firstLastPair.second + 30000, minTime)
             }
             return 0L
         }
+    }
+
+    override fun getDataSource(): DataSource {
+        return source
     }
 
     var lastState = SourceState.NONE
@@ -231,14 +312,14 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
 
     open fun needsInternet(): Boolean = true
 
-    override fun execute(context: Context) {
-        if (enabled) {
+    override fun execute(context: Context, force: Boolean) {
+        if (force || canExecute()) {
             if (needsInternet() && !HttpRequest.isConnected(context)) {
                 Log.w(LOG_ID, "No internet connection")
                 setState(SourceState.NO_CONNECTION)
                 return
             }
-            Log.d(LOG_ID, "Execute request for $source")
+            Log.d(LOG_ID, "Execute request for $source - lastExecution: ${Utils.getUiTimeStamp(lastExecution)} - force: $force")
             try {
                 lastExecution = System.currentTimeMillis()
                 executeRequest()
@@ -283,12 +364,15 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             Log.d(LOG_ID, "handleResult for $source: ${Utils.dumpBundle(extras)}")
         if(!ReceiveData.hasNewValue(extras)) {
             if(extras.containsKey(ReceiveData.TIME)) {
-                setState(
-                    SourceState.NO_NEW_VALUE,
-                    GlucoDataService.context!!.resources.getString(R.string.last_value_on_server, Utils.getUiTimeStamp(extras.getLong(ReceiveData.TIME))),
-                    -1,
-                    getNoNewValueInfo(extras.getLong(ReceiveData.TIME))
-                )
+                val valueTime = extras.getLong(ReceiveData.TIME)
+                if(Utils.getElapsedTimeMinute(valueTime) >= minInterval) {
+                    setState(
+                        SourceState.NO_NEW_VALUE,
+                        GlucoDataService.context!!.resources.getString(R.string.last_value_on_server, Utils.getUiTimeStamp(extras.getLong(ReceiveData.TIME))),
+                        -1,
+                        getNoNewValueInfo(valueTime)
+                    )
+                }
             } else {
                 setState(SourceState.NO_NEW_VALUE)
             }
@@ -414,14 +498,14 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     }
 
     override fun getIntervalMinute(): Long {
-        if (interval > 1L && isShortInterval()) {
+        if (interval > 1 && isShortInterval()) {
             Log.d(LOG_ID, "Use short interval of 1 minute.")
-            return 1   // retry after a minute
+            return 1L   // retry after a minute
         }
-        if (interval == 1L && isLongInterval()) {
-            return 5  // increase interval for case of "429: Too many requests"
+        if (interval == 1 && isLongInterval()) {
+            return 5L  // increase interval for case of "429: Too many requests"
         }
-        return interval
+        return interval.toLong()
     }
 
     override fun getDelayMs(): Long = delaySec * 1000L
@@ -429,6 +513,16 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     override fun active(elapsetTimeMinute: Long): Boolean {
         return enabled
     }
+
+    private fun canExecute(): Boolean {
+        if(enabled && (lastExecution == 0L || Utils.getElapsedTimeMinute(lastExecution, RoundingMode.HALF_UP) >= 1))
+            return true
+        else if(enabled) {
+            Log.d(LOG_ID, "Skip execution - lastExecution: ${Utils.getUiTimeStamp(lastExecution)}")
+        }
+        return false
+    }
+
 
     override fun forceExecution(): Boolean {
         if(enabled && (lastExecution == 0L || Utils.getElapsedTimeMinute(lastExecution) >= getIntervalMinute())) {
@@ -438,24 +532,33 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         return false
     }
 
+    protected open fun disable() {}
+    protected open fun enable() {}
+
     private fun setEnabled(newEnabled: Boolean): Boolean {
-        Log.v(LOG_ID, "Set enabled=$newEnabled (old: $enabled) for $source")
-        var changed = false
+        Log.d(LOG_ID, "Set enabled=$newEnabled (old: $enabled) for $source")
         if(newEnabled != enabled) {
             enabled = newEnabled
             Log.i(LOG_ID, "Set enabled=$enabled for $source")
-            changed = true
+            if(enabled)
+                enable()
+            else
+                disable()
+            if (source == SourceStateData.lastSource) {
+                setState(SourceState.NONE)
+                if(SourceStateData.lastState != SourceState.CONNECTED)
+                    lastExecution = 0L  // reset execution to try again immediately on error
+            }
+            return true
         }
-        if (!enabled && source == SourceStateData.lastSource)
-            setState(SourceState.NONE)
-        return changed
+        return false
     }
 
     override fun checkPreferenceChanged(sharedPreferences: SharedPreferences, key: String?, context: Context): Boolean {
         Log.d(LOG_ID, "checkPreferenceChanged for $key")
         if(key == null) {
             setEnabled(sharedPreferences.getBoolean(enabledKey, false))
-            prefInterval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L
+            prefInterval = sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_INTERVAL, 1)
             delaySec = sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_DELAY, 30).toLong()
             if(GlucoDataService.appSource == AppSource.WEAR_APP)
                 delaySec += 5L  // add 5 seconds delay to receive by phone if connected
@@ -467,8 +570,8 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                     result = setEnabled(sharedPreferences.getBoolean(enabledKey, false))
                 }
                 Constants.SHARED_PREF_SOURCE_INTERVAL -> {
-                    if (prefInterval != (sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L)) {
-                        prefInterval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L
+                    if (prefInterval != (sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_INTERVAL, 1))) {
+                        prefInterval = sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_INTERVAL, 1)
                         result = true
                     }
                 }

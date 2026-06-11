@@ -39,7 +39,7 @@ object CarModeReceiver {
             Log.i(LOG_ID, "onReceive called for intent " + intent + ": " + Utils.dumpBundle(intent.extras))
             if(!PackageUtils.isGlucoDataAutoAvailable(context)) {
                 Log.i(LOG_ID, "GlucoDataAuto not available, but package received -> update packages")
-                PackageUtils.updatePackages(context)
+                PackageUtils.updatePackages(context, true)
             }
             val curEnable = gda_enabled
             val curDuration = graph_duration
@@ -129,8 +129,13 @@ object CarModeReceiver {
                     if(withSettings) {
                         if(sharedPref.getBoolean(Constants.SHARED_PREF_SEND_PREF_TO_GLUCODATAAUTO, true)) {
                             val settings = GlucoDataService.getSettings()
-                            settings.putBoolean(Constants.SHARED_PREF_RELATIVE_TIME, ElapsedTimeTask.relativeTime)
-                            extras.putBundle(Constants.SETTINGS_BUNDLE, settings)
+                            if(settings != null) {
+                                settings.putBoolean(
+                                    Constants.SHARED_PREF_RELATIVE_TIME,
+                                    ElapsedTimeTask.relativeTime
+                                )
+                                extras.putBundle(Constants.SETTINGS_BUNDLE, settings)
+                            }
                             extras.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings(true))
                         }
                     }

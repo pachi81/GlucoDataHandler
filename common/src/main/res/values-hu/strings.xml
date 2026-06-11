@@ -175,9 +175,6 @@ A riasztások és a nagyon alacsony értékek mindig elküldésre kerülnek.</st
     <string name="battery_optimization_disabled">Az akkumulátor optimalizálás aktív!
 Kattintson ide a letiltáshoz.</string>
     <string name="gda_foreground_info">A GlucoDataAuto fut</string>
-    <string name="gda_foreground_summary">Csak akkor engedélyezze, ha csak egy követő forrást és Android Auto értesítéseket használ.
-Ez megakadályozza, hogy az Android bezárja ezt az alkalmazást, miközben nincs csatlakoztatva az Android Auto-hoz, így az alkalmazás nem ismeri fel az Android Auto kapcsolatot.
-Alternatív megoldásként megnyithatja az alkalmazást közvetlenül az Android Auto alkalmazásban.</string>
     <string name="gda_help_aa_dev_mode">1. Fejlesztői beállítások engedélyezése</string>
     <string name="gda_help_aa_dev_mode_summary">- Nyissa meg az Android Auto-t
 - Görgessen a verzióig
@@ -1064,4 +1061,19 @@ Ezeket az engedélyeket bármikor kezelheti a Health Connect alkalmazás beáll�
 
     <string name="xdrip_open_server_api_secret_summary">Opcionális API-titok a hozzáférés védelme érdekében. Ha be van állítva, ugyanazt a titkot kell megadni a kliens alkalmazásban is az adatok eléréséhez.</string>
     <string name="pref_xdrip_server_summary">Helyi webszervert biztosít a 17580-as porton, amely emulálja az xDrip+ webszolgáltatást, így különféle külső szolgáltatások, óraszámlapok és alkalmazások használhatják.</string>
+
+    <string name="gda_foreground_summary">Opcionális hibaelhárítási mód, amely stabilizálja az Android Auto kapcsolatot azáltal, hogy megakadályozza az alkalmazás háttérben történő leállítását. A szolgáltatás aktív kapcsolat nélkül inaktív marad, és az értesítés az Android 14-től kezdve egyszerűen elcsúsztatható.</string>
+
+    <string name="restart_libre_app">Kérjük, indítsa újra a telefont vagy a Libre alkalmazást.</string>
+    <string name="alarm_wear_no_alarm_while_charging">Nincs riasztás töltés közben</string>
+    <string name="alarm_wear_no_alarm_while_charging_summary">Nem indul riasztás az órán, amíg az töltődik.</string>
+    <string name="export_settings_info">A beállítások exportálására készül.\nKérjük, ne ossza meg ezt a fájlt senkivel, mivel érzékeny adatokat, például felhasználóneveket és jelszavakat tartalmazhat.\nMegjegyzés: Még ha a fejlesztő segítséget is kér, általában csak a naplófájlokra van szüksége, nem a beállításokra.\nSzeretné folytatni az exportálást?</string>
+    <string name="pref_switch_standard_children_statistics">TITR használata gyermekeknél</string>
+    <string name="pref_switch_standard_children_statistics_summary">A „szűkebb céltartományban töltött idő” (TITR) használata 70–140 mg/dl (3,9–7,8 mmol/l) célértékekkel egyes régiókban kisgyermekek számára ajánlott.</string>
+
+    <string name="pref_source_librelinkup_5_info_summary">Az Abbott titkosított kommunikációra váltott a LibreLinkUp-ban.\nAhogy az előző interfész leállítódik, a GDH valószínűleg nem fog működni.\nJelenleg nincs technikai megoldás.</string>
+    <string name="source_librelinkup_5_info_popup_title">Fontos megjegyzés a LibreLinkUp-ról:</string>
+    <string name="source_librelinkup_5_info_popup">Az Abbott kiadta az 5-ös verziót, amely új, titkosított interfészt használ.\nHa az Abbott leállítja az előző interfészt, a GDH-val (és más harmadik féltől származó alkalmazásokkal) való kommunikáció valószínűleg megszakad.\nJelenleg nincs technikai megoldás az új titkosítás megkerülésére.\nAz intelligens óra integrációja például alapvető funkciók jövőbeli támogatásával kapcsolatos kérdéseket csak közvetlenül az Abbott támogatása válaszolhatja meg.</string>
+    <string name="accessibility_prominent_disclosure_title">Kiemelt tájékoztatás: Always-On-Display (AOD) támogatás</string>
+    <string name="accessibility_prominent_disclosure_message">Ez az alkalmazás az AccessibilityService API-t használja a vércukor-információk megjelenítésére a rendszer Always-On-Display (AOD) funkciója felett.\n\n<b>Hogyan működik:</b>\nA szolgáltatás a lezárási képernyő észlelésére és egy egyéni nézet megjelenítésére szolgál a vércukoradataival az AOD képernyőn, így az eszköz felébresztése nélkül láthatja az értékeit.\n\n<b>Adatvédelem:</b>\nEz a szolgáltatás NEM gyűjt, tárol vagy oszt meg semmilyen személyes adatot. Teljesen helyben működik az eszközén, hogy biztosítsa ezt az átfedési funkciót.\n\nA funkció engedélyezéséhez át lesz irányítva az Android kisegítő lehetőségek beállításaihoz.</string>
 </resources>

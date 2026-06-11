@@ -1,7 +1,6 @@
 package de.michelinside.glucodataauto
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -26,6 +25,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.content.edit
 import androidx.core.view.MenuCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -34,6 +34,7 @@ import androidx.preference.PreferenceManager
 import de.michelinside.glucodataauto.preferences.SettingsActivity
 import de.michelinside.glucodataauto.preferences.SettingsFragmentClass
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GdhUncaughtExecptionHandler
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
@@ -47,13 +48,16 @@ import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.service.ReceiverManager
 import de.michelinside.glucodatahandler.common.tasks.DexcomShareSourceTask
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.GitHubVersionChecker
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.ui.Dialogs
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
+import java.text.DateFormat
 import java.time.Duration
+import java.util.Date
 import de.michelinside.glucodatahandler.common.R as CR
 
 class MainActivity : AppCompatActivity(), NotifierInterface {
@@ -115,7 +119,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             versionChecker = GitHubVersionChecker("GlucoDataAuto", BuildConfig.VERSION_NAME, this)
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
-            sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
 
             ReceiveData.initData(this)
             TextToSpeechUtils.initTextToSpeech(this)
@@ -191,6 +195,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         try {
             Log.d(LOG_ID, "onResume called")
             super.onResume()
+            if(!GlucoDataService.isServiceRunning)
+                GlucoDataService.context = this.applicationContext
             checkUncaughtException()
             update()
             InternalNotifier.addNotifier( this, this, mutableSetOf(
@@ -209,10 +215,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.UPDATE_MAIN))
 
             GlucoDataServiceAuto.startDataSync()
-            if(!GlucoDataService.isServiceRunning)
-                GlucoDataService.context = this.applicationContext
             chartBitmap.resume()
             versionChecker.checkVersion(1)
+            checkMissingPermissions()
             checkNewSettings()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.message.toString() )
@@ -223,6 +228,24 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         Log.v(LOG_ID, "onDestroy called")
         super.onDestroy()
         chartBitmap.close()
+    }
+
+    private fun checkMissingPermissions() {
+        if(sharedPref.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED) && sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)) {
+            if (!ReceiverManager.checkNotificationReceiverPermission(this, false, true)) {
+                Log.w(LOG_ID, "Missing notification reader permission!")
+                Dialogs.showOkCancelDialog(this,
+                    resources.getString(CR.string.permission_missing_title),
+                    resources.getString(CR.string.setting_permission_missing_message, resources.getString(CR.string.pref_source_notification)),
+                    { _, _ -> ReceiverManager.requestNotificationReceiverPermission(this) },
+                    { _, _ ->
+                        sharedPref.edit {
+                            putBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)
+                        }
+                    }
+                )
+            }
+        }
     }
 
     fun requestPermission() : Boolean {
@@ -266,6 +289,16 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 with(sharedPref.edit()) {
                     putString(Constants.SHARED_PREF_DISCLAIMER_SHOWN, BuildConfig.VERSION_NAME)
                     apply()
+                }
+            }
+            if(ReceiveData.source == DataSource.LIBRELINK && !sharedPref.contains(Constants.SHARED_PREF_LLU_5_WARNING_SHOWN)) {
+                Dialogs.showOkDialog(this,
+                    CR.string.source_librelinkup_5_info_popup_title,
+                    CR.string.source_librelinkup_5_info_popup,
+                    null
+                )
+                sharedPref.edit {
+                    putBoolean(Constants.SHARED_PREF_LLU_5_WARNING_SHOWN, true)
                 }
             }
             if(!sharedPref.contains(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU)) {
@@ -471,6 +504,13 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
             noDataLayout.visibility = if(ReceiveData.time>0) View.GONE else View.VISIBLE
 
+            if(GlucoDataService.patientName.isNullOrEmpty()) {
+                if(title != resources.getString(R.string.app_name))
+                    setTitle(R.string.app_name)
+            } else {
+                setTitle(GlucoDataService.patientName)
+            }
+
             updateNotesTable()
             updateAlarmsTable()
             updateConnectionsTable()
@@ -590,10 +630,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     private fun updateDetailsTable() {
         tableDetails.removeViews(1, maxOf(0, tableDetails.childCount - 1))
-        if(!GlucoDataServiceAuto.patientName.isNullOrEmpty()) {
-            tableDetails.addView(createRow(CR.string.patient_name, GlucoDataServiceAuto.patientName!!))
-        }
-
         if(ReceiveData.time > 0) {
             if (ReceiveData.isMmol)
                 tableDetails.addView(createRow(CR.string.info_label_raw, "${ReceiveData.rawValue} mg/dl"))
@@ -665,7 +701,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             if(Log.isLoggable(LOG_ID, android.util.Log.VERBOSE))
                 Log.v(LOG_ID, "onActivityResult called for requestCode: " + requestCode + " - resultCode: " + resultCode + " - data: " + Utils.dumpBundle(data?.extras))
             super.onActivityResult(requestCode, resultCode, data)
-            if (resultCode == Activity.RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 if (requestCode == CREATE_FILE) {
                     data?.data?.also { uri ->
                         Utils.saveLogs(this, uri)
@@ -682,15 +718,19 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     }
 
     private fun checkUncaughtException() {
-        Log.d(LOG_ID, "Check uncaught exception ${sharedPref.getBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, false)}")
+        Log.i(LOG_ID, "Check uncaught exception exists: ${sharedPref.getBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, false)} - " +
+                "last occured at ${DateFormat.getDateTimeInstance().format(Date(sharedPref.getLong(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_TIME, 0)))}")
         if(sharedPref.getBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, false)) {
-            val excMsg = sharedPref.getString(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_MESSAGE, "")
-            Log.e(LOG_ID, "Uncaught exception detected last time: $excMsg")
-            with(sharedPref.edit()) {
+            val excMsg = sharedPref.getString(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_MESSAGE, "") ?: ""
+            val time = sharedPref.getLong(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_TIME, 0)
+            Log.e(LOG_ID, "Uncaught exception detected at ${DateFormat.getDateTimeInstance().format(Date(time))}: $excMsg")
+            sharedPref.edit {
                 putBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, false)
-                apply()
             }
-            Dialogs.showOkDialog(this, CR.string.app_crash_title, CR.string.app_crash_message, null)
+
+            if(time > 0 && (System.currentTimeMillis()- ReceiveData.time) < (60*60 * 1000) && !GdhUncaughtExecptionHandler.isOutOfMemoryException(excMsg)) {
+                Dialogs.showOkDialog(this, CR.string.app_crash_title, CR.string.app_crash_message, null)
+            }
         }
     }
 }

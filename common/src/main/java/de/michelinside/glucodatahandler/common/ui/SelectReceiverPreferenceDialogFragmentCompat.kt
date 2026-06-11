@@ -23,6 +23,7 @@ import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import de.michelinside.glucodatahandler.common.R
 import kotlinx.coroutines.launch
+import androidx.core.content.edit
 
 
 class SelectReceiverPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat() {
@@ -38,9 +39,11 @@ class SelectReceiverPreferenceDialogFragmentCompat : PreferenceDialogFragmentCom
         }
 
         private fun getReceivers(context: Context, isTapAction: Boolean): HashMap<String, String> {
-            val receivers = PackageUtils.getPackages(context)
-            if(!isTapAction)
+            val receivers = PackageUtils.getPackages(context).toMutableMap() as HashMap<String, String>
+            if(!isTapAction) {
+                Log.v(LOG_ID, "Remove own package for non-tapAction")
                 receivers.remove(context.packageName)
+            }
             return receivers
         }
         private fun getActions(context: Context): HashMap<String, String> {
@@ -68,7 +71,7 @@ class SelectReceiverPreferenceDialogFragmentCompat : PreferenceDialogFragmentCom
             if(receivers.containsKey(value))
                 return receivers[value].toString()
             if(value.isNotEmpty()) {
-                Log.w(LOG_ID, "Unknown receiver: $value")
+                Log.w(LOG_ID, "Unknown receiver: $value - isTapAction: $isTapAction")
                 val name = PackageUtils.checkPackageName(context, value)
                 if(name != null)
                     return name
@@ -113,7 +116,7 @@ class SelectReceiverPreferenceDialogFragmentCompat : PreferenceDialogFragmentCom
             val updatingProgress = view.findViewById<ProgressBar>(R.id.updatingProgress)
             
             reloadImage.setOnClickListener {
-                PackageUtils.updatePackages(requireContext())
+                PackageUtils.updatePackages(requireContext(), true)
             }
 
             lifecycleScope.launch {
@@ -141,9 +144,8 @@ class SelectReceiverPreferenceDialogFragmentCompat : PreferenceDialogFragmentCom
         Log.d(LOG_ID, "onDialogClosed called with positiveResult: " +  positiveResult.toString() )
         try {
             if(positiveResult) {
-                with(sharedPref.edit()) {
+                sharedPref.edit {
                     putBoolean(showAllKey, showAllSwitch.isChecked)
-                    apply()
                 }
                 selectReceiverPreference!!.setReceiver(receiver)
             }

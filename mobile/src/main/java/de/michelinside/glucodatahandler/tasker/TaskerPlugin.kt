@@ -37,7 +37,7 @@ open class GlucodataValues {
     val rate: Float = ReceiveData.rate
     @field:TaskerInputField("rateLabel")
     @get:TaskerOutputVariable("rateLabel", R.string.rate_label_label, R.string.rate_label_html_label)
-    val rateLabel: String? = ReceiveData.rateLabel
+    val rateLabel: String? =  ReceiveData.rateLabel
     @field:TaskerInputField("arrow")
     @get:TaskerOutputVariable("arrow", R.string.arrow_label, R.string.arrow_html_label)
     val arrow: String = GlucoDataUtils.getRateSymbol(ReceiveData.rate).toString()

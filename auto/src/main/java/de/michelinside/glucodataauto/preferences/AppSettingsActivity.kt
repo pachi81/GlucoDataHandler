@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import de.michelinside.glucodatahandler.common.preferences.PreferenceHelper
+import de.michelinside.glucodatahandler.common.preferences.SourceFragment
 import de.michelinside.glucodatahandler.common.R as RC
 
 enum class SettingsFragmentClass(val value: Int, val titleRes: Int) {

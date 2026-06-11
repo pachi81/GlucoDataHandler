@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.preference.DialogPreference
 import de.michelinside.glucodatahandler.common.R
+import androidx.core.content.withStyledAttributes
 
 
 class SelectReceiverPreference : DialogPreference {
@@ -28,15 +29,15 @@ class SelectReceiverPreference : DialogPreference {
 
     fun initPreference(attrs: AttributeSet?) {
         Log.d(LOG_ID, "initPreference called")
-        defaultSummary = this.summary.toString()
-        setReceiver("", false)
         if (attrs != null) {
-            val typedArray = context.obtainStyledAttributes(attrs, R.styleable.SelectReceiverPreference)
-            isTapAction = typedArray.getBoolean(R.styleable.SelectReceiverPreference_isTapAction, false)
-            description = typedArray.getString(R.styleable.SelectReceiverPreference_description)?: ""
-            typedArray.recycle()
+            context.withStyledAttributes(attrs, R.styleable.SelectReceiverPreference) {
+                isTapAction = getBoolean(R.styleable.SelectReceiverPreference_isTapAction, false)
+                description = getString(R.styleable.SelectReceiverPreference_description) ?: ""
+            }
             Log.d(LOG_ID, "isTapAction: $isTapAction, description: $description")
         }
+        defaultSummary = this.summary.toString()
+        setReceiver("", false)
     }
 
     override fun getDialogLayoutResource(): Int {

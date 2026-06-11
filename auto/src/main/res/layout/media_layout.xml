@@ -1,57 +1,68 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/widget"
-    android:layout_width="620dp"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
 
+    <!-- Top Spacer (approx 200/1050) -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="20" />
+
+    <!-- Glucose Trend (approx 250/1050) -->
     <LinearLayout
         android:id="@+id/layout_glucose_trend"
-        android:layout_marginTop="200dp"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="0dp"
+        android:layout_weight="25"
         android:orientation="horizontal"
-        android:gravity="center_horizontal"
-        android:paddingHorizontal="10dp"
-        tools:ignore="UselessParent">
+        android:gravity="center"
+        android:paddingHorizontal="10dp">
 
         <TextView
             android:id="@+id/glucose"
-            android:layout_weight="3"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="3"
             android:gravity="center|end"
+            android:autoSizeTextType="uniform"
             android:autoSizeMinTextSize="1sp"
             android:autoSizeStepGranularity="1sp"
-            android:autoSizeTextType="uniform"
             android:autoSizeMaxTextSize="2000sp"
             android:text="---"
             android:maxLines="1"
             android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            tools:ignore="HardcodedText,NestedWeights" />
+            android:layout_marginEnd="10dp" />
 
         <ImageView
             android:id="@+id/trendImage"
-            android:layout_weight="2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="2"
             android:contentDescription="@string/trend"
             android:gravity="center|start"
             android:layout_marginStart="6dp"
             android:layout_marginEnd="5dp"
-            android:layout_marginTop="10dp"
             android:paddingVertical="2dp"
             android:src="@drawable/icon_question" />
     </LinearLayout>
+
+    <!-- Graph (approx 200/1050) -->
     <ImageView
         android:id="@+id/graphImage"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="0dp"
+        android:layout_weight="20"
         android:scaleType="fitCenter"
         android:contentDescription="@string/graph"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginBottom="400dp"
-        android:adjustViewBounds="true" />
+        android:layout_marginHorizontal="10dp" />
+
+    <!-- Bottom Spacer (approx 400/1050) -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="40" />
 
 </LinearLayout>

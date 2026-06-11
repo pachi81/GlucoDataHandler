@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.os.Bundle
+import androidx.core.content.edit
 import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.database.dbSync
@@ -14,65 +15,23 @@ import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.ScreenEventReceiver
+import de.michelinside.glucodatahandler.common.service.WearPhoneManager
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
-import de.michelinside.glucodatahandler.common.utils.Utils.isScreenReaderOn
+import de.michelinside.glucodatahandler.common.utils.Utils
 
 
 class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterface {
     companion object {
         private val LOG_ID = "GDH.GlucoDataServiceWear"
         private var starting = false
-        private var migrated = false
 
         fun start(context: Context) {
             if(!starting) {
                 starting = true
                 Log.d(LOG_ID, "start called")
                 startServiceReceiver = StartServiceReceiver::class.java
-                migrateSettings(context)
                 start(AppSource.WEAR_APP, context, GlucoDataServiceWear::class.java)
                 starting = false
-            }
-        }
-
-        private fun migrateSettings(context: Context) {
-            try {
-                if(migrated)
-                    return
-
-                migrated = true
-                Log.i(LOG_ID, "migrateSettings called")
-                val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-                // notification to vibrate_only
-                if(!sharedPref.contains(Constants.SHARED_PREF_NOTIFICATION_VIBRATE) && sharedPref.contains("notification")) {
-                    with(sharedPref.edit()) {
-                        putBoolean(Constants.SHARED_PREF_NOTIFICATION_VIBRATE, sharedPref.getBoolean("notification", false))
-                        apply()
-                    }
-                }
-                // complications
-                if(!sharedPref.contains(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION)) {
-                    val curApp = context.packageName
-                    Log.i(LOG_ID, "Setting default tap action for complications to $curApp")
-                    with(sharedPref.edit()) {
-                        putString(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION, curApp)
-                        apply()
-                    }
-                }
-
-                // graph settings
-                if(sharedPref.contains(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION) || !sharedPref.contains(Constants.SHARED_PREF_GRAPH_BITMAP_DURATION)) {
-                    val isScreenReader = context.isScreenReaderOn()
-                    val oldDuration = if(isScreenReader) 0 else sharedPref.getInt(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION, 2)
-                    Log.i(LOG_ID, "Setting default duration for graph - screenReader: $isScreenReader - oldDuration: $oldDuration")
-                    with(sharedPref.edit()) {
-                        putInt(Constants.SHARED_PREF_GRAPH_BITMAP_DURATION, oldDuration)
-                        remove(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION)
-                        apply()
-                    }
-                }
-            } catch( exc: Exception ) {
-                Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
             }
         }
     }
@@ -148,9 +107,9 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
                     updateComplicationNotifier()
                     checkServices(context)
                     if(ScreenEventReceiver.isDisplayOff()) {
-                        sendCommand(Command.PAUSE_NODE)
+                        WearPhoneManager.sendCommand(Command.PAUSE_NODE)
                     } else {
-                        sendCommand(Command.RESUME_NODE)
+                        WearPhoneManager.sendCommand(Command.RESUME_NODE)
                         dbSync.requestDbSync(context)
                     }
                 }
@@ -213,4 +172,62 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
         }
     }
 
+    override fun getSettings(): Bundle? {
+        if(sharedPref != null) {
+            val bundle = Bundle()
+            bundle.putBoolean(Constants.SHARED_PREF_WEAR_NO_ALARM_WHILE_CHARGING, sharedPref!!.getBoolean(Constants.SHARED_PREF_WEAR_NO_ALARM_WHILE_CHARGING, false))
+            return bundle
+        }
+        return null
+    }
+
+    override fun setSettings(context: Context, bundle: Bundle) {
+        if(Log.isLoggable(LOG_ID, android.util.Log.VERBOSE))
+            Log.v(LOG_ID, "setSettings called with bundle ${(Utils.dumpBundle(bundle))}")
+        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
+        sharedPref!!.edit {
+            putBoolean(
+                Constants.SHARED_PREF_SHOW_OTHER_UNIT,
+                bundle.getBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, ReceiveData.isMmol)
+            )
+            putBoolean(
+                Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED,
+                bundle.getBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED, true)
+            )
+            putBoolean(
+                Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED,
+                bundle.getBoolean(Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED, true)
+            )
+            putBoolean(
+                Constants.SHARED_PREF_SOURCE_AAPS_ENABLED,
+                bundle.getBoolean(Constants.SHARED_PREF_SOURCE_AAPS_ENABLED, true)
+            )
+            putBoolean(
+                Constants.SHARED_PREF_SOURCE_BYODA_ENABLED,
+                bundle.getBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, true)
+            )
+            putBoolean(
+                Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED,
+                bundle.getBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, true)
+            )
+            putBoolean(
+                Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED,
+                bundle.getBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, true)
+            )
+            putBoolean(
+                Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE,
+                bundle.getBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, true)
+            )
+            putBoolean(
+                Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED,
+                bundle.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)
+            )
+            putString(
+                Constants.SHARED_PREF_SENSOR_RUNTIME,
+                bundle.getString(Constants.SHARED_PREF_SENSOR_RUNTIME, "14")
+            )
+            putString(Constants.PATIENT_NAME, bundle.getString(Constants.PATIENT_NAME, ""))
+        }
+        ReceiveData.setSettings(sharedPref, bundle)
+    }
 }

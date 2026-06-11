@@ -27,6 +27,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.Date
 import androidx.core.content.edit
+import de.michelinside.glucodatahandler.common.service.WearPhoneManager
 
 object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, NotifierInterface {
     private const val LOG_ID = "GDH.AlarmHandler"
@@ -184,7 +185,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
             if(!fromClient) {
                 val bundle = Bundle()
                 bundle.putLong(SNOOZE_TIME, snoozeTime)
-                GlucoDataService.sendCommand(Command.SNOOZE_ALARM, bundle)
+                WearPhoneManager.sendCommand(Command.SNOOZE_ALARM, bundle)
             }
         }
     }
@@ -193,12 +194,11 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         Log.i(LOG_ID, "Disable inactive time called - fromClient=$fromClient")
         if (GlucoDataService.sharedPref!=null) {
             inactiveEnabled = false
-            with(GlucoDataService.sharedPref!!.edit()) {
+            GlucoDataService.sharedPref!!.edit {
                 putBoolean(Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED, false)
-                apply()
             }
             if(!fromClient) {
-                GlucoDataService.sendCommand(Command.DISABLE_INACTIVE_TIME)
+                WearPhoneManager.sendCommand(Command.DISABLE_INACTIVE_TIME)
             }
             updateInactiveTimeAlarm(GlucoDataService.context!!)
         }
@@ -266,13 +266,12 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
                     " - lastRisingAlarmTime=${DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastRisingAlarmTime))}" +
                     " - snoozeTime=${snoozeTimestamp}"
             )
-            with(sharedExtraPref.edit()) {
+            sharedExtraPref.edit {
                 putLong(LAST_ALARM_TIME, lastAlarmTime)
                 putLong(LAST_FALLING_ALARM_TIME, lastFallingAlarmTime)
                 putLong(LAST_RISING_ALARM_TIME, lastRisingAlarmTime)
                 putInt(LAST_ALARM_INDEX, lastAlarmType.ordinal)
                 putLong(SNOOZE_TIME, snoozeTime)
-                apply()
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "saveExtras exception: " + exc.toString() + " " + exc.stackTraceToString() )
@@ -373,25 +372,52 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
 
     fun setSettings(context: Context, bundle: Bundle) {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-        with(sharedPref.edit()) {
+        sharedPref.edit {
 
             AlarmType.entries.forEach {
                 if (it.setting != null)
                     it.setting.saveSettings(bundle, this)
             }
-            if(AlarmNotificationBase.instance != null) {
+            if (AlarmNotificationBase.instance != null) {
                 AlarmNotificationBase.instance!!.saveSettings(bundle, this)
             }
-            if(bundle.containsKey(Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED)) {
-                putBoolean(Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED, inactiveEnabled))
-                putBoolean(Constants.SHARED_PREF_ALARM_INACTIVE_AUTO_RE_ENABLE, bundle.getBoolean(Constants.SHARED_PREF_ALARM_INACTIVE_AUTO_RE_ENABLE, inactiveAutoReenable))
-                putString(Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME, bundle.getString(Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME, inactiveStartTime))
-                putString(Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME, bundle.getString(Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME, inactiveEndTime))
-                putStringSet(Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS, bundle.getStringArray(Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS)?.toMutableSet() ?: defaultWeekdays)
-                putBoolean(Constants.SHARED_PREF_ALARM_FORCE_VERY_LOW, bundle.getBoolean(Constants.SHARED_PREF_ALARM_FORCE_VERY_LOW, forceVeryLow))
-                putBoolean(Constants.SHARED_PREF_ALARM_FORCE_OBSOLETE, bundle.getBoolean(Constants.SHARED_PREF_ALARM_FORCE_OBSOLETE, forceObsolete))
+            if (bundle.containsKey(Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED)) {
+                putBoolean(
+                    Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED,
+                    bundle.getBoolean(Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED, inactiveEnabled)
+                )
+                putBoolean(
+                    Constants.SHARED_PREF_ALARM_INACTIVE_AUTO_RE_ENABLE,
+                    bundle.getBoolean(
+                        Constants.SHARED_PREF_ALARM_INACTIVE_AUTO_RE_ENABLE,
+                        inactiveAutoReenable
+                    )
+                )
+                putString(
+                    Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME,
+                    bundle.getString(
+                        Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME,
+                        inactiveStartTime
+                    )
+                )
+                putString(
+                    Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME,
+                    bundle.getString(Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME, inactiveEndTime)
+                )
+                putStringSet(
+                    Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS,
+                    bundle.getStringArray(Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS)
+                        ?.toMutableSet() ?: defaultWeekdays
+                )
+                putBoolean(
+                    Constants.SHARED_PREF_ALARM_FORCE_VERY_LOW,
+                    bundle.getBoolean(Constants.SHARED_PREF_ALARM_FORCE_VERY_LOW, forceVeryLow)
+                )
+                putBoolean(
+                    Constants.SHARED_PREF_ALARM_FORCE_OBSOLETE,
+                    bundle.getBoolean(Constants.SHARED_PREF_ALARM_FORCE_OBSOLETE, forceObsolete)
+                )
             }
-            apply()
         }
         setSnoozeTime(bundle.getLong(SNOOZE_TIME, snoozeTime), true)
         updateSettings(sharedPref, context)

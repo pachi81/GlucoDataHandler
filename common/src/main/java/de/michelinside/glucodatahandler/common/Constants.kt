@@ -172,7 +172,8 @@ object Constants {
     const val SHARED_PREF_COMPLICATION_TAP_ACTION = "complication_tap_action"
 
     // Data source preferences
-    const val SHARED_PREF_SOURCE_INTERVAL="source_interval"
+    const val SHARED_PREF_SOURCE_INTERVAL_DEPRECATED="source_interval"
+    const val SHARED_PREF_SOURCE_INTERVAL="source_interval_int"
     const val SHARED_PREF_SOURCE_DELAY="source_delay"
 
     const val SHARED_PREF_SOURCE_HELP="source_help"
@@ -214,6 +215,7 @@ object Constants {
     const val SHARED_PREF_LIBRE_PATIENT_ID="source_libre_patient_id"
     const val SHARED_PREF_LIBRE_USER_ID="source_libre_user_id"
     const val SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU="source_libre_auto_accept_tou"
+    const val SHARED_PREF_LLU_5_WARNING_SHOWN="source_libre_llu_5_warning_shown"
     const val SHARED_PREF_LIBRE_SERVER="source_libre_server"
     const val SHARED_PREF_LIBRE_VERSION="source_libre_version"
 
@@ -263,6 +265,10 @@ object Constants {
     const val SHARED_PREF_AOD_WP_COLOURED = "aod_coloured"
     const val AOD_COLOUR = Color.LTGRAY
 
+    // screensaver
+    const val SHARED_PREF_SCREENSAVER_STYLE = "screensaver_style"
+    const val SHARED_PREF_SCREENSAVER_SIZE = "screensaver_size"
+
     // Alarm
     const val ALARM_SNOOZE_ACTION = "de.michelinside.glucodatahandler.SNOOZE"
     const val ALARM_STOP_NOTIFICATION_ACTION = "de.michelinside.glucodatahandler.STOP_NOTIFICATION"
@@ -298,6 +304,7 @@ object Constants {
     const val SHARED_PREF_NO_ALARM_NOTIFICATION_WEAR_CONNECTED = "alarm_no_notification_wear_connected"
     const val SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED = "alarm_no_notification_auto_connected"
     const val SHARED_PREF_WEAR_NO_ALARM_POPUP_PHONE_CONNECTED = "alarm_wear_no_popup_phone_connected"
+    const val SHARED_PREF_WEAR_NO_ALARM_WHILE_CHARGING = "alarm_wear_no_alarm_while_charging"
 
 
     const val SHARED_PREF_ALARM_SUFFIX_ENABLED = "_enabled"
@@ -367,6 +374,7 @@ object Constants {
     const val SHARED_PREF_FULLSCREEN_LANDSCAPE = "fullscreen_landscape"
     const val SHARED_PREF_SENSOR_RUNTIME = "sensor_runtime"
     const val SHARED_PREF_STANDARD_STATISTICS = "standard_statistics"
+    const val SHARED_PREF_STANDARD_CHILDREN_STATISTICS = "standard_children_statistics"
     const val SHARED_PREF_SHOW_SENSOR_AGE_REMAIN_TIME = "main_show_sensor_age_remain_time"
 
     const val SHARED_PREF_MAIN_STATISTICS_DAYS = "main_statistics_days"

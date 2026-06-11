@@ -1,6 +1,7 @@
 package de.michelinside.glucodatahandler
 
 import android.accessibilityservice.AccessibilityService
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -20,25 +21,32 @@ import android.provider.Settings
 import android.view.Display
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
+import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.widget.AodWidget
 import kotlin.math.abs
 import kotlin.math.max
 
 
-class AODAccessibilityService : AccessibilityService() {
+@SuppressLint("AccessibilityPolicy")
+class AODAccessibilityService : AccessibilityService(), NotifierInterface {
     private var overlayView: View? = null
     private lateinit var windowManager: WindowManager
     private lateinit var powerManager: PowerManager
     private val LOG_ID = "GDH.Aod"
+    private var currentState = Display.STATE_UNKNOWN
 
     private var aodWidget: AodWidget? = null
 
     private var yPosOffset = 0
     private var yPosOffsetFactor = 1
     private val MAX_Y_POS_OFFSET = 10
+    private val handler = android.os.Handler(android.os.Looper.getMainLooper())
+    private var pendingOverlayRunnable: Runnable? = null
     val offset: Int get() {
         if(abs(yPosOffset) >= MAX_Y_POS_OFFSET)
             yPosOffsetFactor *= -1
@@ -66,6 +74,50 @@ class AODAccessibilityService : AccessibilityService() {
         }
     }
 
+
+    private lateinit var displayManager: android.hardware.display.DisplayManager
+
+    private var displayListener: android.hardware.display.DisplayManager.DisplayListener? = null
+
+    private fun displayStateChanged(state: Int, delayMillis: Long = 1000) {
+        try {
+            if(state == Display.STATE_UNKNOWN || currentState == state)
+                return
+
+            Log.i(LOG_ID, "Display state changed from $currentState to $state")
+            when (state) {
+                Display.STATE_OFF, Display.STATE_DOZE, Display.STATE_DOZE_SUSPEND -> {
+                    Log.d(LOG_ID, "Phone screen is off or in Doze")
+                    val sharedPref = getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
+                    val enabled = sharedPref.getBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)
+                    if (enabled) {
+                        checkAndCreateOverlay(delayMillis)
+                    } else {
+                        if (aodWidget != null) {
+                            aodWidget!!.destroy()
+                            aodWidget = null
+                        }
+                    }
+                }
+                Display.STATE_ON -> {
+                    Log.d(LOG_ID, "Phone screen turned on")
+                    // WICHTIG: Geplante Overlays sofort stoppen!
+                    pendingOverlayRunnable?.let {
+                        handler.removeCallbacks(it)
+                        pendingOverlayRunnable = null
+                    }
+                    triggerAodState(GlucoDataService.context!!, false)
+                    aodWidget?.pause()
+                    removeOverlay()
+                }
+            }
+            currentState = state
+        } catch (e: Exception) {
+            Log.e(LOG_ID, "Error in displayStateChanged", e)
+        }
+    }
+
+
     private fun triggerAodState(context: Context, state: Boolean) {
         val extras = Bundle()
         extras.putBoolean("aod_state", state)
@@ -78,29 +130,16 @@ class AODAccessibilityService : AccessibilityService() {
             try {
                 when (intent?.action) {
                     Intent.ACTION_SCREEN_OFF -> {
-                        Log.d(LOG_ID, "Screen turned off")
-                        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-                        val enabled = sharedPref.getBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)
-                        if (enabled) {
-                            checkAndCreateOverlay()
-                        }
-                        else {
-                            Log.d(LOG_ID, "Aod disabled in settings")
-                            if(aodWidget != null) {
-                                aodWidget!!.destroy()
-                                aodWidget = null
-                            }
-                        }
+                        Log.d(LOG_ID, "Screen off")
+                        displayStateChanged(Display.STATE_OFF)
                     }
                     Intent.ACTION_SCREEN_ON -> {
-                        Log.d(LOG_ID, "Screen turned on")
-                        triggerAodState(context, false)
-                        removeOverlay()
-                        aodWidget?.pause()
+                        Log.d(LOG_ID, "Screen on")
+                        displayStateChanged(Display.STATE_ON)
                     }
                 }
             } catch (e: Exception) {
-                Log.e(LOG_ID, "Error in screenStateReceiver")
+                Log.e(LOG_ID, "Error in screenStateReceiver: $e")
             }
         }
     }
@@ -110,8 +149,9 @@ class AODAccessibilityService : AccessibilityService() {
         super.onCreate()
 
         try {
-            windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
-            powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+            windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
+            powerManager = getSystemService(POWER_SERVICE) as PowerManager
+            displayManager = getSystemService(DISPLAY_SERVICE) as android.hardware.display.DisplayManager
 
             Log.d(LOG_ID, "Service created")
 
@@ -120,33 +160,77 @@ class AODAccessibilityService : AccessibilityService() {
                 addAction(Intent.ACTION_SCREEN_OFF)
             }
             registerReceiver(screenStateReceiver, filter)
-            val displayManager = BitmapUtils.getDisplayManager(this)
-            if(displayManager != null && displayManager.displays.isNotEmpty()) {
-                val display = displayManager.displays[0]
-                Log.d(LOG_ID, "Display state: ${display.state}")
-                if(display.state != Display.STATE_ON) {
-                    val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-                    val enabled = sharedPref.getBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)
-                    Log.i(LOG_ID, "Initial screen state is ${display.state} - enabled: $enabled")
-                    if (enabled) {
-                        checkAndCreateOverlay()
-                    }
-                }
-            } else {
-                Log.w(LOG_ID, "No displays found")
-            }
+
+            InternalNotifier.addNotifier(this, this, mutableSetOf(NotifySource.CAR_CONNECTION))
+
+            updateDisplayListener()
+
+            // Initialer Check
+            triggerDisplayCheck()
         } catch (e: Exception) {
             Log.e(LOG_ID, "Error in onCreate", e)
         }
     }
 
+    private fun triggerDisplayCheck(delayMillis: Long = 1000) {
+        val defaultDisplay = displayManager.getDisplay(Display.DEFAULT_DISPLAY)
+        Log.d(LOG_ID, "Default display state: ${defaultDisplay?.state}")
+        if (defaultDisplay != null && defaultDisplay.state != Display.STATE_ON) {
+            Log.i(LOG_ID, "Initial default display state is ${defaultDisplay.state}")
+            displayStateChanged(defaultDisplay.state, delayMillis)
+        }
+    }
+
+    private fun updateDisplayListener() {
+        try {
+            Log.d(LOG_ID, "updateDisplayListener called for AA connected: ${CarModeReceiver.AA_connected}")
+            if(CarModeReceiver.AA_connected) {
+                if(displayListener == null) {
+                    displayListener = object : android.hardware.display.DisplayManager.DisplayListener{
+                        override fun onDisplayAdded(displayId: Int) {}
+                        override fun onDisplayRemoved(displayId: Int) {}
+                        override fun onDisplayChanged(displayId: Int) {
+                            if (displayId == Display.DEFAULT_DISPLAY) {
+                                val display = displayManager.getDisplay(displayId)
+                                val state = display?.state ?: Display.STATE_UNKNOWN
+                                Log.d(LOG_ID, "Display state changed: $state")
+                                when (state) {
+                                    Display.STATE_OFF, Display.STATE_DOZE, Display.STATE_DOZE_SUSPEND -> {
+                                        displayStateChanged(Display.STATE_OFF, 10)
+                                    }
+                                    Display.STATE_ON -> {
+                                        displayStateChanged(Display.STATE_ON)
+                                    }
+                                    else -> {
+                                        Log.w(LOG_ID, "Unknown display state: $state")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    displayManager.registerDisplayListener(displayListener, null)
+                    Log.i(LOG_ID, "DisplayListener enabled!")
+                    triggerDisplayCheck(10)
+                }
+            } else if(displayListener != null) {
+                displayManager.unregisterDisplayListener(displayListener)
+                displayListener = null
+                Log.i(LOG_ID, "DisplayListener disabled!")
+            }
+        } catch (e: Exception) {
+            Log.e(LOG_ID, "Error in updateDisplayListener", e)
+        }
+    }
+
     //    private val handler = android.os.Handler(android.os.Looper.getMainLooper())
 
-    private fun checkAndCreateOverlay() {
-        val handler = android.os.Handler(android.os.Looper.getMainLooper())
+    private fun checkAndCreateOverlay(delayMillis: Long = 1000) {
+        pendingOverlayRunnable?.let { return }
 
-        handler.postDelayed({
-            if (!powerManager.isInteractive) {
+        Log.d(LOG_ID, "Checking if overlay should be created - delay: $delayMillis")
+
+        pendingOverlayRunnable = Runnable {
+            if (!powerManager.isInteractive && (currentState != Display.STATE_ON)) {
                 try {
                     triggerAodState(GlucoDataService.context!!, true)
                     if(aodWidget == null) {
@@ -159,8 +243,14 @@ class AODAccessibilityService : AccessibilityService() {
                 } catch (e: Exception) {
                     Log.e(LOG_ID, "Error adding overlay", e)
                 }
+            } else {
+                Log.d(LOG_ID, "Overlay creation cancelled: Phone is interactive or state is ON")
+                removeOverlay()
             }
-        }, 1000)
+            pendingOverlayRunnable = null
+        }
+
+        handler.postDelayed(pendingOverlayRunnable!!, delayMillis)
     }
 
     fun removeAndCreateOverlay()
@@ -171,8 +261,10 @@ class AODAccessibilityService : AccessibilityService() {
 
     private fun createOverlay() {
         try {
-            if (powerManager.isInteractive)
+            if (powerManager.isInteractive || currentState == Display.STATE_ON) {
+                Log.d(LOG_ID, "Overlay creation cancelled: Phone is interactive (${powerManager.isInteractive}) or state is ON (${currentState == Display.STATE_ON})")
                 return
+            }
             if(aodWidget == null) {
                 aodWidget = AodWidget(this)
                 aodWidget!!.create()
@@ -182,6 +274,7 @@ class AODAccessibilityService : AccessibilityService() {
             if (bitmap == null)
                 return
 
+            Log.d(LOG_ID, "Creating overlay")
             val imageView = ImageView(this)
 
             imageView.layoutParams = FrameLayout.LayoutParams(
@@ -190,6 +283,9 @@ class AODAccessibilityService : AccessibilityService() {
             )
 
             imageView.setImageBitmap(bitmap)
+            val isLandscape = resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
+            val screenWidth = BitmapUtils.getScreenWidth(this)
+            val screenHeight = BitmapUtils.getScreenHeight(this)
             val yOffset = max(0F, ((BitmapUtils.getScreenHeight(this)-bitmap.height)*aodWidget!!.getYPos()/100F)+offset)
             val xOffset = max(0F, ((BitmapUtils.getScreenWidth(this)-bitmap.width)*aodWidget!!.getXPos()/40F)+offset)
 
@@ -206,7 +302,7 @@ class AODAccessibilityService : AccessibilityService() {
                 y = yOffset.toInt()
             }
 
-            Log.d(LOG_ID, "Adding overlay at y-pos ${layoutParams.y}")
+            Log.d(LOG_ID, "Create AOD overlay (x*y:${layoutParams.x}*${layoutParams.y}) at x=$xOffset/$screenWidth and y=$yOffset/$screenHeight - isLandscape=$isLandscape")
 
             windowManager.addView(imageView, layoutParams)
             overlayView = imageView
@@ -229,12 +325,20 @@ class AODAccessibilityService : AccessibilityService() {
         Log.d(LOG_ID, "Service destroyed")
 
         try {
+            InternalNotifier.remNotifier(this, this)
             unregisterReceiver(screenStateReceiver)
+            if(displayListener != null)
+                displayManager.unregisterDisplayListener(displayListener)
+            triggerAodState(GlucoDataService.context!!, false)
         } catch (e: Exception) {
             Log.e(LOG_ID, "Error unregistering receiver", e)
         }
 
         removeOverlay()
+        if (aodWidget != null) {
+            aodWidget!!.destroy()
+            aodWidget = null
+        }
     }
 
     private fun removeOverlay() {
@@ -251,6 +355,19 @@ class AODAccessibilityService : AccessibilityService() {
         }
     }
 
+    override fun OnNotifyData(
+        context: Context,
+        dataSource: NotifySource,
+        extras: Bundle?
+    ) {
+        Log.d(LOG_ID, "OnNotifyData received for $dataSource with extras: ${Utils.dumpBundle(extras)}")
+        when (dataSource) {
+            NotifySource.CAR_CONNECTION -> {
+                updateDisplayListener()
+            }
+            else -> {}
+        }
+    }
 
 
 }

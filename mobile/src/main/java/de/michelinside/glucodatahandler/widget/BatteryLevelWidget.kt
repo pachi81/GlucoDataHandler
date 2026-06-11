@@ -8,10 +8,11 @@ import de.michelinside.glucodatahandler.common.utils.Log
 import android.widget.RemoteViews
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
-import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.notification.AlarmType
+import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
+import de.michelinside.glucodatahandler.common.service.WearPhoneManager
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.R as CR
@@ -37,14 +38,17 @@ class BatteryLevelWidget : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetId: Int,
         batteryLevel: Int,
-        deviceName: String
+        deviceName: String,
+        isCharging: Boolean
     ) {
         try {
-            Log.d(LOG_ID, "updateWidget called for " + this.toString() + " widget:$appWidgetId battery:$batteryLevel device:$deviceName" )
+            Log.d(LOG_ID, "updateWidget called for ${this.toString()} widget:$appWidgetId battery:$batteryLevel device:$deviceName charging:$isCharging" )
 
             val remoteViews = RemoteViews(context.packageName, R.layout.battery_level_widget)
 
-            val batteryLevelStr = if (batteryLevel == 0) "?%" else "$batteryLevel%"
+            var batteryLevelStr = if (batteryLevel == 0) "?%" else "$batteryLevel%"
+            if (isCharging)
+                batteryLevelStr += " ⚡"
             remoteViews.setTextViewText(R.id.battery_level, batteryLevelStr)
             remoteViews.setTextViewText(R.id.device_name, deviceName)
             val levelColour = getColor(batteryLevel)
@@ -74,24 +78,27 @@ class BatteryLevelWidget : AppWidgetProvider() {
 
             for (appWidgetId in appWidgetIds) {
                 var batteryLevel = 0
+                var isCharging = false
                 var deviceName = context.getString(CR.string.activity_main_disconnected_label)
 
 
                 if (WearPhoneConnection.nodesConnected && !WearPhoneConnection.connectionError) {
-                    val connection = GlucoDataService.getWearPhoneConnection()
+                    val connection = WearPhoneManager.getWearPhoneConnection()
                     if (connection != null) {
                         val nodeId = connection.pickBestNodeId()
                         if (nodeId != null) {
                             WearPhoneConnection.getNodeBatteryLevel(nodeId).firstNotNullOf { (name, level) ->
-                                if (level > 0)
-                                    batteryLevel = level
+                                if (level.first > 0) {
+                                    batteryLevel = level.first
+                                    isCharging = BatteryReceiver.isCharging(level.second)
+                                }
                                 deviceName = name
                             }
                         }
                     }
                 }
 
-                updateWidget(context, appWidgetManager, appWidgetId, batteryLevel, deviceName)
+                updateWidget(context, appWidgetManager, appWidgetId, batteryLevel, deviceName, isCharging)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Exception in onUpdate: " + exc.message.toString())
