@@ -67,6 +67,11 @@ Our Application accesses and processes health information to provide its core fu
 - **Purpose:** This data is used solely to provide you with a consolidated view of your glucose levels and to allow other health applications you use to access this information via Health Connect.
 - **Storage:** These health data are processed locally on your device. We do not upload your health data to our own servers or any third-party servers other than Google Health Connect (only upon your activation).
 
+#### Accessibility Service API
+Our Application uses the **AccessibilityService API** to provide the following feature:
+- **Always-On-Display (AOD) Overlay:** The service is used to detect when the device is in lock screen or AOD mode to overlay glucose information. This allows users to view their glucose levels without waking the device.
+- **Data Collection:** We do **not** use the AccessibilityService API to collect, store, or share any personal or sensitive user data. All processing occurs locally on your device.
+- **Activation:** The use of this service is optional and must be explicitly enabled by the user in the Android Accessibility settings after a prominent disclosure is shown within the application.
 
 #### Usage Data
 

@@ -470,8 +470,8 @@ class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen)  {
             val enabled = AODAccessibilityService.isAccessibilitySettingsEnabled(requireContext())
             if (!enabled) {
                 Dialogs.showOkCancelDialog(requireContext(),
-                    resources.getString(CR.string.permission_missing_title),
-                    resources.getString(CR.string.aod_permission_info),
+                    resources.getString(CR.string.accessibility_prominent_disclosure_title),
+                    resources.getString(CR.string.accessibility_prominent_disclosure_message),
                     { _, _ ->
                         val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
                         accessibilitySettingsLauncher.launch(intent)
