@@ -62,11 +62,17 @@ class StatisticsData(val days: Int) {
     val percentVeryHigh: Float get() {
         return (veryHigh.toFloat() / count.toFloat()) * 100f
     }
-    val gmiValue: Float get() {
+    val gmiPercent: Float get() {
         return 3.31F + (0.02392F*averageGlucose)
     }
-    val hba1cValue: Float get() {
+    val gmiMmolPerMol: Int get() {
+        return Utils.round(12.71F + (0.2615F*averageGlucose), 0).toInt()
+    }
+    val hba1cPercent: Float get() {
         return (averageGlucose + 46.7F) / 28.7F
+    }
+    val hba1cMmolPerMol: Int get() {
+        return Utils.round((averageGlucose * 0.3808F) - 10.615F, 0).toInt()
     }
 
     fun update(standardStats: Boolean, useTITR: Boolean) {
