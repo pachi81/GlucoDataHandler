@@ -4,6 +4,7 @@
 
     <string name="unit_mgdl">мг/дл</string>
     <string name="unit_mmol">ммоль/л</string>
+    <string name="unit_gmi">ммоль/моль</string>
 
     <string name="info_label_sensor_id">Датчик</string>
     <string name="info_label_value">Значение</string>

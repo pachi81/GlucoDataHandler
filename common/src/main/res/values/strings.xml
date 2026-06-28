@@ -7,6 +7,7 @@
 
     <string name="unit_mgdl" translatable="false">mg/dl</string>
     <string name="unit_mmol" translatable="false">mmol/l</string>
+    <string name="unit_gmi" translatable="false">mmol/mol</string>
 
     <string name="info_label_iob" translatable="false">IOB</string>
     <string name="info_label_cob" translatable="false">COB</string>
