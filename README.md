@@ -13,7 +13,7 @@ This innovative app receives data from various sources and visualizes it clearly
     * **Cloud Services:**
         * Receives glucose values as **[LibreLinkUp follower](https://github.com/pachi81/GlucoDataHandler/wiki/LibreLinkUp)**
         * Receives glucose values as **[Dexcom Share follower](https://github.com/pachi81/GlucoDataHandler/wiki/Dexcom-Share)**
-        * Received glucose values as **[Medrum follower](https://github.com/pachi81/GlucoDataHandler/wiki/EasyFollow)**
+        * Received glucose values as **[Medtrum follower](https://github.com/pachi81/GlucoDataHandler/wiki/EasyFollow)**
         * Receives glucose, IOB and COB values from **Nightscout** (pebble interface)
     * **Local Apps:**
         * Receives glucose, IOB and COB values from **[AndroidAPS](https://github.com/pachi81/GlucoDataHandler/wiki/Android-APS-(AAPS))**
