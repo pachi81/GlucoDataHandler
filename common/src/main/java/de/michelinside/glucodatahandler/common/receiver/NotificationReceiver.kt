@@ -93,14 +93,17 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         fun verifyNotificationReceiver(context: Context) {
             val sharedPref = GlucoDataService.sharedPref?: context.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
             if(sharedPref.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED) && sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)) {
-                Log.d(LOG_ID, "Verify notification receiver triggered.")
+                Log.d(LOG_ID, "Verify notification receiver triggered. connected=$isConnected - last notification=${Utils.getUiTimeStamp(lastNotificationTime)}")
                 checkPermission(context, true)
             }
         }
 
         private fun checkListener(context: Context) {
-            if(lastNotificationTime == 0L)  // not yet created!
+            if(lastNotificationTime == 0L) {  // not yet created!
+                Log.i(LOG_ID, "Initial check, setting last notification time to 9 min ago")
+                lastNotificationTime = System.currentTimeMillis() - 540000L
                 return
+            }
             Log.d(LOG_ID, "Check listener is working: connected=$isConnected - last notification=${
                 Utils.getUiTimeStamp(
                     lastNotificationTime
@@ -122,8 +125,6 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                 val componentName =
                     ComponentName(context, NotificationReceiver::class.java)
 
-                requestRebind(componentName)
-
                 pm.setComponentEnabledSetting(
                     componentName,
                     PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP
@@ -133,6 +134,8 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                     componentName,
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP
                 )
+
+                requestRebind(componentName)
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "Exception in restartListener: " + exc.toString())
             }

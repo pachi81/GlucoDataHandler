@@ -1122,8 +1122,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             Log.d(LOG_ID, "Create statistics for ${statData.days}d with ${statData.count} data points - hasData: ${statData.hasData}")
             val name = if(btnStat1d.isChecked) resources.getString(CR.string.info_label_average) else resources.getString(CR.string.info_label_average) + " ⌀"
             tableStatistics.addView(createRow(name, GlucoDataUtils.getDisplayGlucoseAsString(statData.averageGlucose, true)))
-            tableStatistics.addView(createRow(CR.string.gmi, "${DecimalFormat("#.#").format(statData.gmiPercent)}%${if(BitmapUtils.isLandscapeOrientation(this))"\n" else " "}(${statData.gmiMmolPerMol} ${resources.getString(CR.string.unit_gmi)})"))
-            tableStatistics.addView(createRow(CR.string.hba1c, "${DecimalFormat("#.#").format(statData.hba1cPercent)}%${if(BitmapUtils.isLandscapeOrientation(this))"\n" else " "}(${statData.hba1cMmolPerMol} ${resources.getString(CR.string.unit_gmi)})"))
+            tableStatistics.addView(createLongValueRow(CR.string.gmi, "${DecimalFormat("#.#").format(statData.gmiPercent)}% (${statData.gmiMmolPerMol} ${resources.getString(CR.string.unit_gmi)})"))
+            tableStatistics.addView(createLongValueRow(CR.string.hba1c, "${DecimalFormat("#.#").format(statData.hba1cPercent)}% (${statData.hba1cMmolPerMol} ${resources.getString(CR.string.unit_gmi)})"))
             if(statData.hasData) {
                 tableStatistics.addView(createProgressBarRow(GlucoseStatistics.getStatisticsTitle(this, AlarmType.VERY_HIGH), statData.percentVeryHigh, ReceiveData.getAlarmTypeColor(AlarmType.VERY_HIGH)))
                 tableStatistics.addView(createProgressBarRow(GlucoseStatistics.getStatisticsTitle(this, AlarmType.HIGH), statData.percentHigh, ReceiveData.getAlarmTypeColor(AlarmType.HIGH)))
@@ -1167,6 +1167,22 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         row.setPadding(Utils.dpToPx(5F, this))
         row.addView(createColumn(key, false, onClickListener))
         row.addView(createColumn(value, true, onClickListener))
+        return row
+    }
+
+    private fun createLongValueRow(keyResId: Int, value: String, onClickListener: OnClickListener? = null) : TableRow {
+        return createLongValueRow(resources.getString(keyResId), value, onClickListener)
+    }
+
+    private fun createLongValueRow(key: String, value: String, onClickListener: OnClickListener? = null) : TableRow {
+        val row = TableRow(this)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+            row.isScreenReaderFocusable = true
+        row.weightSum = 10F
+        //row.setBackgroundColor(resources.getColor(R.color.table_row))
+        row.setPadding(Utils.dpToPx(5F, this))
+        row.addView(createColumn(key, false, onClickListener, 3F))
+        row.addView(createColumn(value, true, onClickListener, 7F))
         return row
     }
 

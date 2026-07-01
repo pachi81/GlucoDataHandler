@@ -1063,8 +1063,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         }
     }
 
-    fun setSensorStartTime(serialId: String?, startTime: Long) {
-        if(!serialId.isNullOrEmpty() && startTime > 0 && (startTimePair.first != serialId || startTimePair.second != startTime)) {
+    fun setSensorStartTime(serialId: String?, startTime: Long, checkStartTime: Boolean = false) {
+        if(!serialId.isNullOrEmpty() && startTime > 0 && (startTimePair.first != serialId || (checkStartTime && startTimePair.second != startTime))) {
             val serial = GlucoDataUtils.checkSerial(serialId)!!
             Log.i(LOG_ID, "setSensorStartTime for " + serial + ": " + Utils.getUiTimeStamp(startTime))
             startTimePair = Pair(serial, startTime)
