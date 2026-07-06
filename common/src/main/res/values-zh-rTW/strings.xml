@@ -1005,6 +1005,8 @@ GlucoDataHandler 只會將血糖數據寫入健康連結，除非您明確授予
     <string name="pref_source_librelinkup_5_info_summary">Abbott 已將 LibreLinkUp 切換至加密通訊。\n一旦先前的介面關閉，GDH 將可能無法運作。\n目前尚無技術解決方案。</string>
     <string name="source_librelinkup_5_info_popup_title">關於 LibreLinkUp 的重要提示：</string>
     <string name="source_librelinkup_5_info_popup">Abbott 發佈了版本 5，採用新的加密介面。\n如果 Abbott 關閉先前的介面，與 GDH（及其他第三方應用程式）的通訊將可能中斷。\n目前尚無技術方案可繞過此新加密。\n關於未來是否支援必要功能（例如智慧手錶整合）的問題，只能由 Abbott 支援團隊直接回答。</string>
-    <string name="accessibility_prominent_disclosure_title">重要聲明：支援永遠顯示 (AOD)</string>
-    <string name="accessibility_prominent_disclosure_message">此應用程式使用 AccessibilityService API 在系統永遠顯示 (AOD) 之上顯示血糖資訊。\n\n<b>運作方式：</b>\n此服務用於偵測鎖定畫面，並在 AOD 畫面上覆蓋血糖數據的自訂視圖，讓您無需喚醒裝置即可查看血糖數值。\n\n<b>數據隱私：</b>\n此服務不會收集、儲存或分享任何個人數據。它完全在您的裝置上本地運行，以提供此覆蓋功能。\n\n若要啟用此功能，您將被重新導向至 Android 協助工具設定。</string>
+
+    <string name="accessibility_prominent_disclosure_title">輔助功能權限</string>
+    <string name="accessibility_prominent_disclosure_message">此應用程式需要使用 AccessibilityService API，以便在您的微光螢幕（Always-On-Display, AOD）上顯示血糖值。\n\n用途：\n系統會偵測鎖定畫面狀態，並在 AOD 畫面上覆蓋顯示含有您當前血糖數據的自訂本機畫面。這能讓您在不喚醒裝置的情況下監控血糖狀態。\n\n數據隱私：\n此服務僅嚴格用於畫面覆蓋顯示。它絕不會存取、收集、儲存或分享任何個人、敏感或健康數據。\n\n同意：\n點擊 \"接受\" 即表示您同意啟用此服務，系統隨後將引導您前往 Android 設定畫面。點擊取消可拒絕啟用。</string>
+    <string name="button_accept">接受</string>
 </resources>

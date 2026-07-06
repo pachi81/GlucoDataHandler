@@ -469,9 +469,9 @@ class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen)  {
         if(preferenceManager.sharedPreferences!!.getBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)) {
             val enabled = AODAccessibilityService.isAccessibilitySettingsEnabled(requireContext())
             if (!enabled) {
-                Dialogs.showOkCancelDialog(requireContext(),
-                    resources.getString(CR.string.accessibility_prominent_disclosure_title),
-                    resources.getString(CR.string.accessibility_prominent_disclosure_message),
+                Dialogs.showAcceptCancelDialog(requireContext(),
+                    CR.string.accessibility_prominent_disclosure_title,
+                    CR.string.accessibility_prominent_disclosure_message,
                     { _, _ ->
                         val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
                         accessibilitySettingsLauncher.launch(intent)

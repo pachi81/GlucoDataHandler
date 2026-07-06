@@ -7,6 +7,7 @@
 
     <string name="unit_mgdl" translatable="false">mg/dl</string>
     <string name="unit_mmol" translatable="false">mmol/l</string>
+    <string name="unit_gmi" translatable="false">mmol/mol</string>
 
     <string name="info_label_iob" translatable="false">IOB</string>
     <string name="info_label_cob" translatable="false">COB</string>
@@ -584,7 +585,7 @@
     <string name="src_dexcom_share_password_summary">Password for Dexcom Share account.</string>
     <string name="pref_source_dexcom_share_info">Setup Dexcom Share</string>
     <string name="permission_missing_title">Missing permission!</string>
-    <string name="setting_permission_missing_message">The settings\n\'%1$s\'\nis set, but the related permission is not granted!\nPress \"OK\" to be forwared the permission dialog or press \"Cancel\" to disable this setting.</string>
+    <string name="setting_permission_missing_message">The settings\n\'%1$s\'\nis set, but the related permission is not granted!\nPress \"OK\" to be forwarded to the permission dialog or press \"Cancel\" to disable this setting.</string>
     <string name="xdrip_broadcast_service_api_enabled">Broadcast Service API</string>
     <string name="xdrip_broadcast_service_api_enabled_summary">Use xDrip+ Broadcast Service API to receive data (also IOB) from xDrip+.\nPlease activate \"Broadcast Service API\" in \"Inter-App settings\" in xDrip+ first!</string>
     <string name="obsolete_time">Obsolete time</string>
@@ -1079,6 +1080,7 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="source_librelinkup_5_info_popup_title">Important note regarding LibreLinkUp:</string>
     <string name="source_librelinkup_5_info_popup">Abbott has released version 5, which uses a new, encrypted interface.\nIf Abbott shuts down the previous interface, communication with GDH (and other third-party apps) will likely be interrupted.\nCurrently, there is no technical solution to bypass this new encryption.\nQuestions regarding the future support of essential features like smartwatch integration can only be answered directly by Abbott support.</string>
 
-    <string name="accessibility_prominent_disclosure_title">Prominent Disclosure: Always-On-Display (AOD) Support</string>
-    <string name="accessibility_prominent_disclosure_message">This app uses the AccessibilityService API to display glucose information on top of the system Always-On-Display (AOD).\n\n<b>How it works:</b>\nThe service is used to detect the lock screen and overlay a custom view with your glucose data on the AOD screen, so you can see your levels without waking your device.\n\n<b>Data Privacy:</b>\nThis service does NOT collect, store, or share any personal data. It operates purely locally on your device to provide this overlay functionality.\n\nTo enable this feature, you will be redirected to the Android Accessibility settings.</string>
+    <string name="accessibility_prominent_disclosure_title">Accessibility Permission</string>
+    <string name="accessibility_prominent_disclosure_message">This app requests the AccessibilityService API to display glucose values on your Always-On-Display (AOD).\n\nPurpose:\nIt detects the lock screen state to overlay a custom local view with your current glucose data. This allows you to monitor your levels without waking the device.\n\nData Privacy:\nThis service is used strictly for the visual overlay. It does NOT access, collect, store, or share any personal, sensitive, or health data.\n\nConsent:\nBy tapping \"Accept\", you agree to enable this service and will be redirected to the Android settings. Tap \"Cancel\" to decline.</string>
+    <string name="button_accept">Accept</string>
 </resources>
