@@ -722,6 +722,14 @@
     <string name="widget_wearos_battery_level">Ниво на батерията на WearOS</string>
 
     <string name="graph">Графика</string>
+    <string name="tile_glucose_value">Глюкоза</string>
+    <string name="tile_glucose_graph">Графика</string>
+    <string name="tile_delta_prefix_1m">1 мин %1$s</string>
+    <string name="tile_delta_prefix_5m">5 мин %1$s</string>
+    <string name="tile_delta_prefix_15m">15 мин %1$s</string>
+    <string name="tile_updated_seconds_ago">Актуализирано преди %1$d сек</string>
+    <string name="tile_updated_minutes_ago">Актуализирано преди %1$d мин</string>
+    <string name="tile_updated_never">Актуализирано --</string>
     <string name="graph_duration">Продължителност на графиката</string>
     <string name="graph_duration_wear_summary">Брой часове, показани на графиката в усложнението и на главния екран.\nИзползвайте 0, за да деактивирате графиката.</string>
     <string name="graph_duration_summary">Брой часове, показани на графиката.\nИзползвайте 0, за да деактивирате графиката.</string>

@@ -723,6 +723,14 @@
     <string name="widget_wearos_battery_level">Úroveň batérie WearOS</string>
 
     <string name="graph">Graf</string>
+    <string name="tile_glucose_value">Glukóza</string>
+    <string name="tile_glucose_graph">Graf</string>
+    <string name="tile_delta_prefix_1m">1 min %1$s</string>
+    <string name="tile_delta_prefix_5m">5 min %1$s</string>
+    <string name="tile_delta_prefix_15m">15 min %1$s</string>
+    <string name="tile_updated_seconds_ago">Aktualizované pred %1$d s</string>
+    <string name="tile_updated_minutes_ago">Aktualizované pred %1$d min</string>
+    <string name="tile_updated_never">Aktualizované --</string>
     <string name="graph_duration">Dĺžka grafu</string>
     <string name="graph_duration_wear_summary">Počet hodín zobrazených v grafe v komplikácii a na hlavnej obrazovke.\nPoužite 0 na vypnutie grafu.</string>
     <string name="graph_duration_summary">Počet hodín zobrazených v grafe.\nPoužite 0 na vypnutie grafu.</string>
