@@ -33,7 +33,6 @@ object GlucoseGraphTileUpdater : NotifierInterface {
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
-            android.util.Log.e("TAG", "++++++++++++++ notified", )
             updateCount++
             TileService.getUpdater(context)
                 .requestUpdate(GlucoseGraphTileService::class.java)
