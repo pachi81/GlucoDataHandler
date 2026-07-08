@@ -2,13 +2,12 @@ package de.michelinside.glucodatahandler.tile
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.Canvas
 import androidx.wear.protolayout.ActionBuilders
 import androidx.wear.protolayout.DimensionBuilders.dp
 import androidx.wear.protolayout.DimensionBuilders.expand
 import androidx.wear.protolayout.LayoutElementBuilders
 import androidx.wear.protolayout.ModifiersBuilders
-import androidx.wear.protolayout.ResourceBuilders
+import androidx.wear.protolayout.ProtoLayoutScope
 import androidx.wear.protolayout.TimelineBuilders
 import androidx.wear.tiles.EventBuilders
 import androidx.wear.tiles.RequestBuilders
@@ -20,29 +19,27 @@ import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.chart.ChartBitmapHandler
-import de.michelinside.glucodatahandler.common.utils.BitmapUtils
+import de.michelinside.glucodatahandler.common.chart.ValueBitmapHandler
 import de.michelinside.glucodatahandler.common.utils.Log
-import androidx.core.graphics.createBitmap
 
 /**
  * Wear OS Tile showing the current glucose value, trend arrow, delta/time and the glucose graph,
  * matching the layout of the wear app main screen.
  *
- * The value + arrow are rendered to a single inline bitmap via [BitmapUtils.getGlucoseTrendBitmap]
- * and the graph is taken from [ChartBitmapHandler] (same source as the chart complication). Tapping
- * the tile opens [WearActivity].
+ * The value + arrow bitmaps come from [ValueBitmapHandler] and the graph from [ChartBitmapHandler]
+ * (same source as the chart complication) - both cache their rendered bitmaps and only redraw when
+ * the underlying data changes, instead of on every tile request. Tapping the tile opens
+ * [WearActivity].
  *
  * The tile is refreshed by [GlucoseGraphTileUpdater] whenever new data or a graph update arrives.
- * Important: the resources version returned here must change whenever the bitmap content changes,
- * otherwise the renderer serves the stale cached image and the tile never repaints.
+ * Images are attached via the request's [ProtoLayoutScope] (see [buildLayout]) - the renderer
+ * collects them from the scope itself, so there is no [onTileResourcesRequest] override here.
  */
 class GlucoseGraphTileService : TileService() {
 
 
     companion object {
         private const val LOG_ID = "GDH.GlucoseGraphTileService"
-        private const val GLUCOSE_IMAGE_ID = "glucose_trend"
-        private const val GRAPH_IMAGE_ID = "glucose_graph"
         private const val WIDGET_ID = "GDH.GlucoseGraphTile"
         // Keep the inline image payload small: the Tiles IPC channel rejects large parcels
         // (TransactionTooLargeException). Downscaled + RGB_565 (2 bytes/px) keeps us well under it.
@@ -58,11 +55,15 @@ class GlucoseGraphTileService : TileService() {
         private fun registerChart(context: Context) {
             if (GlucoDataService.isServiceRunning && !ChartBitmapHandler.isRegistered(WIDGET_ID))
                 ChartBitmapHandler.register(context, WIDGET_ID)
+            if (!ValueBitmapHandler.isRegistered(WIDGET_ID))
+                ValueBitmapHandler.register(context, WIDGET_ID)
         }
 
-        private fun unregisterChart() {
+        private fun unregisterChart(context: Context) {
             if (ChartBitmapHandler.isRegistered(WIDGET_ID))
                 ChartBitmapHandler.unregister(WIDGET_ID)
+            if (ValueBitmapHandler.isRegistered(WIDGET_ID))
+                ValueBitmapHandler.unregister(context, WIDGET_ID)
         }
 
         private fun getGraphBitmap(): Bitmap? = ChartBitmapHandler.getBitmap()
@@ -88,7 +89,7 @@ class GlucoseGraphTileService : TileService() {
 
     override fun onTileRemoveEvent(requestParams: EventBuilders.TileRemoveEvent) {
         try {
-            unregisterChart()
+            unregisterChart(this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onTileRemoveEvent exception: " + exc.message.toString())
         }
@@ -132,7 +133,7 @@ class GlucoseGraphTileService : TileService() {
             val tile = TileBuilders.Tile.Builder()
                 .setResourcesVersion(resourcesVersion())
                 .setFreshnessIntervalMillis(FRESHNESS_INTERVAL_MS)
-                .setTileTimeline(TimelineBuilders.Timeline.fromLayoutElement(buildLayout()))
+                .setTileTimeline(TimelineBuilders.Timeline.fromLayoutElement(buildLayout(requestParams.scope)))
                 .build()
             immediate(tile)
         } catch (exc: Exception) {
@@ -141,35 +142,7 @@ class GlucoseGraphTileService : TileService() {
         }
     }
 
-    override fun onTileResourcesRequest(
-        requestParams: RequestBuilders.ResourcesRequest
-    ): ListenableFuture<ResourceBuilders.Resources> {
-        return try {
-            // Echo the requested version so the resources always match the version the tile
-            // promised in onTileRequest. Recomputing it here races with GlucoseGraphTileUpdater and makes
-            // the renderer reject the resources (tile stops repainting).
-            val builder = ResourceBuilders.Resources.Builder()
-                .setVersion(requestParams.version)
-                .addIdToImageMapping(
-                    GLUCOSE_IMAGE_ID,
-                    inlineImage(buildValueBitmap(), VALUE_IMAGE_WIDTH_PX, VALUE_IMAGE_HEIGHT_PX)
-                )
-            getGraphBitmap()?.let {
-                builder.addIdToImageMapping(
-                    GRAPH_IMAGE_ID,
-                    inlineImage(it, GRAPH_IMAGE_WIDTH_PX, GRAPH_IMAGE_HEIGHT_PX)
-                )
-            }
-            immediate(builder.build())
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "onTileResourcesRequest exception: " + exc.message.toString())
-            immediate(
-                ResourceBuilders.Resources.Builder().setVersion(requestParams.version).build()
-            )
-        }
-    }
-
-    private fun buildLayout(): LayoutElementBuilders.LayoutElement {
+    private fun buildLayout(scope: ProtoLayoutScope): LayoutElementBuilders.LayoutElement {
         val delta5 = deltaLineText(CR.string.tile_delta_prefix_5m, ReceiveData.delta5Min)
         val delta15 = deltaLineText(CR.string.tile_delta_prefix_15m, ReceiveData.delta15Min)
         val clickable = ModifiersBuilders.Clickable.Builder()
@@ -196,20 +169,21 @@ class GlucoseGraphTileService : TileService() {
             // small top inset so the value isn't clipped by the round bezel
             .addContent(spacer(28f))
             .addContent(
-                LayoutElementBuilders.Image.Builder()
-                    .setResourceId(GLUCOSE_IMAGE_ID)
+                LayoutElementBuilders.Image.Builder(scope)
+                    .setImageResource(inlineImage(buildValueBitmap(), VALUE_IMAGE_WIDTH_PX, VALUE_IMAGE_HEIGHT_PX))
                     // wide aspect to match the inline value+arrow bitmap (290x160)
                     .setWidth(expand())
                     .setHeight(dp(52f))
                     .build()
             )
 
-        if (getGraphBitmap() != null) {
+        val graphBitmap = getGraphBitmap()
+        if (graphBitmap != null) {
             frame
                 .addContent(spacer(3f))
                 .addContent(
-                    LayoutElementBuilders.Image.Builder()
-                        .setResourceId(GRAPH_IMAGE_ID)
+                    LayoutElementBuilders.Image.Builder(scope)
+                        .setImageResource(inlineImage(graphBitmap, GRAPH_IMAGE_WIDTH_PX, GRAPH_IMAGE_HEIGHT_PX))
                         .setWidth(expand())     // edge to edge
                         .setHeight(expand())    // fill the gap between value and deltas
                         // FILL_BOUNDS stretches to the full box (default FIT leaves gaps)
@@ -243,17 +217,10 @@ class GlucoseGraphTileService : TileService() {
         return box.build()
     }
 
-    // Value text and trend arrow drawn side by side (inline) rather than stacked.
-    private fun buildValueBitmap(): Bitmap {
-        val value = BitmapUtils.getGlucoseAsBitmap(width = VALUE_TEXT_PX, height = VALUE_IMAGE_HEIGHT_PX)
-            ?: createBitmap(VALUE_TEXT_PX, VALUE_IMAGE_HEIGHT_PX)
-        val arrow = BitmapUtils.getRateAsBitmap(width = VALUE_ARROW_PX, height = VALUE_ARROW_PX)
-            ?: createBitmap(VALUE_ARROW_PX, VALUE_ARROW_PX)
-        val combo = createBitmap(VALUE_IMAGE_WIDTH_PX, VALUE_IMAGE_HEIGHT_PX)
-        val canvas = Canvas(combo)
-        canvas.drawBitmap(value, 0f, 0f, null)
-        canvas.drawBitmap(arrow, VALUE_TEXT_PX.toFloat(), ((VALUE_IMAGE_HEIGHT_PX - VALUE_ARROW_PX) / 2).toFloat(), null)
-        return combo
-    }
+    // Value text and trend arrow drawn side by side (inline) rather than stacked. The composited
+    // combo bitmap is cached in ValueBitmapHandler itself, so this is just a cache read once the
+    // underlying value/arrow bitmaps haven't changed.
+    private fun buildValueBitmap(): Bitmap =
+        ValueBitmapHandler.getComboBitmap(VALUE_TEXT_PX, VALUE_IMAGE_HEIGHT_PX, VALUE_ARROW_PX, VALUE_ARROW_PX)
 
 }
