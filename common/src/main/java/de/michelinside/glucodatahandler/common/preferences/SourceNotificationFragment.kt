@@ -91,7 +91,7 @@ class SourceNotificationFragment : PreferenceFragmentCompatBase(), SharedPrefere
         Log.d(LOG_ID, "checkPermission called")
         val enablePref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED)
         if(enablePref!=null) {
-            if(enablePref.isChecked && !ReceiverManager.checkNotificationReceiverPermission(requireContext(), false, true)) {
+            if(enablePref.isChecked && !ReceiverManager.checkNotificationReceiverPermission(requireContext(), false, false)) {
                 Log.w(LOG_ID, "Disable notification receiver as permission not granted, yet!")
                 enablePref.isChecked = false
             }
