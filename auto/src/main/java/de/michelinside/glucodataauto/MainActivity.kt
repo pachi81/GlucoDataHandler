@@ -232,7 +232,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     private fun checkMissingPermissions() {
         if(sharedPref.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED) && sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)) {
-            if (!ReceiverManager.checkNotificationReceiverPermission(this, false, true)) {
+            if (!ReceiverManager.checkNotificationReceiverPermission(this, false, false)) {
                 Log.w(LOG_ID, "Missing notification reader permission!")
                 Dialogs.showOkCancelDialog(this,
                     resources.getString(CR.string.permission_missing_title),

@@ -237,8 +237,8 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             bundle.putBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, true))
             bundle.putBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, true))
             bundle.putBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, true))
-            bundle.putBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false))
-            bundle.putBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, sharedPref!!.getBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, true))
+             // SHARED_PREF_SOURCE_NOTIFICATION_ENABLED is phone-only and must NOT be sent to wear
+             bundle.putBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, sharedPref!!.getBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, true))
             bundle.putString(Constants.SHARED_PREF_SENSOR_RUNTIME, sharedPref!!.getString(Constants.SHARED_PREF_SENSOR_RUNTIME, "14"))
             bundle.putString(Constants.PATIENT_NAME, sharedPref!!.getString(Constants.PATIENT_NAME, ""))
         }
@@ -250,12 +250,21 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
     override fun setSettings(context: Context, bundle: Bundle) {
         if(Log.isLoggable(LOG_ID, android.util.Log.VERBOSE))
             Log.v(LOG_ID, "setSettings called with bundle ${(Utils.dumpBundle(bundle))}")
+        
+        // Log warning if bundle is missing critical keys (potential JSON deserialization issue)
+        if (!bundle.containsKey(Constants.SHARED_PREF_WEAR_NO_ALARM_WHILE_CHARGING)) {
+            Log.w(LOG_ID, "setSettings: bundle missing key ${Constants.SHARED_PREF_WEAR_NO_ALARM_WHILE_CHARGING}. Bundle keys: ${bundle.keySet()}")
+        }
+        
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
         sharedPref!!.edit {
-            putBoolean(
-                Constants.SHARED_PREF_WEAR_NO_ALARM_WHILE_CHARGING,
-                bundle.getBoolean(Constants.SHARED_PREF_WEAR_NO_ALARM_WHILE_CHARGING, false)
-            )
+            // Only write if key exists in bundle (prevents overwriting with defaults from malformed/incomplete bundles)
+            if (bundle.containsKey(Constants.SHARED_PREF_WEAR_NO_ALARM_WHILE_CHARGING)) {
+                putBoolean(
+                    Constants.SHARED_PREF_WEAR_NO_ALARM_WHILE_CHARGING,
+                    bundle.getBoolean(Constants.SHARED_PREF_WEAR_NO_ALARM_WHILE_CHARGING)
+                )
+            }
         }
 
     }

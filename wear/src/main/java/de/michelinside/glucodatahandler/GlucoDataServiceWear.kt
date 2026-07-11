@@ -184,49 +184,60 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
     override fun setSettings(context: Context, bundle: Bundle) {
         if(Log.isLoggable(LOG_ID, android.util.Log.VERBOSE))
             Log.v(LOG_ID, "setSettings called with bundle ${(Utils.dumpBundle(bundle))}")
+
+        // Log warning if bundle is missing critical keys (potential JSON deserialization issue)
+        val expectedKeys = setOf(
+            Constants.SHARED_PREF_SHOW_OTHER_UNIT,
+            Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED,
+            Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED,
+            Constants.SHARED_PREF_SOURCE_AAPS_ENABLED,
+            Constants.SHARED_PREF_SOURCE_BYODA_ENABLED,
+            Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED,
+             Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED,
+             Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE,
+             // SHARED_PREF_SOURCE_NOTIFICATION_ENABLED is phone-only and NOT sent from phone
+             Constants.SHARED_PREF_SENSOR_RUNTIME,
+            Constants.PATIENT_NAME
+        )
+        val missingKeys = expectedKeys.filter { !bundle.containsKey(it) }
+        if (missingKeys.isNotEmpty()) {
+            Log.w(LOG_ID, "setSettings: bundle missing keys - potential JSON deserialization issue: $missingKeys. Bundle keys: ${bundle.keySet()}")
+        }
+
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
         sharedPref!!.edit {
-            putBoolean(
-                Constants.SHARED_PREF_SHOW_OTHER_UNIT,
-                bundle.getBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, ReceiveData.isMmol)
-            )
-            putBoolean(
-                Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED,
-                bundle.getBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED, true)
-            )
-            putBoolean(
-                Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED,
-                bundle.getBoolean(Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED, true)
-            )
-            putBoolean(
-                Constants.SHARED_PREF_SOURCE_AAPS_ENABLED,
-                bundle.getBoolean(Constants.SHARED_PREF_SOURCE_AAPS_ENABLED, true)
-            )
-            putBoolean(
-                Constants.SHARED_PREF_SOURCE_BYODA_ENABLED,
-                bundle.getBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, true)
-            )
-            putBoolean(
-                Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED,
-                bundle.getBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, true)
-            )
-            putBoolean(
-                Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED,
-                bundle.getBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, true)
-            )
-            putBoolean(
-                Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE,
-                bundle.getBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, true)
-            )
-            putBoolean(
-                Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED,
-                bundle.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)
-            )
-            putString(
-                Constants.SHARED_PREF_SENSOR_RUNTIME,
-                bundle.getString(Constants.SHARED_PREF_SENSOR_RUNTIME, "14")
-            )
-            putString(Constants.PATIENT_NAME, bundle.getString(Constants.PATIENT_NAME, ""))
+            // Only write if key exists in bundle (prevents overwriting with defaults from malformed/incomplete bundles)
+            if (bundle.containsKey(Constants.SHARED_PREF_SHOW_OTHER_UNIT)) {
+                putBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, bundle.getBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT))
+            }
+            if (bundle.containsKey(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED)) {
+                putBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED))
+            }
+            if (bundle.containsKey(Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED)) {
+                putBoolean(Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED))
+            }
+            if (bundle.containsKey(Constants.SHARED_PREF_SOURCE_AAPS_ENABLED)) {
+                putBoolean(Constants.SHARED_PREF_SOURCE_AAPS_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_AAPS_ENABLED))
+            }
+            if (bundle.containsKey(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED)) {
+                putBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED))
+            }
+            if (bundle.containsKey(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED)) {
+                putBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED))
+            }
+            if (bundle.containsKey(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED)) {
+                putBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED))
+            }
+             if (bundle.containsKey(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE)) {
+                 putBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, bundle.getBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE))
+             }
+             // SHARED_PREF_SOURCE_NOTIFICATION_ENABLED is phone-only and will not be in bundle
+             if (bundle.containsKey(Constants.SHARED_PREF_SENSOR_RUNTIME)) {
+                putString(Constants.SHARED_PREF_SENSOR_RUNTIME, bundle.getString(Constants.SHARED_PREF_SENSOR_RUNTIME))
+            }
+            if (bundle.containsKey(Constants.PATIENT_NAME)) {
+                putString(Constants.PATIENT_NAME, bundle.getString(Constants.PATIENT_NAME))
+            }
         }
         ReceiveData.setSettings(sharedPref, bundle)
     }

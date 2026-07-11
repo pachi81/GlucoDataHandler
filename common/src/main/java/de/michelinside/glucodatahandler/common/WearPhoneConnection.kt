@@ -563,6 +563,12 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     val bundle = extras.getBundle(Constants.SETTINGS_BUNDLE)
                     if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
                         Log.d(LOG_ID, "Glucose settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(bundle))
+                    // Ensure sensitive/local-only preferences (like notification reader enable)
+                    // are not changed by incoming settings from a remote node.
+                    if (bundle?.containsKey(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED) == true) {
+                        Log.w(LOG_ID, "Ignoring remote attempt to change ${Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED}")
+                        bundle.remove(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED)
+                    }
                     GlucoDataService.setSettings(context, bundle!!)
                     InternalNotifier.notify(context, NotifySource.SETTINGS, bundle)
                     extras.remove(Constants.SETTINGS_BUNDLE)
@@ -641,7 +647,12 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 if (p0.path.contains(Constants.GENERAL_SETTINGS_INTENT_MESSAGE_PATH)) {
                     if (!extras.isEmpty) {
                         if(Log.isLoggable(LOG_ID, android.util.Log.DEBUG))
-                            Log.d(LOG_ID, "Glucose settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(extras))
+                            Log.i(LOG_ID, "Glucose settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(extras))
+                        // prevent remote nodes (watch) from disabling the notification-source preference
+                        if (extras.containsKey(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED)) {
+                            Log.w(LOG_ID, "Ignoring remote attempt to change ${Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED}")
+                            extras.remove(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED)
+                        }
                         GlucoDataService.setSettings(context, extras)
                         if(GlucoDataService.appSource == AppSource.WEAR_APP)
                             InternalNotifier.notify(context, NotifySource.SETTINGS, extras)
@@ -680,6 +691,11 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                         sharedPref.edit {
                             keys.forEach {
                                 try {
+                                    // Do not allow remote changes to the notification reader preference
+                                    if (it == Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED) {
+                                        Log.w(LOG_ID, "Ignoring remote tasker attempt to change $it")
+                                        return@forEach
+                                    }
                                     val value = extras.getBoolean(it)
                                     Log.d(LOG_ID, "Setting tasker value " + value + " for " + it)
                                     putBoolean(it, value)

@@ -338,14 +338,18 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED,
                 Constants.SHARED_PREF_SOURCE_AAPS_ENABLED,
                 Constants.SHARED_PREF_SOURCE_BYODA_ENABLED,
-                Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED,
-                Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED,
-                Constants.SHARED_PREF_SOURCE_AIDEX_ENABLED,
-                Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED -> {
-                    ReceiverManager.updateSourceReceiver(this, key)
-                    shareSettings = true
-                }
-                Constants.SHARED_PREF_SHOW_OTHER_UNIT,
+                 Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED,
+                 Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED,
+                 Constants.SHARED_PREF_SOURCE_AIDEX_ENABLED -> {
+                     ReceiverManager.updateSourceReceiver(this, key)
+                     shareSettings = true
+                 }
+                 Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED -> {
+                     // This is a phone-only setting and must NOT be shared to wear/auto devices
+                     ReceiverManager.updateSourceReceiver(this, key)
+                     // shareSettings remains false - no sharing to remote devices
+                 }
+                 Constants.SHARED_PREF_SHOW_OTHER_UNIT,
                 Constants.SHARED_PREF_SENSOR_RUNTIME -> {
                     shareSettings = true
                 }

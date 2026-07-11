@@ -2,7 +2,6 @@ package de.michelinside.glucodatahandler.common.utils
 
 import android.os.Bundle
 import android.os.Parcelable
-import de.michelinside.glucodatahandler.common.utils.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.json.JSONObject
@@ -174,7 +173,7 @@ object JsonUtils {
         for ((key, rawValue) in typedMap) {
             try {
                 if (rawValue !is Map<*, *>) {
-                    Log.w(LOG_ID, "Expected a map for TypedJsonValue, but got ${rawValue?.javaClass?.name} for key '$key'")
+                    Log.w(LOG_ID, "Expected a map for TypedJsonValue, but got ${rawValue?.javaClass?.name} for key '$key'. Value: $rawValue. This may indicate a JSON deserialization or format issue.")
                     continue
                 }
                 val type = rawValue["type"] as? String
@@ -439,6 +438,10 @@ object JsonUtils {
             val jsonString = String(bytes, Charsets.UTF_8)
             if(Log.isLoggable(LOG_ID, android.util.Log.VERBOSE))
                 Log.v(LOG_ID, "Received jsonString: $jsonString")
+            // Log warning if JSON is suspiciously short or empty (potential corruption)
+            if (jsonString.trim().isEmpty() || jsonString.trim() == "{}") {
+                Log.w(LOG_ID, "Received empty or minimal JSON (potential deserialization error): '$jsonString'")
+            }
             val mapType = object : TypeToken<Map<String, Any?>>() {}.type
             val gson = Gson()
             val map: Map<String, Any?> = gson.fromJson(jsonString, mapType)

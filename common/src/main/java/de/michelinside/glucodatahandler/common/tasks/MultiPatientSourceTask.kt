@@ -77,7 +77,7 @@ abstract class MultiPatientSourceTask(enabledKey: String, source: DataSource) : 
             Log.i(LOG_ID, "Using current patient ${getPatient(patientId)}")
             if(triggerChange) {
                 Handler(GlucoDataService.context!!.mainLooper).post {
-                    InternalNotifier.notify(GlucoDataService.context!!, NotifySource.PATIENT_DATA_CHANGED, null)
+                    GlucoDataService.context?.let { InternalNotifier.notify(it, NotifySource.PATIENT_DATA_CHANGED, null) }
                 }
             }
         }
@@ -91,7 +91,7 @@ abstract class MultiPatientSourceTask(enabledKey: String, source: DataSource) : 
             putString(patientIdKey, patientId)
         }
         Handler(GlucoDataService.context!!.mainLooper).post {
-            InternalNotifier.notify(GlucoDataService.context!!, NotifySource.PATIENT_DATA_CHANGED, null)
+            GlucoDataService.context?.let { InternalNotifier.notify(it, NotifySource.PATIENT_DATA_CHANGED, null) }
         }
     }
 
