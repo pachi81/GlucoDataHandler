@@ -168,17 +168,16 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                             }
                             // restart timer in case of interval has changed to short or long one and to update lastElapsedMinute
                             startTimer()
-                            Log.v(LOG_ID, "Sleeping")
-                            Thread.sleep(10000)
                         } catch (ex: Exception) {
                             Log.e(LOG_ID, "exception while executing tasks: " + ex)
                         }
                     }
+                    Log.d(LOG_ID, "Task finished")
                 }
                 runningThread!!.start()
             }
             // restart timer
-            startTimer()
+            startTimer(false)
         } catch (ex: Exception) {
             Log.e(LOG_ID, "executeTasks: " + ex)
         }
@@ -236,7 +235,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                     executeTasks(true)
                 } else if (curInterval > 0) {
                     lastElapsedMinute = 0L
-                    startTimer()
+                    startTimer(false)
                 }
             } else if(!checkRunning()) {
                 startTimer()
@@ -293,8 +292,8 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
         return (alarmManager != null && pendingIntent != null)
     }
 
-    fun startTimer() {
-        Log.v(LOG_ID, "startTimer called")
+    fun startTimer(updateLastExecute: Boolean = true) {
+        Log.d(LOG_ID, "startTimer called - updateLastExecute=$updateLastExecute")
         val nextAlarm = getNextAlarm()
         if (nextAlarm != null) {
             init()
@@ -327,7 +326,8 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                     Log.d(LOG_ID, "Ignore next alarm as it is already active")
                 }
                 currentAlarmTime = nextAlarm.timeInMillis
-                lastElapsedMinute = elapsedTimeMinute
+                if(updateLastExecute)
+                    lastElapsedMinute = elapsedTimeMinute
                 return
             }
         }
