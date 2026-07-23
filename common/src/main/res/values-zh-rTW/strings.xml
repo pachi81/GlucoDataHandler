@@ -719,14 +719,6 @@
     <string name="widget_wearos_battery_level">WearOS 電量</string>
 
     <string name="graph">圖表</string>
-    <string name="tile_glucose_value">血糖值</string>
-    <string name="tile_glucose_graph">圖表</string>
-    <string name="tile_delta_prefix_1m">1分 %1$s</string>
-    <string name="tile_delta_prefix_5m">5分 %1$s</string>
-    <string name="tile_delta_prefix_15m">15分 %1$s</string>
-    <string name="tile_updated_seconds_ago">已更新 %1$d秒前</string>
-    <string name="tile_updated_minutes_ago">已更新 %1$d分前</string>
-    <string name="tile_updated_never">已更新 --</string>
     <string name="graph_duration">圖表持續時間</string>
     <string name="graph_duration_wear_summary">在錶面複雜功能和主螢幕上顯示的圖表小時數。\n使用 0 停用圖表。</string>
     <string name="graph_duration_summary">在圖表中顯示的小時數。\n使用 0 停用圖表。</string>

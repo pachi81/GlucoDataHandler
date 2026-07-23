@@ -773,14 +773,6 @@ Mielőtt engedélyezné ezt a beállítást, először engedélyezze az \"Adás 
     <string name="widget_wearos_battery_level">WearOS akkumulátor töltöttsége</string>
 
     <string name="graph">Grafikon</string>
-    <string name="tile_glucose_value">Vércukorérték</string>
-    <string name="tile_glucose_graph">Grafikon</string>
-    <string name="tile_delta_prefix_1m">1 perc %1$s</string>
-    <string name="tile_delta_prefix_5m">5 perc %1$s</string>
-    <string name="tile_delta_prefix_15m">15 perc %1$s</string>
-    <string name="tile_updated_seconds_ago">Frissítve %1$d másodperce</string>
-    <string name="tile_updated_minutes_ago">Frissítve %1$d perce</string>
-    <string name="tile_updated_never">Frissítve --</string>
     <string name="graph_duration">Grafikon időtartama</string>
     <string name="graph_duration_wear_summary">A grafikonon, a komplikációban és a főképernyőn megjelenített órák száma.\nA grafikon letiltásához használjon 0-t.</string>
     <string name="graph_duration_summary">A grafikonon megjelenített órák száma.\nA grafikon letiltásához használjon 0-t.</string>

@@ -724,14 +724,6 @@
     <string name="widget_wearos_battery_level">WearOS batterijniveau</string>
 
     <string name="graph">Grafiek</string>
-    <string name="tile_glucose_value">Glucose</string>
-    <string name="tile_glucose_graph">Grafiek</string>
-    <string name="tile_delta_prefix_1m">1 min %1$s</string>
-    <string name="tile_delta_prefix_5m">5 min %1$s</string>
-    <string name="tile_delta_prefix_15m">15 min %1$s</string>
-    <string name="tile_updated_seconds_ago">Bijgewerkt %1$d s geleden</string>
-    <string name="tile_updated_minutes_ago">Bijgewerkt %1$d min geleden</string>
-    <string name="tile_updated_never">Bijgewerkt --</string>
     <string name="graph_duration">Grafiekduur</string>
     <string name="graph_duration_wear_summary">Aantal uren weergegeven in de grafiek in de complicatie en op het hoofdscherm.\nGebruik 0 om de grafiek uit te schakelen.</string>
     <string name="graph_duration_summary">Aantal uren weergegeven in de grafiek.\nGebruik 0 om de grafiek uit te schakelen.</string>

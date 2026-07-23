@@ -724,14 +724,6 @@
     <string name="widget_wearos_battery_level">Poziom baterii WearOS</string>
 
     <string name="graph">Wykres</string>
-    <string name="tile_glucose_value">Glukoza</string>
-    <string name="tile_glucose_graph">Wykres</string>
-    <string name="tile_delta_prefix_1m">1 min %1$s</string>
-    <string name="tile_delta_prefix_5m">5 min %1$s</string>
-    <string name="tile_delta_prefix_15m">15 min %1$s</string>
-    <string name="tile_updated_seconds_ago">Zaktualizowano %1$d s temu</string>
-    <string name="tile_updated_minutes_ago">Zaktualizowano %1$d min temu</string>
-    <string name="tile_updated_never">Zaktualizowano --</string>
     <string name="graph_duration">Czas na wykresie</string>
     <string name="graph_duration_wear_summary">Liczba godzin pokazanych na wykresie na komplikacji i na ekranie głównym.\nWpisz 0, aby wyłączyć wykres.</string>
     <string name="graph_duration_summary">Liczba godzin pokazanych na wykresie.\nWpisz 0, aby wyłączyć wykres.</string>

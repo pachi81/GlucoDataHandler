@@ -715,14 +715,6 @@
     <string name="widget_wearos_battery_level">WearOS batterinivå</string>
 
     <string name="graph">Graf</string>
-    <string name="tile_glucose_value">Glukosvärde</string>
-    <string name="tile_glucose_graph">Graf</string>
-    <string name="tile_delta_prefix_1m">1 min %1$s</string>
-    <string name="tile_delta_prefix_5m">5 min %1$s</string>
-    <string name="tile_delta_prefix_15m">15 min %1$s</string>
-    <string name="tile_updated_seconds_ago">Uppdaterad %1$d s sedan</string>
-    <string name="tile_updated_minutes_ago">Uppdaterad %1$d min sedan</string>
-    <string name="tile_updated_never">Uppdaterad --</string>
     <string name="graph_duration">Tidsperiod i grafen</string>
     <string name="graph_duration_wear_summary">Antal timmar som visas i grafen i komplikationen och på huvudskärmen.\nAnvänd 0 för att inaktivera grafen.</string>
     <string name="graph_duration_summary">Antal timmar som visas i grafen.\nAnvänd 0 för att inaktivera grafen.</string>
