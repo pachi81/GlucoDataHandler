@@ -262,9 +262,6 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             } else {
                 txtBgValue.paintFlags = 0
             }
-            if(chartBitmap.imageView.isEnabled) {
-
-            }
             viewIcon.setImageIcon(BitmapUtils.getRateAsIcon("main_trend"))
             viewIcon.contentDescription = ReceiveData.getRateAsText(this)
 
@@ -546,6 +543,8 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             }
 
             tableDetails.addView(createRow(CR.string.info_label_timestamp, Utils.getUiTimeStamp(ReceiveData.time)))
+            if (!ReceiveData.eiob.isNaN() && !ReceiveData.isIobCobObsolete())
+                tableDetails.addView(createRow(CR.string.info_label_eiob, ReceiveData.getEiobAsString()))
             if (!ReceiveData.isIobCobObsolete(1.days.inWholeSeconds.toInt()))
                 tableDetails.addView(createRow(CR.string.info_label_iob_cob_timestamp, DateFormat.getTimeInstance(
                     DateFormat.DEFAULT).format(Date(ReceiveData.iobCobTime))))
