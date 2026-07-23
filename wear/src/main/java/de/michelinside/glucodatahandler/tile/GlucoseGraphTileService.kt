@@ -15,6 +15,8 @@ import androidx.wear.tiles.TileBuilders
 import androidx.wear.tiles.TileService
 import com.google.common.util.concurrent.ListenableFuture
 import de.michelinside.glucodatahandler.GlucoDataServiceWear
+import de.michelinside.glucodatahandler.GraphActivity
+import de.michelinside.glucodatahandler.WearActivity
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.chart.ChartBitmapHandler
@@ -153,7 +155,21 @@ class GlucoseGraphTileService : TileService() {
                     .setAndroidActivity(
                         ActionBuilders.AndroidActivity.Builder()
                             .setPackageName(packageName)
-                            .setClassName("de.michelinside.glucodatahandler.WearActivity")
+                            .setClassName(WearActivity::class.java.name)
+                            .build()
+                    )
+                    .build()
+            )
+            .build()
+
+        val graphClickable = ModifiersBuilders.Clickable.Builder()
+            .setId("open_graph")
+            .setOnClick(
+                ActionBuilders.LaunchAction.Builder()
+                    .setAndroidActivity(
+                        ActionBuilders.AndroidActivity.Builder()
+                            .setPackageName(packageName)
+                            .setClassName(GraphActivity::class.java.name)
                             .build()
                     )
                     .build()
@@ -175,6 +191,11 @@ class GlucoseGraphTileService : TileService() {
                     // wide aspect to match the inline value+arrow bitmap
                     .setWidth(expand())
                     .setHeight(dp(64f))
+                    .setModifiers(
+                        ModifiersBuilders.Modifiers.Builder()
+                            .setClickable(clickable)
+                            .build()
+                    )
                     .build()
             )
 
@@ -189,6 +210,11 @@ class GlucoseGraphTileService : TileService() {
                         .setHeight(expand())    // fill the gap between value and deltas
                         // FILL_BOUNDS stretches to the full box (default FIT leaves gaps)
                         .setContentScaleMode(LayoutElementBuilders.CONTENT_SCALE_MODE_FILL_BOUNDS)
+                        .setModifiers(
+                            ModifiersBuilders.Modifiers.Builder()
+                                .setClickable(graphClickable)
+                                .build()
+                        )
                         .build()
                 )
                 .addContent(spacer(3f))
@@ -197,13 +223,15 @@ class GlucoseGraphTileService : TileService() {
         }
 
         // bottom stack: time + delta row, then IOB + COB row
-        frame.addContent(
-            LayoutElementBuilders.Row.Builder()
-                .addContent(updatedAgoText())
-                .addContent(horizontalSpacer(8f))
-                .addContent(deltaLine("Δ $delta"))
-                .build()
-        )
+        val bottomStack = LayoutElementBuilders.Column.Builder()
+            .setHorizontalAlignment(LayoutElementBuilders.HORIZONTAL_ALIGN_CENTER)
+            .addContent(
+                LayoutElementBuilders.Row.Builder()
+                    .addContent(updatedAgoText())
+                    .addContent(horizontalSpacer(8f))
+                    .addContent(deltaLine("Δ $delta"))
+                    .build()
+            )
 
         if (iobText.isNotEmpty() || cobText.isNotEmpty()) {
             val iobCobRow = LayoutElementBuilders.Row.Builder()
@@ -216,9 +244,20 @@ class GlucoseGraphTileService : TileService() {
             if (cobText.isNotEmpty()) {
                 iobCobRow.addContent(deltaLine(cobText))
             }
-            frame.addContent(spacer(2f))
-            frame.addContent(iobCobRow.build())
+            bottomStack.addContent(spacer(2f))
+            bottomStack.addContent(iobCobRow.build())
         }
+
+        frame.addContent(
+            LayoutElementBuilders.Box.Builder()
+                .addContent(bottomStack.build())
+                .setModifiers(
+                    ModifiersBuilders.Modifiers.Builder()
+                        .setClickable(clickable)
+                        .build()
+                )
+                .build()
+        )
 
         frame.addContent(spacer(20f))
 
@@ -226,11 +265,6 @@ class GlucoseGraphTileService : TileService() {
             .setWidth(expand())
             .setHeight(expand())
             .setVerticalAlignment(LayoutElementBuilders.VERTICAL_ALIGN_CENTER)
-            .setModifiers(
-                ModifiersBuilders.Modifiers.Builder()
-                    .setClickable(clickable)
-                    .build()
-            )
             .addContent(frame.build())
 
         return box.build()

@@ -52,6 +52,7 @@
         </activity>
         <activity
             android:name=".GraphActivity"
+            android:exported="true"
             android:label="@string/graph"
             android:launchMode="singleTop"
             android:parentActivityName=".WearActivity"

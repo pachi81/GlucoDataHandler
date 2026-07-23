@@ -59,7 +59,7 @@ internal fun iobLineText(): String =
 
 internal fun cobLineText(): String =
     if (ReceiveData.isIobCobObsolete() || ReceiveData.cob.isNaN()) ""
-    else "🍔 " + "25 g"//ReceiveData.getCobAsString()
+    else "🍔 " + ReceiveData.getCobAsString()
 
 private fun updatedAgoFontStyle(sizeSp: Float): LayoutElementBuilders.FontStyle =
     LayoutElementBuilders.FontStyle.Builder()

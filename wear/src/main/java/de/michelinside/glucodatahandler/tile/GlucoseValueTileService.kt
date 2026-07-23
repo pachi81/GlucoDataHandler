@@ -15,6 +15,7 @@ import androidx.wear.tiles.TileBuilders
 import androidx.wear.tiles.TileService
 import com.google.common.util.concurrent.ListenableFuture
 import de.michelinside.glucodatahandler.GlucoDataServiceWear
+import de.michelinside.glucodatahandler.WearActivity
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.chart.ValueBitmapHandler
 import de.michelinside.glucodatahandler.common.utils.Log
@@ -141,7 +142,7 @@ class GlucoseValueTileService : TileService() {
                     .setAndroidActivity(
                         ActionBuilders.AndroidActivity.Builder()
                             .setPackageName(packageName)
-                            .setClassName("de.michelinside.glucodatahandler.WearActivity")
+                            .setClassName(WearActivity::class.java.name)
                             .build()
                     )
                     .build()
