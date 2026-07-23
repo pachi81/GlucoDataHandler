@@ -41,9 +41,9 @@ class GlucoseValueTileService : TileService() {
         private const val VALUE_IMAGE_WIDTH_PX = 220
         private const val VALUE_IMAGE_HEIGHT_PX = 130
         // Pixel->dp scale for the arrow, keeping its own aspect ratio.
-        private const val IMAGE_SCALE = 0.4f
+        private const val IMAGE_SCALE = 0.5f
         // Bigger display scale just for the value text, so it stands out as the focal point.
-        private const val VALUE_IMAGE_SCALE = 0.55f
+        private const val VALUE_IMAGE_SCALE = 0.6f
         private const val FRESHNESS_INTERVAL_MS = 60_000L
 
         private fun registerValue(context: Context) {
@@ -95,7 +95,7 @@ class GlucoseValueTileService : TileService() {
             if (events.any { it.eventType == EventBuilders.TileInteractionEvent.ENTER }) {
                 GlucoDataServiceWear.start(this)
                 requestFreshDataIfStale(this)
-                TileService.getUpdater(this).requestUpdate(GlucoseValueTileService::class.java)
+                getUpdater(this).requestUpdate(GlucoseValueTileService::class.java)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onRecentInteractionEventsAsync exception: " + exc.message.toString())

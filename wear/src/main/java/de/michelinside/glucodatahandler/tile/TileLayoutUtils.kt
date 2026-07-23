@@ -14,7 +14,6 @@ import androidx.wear.tiles.TileService
 import com.google.common.util.concurrent.ListenableFuture
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
-import de.michelinside.glucodatahandler.common.R as CR
 import java.time.Instant
 
 // Shared protolayout building blocks for the wear tiles (GlucoseValueTileService, GlucoseGraphTileService).
@@ -33,6 +32,9 @@ internal fun immediateVoid(): ListenableFuture<Void> =
 
 internal fun spacer(heightDp: Float): LayoutElementBuilders.Spacer =
     LayoutElementBuilders.Spacer.Builder().setHeight(dp(heightDp)).build()
+
+internal fun horizontalSpacer(widthDp: Float): LayoutElementBuilders.Spacer =
+    LayoutElementBuilders.Spacer.Builder().setWidth(dp(widthDp)).build()
 
 internal fun expandSpacer(): LayoutElementBuilders.Spacer =
     LayoutElementBuilders.Spacer.Builder().setHeight(expand()).build()
@@ -56,58 +58,49 @@ internal fun deltaStr(value: Float): String =
 internal fun TileService.deltaLineText(resId: Int, value: Float): String =
     getString(resId, deltaStr(value))
 
-private fun TileService.staticUpdatedAgoText(): String {
-    if (ReceiveData.time == 0L) return getString(CR.string.tile_updated_never)
-    val secs = (System.currentTimeMillis() - ReceiveData.time) / 1000
-    return if (secs < 60) getString(CR.string.tile_updated_seconds_ago, secs)
-    else getString(CR.string.tile_updated_minutes_ago, secs / 60)
-}
+internal fun iobLineText(): String =
+    if (ReceiveData.isIobCobObsolete() || ReceiveData.iob.isNaN()) ""
+    else "💉 " + ReceiveData.getIobAsString()
 
-// Resource strings are "...%1$d..." patterns - split around the placeholder so the literal parts
-// can be concatenated around a live dynamic value.
-private fun TileService.placeholderParts(resId: Int): Pair<String, String> {
-    val pattern = getString(resId)
-    val index = pattern.indexOf("%1\$d")
-    return if (index >= 0) pattern.substring(0, index) to pattern.substring(index + 4) else pattern to ""
-}
+internal fun cobLineText(): String =
+    if (ReceiveData.isIobCobObsolete() || ReceiveData.cob.isNaN()) ""
+    else "🍔 " + ReceiveData.getCobAsString()
 
 private val updatedAgoFontStyle: LayoutElementBuilders.FontStyle =
     LayoutElementBuilders.FontStyle.Builder()
-        .setSize(sp(12f))
-        .setColor(argb(Color.GRAY))
+        .setSize(sp(14f))
+        .setColor(argb(Color.LTGRAY))
         .build()
 
-// "Updated Xs/Xm ago", bound to a ProtoLayout dynamic expression so the tile renderer keeps ticking
+// "🕒 X min", bound to a ProtoLayout dynamic expression so the tile renderer keeps ticking
 // it up off the platform clock by itself - no onTileRequest call, no app wake-up needed. Renderers
 // that don't support dynamic values fall back to the static text computed at render time.
-internal fun TileService.updatedAgoText(): LayoutElementBuilders.Text {
+internal fun updatedAgoText(): LayoutElementBuilders.Text {
     if (ReceiveData.time == 0L) {
         return LayoutElementBuilders.Text.Builder()
-            .setText(getString(CR.string.tile_updated_never))
+            .setText("🕒 --")
             .setFontStyle(updatedAgoFontStyle)
             .build()
     }
-    val (secPrefix, secSuffix) = placeholderParts(CR.string.tile_updated_seconds_ago)
-    val (minPrefix, minSuffix) = placeholderParts(CR.string.tile_updated_minutes_ago)
     val elapsed = DynamicInstant.withSecondsPrecision(Instant.ofEpochMilli(ReceiveData.time))
         .durationUntil(DynamicInstant.platformTimeWithSecondsPrecision())
-    val secondsText = DynamicString.constant(secPrefix)
+    val secondsText = DynamicString.constant("🕒 ")
         .concat(elapsed.toIntSeconds().format())
-        .concat(DynamicString.constant(secSuffix))
-    val minutesText = DynamicString.constant(minPrefix)
+        .concat(DynamicString.constant(" s"))
+    val minutesText = DynamicString.constant("🕒 ")
         .concat(elapsed.toIntMinutes().format())
-        .concat(DynamicString.constant(minSuffix))
+        .concat(DynamicString.constant(" min"))
     val liveText = DynamicString.onCondition(elapsed.toIntSeconds().lt(60))
         .use(secondsText)
         .elseUse(minutesText)
-    val textProp = TypeBuilders.StringProp.Builder(staticUpdatedAgoText())
+    val textProp = TypeBuilders.StringProp.Builder("🕒 " + ((System.currentTimeMillis() - ReceiveData.time) / 60000) + " min")
         .setDynamicValue(liveText)
         .build()
     return LayoutElementBuilders.Text.Builder()
         .setText(textProp)
         .setLayoutConstraintsForDynamicText(
             // Only used to size the text box (widest realistic value); never displayed.
-            TypeBuilders.StringLayoutConstraint.Builder(getString(CR.string.tile_updated_minutes_ago, 59)).build()
+            TypeBuilders.StringLayoutConstraint.Builder("🕒 59 min").build()
         )
         .setFontStyle(updatedAgoFontStyle)
         .build()
