@@ -711,6 +711,14 @@
     <string name="widget_wearos_battery_level">Livello batteria WearOS</string>
 
     <string name="graph">Grafico</string>
+    <string name="tile_glucose_value">Glicemia</string>
+    <string name="tile_glucose_graph">Grafico</string>
+    <string name="tile_delta_prefix_1m">1 min %1$s</string>
+    <string name="tile_delta_prefix_5m">5 min %1$s</string>
+    <string name="tile_delta_prefix_15m">15 min %1$s</string>
+    <string name="tile_updated_seconds_ago">Aggiornato %1$d s fa</string>
+    <string name="tile_updated_minutes_ago">Aggiornato %1$d min fa</string>
+    <string name="tile_updated_never">Aggiornato --</string>
     <string name="graph_duration">Durata grafico</string>
     <string name="graph_duration_wear_summary">Numero di ore mostrate nel grafico nella complicazione e nella schermata principale.\nUsa 0 per disabilitare il grafico.</string>
     <string name="graph_duration_summary">Numero di ore mostrate nel grafico.\nUsa 0 per disabilitare il grafico.</string>

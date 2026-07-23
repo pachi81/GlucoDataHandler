@@ -707,6 +707,14 @@
     <string name="widget_wearos_battery_level">WearOS電池残量</string>
 
     <string name="graph">グラフ設定</string>
+    <string name="tile_glucose_value">血糖値</string>
+    <string name="tile_glucose_graph">グラフ</string>
+    <string name="tile_delta_prefix_1m">1分 %1$s</string>
+    <string name="tile_delta_prefix_5m">5分 %1$s</string>
+    <string name="tile_delta_prefix_15m">15分 %1$s</string>
+    <string name="tile_updated_seconds_ago">更新 %1$d秒前</string>
+    <string name="tile_updated_minutes_ago">更新 %1$d分前</string>
+    <string name="tile_updated_never">更新 --</string>
     <string name="graph_duration">グラフ表示時間</string>
     <string name="graph_duration_wear_summary">メイン画面で表示するグラフの時間数 \nグラフを無効にするには0を使用します </string>
     <string name="graph_duration_summary">グラフ表示する時間数 \nグラフを無効にするには0を使用します </string>

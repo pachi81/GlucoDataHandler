@@ -715,6 +715,14 @@
     <string name="widget_wearos_battery_level">WearOS-Akkustand</string>
 
     <string name="graph">Graph</string>
+    <string name="tile_glucose_value">Zuckerwert</string>
+    <string name="tile_glucose_graph">Graph</string>
+    <string name="tile_delta_prefix_1m">1 min %1$s</string>
+    <string name="tile_delta_prefix_5m">5 min %1$s</string>
+    <string name="tile_delta_prefix_15m">15 min %1$s</string>
+    <string name="tile_updated_seconds_ago">Aktualisiert vor %1$d s</string>
+    <string name="tile_updated_minutes_ago">Aktualisiert vor %1$d min</string>
+    <string name="tile_updated_never">Aktualisiert --</string>
     <string name="graph_duration">Zeitspanne im Graphen</string>
     <string name="graph_duration_wear_summary">Anzahl der Stunden, die im Graph in der Komplikation und auf dem Hauptbildschirm angezeigt werden.\nVerwende 0, um den Graph zu deaktivieren.</string>
     <string name="graph_duration_summary">Anzahl der Stunden, die im Graph angezeigt werden.\nVerwende 0, um den Graph zu deaktivieren.</string>
