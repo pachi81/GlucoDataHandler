@@ -1037,6 +1037,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             if (!ReceiveData.isIobCobObsolete(1.days.inWholeSeconds.toInt()))
                 tableDetails.addView(createRow(CR.string.info_label_iob_cob_timestamp, DateFormat.getTimeInstance(
                     DateFormat.DEFAULT).format(Date(ReceiveData.iobCobTime))))
+            if (!ReceiveData.eiob.isNaN() && !ReceiveData.isIobCobObsolete())
+                tableDetails.addView(createRow(CR.string.info_label_eiob, ReceiveData.getEiobAsString()))
             if (ReceiveData.sensorID?.isNotEmpty() == true) {
                 if(ReceiveData.source == DataSource.AAPS)
                     tableDetails.addView(createRow(CR.string.label_profile, ReceiveData.sensorID!!))

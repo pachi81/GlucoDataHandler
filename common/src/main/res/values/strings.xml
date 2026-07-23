@@ -11,7 +11,9 @@
 
     <string name="info_label_iob" translatable="false">IOB</string>
     <string name="info_label_cob" translatable="false">COB</string>
+    <string name="info_label_eiob" translatable="false">eIOB</string>
     <string name="info_label_iob_talkback" translatable="false">I.O.B.</string>
+    <string name="info_label_eiob_talkback" translatable="false">effective I.O.B.</string>
     <string name="info_label_cob_talkback" translatable="false">C.O.B.</string>
 
     <string name="menu_facebook" translatable="false">Facebook</string>
