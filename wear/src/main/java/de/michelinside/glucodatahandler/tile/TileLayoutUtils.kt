@@ -10,7 +10,6 @@ import androidx.wear.protolayout.LayoutElementBuilders
 import androidx.wear.protolayout.TypeBuilders
 import androidx.wear.protolayout.expression.DynamicBuilders.DynamicInstant
 import androidx.wear.protolayout.expression.DynamicBuilders.DynamicString
-import androidx.wear.tiles.TileService
 import com.google.common.util.concurrent.ListenableFuture
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
@@ -39,12 +38,12 @@ internal fun horizontalSpacer(widthDp: Float): LayoutElementBuilders.Spacer =
 internal fun expandSpacer(): LayoutElementBuilders.Spacer =
     LayoutElementBuilders.Spacer.Builder().setHeight(expand()).build()
 
-internal fun deltaLine(text: String): LayoutElementBuilders.Text =
+internal fun deltaLine(text: String, sizeSp: Float = 14f): LayoutElementBuilders.Text =
     LayoutElementBuilders.Text.Builder()
         .setText(text)
         .setFontStyle(
             LayoutElementBuilders.FontStyle.Builder()
-                .setSize(sp(14f))
+                .setSize(sp(sizeSp))
                 .setColor(argb(Color.LTGRAY))
                 .build()
         )
@@ -54,32 +53,28 @@ internal fun deltaStr(value: Float): String =
     if (ReceiveData.isObsoleteShort() || value.isNaN()) "--"
     else GlucoDataUtils.deltaToString(value)
 
-// e.g. "5m +3" - resId is a localized "<prefix> %1$s" string, filled in with the formatted delta.
-internal fun TileService.deltaLineText(resId: Int, value: Float): String =
-    getString(resId, deltaStr(value))
-
 internal fun iobLineText(): String =
     if (ReceiveData.isIobCobObsolete() || ReceiveData.iob.isNaN()) ""
     else "💉 " + ReceiveData.getIobAsString()
 
 internal fun cobLineText(): String =
     if (ReceiveData.isIobCobObsolete() || ReceiveData.cob.isNaN()) ""
-    else "🍔 " + ReceiveData.getCobAsString()
+    else "🍔 " + "25 g"//ReceiveData.getCobAsString()
 
-private val updatedAgoFontStyle: LayoutElementBuilders.FontStyle =
+private fun updatedAgoFontStyle(sizeSp: Float): LayoutElementBuilders.FontStyle =
     LayoutElementBuilders.FontStyle.Builder()
-        .setSize(sp(14f))
+        .setSize(sp(sizeSp))
         .setColor(argb(Color.LTGRAY))
         .build()
 
 // "🕒 X min", bound to a ProtoLayout dynamic expression so the tile renderer keeps ticking
 // it up off the platform clock by itself - no onTileRequest call, no app wake-up needed. Renderers
 // that don't support dynamic values fall back to the static text computed at render time.
-internal fun updatedAgoText(): LayoutElementBuilders.Text {
+internal fun updatedAgoText(sizeSp: Float = 14f): LayoutElementBuilders.Text {
     if (ReceiveData.time == 0L) {
         return LayoutElementBuilders.Text.Builder()
             .setText("🕒 --")
-            .setFontStyle(updatedAgoFontStyle)
+            .setFontStyle(updatedAgoFontStyle(sizeSp))
             .build()
     }
     val elapsed = DynamicInstant.withSecondsPrecision(Instant.ofEpochMilli(ReceiveData.time))
@@ -102,6 +97,6 @@ internal fun updatedAgoText(): LayoutElementBuilders.Text {
             // Only used to size the text box (widest realistic value); never displayed.
             TypeBuilders.StringLayoutConstraint.Builder("🕒 59 min").build()
         )
-        .setFontStyle(updatedAgoFontStyle)
+        .setFontStyle(updatedAgoFontStyle(sizeSp))
         .build()
 }

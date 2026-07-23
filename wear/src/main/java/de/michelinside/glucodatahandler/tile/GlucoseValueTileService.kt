@@ -16,7 +16,6 @@ import androidx.wear.tiles.TileService
 import com.google.common.util.concurrent.ListenableFuture
 import de.michelinside.glucodatahandler.GlucoDataServiceWear
 import de.michelinside.glucodatahandler.common.ReceiveData
-import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.chart.ValueBitmapHandler
 import de.michelinside.glucodatahandler.common.utils.Log
 
@@ -37,14 +36,14 @@ class GlucoseValueTileService : TileService() {
     companion object {
         private const val LOG_ID = "GDH.GlucoseValueTileService"
         private const val WIDGET_ID = "GDH.GlucoseValueTile"
-        private const val ARROW_IMAGE_PX = 120
-        private const val VALUE_IMAGE_WIDTH_PX = 220
-        private const val VALUE_IMAGE_HEIGHT_PX = 130
-        // Pixel->dp scale for the arrow, keeping its own aspect ratio.
-        private const val IMAGE_SCALE = 0.5f
-        // Bigger display scale just for the value text, so it stands out as the focal point.
-        private const val VALUE_IMAGE_SCALE = 0.6f
+        // Glucose value and trend arrow are composed side by side (inline) into a single bitmap.
+        private const val VALUE_IMAGE_HEIGHT_PX = 180
+        private const val VALUE_TEXT_PX = 200
+        private const val VALUE_ARROW_PX = 180
+        private const val VALUE_IMAGE_WIDTH_PX = VALUE_TEXT_PX + VALUE_ARROW_PX
         private const val FRESHNESS_INTERVAL_MS = 60_000L
+
+        private const val TEXT_SIZE = 18f
 
         private fun registerValue(context: Context) {
             if (!ValueBitmapHandler.isRegistered(WIDGET_ID))
@@ -131,9 +130,10 @@ class GlucoseValueTileService : TileService() {
     }
 
     private fun buildLayout(scope: ProtoLayoutScope): LayoutElementBuilders.LayoutElement {
-        val delta1 = deltaLineText(CR.string.tile_delta_prefix_1m, ReceiveData.delta1Min)
-        val delta5 = deltaLineText(CR.string.tile_delta_prefix_5m, ReceiveData.delta5Min)
-        val delta15 = deltaLineText(CR.string.tile_delta_prefix_15m, ReceiveData.delta15Min)
+        val delta = deltaStr(ReceiveData.delta)
+        val iobText = iobLineText()
+        val cobText = cobLineText()
+
         val clickable = ModifiersBuilders.Clickable.Builder()
             .setId("open")
             .setOnClick(
@@ -148,35 +148,42 @@ class GlucoseValueTileService : TileService() {
             )
             .build()
 
-        // Column flow: top inset, then arrow + current value near the top. An expanding spacer
-        // pushes the deltas/last-updated section down so it sits flush against the bottom edge.
+        // Column flow: centered block with value + arrow on top and details below.
         val frame = LayoutElementBuilders.Column.Builder()
             .setWidth(expand())
-            .setHeight(expand())
             .setHorizontalAlignment(LayoutElementBuilders.HORIZONTAL_ALIGN_CENTER)
-            .addContent(spacer(28f))
-            .addContent(
-                LayoutElementBuilders.Image.Builder(scope)
-                    .setImageResource(inlineImage(buildArrowBitmap(), ARROW_IMAGE_PX, ARROW_IMAGE_PX))
-                    .setWidth(dp(ARROW_IMAGE_PX * IMAGE_SCALE))
-                    .setHeight(dp(ARROW_IMAGE_PX * IMAGE_SCALE))
-                    .build()
-            )
-            .addContent(spacer(4f))
             .addContent(
                 LayoutElementBuilders.Image.Builder(scope)
                     .setImageResource(inlineImage(buildValueBitmap(), VALUE_IMAGE_WIDTH_PX, VALUE_IMAGE_HEIGHT_PX))
-                    .setWidth(dp(VALUE_IMAGE_WIDTH_PX * VALUE_IMAGE_SCALE))
-                    .setHeight(dp(VALUE_IMAGE_HEIGHT_PX * VALUE_IMAGE_SCALE))
+                    .setWidth(dp(80f * (VALUE_IMAGE_WIDTH_PX.toFloat() / VALUE_IMAGE_HEIGHT_PX.toFloat())))
+                    .setHeight(dp(80f))
                     .build()
             )
-            .addContent(expandSpacer())
-            .addContent(deltaLine(delta1))
-            .addContent(deltaLine(delta5))
-            .addContent(deltaLine(delta15))
-            .addContent(spacer(3f))
-            .addContent(updatedAgoText())
-            .addContent(spacer(8f))
+            .addContent(spacer(12f))
+
+        // details: time + delta row
+        frame.addContent(
+            LayoutElementBuilders.Row.Builder()
+                .addContent(updatedAgoText(TEXT_SIZE))
+                .addContent(horizontalSpacer(10f))
+                .addContent(deltaLine("Δ $delta", TEXT_SIZE))
+                .build()
+        )
+
+        if (iobText.isNotEmpty() || cobText.isNotEmpty()) {
+            frame.addContent(spacer(4f))
+            val iobCobRow = LayoutElementBuilders.Row.Builder()
+            if (iobText.isNotEmpty()) {
+                iobCobRow.addContent(deltaLine(iobText, TEXT_SIZE))
+            }
+            if (iobText.isNotEmpty() && cobText.isNotEmpty()) {
+                iobCobRow.addContent(horizontalSpacer(10f))
+            }
+            if (cobText.isNotEmpty()) {
+                iobCobRow.addContent(deltaLine(cobText, TEXT_SIZE))
+            }
+            frame.addContent(iobCobRow.build())
+        }
 
         val box = LayoutElementBuilders.Box.Builder()
             .setWidth(expand())
@@ -192,9 +199,6 @@ class GlucoseValueTileService : TileService() {
         return box.build()
     }
 
-    private fun buildArrowBitmap(): Bitmap =
-        ValueBitmapHandler.getArrowBitmap(ARROW_IMAGE_PX, ARROW_IMAGE_PX)
-
     private fun buildValueBitmap(): Bitmap =
-        ValueBitmapHandler.getValueBitmap(VALUE_IMAGE_WIDTH_PX, VALUE_IMAGE_HEIGHT_PX)
+        ValueBitmapHandler.getComboBitmap(VALUE_TEXT_PX, VALUE_IMAGE_HEIGHT_PX, VALUE_ARROW_PX, VALUE_ARROW_PX)
 }
