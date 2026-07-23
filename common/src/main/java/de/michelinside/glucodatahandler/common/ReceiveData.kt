@@ -34,6 +34,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     const val TIME = "glucodata.Minute.Time"
     const val DELTA = "glucodata.Minute.Delta"
     const val IOB = "glucodata.Minute.IOB"
+    const val EIOB = "glucodata.Minute.eIOB"
     const val COB = "glucodata.Minute.COB"
     const val IOBCOB_TIME = "gdh.IOB_COB_time"
     const val SENSOR_START_TIME = "gdh.sensor_start_time"
@@ -92,6 +93,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     var iob: Float = Float.NaN
+    var eiob: Float = Float.NaN
     var cob: Float = Float.NaN
     var iobCobTime: Long = 0
     private var lowValue: Float = 70F
@@ -239,6 +241,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         if(withIobCob && !isIobCobObsolete()) {
             if(!iob.isNaN())
                 text += ", " + context.getString(R.string.info_label_iob_talkback) + " " + getIobAsString()
+            if(!eiob.isNaN())
+                text += ", " + context.getString(R.string.info_label_eiob_talkback) + " " + getEiobAsString()
             if(!cob.isNaN())
                 text += ", " + context.getString(R.string.info_label_cob_talkback) + " " + getCobAsString()
         }
@@ -330,6 +334,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private fun isIobCob() : Boolean {
         if (isIobCobObsolete()) {
             iob = Float.NaN
+            eiob = Float.NaN
             cob = Float.NaN
         }
         return !iob.isNaN() || !cob.isNaN()
@@ -356,6 +361,21 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         if (withUnit)
             return iobString + " U"
         return iobString
+    }
+
+    val eiobString: String get() {
+        if (isIobCobObsolete())
+            eiob = Float.NaN
+        if(eiob.isNaN()) {
+            return " - "
+        }
+        return "%.2f".format(Locale.ROOT, eiob)
+    }
+
+    fun getEiobAsString(withUnit: Boolean = true): String {
+        if (withUnit)
+            return eiobString + " U"
+        return eiobString
     }
     fun getCobAsString(withUnit: Boolean = true): String {
         if (withUnit)
@@ -678,6 +698,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
 
                     if(extras.containsKey(IOB) || extras.containsKey(COB)) {
                         iob = extras.getFloat(IOB, Float.NaN)
+                        eiob = extras.getFloat(EIOB, Float.NaN)
                         cob = extras.getFloat(COB, Float.NaN)
                         iobCobTime = if(extras.containsKey(IOBCOB_TIME))
                             extras.getLong(IOBCOB_TIME)
@@ -769,6 +790,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             if(iob != extras.getFloat(IOB, Float.NaN) || cob != extras.getFloat(COB, Float.NaN)) {
                 Log.i(LOG_ID, "Only IOB/COB changed: ${extras.getFloat(IOB, Float.NaN)}/${extras.getFloat(COB, Float.NaN)} - at ${Utils.getUiTimeStamp(iobCobTime)} - from $dataSource")
                 iob = extras.getFloat(IOB, Float.NaN)
+                eiob = extras.getFloat(EIOB, Float.NaN)
                 cob = extras.getFloat(COB, Float.NaN)
                 iobCobChange = true
             } else {
@@ -933,6 +955,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         extras.putFloat(DELTA, deltaValue)
         if(includeObsoleteIobCob || !isIobCobObsolete()) {
             extras.putFloat(IOB, iob)
+            extras.putFloat(EIOB, eiob)
             extras.putFloat(COB, cob)
             extras.putLong(IOBCOB_TIME, iobCobTime)
         }
@@ -982,6 +1005,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 putInt(ALARM, alarm)
                 putFloat(DELTA, deltaValue)
                 putFloat(IOB, iob)
+                putFloat(EIOB, eiob)
                 putFloat(COB, cob)
                 putLong(IOBCOB_TIME, iobCobTime)
                 putInt(DELTA_FALLING_COUNT, deltaFallingCount)
@@ -1014,6 +1038,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     extras.putInt(ALARM, sharedGlucosePref.getInt(ALARM, alarm))
                     extras.putFloat(DELTA, sharedGlucosePref.getFloat(DELTA, deltaValue))
                     extras.putFloat(IOB, sharedGlucosePref.getFloat(IOB, iob))
+                    extras.putFloat(EIOB, sharedGlucosePref.getFloat(EIOB, eiob))
                     extras.putFloat(COB, sharedGlucosePref.getFloat(COB, cob))
                     extras.putLong(IOBCOB_TIME, sharedGlucosePref.getLong(IOBCOB_TIME, iobCobTime))
                     extras.putInt(DELTA_FALLING_COUNT, sharedGlucosePref.getInt(DELTA_FALLING_COUNT, deltaFallingCount))
@@ -1088,6 +1113,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             startTimePair = Pair("", 0L)
             iobCobTime = 0L
             iob = Float.NaN
+            eiob = Float.NaN
             cob = Float.NaN
             deltaFallingCount = 0
             deltaRisingCount = 0

@@ -1083,4 +1083,11 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="accessibility_prominent_disclosure_title">Accessibility Permission</string>
     <string name="accessibility_prominent_disclosure_message">This app requests the AccessibilityService API to display glucose values on your Always-On-Display (AOD).\n\nPurpose:\nIt detects the lock screen state to overlay a custom local view with your current glucose data. This allows you to monitor your levels without waking the device.\n\nData Privacy:\nThis service is used strictly for the visual overlay. It does NOT access, collect, store, or share any personal, sensitive, or health data.\n\nConsent:\nBy tapping \"Accept\", you agree to enable this service and will be redirected to the Android settings. Tap \"Cancel\" to decline.</string>
     <string name="button_accept">Accept</string>
+
+    <!-- v2.5 -->
+
+    <string name="tile_glucose_value">Glucose value</string>
+    <string name="tile_glucose_graph">Glucose graph</string>
+    <string name="info_label_eiob" translatable="false">eIOB</string>
+    <string name="info_label_eiob_talkback" translatable="false">effective I.O.B.</string>
 </resources>
