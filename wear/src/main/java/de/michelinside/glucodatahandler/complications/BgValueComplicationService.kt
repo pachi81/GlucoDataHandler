@@ -262,6 +262,11 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
             image = Icon.createWithResource(this, R.drawable.icon_rate)
         ).build()
 
+    fun unicodeIcon(id: Int, symbol: String): MonochromaticImage {
+        return MonochromaticImage.Builder(
+            image = BitmapUtils.getUnicodeAsIcon(symbol)
+        ).build()
+    }
 
     fun glucoseImage(id: Int, small: Boolean = false): SmallImage {
         return SmallImage.Builder(
