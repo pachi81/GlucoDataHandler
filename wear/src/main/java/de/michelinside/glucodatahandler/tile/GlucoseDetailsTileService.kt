@@ -19,6 +19,7 @@ import de.michelinside.glucodatahandler.WearActivity
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.chart.ValueBitmapHandler
+import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.R as CR
 import java.time.Duration
@@ -136,9 +137,9 @@ class GlucoseDetailsTileService : TileService() {
             .addContent(expandSpacer())
 
         // Top section: Optional items (Sensor Age, Other Unit)
-        val sensorAge = if (ReceiveData.sensorStartTime > 0) {
+        val sensorAge = if (!GlucoDataUtils.isSensorExpired(this)) {
             val duration = Duration.ofMillis(System.currentTimeMillis() - ReceiveData.sensorStartTime)
-            resources.getString(CR.string.sensor_age_label) + ": " + formatSensorAge(duration)
+            "⌛ " + formatSensorAge(duration)
         } else ""
 
         val otherUnit = if (GlucoDataService.sharedPref?.getBoolean(de.michelinside.glucodatahandler.common.Constants.SHARED_PREF_SHOW_OTHER_UNIT, false) == true) {

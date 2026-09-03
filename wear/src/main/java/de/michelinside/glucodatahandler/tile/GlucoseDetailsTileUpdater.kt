@@ -21,11 +21,13 @@ object GlucoseDetailsTileUpdater : NotifierInterface {
         NotifySource.BROADCAST,
         NotifySource.SETTINGS,
         NotifySource.OBSOLETE_VALUE,
-        NotifySource.TIME_VALUE
+        NotifySource.TIME_VALUE,
+        NotifySource.SENSOR_AGE_CHANGED
     )
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
+            Log.v(LOG_ID, "OnNotifyData called for source $dataSource")
             updateCount++
             TileService.getUpdater(context)
                 .requestUpdate(GlucoseDetailsTileService::class.java)

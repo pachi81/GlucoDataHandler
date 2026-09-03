@@ -35,7 +35,8 @@ enum class Command {
     FORCE_UPDATE,
     DB_SYNC,
     CLEAN_UP_DB,
-    REQUEST_DB_SYNC
+    REQUEST_DB_SYNC,
+    NEW_SENSOR_TIME
 }
 
 class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityClient.OnCapabilityChangedListener, NotifierInterface {
@@ -771,6 +772,11 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                         GlucoDataService.resetDB()
                 }
                 Command.REQUEST_DB_SYNC -> dbSync.requestDbSync(context)
+                Command.NEW_SENSOR_TIME -> {
+                    if(bundle?.containsKey(ReceiveData.SENSOR_START_TIME) == true && bundle?.containsKey(ReceiveData.SENSOR_ID) == true) {
+                        ReceiveData.setSensorStartTime(bundle.getString(ReceiveData.SENSOR_ID), bundle.getLong(ReceiveData.SENSOR_START_TIME), true)
+                    }
+                }
             }
 
         } catch (exc: Exception) {

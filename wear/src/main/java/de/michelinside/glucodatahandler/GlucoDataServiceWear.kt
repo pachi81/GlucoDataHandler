@@ -58,7 +58,8 @@ class  GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInter
             NotifySource.MESSAGECLIENT,
             NotifySource.BROADCAST,
             NotifySource.SETTINGS,
-            NotifySource.DISPLAY_STATE_CHANGED
+            NotifySource.DISPLAY_STATE_CHANGED,
+            NotifySource.SENSOR_AGE_CHANGED
         )
 
         if(ActiveComplicationHandler.canUpdateComplications(NotifySource.TIME_VALUE) && (sharedPref == null || sharedPref!!.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, true))) {

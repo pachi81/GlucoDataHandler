@@ -85,6 +85,7 @@ import kotlin.math.min
 import kotlin.time.Duration.Companion.days
 import de.michelinside.glucodatahandler.common.R as CR
 import androidx.core.net.toUri
+import de.michelinside.glucodatahandler.common.Command
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 import de.michelinside.glucodatahandler.common.service.ReceiverManager
 import de.michelinside.glucodatahandler.common.service.WearPhoneManager
@@ -285,7 +286,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.TIME_VALUE,
                 NotifySource.ALARM_STATE_CHANGED,
                 NotifySource.SOURCE_STATE_CHANGE,
-                NotifySource.UPDATE_MAIN))
+                NotifySource.UPDATE_MAIN,
+                NotifySource.SENSOR_AGE_CHANGED))
             checkUncaughtException()
             checkMissingPermissions()
             checkNewSettings()
@@ -541,8 +543,12 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     Dialogs.showDateTimePicker(this, startTime) { selectedTime ->
                         val sensorId = if(ReceiveData.sensorID.isNullOrEmpty()) Constants.GDH_MANUAL_SENSOR_ID else ReceiveData.sensorID
                         Log.d(LOG_ID, "Set sensor start time for $sensorId to ${Utils.getUiTimeStamp(selectedTime)}")
-                        ReceiveData.setSensorStartTime(sensorId, selectedTime, true)
-                        updateDetailsTable()
+                        if(ReceiveData.setSensorStartTime(sensorId, selectedTime, true)) {
+                            val extras = Bundle()
+                            extras.putLong(ReceiveData.SENSOR_START_TIME, selectedTime)
+                            extras.putString(ReceiveData.SENSOR_ID, sensorId)
+                            WearPhoneManager.sendCommand(Command.NEW_SENSOR_TIME, extras)
+                        }
                     }
                     return true
                 }
@@ -1070,7 +1076,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     tableDetails.addView(createRow(CR.string.info_label_sensor_id, if(BuildConfig.DEBUG) "ABCDE12345" else ReceiveData.sensorID!!))
             }
             Log.d(LOG_ID, "Current sensor ${ReceiveData.sensorID} - start-time: ${Utils.getUiTimeStamp(ReceiveData.sensorStartTime)}")
-            if(ReceiveData.sensorStartTime > 0) {
+            if(ReceiveData.sensorStartTime > 0 && !GlucoDataUtils.isSensorExpired(this)) {
                 val duration = Duration.ofMillis(System.currentTimeMillis() - ReceiveData.sensorStartTime)
                 val days = duration.toDays()
                 val hours = duration.minusDays(days).toHours()

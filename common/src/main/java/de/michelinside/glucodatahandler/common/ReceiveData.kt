@@ -670,9 +670,9 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     sensorID = GlucoDataUtils.checkSerial(extras.getString(SERIAL)) //Name of sensor
                     if(extras.containsKey(SENSOR_START_TIME)) {
                         if(sensorID.isNullOrEmpty() && extras.containsKey(SENSOR_ID)) {
-                            setSensorStartTime(extras.getString(SENSOR_ID), extras.getLong(SENSOR_START_TIME))
+                            setSensorStartTime(extras.getString(SENSOR_ID), extras.getLong(SENSOR_START_TIME), interApp)
                         } else {
-                            setSensorStartTime(sensorID, extras.getLong(SENSOR_START_TIME))
+                            setSensorStartTime(sensorID, extras.getLong(SENSOR_START_TIME), interApp)
                         }
                     }
 
@@ -1098,16 +1098,19 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         }
     }
 
-    fun setSensorStartTime(serialId: String?, startTime: Long, checkStartTime: Boolean = false) {
+    fun setSensorStartTime(serialId: String?, startTime: Long, checkStartTime: Boolean = false): Boolean {
         Log.d(LOG_ID, "set sensor start time $startTime for serial $serialId - current: ${startTimePair.second} for ${startTimePair.first}")
-        if(!serialId.isNullOrEmpty() && startTime > 0 && (startTimePair.first != serialId || (checkStartTime && startTimePair.second != startTime))) {
+        if(!serialId.isNullOrEmpty() && startTime > 0 && (startTimePair.first != serialId || ((checkStartTime || serialId == Constants.GDH_MANUAL_SENSOR_ID) && startTimePair.second != startTime))) {
             val serial = GlucoDataUtils.checkSerial(serialId)!!
             Log.i(LOG_ID, "setSensorStartTime for " + serial + ": " + Utils.getUiTimeStamp(startTime))
             startTimePair = Pair(serial, startTime)
             if(checkStartTime && GlucoDataService.context != null) {
                 saveExtras(GlucoDataService.context!!)
+                InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SENSOR_AGE_CHANGED, null)
             }
+            return true
         }
+        return false
     }
 
     fun reset(context: Context) {

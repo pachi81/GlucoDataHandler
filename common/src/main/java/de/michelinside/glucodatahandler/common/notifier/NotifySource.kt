@@ -35,5 +35,6 @@ enum class NotifySource {
     NODE_CONNECTED,
     TASKER_SETTINGS,
     UPDATE_MAIN,
-    WATCH_SETTINGS;
+    WATCH_SETTINGS,
+    SENSOR_AGE_CHANGED;
 }
