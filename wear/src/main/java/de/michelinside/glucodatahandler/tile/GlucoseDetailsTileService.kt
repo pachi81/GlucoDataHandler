@@ -151,6 +151,8 @@ class GlucoseDetailsTileService : TileService() {
                 frame.addContent(deltaLine(sensorAge, 14f))
             }
             if (otherUnit.isNotEmpty()) {
+                if (sensorAge.isNotEmpty())
+                    frame.addContent(spacer(3f))
                 frame.addContent(deltaLine(otherUnit, 16f))
             }
         }
