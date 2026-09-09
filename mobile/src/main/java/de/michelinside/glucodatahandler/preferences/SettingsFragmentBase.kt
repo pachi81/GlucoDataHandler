@@ -540,6 +540,15 @@ class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen)  {
                     },
                     { _, _ ->
                         Log.v(LOG_ID, "Accessibility permission canceled!")
+                        preferenceManager.sharedPreferences!!.edit {
+                            putBoolean(
+                                Constants.SHARED_PREF_AOD_WP_ENABLED,
+                                false
+                            )
+                        }
+                        val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_AOD_WP_ENABLED)
+                        if (pref != null)
+                            pref.isChecked = false
                         updateEnabledInitial()
                     }
                 )
