@@ -993,7 +993,7 @@ GlucoDataHandlerは、Health Connectに血糖データのみを書き込み、�
     <string name="source_librelinkup_5_info_popup">アボット社は、新しい暗号化インターフェースを採用したバージョン5をリリースしました。\nアボット社が従来のインターフェースを停止した場合、GDH（およびその他のサードパーティ製アプリ）との通信は中断される可能性があります。\n現在 この新しい暗号化を回避できる手段は、ありません。\nスマートウォッチ連携など主要機能の今後のサポートに関するご質問は、アボット社にお問い合わせください。</string>
 
     <string name="accessibility_prominent_disclosure_title">ユーザー補助の権限</string>
-    <string name="accessibility_prominent_disclosure_message">このアプリは 常時血糖値を表示するために AccessibilityService API をリクエストします。\n\n目的：\n端末がスリープ解除せずに数値を表示するため、ロック画面またはAODモードであることを確認します。\n\nデータのプライバシー：\nこのサービスは、値を正しく表示するためのみに使用されます。個人情報等には一切アクセスしません。\n\n同意：\n\"同意する\" をタップすると、Androidの設定画面に移動します。拒否する場合はキャンセルをタップしてください。</string>
+    <string name="accessibility_prominent_disclosure_message">このアプリは、常時点灯ディスプレイ（AOD）に血糖値を表示するためだけに AccessibilityService API を要求します。\n\n目的：\nロック画面がアクティブになったことを検知し、現在の血糖値データを表示する小さなローカルビューを重ねて表示します。これにより、端末を起動せずに血糖値を確認できます。\n\nこのサービスは以下を行いません：\n- 他のアプリのコンテンツ、テキスト、またはUI要素の読み取り・アクセス・操作\n- 個人情報、機密情報、または健康データの収集・保存・送信\n- お客様の知らない間のデバイス設定の変更\n\n同意：\n\"同意する\" をタップすると、このサービスの有効化に同意し、Androidのアクセシビリティ設定に移動します。拒否する場合は \"キャンセル\" をタップしてください。</string>
     <string name="button_accept">同意する</string>
 
     <!-- v2.5 -->
