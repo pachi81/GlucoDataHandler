@@ -1020,4 +1020,7 @@ Du kan hantera dessa behörigheter när som helst i Health Connect-appens instä
     <string name="aod_advanced_protection_enabled_dialog">AOD kan inte användas när Avancerat skydd är aktiverat.\nInställningen har inaktiverats och kan endast återaktiveras i inställningsmenyn efter att Avancerat skydd har inaktiverats.</string>
     <string name="aod_advanced_protection_enabled_info">Avancerat skydd är aktivt och blockerar tillgänglighetstjänster för den här appen. För att använda AOD, vänligen inaktivera Avancerat skydd i dina Android-inställningar.</string>
     <string name="press_here_to_check">Tryck här för att kontrollera.</string>
+    <string name="aod_optional_feature_title">Valfri Always‑On Display</string>
+    <string name="aod_optional_feature_message">Appen erbjuder en valfri Always‑On Display (AOD)-funktion som använder Android AccessibilityService API för att visa ditt glukosvärde på AOD.\n\nDenna funktion är inaktiverad som standard och kan aktiveras när som helst under Inställningar. AccessibilityService används endast för denna AOD‑funktion. Den får inte åtkomst till eller läsa innehåll från andra appar eller dina personuppgifter.</string>
+    <string name="button_got_it">Förstått</string>
 </resources>

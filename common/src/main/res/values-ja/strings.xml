@@ -1012,4 +1012,7 @@ GlucoDataHandlerは、Health Connectに血糖データのみを書き込み、�
     <string name="aod_advanced_protection_enabled_dialog">高度な保護機能が有効な間は、AODを使用できません。\nこの設定は無効化されました。高度な保護機能を無効にした後、設定メニューで再度有効にできます。</string>
     <string name="aod_advanced_protection_enabled_info">高度な保護機能が有効になっており、このアプリのユーザー補助サービスをブロックしています。AODを使用するには、Androidの設定で高度な保護機能を無効にしてください。</string>
     <string name="press_here_to_check">ここをタップして確認してください。</string>
+    <string name="aod_optional_feature_title">オプションの常時表示 (AOD)</string>
+    <string name="aod_optional_feature_message">このアプリは、AndroidのAccessibilityService APIを使用してAODに血糖値を表示するオプションのAlways‑On Display（AOD）機能を提供します。\n\nこの機能はデフォルトで無効になっており、設定でいつでも有効にできます。AccessibilityServiceはこのAOD機能のみに使用され、他のアプリの内容や個人データにアクセスまたは読み取ることはありません。</string>
+    <string name="button_got_it">了解</string>
 </resources>

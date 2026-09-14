@@ -18,12 +18,16 @@ import java.util.Calendar
 object Dialogs {
 
     const val LOG_ID = "GDH.Dialogs"
-    fun showOkDialog(context: Context, titleResId: Int, messageResId: Int, okListener: DialogInterface.OnClickListener?) {
+
+    fun showDialog(context: Context, titleResId: Int, messageResId: Int, okButtonRes: Int, okListener: DialogInterface.OnClickListener?) {
         MaterialAlertDialogBuilder(context)
             .setTitle(context.resources.getString(titleResId))
             .setMessage(context.resources.getString(messageResId))
-            .setPositiveButton(context.resources.getText(R.string.button_ok), okListener)
+            .setPositiveButton(context.resources.getText(okButtonRes), okListener)
             .show()
+    }
+    fun showOkDialog(context: Context, titleResId: Int, messageResId: Int, okListener: DialogInterface.OnClickListener?) {
+        showDialog(context, titleResId, messageResId, R.string.button_ok, okListener)
     }
 
     fun showOkCancelDialog(context: Context, titleResId: Int, messageResId: Int, okListener: DialogInterface.OnClickListener?, cancelListener: DialogInterface.OnClickListener? = null) {

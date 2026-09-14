@@ -1090,4 +1090,7 @@ Ezeket az engedélyeket bármikor kezelheti a Health Connect alkalmazás beáll�
     <string name="aod_advanced_protection_enabled_dialog">Az AOD nem használható, amíg a Speciális védelem engedélyezve van.\nA beállítás deaktiválva lett, és csak a Speciális védelem kikapcsolása után engedélyezhető újra a beállítások menüben.</string>
     <string name="aod_advanced_protection_enabled_info">A Speciális védelem aktív, és blokkolja az akadálymentesítési szolgáltatásokat ehhez az alkalmazáshoz. Az AOD használatához kérjük, kapcsolja ki a Speciális védelmet az Android beállításaiban.</string>
     <string name="press_here_to_check">Kattintson ide az ellenőrzéshez.</string>
+    <string name="aod_optional_feature_title">Opcionális Always‑On Display</string>
+    <string name="aod_optional_feature_message">Az alkalmazás opcionális Always‑On Display (AOD) funkciót kínál, amely az Android AccessibilityService API‑ját használja a vércukorszint megjelenítéséhez az AOD‑n.\n\nA funkció alapértelmezés szerint ki van kapcsolva, és bármikor engedélyezhető a Beállításokban. Az AccessibilityService csak erre az AOD funkcióra szolgál. Nem fér hozzá más alkalmazások tartalmához, és nem olvassa személyes adatait.</string>
+    <string name="button_got_it">Értettem</string>
 </resources>

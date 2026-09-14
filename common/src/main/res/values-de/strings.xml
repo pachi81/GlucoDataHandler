@@ -1021,4 +1021,7 @@ Sie können diese Berechtigungen jederzeit in den Health Connect App-Einstellung
     <string name="aod_advanced_protection_enabled_dialog">AOD kann nicht genutzt werden, da die Erweiterte Sicherheit aktiviert ist.\nDie Einstellung wurde deaktiviert und kann erst wieder im Einstellungsmenü aktiviert werden, wenn die Erweiterte Sicherheit deaktiviert wurde.</string>
     <string name="aod_advanced_protection_enabled_info">Die \"Erweiterte Sicherheit\" ist aktiv und blockiert die AOD-Anzeige. Bitte deaktivieren Sie ihn in den Android-Einstellungen, um diese Funktion nutzen zu können.</string>
     <string name="press_here_to_check">Hier drücken, um dies zu prüfen.</string>
+    <string name="aod_optional_feature_title">Optional Always-On Display</string>
+    <string name="aod_optional_feature_message">Diese App bietet eine optionale Always‑On‑Display (AOD)-Funktion, die die Android AccessibilityService API verwendet, um Ihren Blutzuckerwert auf dem AOD anzuzeigen.\n\nDiese Funktion ist standardmäßig deaktiviert und kann jederzeit in den Einstellungen aktiviert werden. Der AccessibilityService wird ausschließlich für diese AOD‑Funktion verwendet. Er greift nicht auf Inhalte anderer Apps oder persönliche Daten zu.</string>
+    <string name="button_got_it">Verstanden</string>
 </resources>

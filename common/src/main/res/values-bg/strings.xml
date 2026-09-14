@@ -1035,4 +1035,7 @@ GlucoDataHandler само записва данни за кръвната зах
     <string name="aod_advanced_protection_enabled_dialog">AOD не може да се използва, докато е активирана Разширена защита.\nНастройката е деактивирана и може да бъде активирана отново в менюто с настройки само след като Разширената защита бъде деактивирана.</string>
     <string name="aod_advanced_protection_enabled_info">Разширената защита е активна и блокира услугите за достъпност за това приложение. За да използвате AOD, моля, деактивирайте Разширената защита в настройките на Android.</string>
     <string name="press_here_to_check">Hier drücken, um dies zu prüfen.</string>
+    <string name="aod_optional_feature_title">Опционален Always‑On Display</string>
+    <string name="aod_optional_feature_message">Това приложение предлага опционална функция Always‑On Display (AOD), която използва Android AccessibilityService API за показване на нивото ви на глюкоза на AOD.\n\nТази функция е деактивирана по подразбиране и може да бъде активирана по всяко време в Настройки. AccessibilityService се използва само за тази AOD функция. Тя не осъществява достъп или четене на съдържание от други приложения или вашите лични данни.</string>
+    <string name="button_got_it">Разбрах</string>
 </resources>

@@ -1027,4 +1027,7 @@ GlucoDataHandler 只會將血糖數據寫入健康連結，除非您明確授予
     <string name="aod_advanced_protection_enabled_info">進階防護已啟用，並封鎖此程式的協助工具服務。若要使用 AOD，請在 Android 設定中停用進階防護。</string>
     <string name="press_here_to_check">按這裡進行檢查。</string>
 
+    <string name="aod_optional_feature_title">可選的常時顯示 (AOD)</string>
+    <string name="aod_optional_feature_message">此應用程式提供一個可選的 Always‑On Display (AOD) 功能，使用 Android AccessibilityService API 在 AOD 上顯示您的血糖值。\n\n此功能預設關閉，可隨時在「設定」中啟用。AccessibilityService 僅用於此 AOD 功能，不會存取或讀取其他應用程式的內容或您的個人資料。</string>
+    <string name="button_got_it">知道了</string>
 </resources>

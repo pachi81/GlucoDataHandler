@@ -1031,5 +1031,8 @@ Tieto povolenia môžete kedykoľvek spravovať v nastaveniach aplikácie Health
     <string name="aod_advanced_protection_enabled_dialog">AOD nie je možné používať, kým je aktivovaná Rozšírená ochrana.\nNastavenie bolo zakázané a je možné ho znova povoliť v menu nastavení až po deaktivácii Rozšírenej ochrany.</string>
     <string name="aod_advanced_protection_enabled_info">Rozšírená ochrana je aktívna a blokuje služby dostupnosti pre túto aplikáciu. Ak chcete používať AOD, vypnite Rozšírenú ochranu v nastaveniach Androidu.</string>
     <string name="press_here_to_check">Kliknutím sem to skontrolujete.</string>
+    <string name="aod_optional_feature_title">Voliteľné Always‑On Display</string>
+    <string name="aod_optional_feature_message">Aplikácia ponúka voliteľnú funkciu Always‑On Display (AOD), ktorá používa rozhranie Android AccessibilityService API na zobrazenie hodnoty glukózy na AOD.\n\nTáto funkcia je predvolene vypnutá a možno ju kedykoľvek zapnúť v Nastaveniach. AccessibilityService sa používa iba pre túto funkciu AOD. Nepristupuje ani nečíta obsah iných aplikácií ani vaše osobné údaje.</string>
+    <string name="button_got_it">Rozumiem</string>
 </resources>
 

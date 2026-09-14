@@ -1103,4 +1103,7 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="aod_advanced_protection_enabled_info">Advanced Protection is active and blocks accessibility services for this app. To use AOD, please disable Advanced Protection in your Android settings.</string>
 
     <string name="press_here_to_check">Press here to check it.</string>
+    <string name="aod_optional_feature_title">Optional Always-On Display</string>
+    <string name="aod_optional_feature_message">This app offers an optional Always-On Display (AOD) feature that uses the Android AccessibilityService API to display your glucose value on the AOD.\n\nThis feature is disabled by default and can be enabled at any time in Settings. The AccessibilityService is only used for this AOD feature. It does not access or read content from other apps or your personal data.</string>
+    <string name="button_got_it">Got it</string>
 </resources>

@@ -1032,4 +1032,7 @@
     <string name="aod_advanced_protection_enabled_dialog">Funkcja AOD nie może być używana, gdy włączona jest funkcja zaawansowanej ochrony.\nTo ustawienie zostało wyłączone i można je ponownie włączyć w menu ustawień dopiero po wyłączeniu funkcji zaawansowanej ochrony.</string>
     <string name="aod_advanced_protection_enabled_info">Funkcja zaawansowanej ochrony jest aktywna i blokuje usługi ułatwień dostępu dla tej aplikacji. Aby korzystać z funkcji AOD, proszę wyłączyć funkcję zaawansowanej ochrony w ustawieniach systemu Android.</string>
     <string name="press_here_to_check">Naciśnij tutaj, aby to sprawdzić.</string>
+    <string name="aod_optional_feature_title">Opcjonalny Always‑On Display</string>
+    <string name="aod_optional_feature_message">Aplikacja oferuje opcjonalną funkcję Always‑On Display (AOD), która wykorzystuje API AccessibilityService systemu Android do wyświetlania poziomu glukozy na AOD.\n\nFunkcja jest domyślnie wyłączona i można ją włączyć w dowolnym momencie w Ustawieniach. AccessibilityService jest używany wyłącznie dla tej funkcji AOD. Nie uzyskuje dostępu ani nie odczytuje zawartości innych aplikacji ani Twoich danych osobowych.</string>
+    <string name="button_got_it">Rozumiem</string>
 </resources>
