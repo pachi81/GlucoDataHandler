@@ -442,17 +442,17 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                         CR.string.aod_optional_feature_title,
                         CR.string.aod_optional_feature_message,
                         CR.string.button_got_it,
-                        { _, _ ->
-                            sharedPref.edit {
-                                putString(Constants.SHARED_PREF_DISCLAIMER_SHOWN, BuildConfig.VERSION_NAME)
-                            }
-                        })
+                        null)
                 }
                 Dialogs.showOkDialog(this,
                     CR.string.gdh_disclaimer_title,
                     CR.string.gdh_disclaimer_message,
                     null
                 )
+                // this will prevent showing dialogs more than once!
+                sharedPref.edit {
+                    putString(Constants.SHARED_PREF_DISCLAIMER_SHOWN, BuildConfig.VERSION_NAME)
+                }
             }
             if(ReceiveData.source == DataSource.LIBRELINK && !sharedPref.contains(Constants.SHARED_PREF_LLU_5_WARNING_SHOWN)) {
                 Dialogs.showOkDialog(this,
