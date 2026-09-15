@@ -1018,6 +1018,6 @@ Puoi gestire queste autorizzazioni in qualsiasi momento nelle impostazioni dell\
     <string name="aod_advanced_protection_enabled_info">La Protezione avanzata è attiva e blocca i servizi di accessibilità per questa app. Per utilizzare l\'AOD, disattiva la Protezione avanzata nelle impostazioni di Android.</string>
     <string name="press_here_to_check">Premi qui per verificare.</string>
     <string name="aod_optional_feature_title">Always‑On Display opzionale</string>
-    <string name="aod_optional_feature_message">Questa app offre una funzione Always‑On Display (AOD) opzionale che utilizza l\'API AccessibilityService di Android per visualizzare il valore della glicemia sull'AOD. Questa funzione è disattivata per impostazione predefinita e può essere attivata in qualsiasi momento nelle Impostazioni. AccessibilityService viene utilizzato solo per questa funzione AOD e non accede ai contenuti di altre app o ai tuoi dati personali.</string>
+    <string name="aod_optional_feature_message">Questa app offre una funzione Always‑On Display (AOD) opzionale che utilizza l\'API AccessibilityService di Android per visualizzare il valore della glicemia sull\'AOD. Questa funzione è disattivata per impostazione predefinita e può essere attivata in qualsiasi momento nelle Impostazioni. AccessibilityService viene utilizzato solo per questa funzione AOD e non accede ai contenuti di altre app o ai tuoi dati personali.</string>
     <string name="button_got_it">Ricevuto</string>
 </resources>
