@@ -8,7 +8,7 @@ import java.util.Locale
 import com.github.mikephil.charting.formatter.ValueFormatter
 import de.michelinside.glucodatahandler.common.utils.Utils
 
-class TimeValueFormatter(private val mChart: LineChart) : ValueFormatter() {
+class TimeValueFormatter(private val mChart: LineChart, val showNoDataValues: Boolean = true) : ValueFormatter() {
     //private val formatMinutes: SimpleDateFormat = SimpleDateFormat("HH:mm", Locale.ENGLISH)
     private val formatMinutes: SimpleDateFormat
         get() {
@@ -81,6 +81,9 @@ class TimeValueFormatter(private val mChart: LineChart) : ValueFormatter() {
     }
 
     override fun getFormattedValue(value: Float): String {
+        if (!showNoDataValues && (mChart.data == null || mChart.data.dataSetCount == 0 || mChart.data.getDataSetByIndex(0).entryCount == 0)) {
+            return ""
+        }
         val min = mChart.lowestVisibleX
         val max = mChart.highestVisibleX
 

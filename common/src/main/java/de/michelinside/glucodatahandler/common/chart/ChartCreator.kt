@@ -66,6 +66,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     protected open val showAverage = true
     protected open val showDateOnBubble = true
     protected open val showDeltaOnBubble = true
+    protected open val showTimeAxisNoData = true
     private var graphStartTime = 0L
     private var recreateThread: Thread? = null
     private var averageLine: LimitLine? = null
@@ -246,7 +247,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         chart.xAxis.position = XAxis.XAxisPosition.BOTTOM
         chart.xAxis.setDrawGridLines(true)
         chart.xAxis.enableGridDashedLine(10F, 10F, 0F)
-        chart.xAxis.valueFormatter = TimeValueFormatter(chart)
+        chart.xAxis.valueFormatter = TimeValueFormatter(chart, showTimeAxisNoData)
         chart.setXAxisRenderer(TimeAxisRenderer(chart))
         chart.xAxis.textColor = textColor
     }
