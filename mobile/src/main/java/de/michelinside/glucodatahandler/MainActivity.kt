@@ -437,14 +437,22 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private fun checkNewSettings() {
         try {
             if(!sharedPref.contains(Constants.SHARED_PREF_DISCLAIMER_SHOWN)) {
+                if(!Constants.IS_SECOND) {
+                    Dialogs.showDialog(this,
+                        CR.string.aod_optional_feature_title,
+                        CR.string.aod_optional_feature_message,
+                        CR.string.button_got_it,
+                        { _, _ ->
+                            sharedPref.edit {
+                                putString(Constants.SHARED_PREF_DISCLAIMER_SHOWN, BuildConfig.VERSION_NAME)
+                            }
+                        })
+                }
                 Dialogs.showOkDialog(this,
                     CR.string.gdh_disclaimer_title,
                     CR.string.gdh_disclaimer_message,
                     null
                 )
-                sharedPref.edit {
-                    putString(Constants.SHARED_PREF_DISCLAIMER_SHOWN, BuildConfig.VERSION_NAME)
-                }
             }
             if(ReceiveData.source == DataSource.LIBRELINK && !sharedPref.contains(Constants.SHARED_PREF_LLU_5_WARNING_SHOWN)) {
                 Dialogs.showOkDialog(this,
