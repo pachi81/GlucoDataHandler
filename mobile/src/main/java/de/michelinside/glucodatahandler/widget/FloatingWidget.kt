@@ -18,6 +18,7 @@ import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import java.util.*
+import androidx.core.content.edit
 
 
 class FloatingWidget(context: Context): WallpaperBase(context, "GDH.FloatingWidget") {
@@ -35,6 +36,7 @@ class FloatingWidget(context: Context): WallpaperBase(context, "GDH.FloatingWidg
     override val MAX_SIZE = 30f
     override val DEFAULT_FONT_SIZE = 10f
 
+    @SuppressLint("InflateParams")
     override fun enable() {
         try {
             Log.d(LOG_ID, "enable called")
@@ -63,10 +65,9 @@ class FloatingWidget(context: Context): WallpaperBase(context, "GDH.FloatingWidg
         try {
             if (windowManager != null) {
                 try {
-                    with(sharedInternalPref.edit()) {
-                        putInt(Constants.SHARED_PREF_FLOATING_WIDGET_X,params.x)
-                        putInt(Constants.SHARED_PREF_FLOATING_WIDGET_Y,params.y)
-                        apply()
+                    sharedInternalPref.edit {
+                        putInt(Constants.SHARED_PREF_FLOATING_WIDGET_X, params.x)
+                        putInt(Constants.SHARED_PREF_FLOATING_WIDGET_Y, params.y)
                     }
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "saving pos exception: " + exc.message.toString() )
@@ -83,10 +84,9 @@ class FloatingWidget(context: Context): WallpaperBase(context, "GDH.FloatingWidg
     private fun setContent() {
         imageView.setImageBitmap(createWallpaperView(backgroundColor = Utils.getBackgroundColor(sharedPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY, 3))))
         imageView.contentDescription = ReceiveData.getAsText(context, hasIobCob())
-        receycleOldWallpaper()
     }
 
-    override open fun update() {
+    override fun update() {
         Log.d(LOG_ID, "update called - enabled: $enabled")
         try {
             if (enabled) {
@@ -145,9 +145,8 @@ class FloatingWidget(context: Context): WallpaperBase(context, "GDH.FloatingWidg
             }
             imageView.setOnLongClickListener {
                 Log.d(LOG_ID, "onLongClick called")
-                with(sharedPref.edit()) {
+                sharedPref.edit {
                     putBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, false)
-                    apply()
                 }
                 remove()
                 true
@@ -171,10 +170,9 @@ class FloatingWidget(context: Context): WallpaperBase(context, "GDH.FloatingWidg
                             }
                             MotionEvent.ACTION_UP -> {
                                 // only check duration, if there was no movement...
-                                with(sharedInternalPref.edit()) {
-                                    putInt(Constants.SHARED_PREF_FLOATING_WIDGET_X,params.x)
-                                    putInt(Constants.SHARED_PREF_FLOATING_WIDGET_Y,params.y)
-                                    apply()
+                                sharedInternalPref.edit {
+                                    putInt(Constants.SHARED_PREF_FLOATING_WIDGET_X, params.x)
+                                    putInt(Constants.SHARED_PREF_FLOATING_WIDGET_Y, params.y)
                                 }
                                 if  (Math.abs(params.x - initialX) < 50 && Math.abs(params.y - initialY) < 50 ) {
                                     val duration = Calendar.getInstance().timeInMillis - startClickTime

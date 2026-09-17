@@ -3,7 +3,6 @@ package de.michelinside.glucodatahandler.healthconnect
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import de.michelinside.glucodatahandler.common.utils.Log
@@ -33,6 +32,7 @@ import java.time.Instant
 import java.time.ZonedDateTime
 import androidx.core.content.edit
 import androidx.core.net.toUri
+import de.michelinside.glucodatahandler.common.ReceiveData
 
 enum class HealthConnectState(val resId: Int) {
     UNKNOWN(0),
@@ -49,6 +49,7 @@ object HealthConnectManager: NotifierInterface {
     private var healthConnectClient: HealthConnectClient? = null
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private lateinit var sharedExtraPref: SharedPreferences
+    private var sendOnlyLastValue = false
     var state = HealthConnectState.UNKNOWN
         private set(value) {
             if (field != value) {
@@ -75,11 +76,7 @@ object HealthConnectManager: NotifierInterface {
 
     fun enable() {
         enabled = true
-        InternalNotifier.addNotifier( GlucoDataService.context!!, this,
-            mutableSetOf(
-                NotifySource.DB_DATA_CHANGED
-            )
-        )
+        updateNotifier()
         lastValueTime = sharedExtraPref.getLong(Constants.SHARED_PREF_HEALTH_CONNECT_LAST_VALUE_TIME, 0L)
         writeLastValues(GlucoDataService.context!!)
         Log.i(LOG_ID, "Health Connect enabled")
@@ -88,10 +85,23 @@ object HealthConnectManager: NotifierInterface {
     fun disable() {
         enabled = false
         state = HealthConnectState.DISABLED
-        InternalNotifier.remNotifier(
-            GlucoDataService.context!!, this
-        )
+        updateNotifier()
         Log.i(LOG_ID, "Health Connect disabled")
+    }
+
+    private fun updateNotifier() {
+        Log.d(LOG_ID, "Update notifier: enabled=$enabled, sendOnlyLastValue=$sendOnlyLastValue")
+        if(enabled && !sendOnlyLastValue) {
+            InternalNotifier.addNotifier( GlucoDataService.context!!, this,
+                mutableSetOf(
+                    NotifySource.DB_DATA_CHANGED
+                )
+            )
+        } else {
+            InternalNotifier.remNotifier(
+                GlucoDataService.context!!, this
+            )
+        }
     }
 
     fun getPermissionRequestContract(): ActivityResultContract<Set<String>, Set<String>> {
@@ -206,7 +216,7 @@ object HealthConnectManager: NotifierInterface {
 
     fun writeLastValues(context: Context): Boolean {
         try {
-            val minTime = maxOf(lastValueTime + 1, System.currentTimeMillis() - Constants.DB_MAX_DATA_WEAR_TIME_MS)
+            val minTime = if(sendOnlyLastValue) ReceiveData.time else maxOf(lastValueTime + 1, System.currentTimeMillis() - Constants.DB_MAX_DATA_WEAR_TIME_MS)
             Log.d(LOG_ID, "Write last values from ${Utils.getUiTimeStamp(minTime)}")
             return writeGlucoseData(context, dbAccess.getGlucoseValues(minTime))
         } catch (exc: Exception) {
@@ -239,7 +249,7 @@ object HealthConnectManager: NotifierInterface {
                         model = "App",
                         type = Device.TYPE_PHONE
                     )
-                    val currentMeta = Metadata.Companion.autoRecorded(device = deviceInfo)
+                    val currentMeta = Metadata.Companion.unknownRecordingMethod(device = deviceInfo)
                     val recordsToInsert = mutableListOf<BloodGlucoseRecord>()
 
                     glucoseValues.forEach {
@@ -322,8 +332,8 @@ object HealthConnectManager: NotifierInterface {
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
-            Log.d(LOG_ID, "OnNotifyData - dataSource: $dataSource - enable: $enabled")
-            if(enabled) {
+            Log.d(LOG_ID, "OnNotifyData - dataSource: $dataSource - enable: $enabled - sendOnlyLastValue: $sendOnlyLastValue")
+            if(enabled && !sendOnlyLastValue) {
                 if(dataSource == NotifySource.DB_DATA_CHANGED && extras != null) {
                     val startTime = extras.getLong(Constants.EXTRA_START_TIME)
                     val endTime = extras.getLong(Constants.EXTRA_END_TIME)
@@ -341,4 +351,11 @@ object HealthConnectManager: NotifierInterface {
         }
     }
 
+    fun setOnlyLastValue(onlyLastValue: Boolean) {
+        if(sendOnlyLastValue != onlyLastValue) {
+            Log.i(LOG_ID, "Send only last value changed from $sendOnlyLastValue to $onlyLastValue")
+            sendOnlyLastValue = onlyLastValue
+            updateNotifier()
+        }
+    }
 }

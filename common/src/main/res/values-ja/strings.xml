@@ -962,15 +962,15 @@ GlucoDataHandlerは、Health Connectに血糖データのみを書き込み、�
     <string name="source_aidex_summary">AiDEX ブロードキャスト受信機を有効にします AiDEX アプリのバージョン 1.0.17 以下が必要です </string>
     <string name="pref_source_aidex_summary">AiDEX アプリからブロードキャストを受信します AiDEX アプリのバージョン 1.0.17 以下が必要です </string>
 
-    <string name="transfer_values_interval_summary">血糖値を送信する頻度 \n前回の送信以降に記録されたすべての値が送信されます </string>
+    <string name="transfer_values_interval_summary">血糖値を送信する頻度 </string>
     <string name="health_connect_settings">Health Connect を開く</string>
     <string name="health_connect_settings_summary">Health Connect の権限とデータアクセスを管理します </string>
     <string name="health_connect_not_supported_version">Health Connect には Android 9 以上が必要です </string>
     <string name="pref_transfer_to_nightscout_summary">血糖値を Nightscout にアップロードします </string>
     <string name="transfer_to_nightscout">Nightscout アップロード</string>
     <string name="label_profile">プロファイル</string>
-    <string name="pref_watchfaces_cx_summary">Creative eXtreme ウォッチフェイスも GlucoDataHandler をサポートしています \nこれらのウォッチフェイスを適用するには Facer ウォッチフェイスアプリを適用する必要があります \nここをタップして Creative eXtreme ウォッチフェイスの Facer ページを開きます </string>
-    <string name="notification_reader_interval_summary">過度な通知の処理を避けるために、センサーの更新レートに合わせて設定してください \nソースアプリが新しい血糖値に対してのみ更新される場合 (CamAPS FX のように) は 0 に設定してください </string>
+    <string name="pref_watchfaces_cx_summary">Creative eXtreme ウォッチフェイスも GlucoDataHandler をサポートしています \nこれらのウォッチフェイスを適用するには Facer ウォッチフェイスアプリを適用する必要があります \nここをタップして Creative eXtreme ウォッチフェイスの Facer ページを開いてください </string>
+    <string name="notification_reader_interval_summary">過度な通知を避けるために、センサーの更新レートに合わせて設定してください \nソースアプリが新しい血糖値に対してのみ更新される場合 (CamAPS FXなど) は 0 に設定してください </string>
     <string name="pref_transfer_to_local_apps">ローカルアプリケーション</string>
     <string name="advanced_settings_developer_summary">内容を理解している場合、または開発者から指示された場合のみ、このオプションを有効にしてください</string>
     <string name="xdrip_open_server_api_secret_summary">サービスを保護するためのオプションのAPIシークレット 設定する場合、このオプションはすべてのAPIリクエストに含める必要があります</string>
@@ -985,7 +985,7 @@ GlucoDataHandlerは、Health Connectに血糖データのみを書き込み、�
     <string name="alarm_wear_no_alarm_while_charging">充電中はアラームを消す</string>
     <string name="alarm_wear_no_alarm_while_charging_summary">充電している間はアラームを鳴らさないようにします</string>
     <string name="export_settings_info">設定をエクスポートします\n このファイルにはパスワード等が含まれるため、誰とも共有しないでください。\n ※開発者が設定ファイルの提示を求めることはありません。\n （通常はログデータのみ提示を求めます。）\n エクスポートを続行しますか？</string>
-    <string name="pref_switch_standard_children_statistics">子ども向け TITR の使用</string>
+    <string name="pref_switch_standard_children_statistics">TITR（Time in Tighter Range）の使用</string>
     <string name="pref_switch_standard_children_statistics_summary">一部の国と地域では、幼児に対して70～140 mg/dl（3.9～7.8 mmol/l）を目標値とする「タイトレンジ内時間（Time in Tighter Range：TITR）」が、推奨されています。</string>
 
     <string name="pref_source_librelinkup_5_info_summary">アボット社は、LibreLinkUpの通信を暗号化方式に変更しました。\n従来のインターフェースが停止され次第、GDHは動作しなくなる可能性があります。\n現時点では、この問題を解決できる手段は見当たりません。</string>
@@ -993,6 +993,26 @@ GlucoDataHandlerは、Health Connectに血糖データのみを書き込み、�
     <string name="source_librelinkup_5_info_popup">アボット社は、新しい暗号化インターフェースを採用したバージョン5をリリースしました。\nアボット社が従来のインターフェースを停止した場合、GDH（およびその他のサードパーティ製アプリ）との通信は中断される可能性があります。\n現在 この新しい暗号化を回避できる手段は、ありません。\nスマートウォッチ連携など主要機能の今後のサポートに関するご質問は、アボット社にお問い合わせください。</string>
 
     <string name="accessibility_prominent_disclosure_title">ユーザー補助の権限</string>
-    <string name="accessibility_prominent_disclosure_message">このアプリは、常に画面表示（AOD）に血糖値を表示するために AccessibilityService API をリクエストします。\n\n目的：\n端末がロック画面またはAODモードであることを検出し、現在の血糖値データをカスタムローカルビューで重ねて表示します。これにより、端末をスリープ解除することなく数値を 確認できます。\n\nデータのプライバシー：\nこのサービスは、視覚的なオーバーレイ表示のみに厳格に使用されます。個人情報、機密情報、または健康データへのアクセス、収集、保存、共有は一切行いません。\n\n同意：\n\"同意する\" をタップすると、このサービスの有効化に同意したことになり、Androidの設定画面にリダイレクトされます。拒否する場合はキャンセルをタップしてください。</string>
+    <string name="accessibility_prominent_disclosure_message">このアプリは、常時点灯ディスプレイ（AOD）に血糖値を表示するためだけに AccessibilityService API を要求します。\n\n目的：\nロック画面がアクティブになったことを検知し、現在の血糖値データを表示する小さなローカルビューを重ねて表示します。これにより、端末を起動せずに血糖値を確認できます。\n\nこのサービスは以下を行いません：\n- 他のアプリのコンテンツ、テキスト、またはUI要素の読み取り・アクセス・操作\n- 個人情報、機密情報、または健康データの収集・保存・送信\n- お客様の知らない間のデバイス設定の変更\n\n同意：\n\"同意する\" をタップすると、このサービスの有効化に同意し、Androidのアクセシビリティ設定に移動します。拒否する場合は \"キャンセル\" をタップしてください。</string>
     <string name="button_accept">同意する</string>
+
+    <!-- v2.5 -->
+    <string name="unit_second_short">秒</string>
+    <string name="unit_minute_short">分</string>
+    <plurals name="minutes_short">
+        <item quantity="other">%d 分</item>
+    </plurals>
+    <string name="tile_glucose_value">血糖値</string>
+    <string name="tile_glucose_graph">血糖グラフ</string>
+    <string name="tile_glucose_details">血糖詳細</string>
+    <string name="info_label_eiob_talkback">有効 I.O.B.</string>
+    <string name="pref_health_send_last_value">最新の値のみ送信</string>
+    <string name="pref_health_send_last_value_summary">有効にすると、最新の血糖値のみをヘルスコネクトに送信します。無効にすると、前回の同期以降に記録されたすべての値が送信されます。</string>
+    <string name="new_sensor">新しいセンサー</string>
+    <string name="aod_advanced_protection_enabled_dialog">高度な保護機能が有効な間は、AODを使用できません。\nこの設定は無効化されました。高度な保護機能を無効にした後、設定メニューで再度有効にできます。</string>
+    <string name="aod_advanced_protection_enabled_info">高度な保護機能が有効になっており、このアプリのユーザー補助サービスをブロックしています。AODを使用するには、Androidの設定で高度な保護機能を無効にしてください。</string>
+    <string name="press_here_to_check">ここをタップして確認してください。</string>
+    <string name="aod_optional_feature_title">オプションの常時表示 (AOD)</string>
+    <string name="aod_optional_feature_message">このアプリは、AndroidのAccessibilityService APIを使用してAODに血糖値を表示するオプションのAlways‑On Display（AOD）機能を提供します。\n\nこの機能はデフォルトで無効になっており、設定でいつでも有効にできます。AccessibilityServiceはこのAOD機能のみに使用され、他のアプリの内容や個人データにアクセスまたは読み取ることはありません。</string>
+    <string name="button_got_it">了解</string>
 </resources>

@@ -217,7 +217,8 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.TIME_VALUE,
                 NotifySource.SOURCE_STATE_CHANGE,
                 NotifySource.ALARM_STATE_CHANGED,
-                NotifySource.UPDATE_MAIN))
+                NotifySource.UPDATE_MAIN,
+                NotifySource.SENSOR_AGE_CHANGED))
             if (requestNotificationPermission && Utils.checkPermission(this.applicationContext, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
                 Log.i(LOG_ID, "Notification permission granted")
                 requestNotificationPermission = false
@@ -261,9 +262,6 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 txtBgValue.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
             } else {
                 txtBgValue.paintFlags = 0
-            }
-            if(chartBitmap.imageView.isEnabled) {
-
             }
             viewIcon.setImageIcon(BitmapUtils.getRateAsIcon("main_trend"))
             viewIcon.contentDescription = ReceiveData.getRateAsText(this)
@@ -546,13 +544,15 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             }
 
             tableDetails.addView(createRow(CR.string.info_label_timestamp, Utils.getUiTimeStamp(ReceiveData.time)))
+            if (!ReceiveData.eiob.isNaN() && !ReceiveData.isIobCobObsolete())
+                tableDetails.addView(createRow(CR.string.info_label_eiob, ReceiveData.getEiobAsString()))
             if (!ReceiveData.isIobCobObsolete(1.days.inWholeSeconds.toInt()))
                 tableDetails.addView(createRow(CR.string.info_label_iob_cob_timestamp, DateFormat.getTimeInstance(
                     DateFormat.DEFAULT).format(Date(ReceiveData.iobCobTime))))
             if (ReceiveData.sensorID?.isNotEmpty() == true) {
                 tableDetails.addView(createRow(CR.string.info_label_sensor_id, if(BuildConfig.DEBUG) "ABCDE12345" else ReceiveData.sensorID!!))
             }
-            if(ReceiveData.sensorStartTime > 0) {
+            if(ReceiveData.sensorStartTime > 0 && !GlucoDataUtils.isSensorExpired(this)) {
                 val duration = Duration.ofMillis(System.currentTimeMillis() - ReceiveData.sensorStartTime)
                 val days = duration.toDays()
                 val hours = duration.minusDays(days).toHours()

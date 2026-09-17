@@ -1006,7 +1006,22 @@ Sie können diese Berechtigungen jederzeit in den Health Connect App-Einstellung
     <string name="source_librelinkup_5_info_popup">Abbott hat die Version 5 veröffentlicht, die eine neue, verschlüsselte Schnittstelle nutzt.\nSollte Abbott die bisherige Schnittstelle abschalten, wird die Kommunikation mit GDH (und anderen Drittanbieter Apps) voraussichtlich unterbrochen.\nAktuell gibt es technisch keine Lösung, um diese neue Verschlüsselung zu umgehen.\nFragen zur künftigen Unterstützung wichtiger Funktionen wie der Smartwatch-Anbindung können nur direkt durch den Support von Abbott beantwortet werden.</string>
 
     <string name="accessibility_prominent_disclosure_title">Berechtigung für Eingabehilfen</string>
-    <string name="accessibility_prominent_disclosure_message">Diese App erfordert die AccessibilityService-API, um Glukosewerte auf Ihrem Always-On-Display (AOD) anzuzeigen.\n\nZweck:\nSie erkennt den Zustand des Sperrbildschirms, um eine benutzerdefinierte lokale Ansicht mit Ihren aktuellen Glukosedaten zu überlagern. So können Sie Ihre Werte überwachen, ohne das Gerät zu aktivieren.\n\nDatenschutz:\nDieser Dienst wird ausschließlich für die visuelle Überlagerung verwendet. Er greift NICHT auf persönliche, sensible oder gesundheitliche Daten zu, erhebt, speichert oder teilt diese nicht.\n\nEinwilligung:\nDurch Tippen auf \"Akzeptieren\" stimmen Sie der Aktivierung dieses Dienstes zu und werden zu den Android-Einstellungen für Eingabehilfen weitergeleitet. Tippen Sie zum Ablehnen auf Abbrechen.</string>
+    <string name="accessibility_prominent_disclosure_message">Diese App erfordert die AccessibilityService-API ausschließlich zur Anzeige von Glukosewerten auf dem Always-On-Display (AOD).\n\nZweck:\nSie erkennt, wann der Sperrbildschirm aktiv ist, und blendet eine kleine lokale Ansicht mit dem aktuellen Glukosewert ein, sodass Sie Ihre Werte prüfen können, ohne das Gerät zu aktivieren.\n\nDieser Dienst tut NICHT:\n- Lesen, Zugreifen auf oder Interagieren mit Inhalten, Texten oder UI-Elementen anderer Apps\n- Erfassen, Speichern oder Übertragen persönlicher, sensibler oder gesundheitlicher Daten\n- Ändern von Geräteeinstellungen ohne Ihr Wissen\n\nEinwilligung:\nDurch Tippen auf \"Akzeptieren\" stimmen Sie der Aktivierung dieses Dienstes zu und werden zu den Android-Einstellungen für Eingabehilfen weitergeleitet. Tippen Sie auf \"Abbrechen\", um abzulehnen.</string>
     <string name="button_accept">Akzeptieren</string>
 
+    <!-- v2.5 -->
+
+    <string name="tile_glucose_value">Glukosewert</string>
+    <string name="tile_glucose_graph">Glukosegraph</string>
+    <string name="tile_glucose_details">Glukosedetails</string>
+    <string name="info_label_eiob_talkback">effektives I.O.B.</string>
+    <string name="pref_health_send_last_value">Nur letzten Wert senden</string>
+    <string name="pref_health_send_last_value_summary">Wenn aktiviert, wird nur der aktuellste Glukosewert an Health Connect gesendet. Andernfalls werden alle seit der letzten Synchronisierung aufgezeichneten Werte übertragen.</string>
+    <string name="new_sensor">Neuer Sensor</string>
+    <string name="aod_advanced_protection_enabled_dialog">AOD kann nicht genutzt werden, da die Erweiterte Sicherheit aktiviert ist.\nDie Einstellung wurde deaktiviert und kann erst wieder im Einstellungsmenü aktiviert werden, wenn die Erweiterte Sicherheit deaktiviert wurde.</string>
+    <string name="aod_advanced_protection_enabled_info">Die \"Erweiterte Sicherheit\" ist aktiv und blockiert die AOD-Anzeige. Bitte deaktivieren Sie ihn in den Android-Einstellungen, um diese Funktion nutzen zu können.</string>
+    <string name="press_here_to_check">Hier drücken, um dies zu prüfen.</string>
+    <string name="aod_optional_feature_title">Optional Always-On Display</string>
+    <string name="aod_optional_feature_message">Diese App bietet eine optionale Always‑On‑Display (AOD)-Funktion, die die Android AccessibilityService API verwendet, um Ihren Blutzuckerwert auf dem AOD anzuzeigen.\n\nDiese Funktion ist standardmäßig deaktiviert und kann jederzeit in den Einstellungen aktiviert werden. Der AccessibilityService wird ausschließlich für diese AOD‑Funktion verwendet. Er greift nicht auf Inhalte anderer Apps oder persönliche Daten zu.</string>
+    <string name="button_got_it">Verstanden</string>
 </resources>

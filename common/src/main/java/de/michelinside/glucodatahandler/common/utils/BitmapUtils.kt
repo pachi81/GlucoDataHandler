@@ -13,6 +13,7 @@ import android.graphics.Rect
 import android.graphics.Typeface
 import android.graphics.drawable.Icon
 import android.hardware.display.DisplayManager
+import android.text.TextPaint
 import android.view.View
 import androidx.window.layout.WindowMetricsCalculator
 import de.michelinside.glucodatahandler.common.Constants
@@ -362,5 +363,21 @@ object BitmapUtils {
         val canvas = Canvas(bitmap)
         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
         return bitmap
+    }
+
+    fun getUnicodeAsIcon(text: String, size: Int = 100): Icon {
+        val bitmap = BitmapPool.getBitmap(size, size)
+        val canvas = Canvas(bitmap)
+        val paint = Paint(TextPaint.ANTI_ALIAS_FLAG).apply {
+            textSize = size * 0.8f // Etwas kleiner als die Gesamtgröße, damit nichts abgeschnitten wird
+            textAlign = Paint.Align.CENTER
+        }
+
+        // Text vertikal zentrieren
+        val xPos = canvas.width / 2f
+        val yPos = (canvas.height / 2f - (paint.descent() + paint.ascent()) / 2f)
+
+        canvas.drawText(text, xPos, yPos, paint)
+        return Icon.createWithBitmap(bitmap)
     }
 }

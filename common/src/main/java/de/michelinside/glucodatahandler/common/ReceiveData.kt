@@ -34,9 +34,11 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     const val TIME = "glucodata.Minute.Time"
     const val DELTA = "glucodata.Minute.Delta"
     const val IOB = "glucodata.Minute.IOB"
+    const val EIOB = "glucodata.Minute.eIOB"
     const val COB = "glucodata.Minute.COB"
     const val IOBCOB_TIME = "gdh.IOB_COB_time"
     const val SENSOR_START_TIME = "gdh.sensor_start_time"
+    const val SENSOR_ID = "gdh.sensor_id"   // used for start time, otherwise the serial is used
     const val DELTA_FALLING_COUNT = "gdh.delta_falling_count"
     const val DELTA_RISING_COUNT = "gdh.delta_rising_count"
 
@@ -50,7 +52,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     var sensorID: String? = null
     private var startTimePair = Pair("", 0L)
     val sensorStartTime: Long get() {
-        if(!sensorID.isNullOrEmpty() && startTimePair.first == sensorID)
+        if(startTimePair.first == Constants.GDH_MANUAL_SENSOR_ID || (!sensorID.isNullOrEmpty() && startTimePair.first == sensorID))
             return startTimePair.second
         return 0L
     }
@@ -92,6 +94,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     var iob: Float = Float.NaN
+    var eiob: Float = Float.NaN
     var cob: Float = Float.NaN
     var iobCobTime: Long = 0
     private var lowValue: Float = 70F
@@ -239,6 +242,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         if(withIobCob && !isIobCobObsolete()) {
             if(!iob.isNaN())
                 text += ", " + context.getString(R.string.info_label_iob_talkback) + " " + getIobAsString()
+            if(!eiob.isNaN())
+                text += ", " + context.getString(R.string.info_label_eiob_talkback) + " " + getEiobAsString()
             if(!cob.isNaN())
                 text += ", " + context.getString(R.string.info_label_cob_talkback) + " " + getCobAsString()
         }
@@ -261,7 +266,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
 
     fun getDbValue(): Int {
         if(isMmol) {
-            return GlucoDataUtils.mmolToMg(glucose).toInt()
+            if(GlucoDataUtils.mgToMmol(rawValue.toFloat()) != glucose)  // if the raw value is not equal to the calculated mmol value, then use the mmol value for db storage
+                return GlucoDataUtils.mmolToMg(glucose).toInt()
         }
         return rawValue
     }
@@ -330,6 +336,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private fun isIobCob() : Boolean {
         if (isIobCobObsolete()) {
             iob = Float.NaN
+            eiob = Float.NaN
             cob = Float.NaN
         }
         return !iob.isNaN() || !cob.isNaN()
@@ -356,6 +363,21 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         if (withUnit)
             return iobString + " U"
         return iobString
+    }
+
+    val eiobString: String get() {
+        if (isIobCobObsolete())
+            eiob = Float.NaN
+        if(eiob.isNaN()) {
+            return " - "
+        }
+        return "%.2f".format(Locale.ROOT, eiob)
+    }
+
+    fun getEiobAsString(withUnit: Boolean = true): String {
+        if (withUnit)
+            return eiobString + " U"
+        return eiobString
     }
     fun getCobAsString(withUnit: Boolean = true): String {
         if (withUnit)
@@ -646,8 +668,13 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     receiveTime = System.currentTimeMillis()
                     source = dataSource
                     sensorID = GlucoDataUtils.checkSerial(extras.getString(SERIAL)) //Name of sensor
-                    if(extras.containsKey(SENSOR_START_TIME))
-                        setSensorStartTime(sensorID, extras.getLong(SENSOR_START_TIME))
+                    if(extras.containsKey(SENSOR_START_TIME)) {
+                        if(sensorID.isNullOrEmpty() && extras.containsKey(SENSOR_ID)) {
+                            setSensorStartTime(extras.getString(SENSOR_ID), extras.getLong(SENSOR_START_TIME), interApp)
+                        } else {
+                            setSensorStartTime(sensorID, extras.getLong(SENSOR_START_TIME), interApp)
+                        }
+                    }
 
                     sourceRate = extras.getFloat(RATE) //Rate of change of glucose. See libre and dexcom label functions
 
@@ -678,6 +705,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
 
                     if(extras.containsKey(IOB) || extras.containsKey(COB)) {
                         iob = extras.getFloat(IOB, Float.NaN)
+                        eiob = extras.getFloat(EIOB, Float.NaN)
                         cob = extras.getFloat(COB, Float.NaN)
                         iobCobTime = if(extras.containsKey(IOBCOB_TIME))
                             extras.getLong(IOBCOB_TIME)
@@ -769,6 +797,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             if(iob != extras.getFloat(IOB, Float.NaN) || cob != extras.getFloat(COB, Float.NaN)) {
                 Log.i(LOG_ID, "Only IOB/COB changed: ${extras.getFloat(IOB, Float.NaN)}/${extras.getFloat(COB, Float.NaN)} - at ${Utils.getUiTimeStamp(iobCobTime)} - from $dataSource")
                 iob = extras.getFloat(IOB, Float.NaN)
+                eiob = extras.getFloat(EIOB, Float.NaN)
                 cob = extras.getFloat(COB, Float.NaN)
                 iobCobChange = true
             } else {
@@ -928,11 +957,13 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         extras.putInt(MGDL, rawValue)
         extras.putString(SERIAL, sensorID)
         extras.putLong(SENSOR_START_TIME, sensorStartTime)
+        extras.putString(SENSOR_ID, startTimePair.first)
         extras.putFloat(RATE, rate)
         extras.putInt(ALARM, alarm)
         extras.putFloat(DELTA, deltaValue)
         if(includeObsoleteIobCob || !isIobCobObsolete()) {
             extras.putFloat(IOB, iob)
+            extras.putFloat(EIOB, eiob)
             extras.putFloat(COB, cob)
             extras.putLong(IOBCOB_TIME, iobCobTime)
         }
@@ -978,10 +1009,12 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 putInt(MGDL, rawValue)
                 putString(SERIAL, sensorID)
                 putLong(SENSOR_START_TIME, sensorStartTime)
+                putString(SENSOR_ID, startTimePair.first)
                 putFloat(RATE, rate)
                 putInt(ALARM, alarm)
                 putFloat(DELTA, deltaValue)
                 putFloat(IOB, iob)
+                putFloat(EIOB, eiob)
                 putFloat(COB, cob)
                 putLong(IOBCOB_TIME, iobCobTime)
                 putInt(DELTA_FALLING_COUNT, deltaFallingCount)
@@ -1010,10 +1043,12 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     extras.putInt(MGDL, sharedGlucosePref.getInt(MGDL, rawValue))
                     extras.putString(SERIAL, sharedGlucosePref.getString(SERIAL, sensorID))
                     extras.putLong(SENSOR_START_TIME, sharedGlucosePref.getLong(SENSOR_START_TIME, 0L))
+                    extras.putString(SENSOR_ID, sharedGlucosePref.getString(SENSOR_ID, null))
                     extras.putFloat(RATE, sharedGlucosePref.getFloat(RATE, rate))
                     extras.putInt(ALARM, sharedGlucosePref.getInt(ALARM, alarm))
                     extras.putFloat(DELTA, sharedGlucosePref.getFloat(DELTA, deltaValue))
                     extras.putFloat(IOB, sharedGlucosePref.getFloat(IOB, iob))
+                    extras.putFloat(EIOB, sharedGlucosePref.getFloat(EIOB, eiob))
                     extras.putFloat(COB, sharedGlucosePref.getFloat(COB, cob))
                     extras.putLong(IOBCOB_TIME, sharedGlucosePref.getLong(IOBCOB_TIME, iobCobTime))
                     extras.putInt(DELTA_FALLING_COUNT, sharedGlucosePref.getInt(DELTA_FALLING_COUNT, deltaFallingCount))
@@ -1063,12 +1098,19 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         }
     }
 
-    fun setSensorStartTime(serialId: String?, startTime: Long, checkStartTime: Boolean = false) {
-        if(!serialId.isNullOrEmpty() && startTime > 0 && (startTimePair.first != serialId || (checkStartTime && startTimePair.second != startTime))) {
+    fun setSensorStartTime(serialId: String?, startTime: Long, checkStartTime: Boolean = false): Boolean {
+        Log.d(LOG_ID, "set sensor start time $startTime for serial $serialId - current: ${startTimePair.second} for ${startTimePair.first}")
+        if(!serialId.isNullOrEmpty() && startTime > 0 && (startTimePair.first != serialId || ((checkStartTime || serialId == Constants.GDH_MANUAL_SENSOR_ID) && startTimePair.second != startTime))) {
             val serial = GlucoDataUtils.checkSerial(serialId)!!
             Log.i(LOG_ID, "setSensorStartTime for " + serial + ": " + Utils.getUiTimeStamp(startTime))
             startTimePair = Pair(serial, startTime)
+            if(checkStartTime && GlucoDataService.context != null) {
+                saveExtras(GlucoDataService.context!!)
+                InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SENSOR_AGE_CHANGED, null)
+            }
+            return true
         }
+        return false
     }
 
     fun reset(context: Context) {
@@ -1088,6 +1130,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             startTimePair = Pair("", 0L)
             iobCobTime = 0L
             iob = Float.NaN
+            eiob = Float.NaN
             cob = Float.NaN
             deltaFallingCount = 0
             deltaRisingCount = 0

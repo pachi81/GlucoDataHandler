@@ -27,6 +27,14 @@
             android:summaryOff="@string/aa_media_player_colored_summary_off"
             android:title="@string/aa_media_player_colored"
             app:iconSpaceReserved="false" />
+        <androidx.preference.ListPreference
+            android:defaultValue="graph"
+            android:entries="@array/pref_aa_media_player_icon_labels"
+            android:entryValues="@array/pref_aa_media_player_icon_values"
+            android:key="aa_media_player_icon_style_new"
+            android:summary="@string/pref_aa_media_player_icon_style_summary"
+            android:title="@string/pref_floating_widget_style"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/pref_cat_play_button"

@@ -14,6 +14,7 @@ object Constants {
     const val REQUEST_DATA_MESSAGE_PATH = "/request_data_intent"
     const val COMMAND_PATH = "/command_intent"
     const val JSON_PATH_EXTENSION = "_json"
+    const val GDH_MANUAL_SENSOR_ID = "gdh_sensor_id"
 
     const val REQUEST_LOGCAT_MESSAGE_PATH = "/request_logcat_intent"
 
@@ -90,6 +91,7 @@ object Constants {
     const val SHARED_PREF_XDRIP_SERVER_1_MINUTE_INTERVAL = "xdrip_server_1_minute_interval"
     const val SHARED_PREF_SEND_TO_HEALTH_CONNECT = "send_to_health_connect"
     const val SHARED_PREF_SEND_TO_HEALTH_CONNECT_INTERVAL = "send_to_health_connect_interval"
+    const val SHARED_PREF_SEND_TO_HEALTH_ONLY_LAST_VALUE = "send_to_health_only_last_value"
     const val SHARED_PREF_HEALTH_CONNECT_LAST_VALUE_TIME = "health_connect_last_value_time"
     const val SHARED_PREF_TARGET_MIN = "target_min_value"
     const val SHARED_PREF_TARGET_MAX = "target_max_value"
@@ -350,6 +352,7 @@ object Constants {
     const val AA_MEDIA_ICON_STYLE_TREND = "trend"
     const val AA_MEDIA_ICON_STYLE_GLUCOSE_TREND = "glucose_trend"
     const val AA_MEDIA_ICON_STYLE_GLUCOSE = "glucose"
+    const val AA_MEDIA_ICON_STYLE_GRAPH = "graph"
     const val SHARED_PREF_FOREGROUND_SERVICE = "foreground_service"
 
     const val SHARED_PREF_CAR_NOTIFICATION = "car_notification"
@@ -360,7 +363,7 @@ object Constants {
     const val SHARED_PREF_CAR_NOTIFICATION_SHOW_IOB_COB = "car_notification_show_iob_cob"
 
     const val SHARED_PREF_CAR_MEDIA = "car_media"
-    const val AA_MEDIA_ICON_STYLE = "aa_media_player_icon_style"
+    const val AA_MEDIA_ICON_STYLE = "aa_media_player_icon_style_new"
     const val AA_MEDIA_SHOW_IOB_COB = "aa_media_player_show_iob_cob"
     const val AA_MEDIA_PLAYER_SPEAK_VALUES = "aa_media_player_speak_values"
     const val AA_MEDIA_PLAYER_SPEAK_NEW_VALUE = "aa_media_player_speak_new_value"

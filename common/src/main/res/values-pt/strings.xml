@@ -1007,6 +1007,21 @@ Pode gerir estas permissões a qualquer momento nas definições da aplicação 
     <string name="source_librelinkup_5_info_popup">Abbott lançou a versão 5, que usa uma nova interface criptografada.\nSe Abbott desativar a interface anterior, a comunicação com o GDH (e outros aplicativos de terceiros) provavelmente será interrompida.\nAtualmente, não há solução técnica para contornar essa nova criptografia.\nPerguntas sobre o suporte futuro de recursos essenciais, como integração com smartwatch, só podem ser respondidas diretamente pelo suporte da Abbott.</string>
 
     <string name="accessibility_prominent_disclosure_title">Permissão de acessibilidade</string>
-    <string name="accessibility_prominent_disclosure_message">Este aplicativo solicita a API AccessibilityService para exibir os valores de glicose na sua tela Always-On-Display (AOD).\n\nPropósito:\nEle detecta o estado da tela de bloqueio para sobrepor uma visualização local personalizada com seus dados de glicose atuais. Isso permite monitorar seus níveis sem despertar o dispositivo.\n\nPrivacidade dos dados:\nEste serviço é usado estritamente para a sobreposição visual. Ele NÃO acessa, coleta, armazena ou compartilha quaisquer dados pessoais, sensíveis ou de saúde.\n\nConsentimento:\nAo tocar em \"Aceitar\", você concorda em ativar este serviço e será redirecionado para as configurações do Android. Toque para recusar.</string>
+    <string name="accessibility_prominent_disclosure_message">Este aplicativo solicita a API AccessibilityService exclusivamente para exibir os valores de glicose na tela Always-On-Display (AOD).\n\nPropósito:\nEle detecta quando a tela de bloqueio está ativa e sobrepõe uma pequena visualização local com seus dados de glicose atuais, permitindo monitorar seus níveis sem despertar o dispositivo.\n\nEste serviço NÃO:\n- Lê, acessa ou interage com o conteúdo, texto ou elementos de interface de qualquer outro aplicativo\n- Coleta, armazena ou transmite dados pessoais, sensíveis ou de saúde\n- Altera configurações do dispositivo sem o seu conhecimento\n\nConsentimento:\nAo tocar em \"Aceitar\", você concorda em ativar este serviço e será redirecionado para as configurações de acessibilidade do Android. Toque em \"Cancelar\" para recusar.</string>
     <string name="button_accept">Aceitar</string>
+
+    <!-- v2.5 -->
+    <string name="tile_glucose_value">Valor da glicose</string>
+    <string name="tile_glucose_graph">Gráfico da glicose</string>
+    <string name="tile_glucose_details">Detalhes da glicose</string>
+    <string name="info_label_eiob_talkback">I.O.B. efetivo</string>
+    <string name="pref_health_send_last_value">Enviar apenas o último valor</string>
+    <string name="pref_health_send_last_value_summary">Se ativado, apenas o valor de glicose mais recente é enviado para o Health Connect. Caso contrário, todos os valores registados desde a última sincronização são transmitidos.</string>
+    <string name="new_sensor">Novo sensor</string>
+    <string name="aod_advanced_protection_enabled_dialog">O AOD não pode ser utilizado enquanto a Proteção Avançada estiver ativada.\nA definição foi desativada e só pode ser reativada no menu de definições após a Proteção Avançada ter sido desativada.</string>
+    <string name="aod_advanced_protection_enabled_info">A Proteção Avançada está ativa e bloqueia os serviços de acessibilidade para esta aplicação. Para utilizar o AOD, desative a Proteção Avançada nas definições do seu Android.</string>
+    <string name="press_here_to_check">Toque aqui para verificar.</string>
+    <string name="aod_optional_feature_title">Always‑On Display opcional</string>
+    <string name="aod_optional_feature_message">Este aplicativo oferece um recurso opcional Always‑On Display (AOD) que usa a API AccessibilityService do Android para exibir seu valor de glicose no AOD.\n\nEsse recurso está desativado por padrão e pode ser ativado a qualquer momento em Configurações. O AccessibilityService é usado apenas para esse recurso AOD. Ele não acessa nem lê conteúdo de outros aplicativos ou seus dados pessoais.</string>
+    <string name="button_got_it">Entendi</string>
 </resources>

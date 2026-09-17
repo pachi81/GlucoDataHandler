@@ -1015,6 +1015,21 @@ U kunt deze toestemmingen op elk moment beheren in de instellingen van de Health
     <string name="source_librelinkup_5_info_popup">Abbott heeft versie 5 uitgebracht, die een nieuwe, versleutelde interface gebruikt.\nAls Abbott de vorige interface uitschakelt, zal de communicatie met GDH (en andere apps van derden) waarschijnlijk worden onderbroken.\nEr is momenteel geen technische oplossing om deze nieuwe versleuteling te omzeilen.\nVragen over toekomstige ondersteuning van essentiële functies zoals smartwatch-integratie kunnen alleen rechtstreeks door Abbott-ondersteuning worden beantwoord.</string>
 
     <string name="accessibility_prominent_disclosure_title">Toegankelijkheidstoestemming</string>
-    <string name="accessibility_prominent_disclosure_message">Deze app vereist de AccessibilityService API om glucosewaarden weer te geven op uw Always-On-Display (AOD).\n\nDoel:\nHet detecteert de status van het vergrendelscherm om een aangepaste lokale weergave met uw actuele glucosegegevens te tonen. Hierdoor kunt u uw waarden controleren zonder het apparaat te activeren.\n\nPrivacy van gegevens:\nDeze dienst wordt strikt gebruikt voor de visuele weergave. Het opent, verzamelt, bewaart of deelt GEEN persoonlijke, gevoelige of gezondheidsgegevens.\n\nToestemming:\nDoor op \"Accepteren\" te tikken, gaat u akkoord met het inschakelen van deze dienst en wordt u doorgestuurd naar de Android-instellingen. Tik om te weigeren.</string>
+    <string name="accessibility_prominent_disclosure_message">Deze app vereist de AccessibilityService API uitsluitend om glucosewaarden weer te geven op uw Always-On-Display (AOD).\n\nDoel:\nHet detecteert wanneer het vergrendelscherm actief is en toont een kleine lokale weergave met uw actuele glucosegegevens, zodat u uw waarden kunt controleren zonder het apparaat te activeren.\n\nDeze dienst doet NIET het volgende:\n- De inhoud, tekst of UI-elementen van andere apps lezen, openen of ermee interageren\n- Persoonlijke, gevoelige of gezondheidsgegevens verzamelen, opslaan of verzenden\n- Apparaatinstellingen wijzigen zonder uw medeweten\n\nToestemming:\nDoor op \"Accepteren\" te tikken, gaat u akkoord met het inschakelen van deze dienst en wordt u doorgestuurd naar de Android-toegankelijkheidsinstellingen. Tik op \"Annuleren\" om te weigeren.</string>
     <string name="button_accept">Accepteren</string>
+
+    <!-- v2.5 -->
+    <string name="tile_glucose_value">Glucosewaarde</string>
+    <string name="tile_glucose_graph">Glucosegrafiek</string>
+    <string name="tile_glucose_details">Glucosedetails</string>
+    <string name="info_label_eiob_talkback">effectieve I.O.B.</string>
+    <string name="pref_health_send_last_value">Alleen laatste waarde verzenden</string>
+    <string name="pref_health_send_last_value_summary">Indien ingeschakeld, wordt alleen de meest recente glucosewaarde naar Health Connect verzonden. Anders worden alle geregistreerde waarden sinds de laatste synchronisatie verzonden.</string>
+    <string name="new_sensor">Nieuwe sensor</string>
+    <string name="aod_advanced_protection_enabled_dialog">AOD kan niet worden gebruikt terwijl Geavanceerde beveiliging is ingeschakeld.\nDe instelling is uitgeschakeld en kan pas weer worden ingeschakeld in het instellingenmenu nadat Geavanceerde beveiliging is gedeactiveerd.</string>
+    <string name="aod_advanced_protection_enabled_info">Geavanceerde beveiliging is actief en blokkeert toegankelijkheidsservices voor deze app. Schakel Geavanceerde beveiliging uit in je Android-instellingen om AOD te gebruiken.</string>
+    <string name="press_here_to_check">Tik hier om dit te controleren.</string>
+    <string name="aod_optional_feature_title">Optioneel Always‑On Display</string>
+    <string name="aod_optional_feature_message">Deze app biedt een optionele Always‑On Display (AOD)-functie die de Android AccessibilityService API gebruikt om uw glucosewaarde op de AOD weer te geven.\n\nDeze functie is standaard uitgeschakeld en kan op elk moment in Instellingen worden ingeschakeld. De AccessibilityService wordt alleen voor deze AOD‑functie gebruikt. Deze heeft geen toegang tot of leest inhoud van andere apps of uw persoonlijke gegevens.</string>
+    <string name="button_got_it">Begrepen</string>
 </resources>

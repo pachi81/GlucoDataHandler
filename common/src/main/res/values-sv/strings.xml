@@ -1006,6 +1006,21 @@ Du kan hantera dessa behörigheter när som helst i Health Connect-appens instä
     <string name="source_librelinkup_5_info_popup">Abbott har släppt version 5, som använder ett nytt, krypterat gränssnitt.\nOm Abbott stänger av det tidigare gränssnittet kommer kommunikationen med GDH (och andra tredjepartsappar) förmodligen att avbrytas.\nFör närvarande finns det ingen teknisk lösning för att kringgå denna nya kryptering.\nFrågor angående framtida stöd för viktiga funktioner som smartwatch-integrering kan endast besvaras direkt av Abbotts support.</string>
 
     <string name="accessibility_prominent_disclosure_title">Tillgänglighetsbehörighet</string>
-    <string name="accessibility_prominent_disclosure_message">Denna app kräver AccessibilityService API för att visa glukosvärden på din Always-On-Display (AOD).\n\nSyfte:\nDen känner av låsskärmens status för att lägga till en anpassad lokal vy med dina aktuella glukosdata. Detta gör att du kan övervaka dina nivåer utan att väcka enheten.\n\nDatasekretess:\nDenna tjänst används strikt för den visuella vyn. Den kommer INTE att hämta, samla in, lagra eller dela några personliga, känsliga eller hälsodata.\n\nSamtycke:\nGenom att trycka på \"Acceptera\" godkänner du att aktivera denna tjänst och kommer att omdirigeras till Android-inställningarna. Tryck för att avböja.</string>
+    <string name="accessibility_prominent_disclosure_message">Denna app kräver AccessibilityService API uteslutande för att visa glukosvärden på din Always-On-Display (AOD).\n\nSyfte:\nDen känner av när låsskärmen är aktiv och lägger till en liten lokal vy med dina aktuella glukosdata, så att du kan övervaka dina nivåer utan att väcka enheten.\n\nDenna tjänst gör INTE:\n- Läser, åtkomst till eller interagerar med innehåll, text eller gränssnittelement i andra appar\n- Samlar in, lagrar eller överför personliga, känsliga eller hälsodata\n- Ändrar enhetsinställningar utan din vetskap\n\nSamtycke:\nGenom att trycka på \"Acceptera\" godkänner du att aktivera denna tjänst och kommer att omdirigeras till Android-tillgänglighetsinställningarna. Tryck på \"Avbryt\" för att avböja.</string>
     <string name="button_accept">Acceptera</string>
+
+    <!-- v2.5 -->
+    <string name="tile_glucose_value">Glukosvärde</string>
+    <string name="tile_glucose_graph">Glukosgraf</string>
+    <string name="tile_glucose_details">Glukosdetaljer</string>
+    <string name="info_label_eiob_talkback">effektiv I.O.B.</string>
+    <string name="pref_health_send_last_value">Skicka endast senaste värdet</string>
+    <string name="pref_health_send_last_value_summary">Om aktiverat skickas endast det senaste glukosvärdet till Health Connect. Annars skickas alla sparade värden sedan den senaste synkroniseringen.</string>
+    <string name="new_sensor">Ny sensor</string>
+    <string name="aod_advanced_protection_enabled_dialog">AOD kan inte användas när Avancerat skydd är aktiverat.\nInställningen har inaktiverats och kan endast återaktiveras i inställningsmenyn efter att Avancerat skydd har inaktiverats.</string>
+    <string name="aod_advanced_protection_enabled_info">Avancerat skydd är aktivt och blockerar tillgänglighetstjänster för den här appen. För att använda AOD, vänligen inaktivera Avancerat skydd i dina Android-inställningar.</string>
+    <string name="press_here_to_check">Tryck här för att kontrollera.</string>
+    <string name="aod_optional_feature_title">Valfri Always‑On Display</string>
+    <string name="aod_optional_feature_message">Appen erbjuder en valfri Always‑On Display (AOD)-funktion som använder Android AccessibilityService API för att visa ditt glukosvärde på AOD.\n\nDenna funktion är inaktiverad som standard och kan aktiveras när som helst under Inställningar. AccessibilityService används endast för denna AOD‑funktion. Den får inte åtkomst till eller läsa innehåll från andra appar eller dina personuppgifter.</string>
+    <string name="button_got_it">Förstått</string>
 </resources>

@@ -1076,6 +1076,21 @@ Ezeket az engedélyeket bármikor kezelheti a Health Connect alkalmazás beáll�
     <string name="source_librelinkup_5_info_popup">Az Abbott kiadta az 5-ös verziót, amely új, titkosított interfészt használ.\nHa az Abbott leállítja az előző interfészt, a GDH-val (és más harmadik féltől származó alkalmazásokkal) való kommunikáció valószínűleg megszakad.\nJelenleg nincs technikai megoldás az új titkosítás megkerülésére.\nAz intelligens óra integrációja például alapvető funkciók jövőbeli támogatásával kapcsolatos kérdéseket csak közvetlenül az Abbott támogatása válaszolhatja meg.</string>
 
     <string name="accessibility_prominent_disclosure_title">Akadálymentesítési engedély</string>
-    <string name="accessibility_prominent_disclosure_message">Ez az alkalmazás az AccessibilityService API-t igényli a glükózértékek megjelenítéséhez a mindig bekapcsolt kijelzőn (AOD).\n\nCél:\nÉrzékeli a lezárt képernyő állapotát, hogy egy egyedi helyi nézetet jelenítsen meg az aktuális glükózadatokkal. Ez lehetővé teszi a szintek ellenőrzését a készülék felébresztése nélkül.\n\nAdatvédelem:\nEz a szolgáltatás szigorúan csak a vizuális megjelenítésre szolgál. NEM ér el, gyűjt, tárol vagy oszt meg semmilyen személyes, érzékeny vagy egészségügyi adatot.\n\nHozzájárulás:\nAz \"Elfogadás\" gombra koppintva elfogadja a szolgáltatás engedélyezését, и átirányításra kerül az Android beállításokhoz. A művelet megszakításához koppintson a Mégse gombra.</string>
+    <string name="accessibility_prominent_disclosure_message">Ez az alkalmazás kizárólag a glükózértékek megjelenítéséhez igényli az AccessibilityService API-t a mindig bekapcsolt kijelzőn (AOD).\n\nCél:\nÉrzékeli, amikor a lezárt képernyő aktív, és egy kis helyi nézetet jelenít meg az aktuális glükózadatokkal, lehetővé téve a szintek ellenőrzését a készülék felébresztése nélkül.\n\nEz a szolgáltatás NEM:\n- Olvassa, éri el vagy lép kapcsolatba más alkalmazások tartalmával, szövegével vagy felhasználói felületi elemeivel\n- Gyűjt, tárol vagy továbbít személyes, érzékeny vagy egészségügyi adatokat\n- Változtatja meg az eszközbeállításokat az Ön tudta nélkül\n\nHozzájárulás:\nAz \"Elfogadás\" gombra koppintva elfogadja a szolgáltatás engedélyezését és átirányításra kerül az Android akadálymentesítési beállításokhoz. A \"Mégse\" gombra koppintva elutasítja.</string>
     <string name="button_accept">Elfogadás</string>
+
+    <!-- v2.5 -->
+    <string name="tile_glucose_value">Vércukorérték</string>
+    <string name="tile_glucose_graph">Vércukor grafikon</string>
+    <string name="tile_glucose_details">Vércukor részletek</string>
+    <string name="info_label_eiob_talkback">effektív I.O.B.</string>
+    <string name="pref_health_send_last_value">Csak az utolsó érték küldése</string>
+    <string name="pref_health_send_last_value_summary">Ha engedélyezve van, csak a legfrissebb vércukorértéket küldi el a Health Connect szolgáltatásnak. Ellenkező esetben az utolsó szinkronizálás óta rögzített összes értéket továbbítja.</string>
+    <string name="new_sensor">Új szenzor</string>
+    <string name="aod_advanced_protection_enabled_dialog">Az AOD nem használható, amíg a Speciális védelem engedélyezve van.\nA beállítás deaktiválva lett, és csak a Speciális védelem kikapcsolása után engedélyezhető újra a beállítások menüben.</string>
+    <string name="aod_advanced_protection_enabled_info">A Speciális védelem aktív, és blokkolja az akadálymentesítési szolgáltatásokat ehhez az alkalmazáshoz. Az AOD használatához kérjük, kapcsolja ki a Speciális védelmet az Android beállításaiban.</string>
+    <string name="press_here_to_check">Kattintson ide az ellenőrzéshez.</string>
+    <string name="aod_optional_feature_title">Opcionális Always‑On Display</string>
+    <string name="aod_optional_feature_message">Az alkalmazás opcionális Always‑On Display (AOD) funkciót kínál, amely az Android AccessibilityService API‑ját használja a vércukorszint megjelenítéséhez az AOD‑n.\n\nA funkció alapértelmezés szerint ki van kapcsolva, és bármikor engedélyezhető a Beállításokban. Az AccessibilityService csak erre az AOD funkcióra szolgál. Nem fér hozzá más alkalmazások tartalmához, és nem olvassa személyes adatait.</string>
+    <string name="button_got_it">Értettem</string>
 </resources>

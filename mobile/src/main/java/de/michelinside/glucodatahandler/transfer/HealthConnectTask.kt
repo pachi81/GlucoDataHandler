@@ -1,6 +1,7 @@
 package de.michelinside.glucodatahandler.transfer
 
 import android.content.Context
+import android.content.SharedPreferences
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.healthconnect.HealthConnectManager
@@ -23,6 +24,18 @@ class HealthConnectTask: TransferTask() {
     override fun disable() {
         Log.d(LOG_ID, "disable called")
         HealthConnectManager.disable()
+    }
+
+    override fun checkPreferenceChanged(
+        sharedPreferences: SharedPreferences,
+        key: String?
+    ): Boolean {
+        if(key == null || key == Constants.SHARED_PREF_SEND_TO_HEALTH_ONLY_LAST_VALUE) {
+            val onlyLastValue = sharedPreferences.getBoolean(Constants.SHARED_PREF_SEND_TO_HEALTH_ONLY_LAST_VALUE, false)
+            Log.d(LOG_ID, "checkPreferenceChanged: onlyLastValue: $onlyLastValue")
+            HealthConnectManager.setOnlyLastValue(onlyLastValue)
+        }
+        return super.checkPreferenceChanged(sharedPreferences, key)
     }
 
 }

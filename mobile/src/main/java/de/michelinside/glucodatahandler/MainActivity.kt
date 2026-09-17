@@ -85,6 +85,7 @@ import kotlin.math.min
 import kotlin.time.Duration.Companion.days
 import de.michelinside.glucodatahandler.common.R as CR
 import androidx.core.net.toUri
+import de.michelinside.glucodatahandler.common.Command
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 import de.michelinside.glucodatahandler.common.service.ReceiverManager
 import de.michelinside.glucodatahandler.common.service.WearPhoneManager
@@ -285,7 +286,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.TIME_VALUE,
                 NotifySource.ALARM_STATE_CHANGED,
                 NotifySource.SOURCE_STATE_CHANGE,
-                NotifySource.UPDATE_MAIN))
+                NotifySource.UPDATE_MAIN,
+                NotifySource.SENSOR_AGE_CHANGED))
             checkUncaughtException()
             checkMissingPermissions()
             checkNewSettings()
@@ -390,16 +392,41 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             if (!AODAccessibilityService.isAccessibilitySettingsEnabled(this)) {
                 permissionRequested = true
                 Log.w(LOG_ID, "Missing AOD permission")
-                Dialogs.showOkCancelDialog(this,
-                    resources.getString(CR.string.permission_missing_title),
-                    resources.getString(CR.string.setting_permission_missing_message, resources.getString(CR.string.pref_cat_aod)),
-                    { _, _ -> LockscreenSettingsFragment.requestAccessibilitySettings(this) },
-                    { _, _ ->
-                        sharedPref.edit {
-                            putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)
-                        }
+                if(AODAccessibilityService.isAdvancedProtectionActive(this)) {
+                    sharedPref.edit {
+                        putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)
                     }
-                )
+                    Dialogs.showOkDialog(this,
+                        CR.string.permission_missing_title,
+                        CR.string.aod_advanced_protection_enabled_dialog,
+                        null
+                    )
+                } else {
+                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.BAKLAVA) {  // Workaround for Android 17 beta issue, where the system does not retrieve the relevant state
+                        Dialogs.showOkCancelDialog(this,
+                            resources.getString(CR.string.permission_missing_title),
+                            resources.getString(CR.string.setting_permission_missing_message, resources.getString(CR.string.pref_cat_aod)),
+                            { _, _ ->
+                                Dialogs.showAcceptCancelDialog(this,
+                                CR.string.accessibility_prominent_disclosure_title,
+                                CR.string.accessibility_prominent_disclosure_message,
+                                { _, _ ->
+                                    LockscreenSettingsFragment.requestAccessibilitySettings(this)
+                                },
+                                { _, _ ->
+                                    sharedPref.edit {
+                                        putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)
+                                    }
+                                })
+                            },
+                            { _, _ ->
+                                sharedPref.edit {
+                                    putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)
+                                }
+                            }
+                        )
+                    }
+                }
             }
         }
         if(!permissionRequested && sharedPref.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED) && sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)) {
@@ -422,11 +449,19 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private fun checkNewSettings() {
         try {
             if(!sharedPref.contains(Constants.SHARED_PREF_DISCLAIMER_SHOWN)) {
+                if(!Constants.IS_SECOND) {
+                    Dialogs.showDialog(this,
+                        CR.string.aod_optional_feature_title,
+                        CR.string.aod_optional_feature_message,
+                        CR.string.button_got_it,
+                        null)
+                }
                 Dialogs.showOkDialog(this,
                     CR.string.gdh_disclaimer_title,
                     CR.string.gdh_disclaimer_message,
                     null
                 )
+                // this will prevent showing dialogs more than once!
                 sharedPref.edit {
                     putString(Constants.SHARED_PREF_DISCLAIMER_SHOWN, BuildConfig.VERSION_NAME)
                 }
@@ -502,7 +537,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         try {
-            Log.v(LOG_ID, "onOptionsItemSelected for " + item.itemId.toString())
+            Log.d(LOG_ID, "onOptionsItemSelected for " + item.itemId.toString())
             when(item.itemId) {
                 R.id.action_settings -> {
                     val intent = Intent(this, SettingsActivity::class.java)
@@ -520,6 +555,21 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     val intent = Intent(this, SettingsActivity::class.java)
                     intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.ALARM_FRAGMENT.value)
                     startActivity(intent)
+                    return true
+                }
+                R.id.action_new_sensor -> {
+                    Log.d(LOG_ID, "New sensor action")
+                    val startTime = if(Utils.getElapsedTimeMinute(ReceiveData.sensorStartTime) < (60*24*10) ) ReceiveData.sensorStartTime else System.currentTimeMillis()
+                    Dialogs.showDateTimePicker(this, startTime) { selectedTime ->
+                        val sensorId = if(ReceiveData.sensorID.isNullOrEmpty()) Constants.GDH_MANUAL_SENSOR_ID else ReceiveData.sensorID
+                        Log.d(LOG_ID, "Set sensor start time for $sensorId to ${Utils.getUiTimeStamp(selectedTime)}")
+                        if(ReceiveData.setSensorStartTime(sensorId, selectedTime, true)) {
+                            val extras = Bundle()
+                            extras.putLong(ReceiveData.SENSOR_START_TIME, selectedTime)
+                            extras.putString(ReceiveData.SENSOR_ID, sensorId)
+                            WearPhoneManager.sendCommand(Command.NEW_SENSOR_TIME, extras)
+                        }
+                    }
                     return true
                 }
                 R.id.action_help -> {
@@ -1034,16 +1084,19 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 tableDetails.addView(createRow(ReceiveData.getOtherUnit(), ReceiveData.getGlucoseAsOtherUnit() + " (Δ " + ReceiveData.getDeltaAsOtherUnit() + ")"))
             }
             tableDetails.addView(createRow(CR.string.info_label_timestamp, Utils.getUiTimeStamp(ReceiveData.time)))
+            if (!ReceiveData.eiob.isNaN() && !ReceiveData.isIobCobObsolete())
+                tableDetails.addView(createRow(CR.string.info_label_eiob, ReceiveData.getEiobAsString()))
             if (!ReceiveData.isIobCobObsolete(1.days.inWholeSeconds.toInt()))
                 tableDetails.addView(createRow(CR.string.info_label_iob_cob_timestamp, DateFormat.getTimeInstance(
                     DateFormat.DEFAULT).format(Date(ReceiveData.iobCobTime))))
-            if (ReceiveData.sensorID?.isNotEmpty() == true) {
+            if (ReceiveData.sensorID?.isNotEmpty() == true && ReceiveData.sensorID != Constants.GDH_MANUAL_SENSOR_ID) {
                 if(ReceiveData.source == DataSource.AAPS)
                     tableDetails.addView(createRow(CR.string.label_profile, ReceiveData.sensorID!!))
                 else
                     tableDetails.addView(createRow(CR.string.info_label_sensor_id, if(BuildConfig.DEBUG) "ABCDE12345" else ReceiveData.sensorID!!))
             }
-            if(ReceiveData.sensorStartTime > 0) {
+            Log.d(LOG_ID, "Current sensor ${ReceiveData.sensorID} - start-time: ${Utils.getUiTimeStamp(ReceiveData.sensorStartTime)}")
+            if(ReceiveData.sensorStartTime > 0 && !GlucoDataUtils.isSensorExpired(this)) {
                 val duration = Duration.ofMillis(System.currentTimeMillis() - ReceiveData.sensorStartTime)
                 val days = duration.toDays()
                 val hours = duration.minusDays(days).toHours()
@@ -1051,15 +1104,17 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 if(runtime != null && runtime > 0F) {
                     val max = runtime * 24 * 60 // minutes
                     Log.d(LOG_ID, "Sensor age: ${Utils.formatDuration(duration)} - runtime: ${Utils.formatDurationFromSeconds(max.toLong()*60)}")
-                    val progress = min(duration.toMinutes().toFloat(), max)
-                    val color = if(max - progress <= 60) {
-                        ReceiveData.getAlarmTypeColor(AlarmType.VERY_LOW)
-                    } else if(max - progress <= (24*60)) {
-                        ReceiveData.getAlarmTypeColor(AlarmType.LOW)
-                    } else {
-                        resources.getColor(CR.color.main)
+                    if((max+300) > duration.toMinutes().toFloat()) {  // after 5h the sensor age is removed
+                        val progress = min(duration.toMinutes().toFloat(), max)
+                        val color = if(max - progress <= 60) {
+                            ReceiveData.getAlarmTypeColor(AlarmType.VERY_LOW)
+                        } else if(max - progress <= (24*60)) {
+                            ReceiveData.getAlarmTypeColor(AlarmType.LOW)
+                        } else {
+                            resources.getColor(CR.color.main)
+                        }
+                        tableDetails.addView(createProgressBarRow(CR.string.sensor_age_label, progress*100 / max, color, createSensorAgeColumn(duration, max)/* + "\n-> " + resources.getString(CR.string.sensor_age_value).format(diffDays, diffHours)*/))
                     }
-                    tableDetails.addView(createProgressBarRow(CR.string.sensor_age_label, progress*100 / max, color, createSensorAgeColumn(duration, max)/* + "\n-> " + resources.getString(CR.string.sensor_age_value).format(diffDays, diffHours)*/))
                 } else
                     tableDetails.addView(createRow(CR.string.sensor_age_label, resources.getString(CR.string.sensor_age_value).format(days, hours)))
 

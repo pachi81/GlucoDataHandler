@@ -11,6 +11,7 @@
 
     <string name="info_label_iob" translatable="false">IOB</string>
     <string name="info_label_cob" translatable="false">COB</string>
+    <string name="info_label_eiob" translatable="false">eIOB</string>
     <string name="info_label_iob_talkback" translatable="false">I.O.B.</string>
     <string name="info_label_cob_talkback" translatable="false">C.O.B.</string>
 
@@ -1081,6 +1082,28 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="source_librelinkup_5_info_popup">Abbott has released version 5, which uses a new, encrypted interface.\nIf Abbott shuts down the previous interface, communication with GDH (and other third-party apps) will likely be interrupted.\nCurrently, there is no technical solution to bypass this new encryption.\nQuestions regarding the future support of essential features like smartwatch integration can only be answered directly by Abbott support.</string>
 
     <string name="accessibility_prominent_disclosure_title">Accessibility Permission</string>
-    <string name="accessibility_prominent_disclosure_message">This app requests the AccessibilityService API to display glucose values on your Always-On-Display (AOD).\n\nPurpose:\nIt detects the lock screen state to overlay a custom local view with your current glucose data. This allows you to monitor your levels without waking the device.\n\nData Privacy:\nThis service is used strictly for the visual overlay. It does NOT access, collect, store, or share any personal, sensitive, or health data.\n\nConsent:\nBy tapping \"Accept\", you agree to enable this service and will be redirected to the Android settings. Tap \"Cancel\" to decline.</string>
+    <string name="accessibility_prominent_disclosure_message">This app requests the AccessibilityService API exclusively to display your glucose values on the Always-On-Display (AOD).\n\nPurpose:\nIt detects when the lock screen is active and overlays a small local view showing your current glucose data, so you can monitor your levels without waking the device.\n\nThis service does NOT:\n- Read, access, or interact with the content, text, or UI elements of any other app\n- Collect, store, or transmit any personal, sensitive, or health data\n- Change any device settings without your knowledge\n\nConsent:\nBy tapping \"Accept\", you agree to enable this service and will be redirected to Android Accessibility Settings. Tap \"Cancel\" to decline.</string>
     <string name="button_accept">Accept</string>
+
+    <!-- v2.5 -->
+    <string name="unit_second_short" translatable="false">s</string>
+    <string name="unit_minute_short" translatable="false">min</string>
+    <plurals name="minutes_short" translatable="false">
+        <item quantity="one">%d min</item>
+        <item quantity="other">%d min</item>
+    </plurals>
+    <string name="tile_glucose_value">Glucose value</string>
+    <string name="tile_glucose_graph">Glucose graph</string>
+    <string name="tile_glucose_details">Glucose details</string>
+    <string name="info_label_eiob_talkback">effective I.O.B.</string>
+    <string name="pref_health_send_last_value">Send only last value</string>
+    <string name="pref_health_send_last_value_summary">If enabled, only the most recent glucose value is sent to Health Connect. Otherwise, all recorded values since the last synchronization are transmitted.</string>
+    <string name="new_sensor">New Sensor</string>
+    <string name="aod_advanced_protection_enabled_dialog">AOD cannot be used while Advanced Protection is enabled.\nThe setting has been disabled and can only be re-enabled in the settings menu after Advanced Protection has been deactivated.</string>
+    <string name="aod_advanced_protection_enabled_info">Advanced Protection is active and blocks accessibility services for this app. To use AOD, please disable Advanced Protection in your Android settings.</string>
+
+    <string name="press_here_to_check">Press here to check it.</string>
+    <string name="aod_optional_feature_title">Optional Always-On Display</string>
+    <string name="aod_optional_feature_message">This app offers an optional Always-On Display (AOD) feature that uses the Android AccessibilityService API to display your glucose value on the AOD.\n\nThis feature is disabled by default and can be enabled at any time in Settings. The AccessibilityService is only used for this AOD feature. It does not access or read content from other apps or your personal data.</string>
+    <string name="button_got_it">Got it</string>
 </resources>

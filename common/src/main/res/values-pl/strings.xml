@@ -1018,6 +1018,21 @@
     <string name="source_librelinkup_5_info_popup">Firma Abbott udostępniła wersję 5, która wykorzystuje nowy, szyfrowany interfejs.\nJeśli firma Abbott wyłączy poprzedni interfejs, komunikacja z aplikacją GDH (oraz innymi aplikacjami innych producentów) zostanie prawdopodobnie przerwana.\nObecnie nie ma technicznego rozwiązania pozwalającego na obejście tego nowego szyfrowania.\nNa pytania dotyczące przyszłej obsługi kluczowych funkcji, takich jak integracja ze smartwatchami, może odpowiedzieć wyłącznie dział pomocy technicznej firmy Abbott.</string>
 
     <string name="accessibility_prominent_disclosure_title">Uprawnienia dostępności</string>
-    <string name="accessibility_prominent_disclosure_message">Ta aplikacja wymaga interfejsu AccessibilityService API do wyświetlania wartości glukozy na ekranie Always-On-Display (AOD).\n\nCel:\nWykrywa stan ekranu blokady, aby nałożyć niestandardowy lokalny widok z bieżącymi danymi dotyczącymi glukozy. Pozwala to na monitorowanie poziomów bez wybudzania urządzenia.\n\nPrywatność danych:\nTa usługa jest używana wyłącznie do nakładania widoku. NIE uzyskuje dostępu, nie zbiera, nie przechowuje ani nie udostępnia żadnych danych osobowych, wrażliwych ani medycznych.\n\nZgoda:\nDotykając \"Akceptuj\", wyrażasz zgodę na włączenie tej usługi i zostaniesz przekierowany do ustawień systemu Android. Dotknij, aby odrzucić.</string>
+    <string name="accessibility_prominent_disclosure_message">Ta aplikacja wymaga interfejsu AccessibilityService API wyłącznie do wyświetlania wartości glukozy na ekranie Always-On-Display (AOD).\n\nCel:\nWykrywa, kiedy ekran blokady jest aktywny, i wyświetla małe lokalne okno z bieżącymi danymi dotyczącymi glukozy, umożliwiając monitorowanie poziomów bez wybudzania urządzenia.\n\nTa usługa NIE:\n- Odczytuje, uzyskuje dostępu do ani wchodzi w interakcję z treścią, tekstem ani elementami interfejsu innych aplikacji\n- Zbiera, przechowuje ani przesyła żadnych danych osobowych, wrażliwych ani medycznych\n- Zmienia ustawień urządzenia bez Twojej wiedzy\n\nZgoda:\nDotykając \"Akceptuj\", wyrażasz zgodę na włączenie tej usługi i zostaniesz przekierowany do ustawień dostępności systemu Android. Dotknij \"Anuluj\", aby odrzucić.</string>
     <string name="button_accept">Akceptuj</string>
+
+    <!-- v2.5 -->
+    <string name="tile_glucose_value">Wartość glukozy</string>
+    <string name="tile_glucose_graph">Wykres glukozy</string>
+    <string name="tile_glucose_details">Szczegóły glukozy</string>
+    <string name="info_label_eiob_talkback">Aktualna wartość I.O.B.</string>
+    <string name="pref_health_send_last_value">Wyślij tylko ostatnią</string>
+    <string name="pref_health_send_last_value_summary">Jeśli opcja zostanie włączona, do Health Connect wysyłana będzie tylko ostatnia dostępna wartość. W przeciwnym razie przesyłane będą wszystkie wartości zarejestrowane od ostatniej synchronizacji.</string>
+    <string name="new_sensor">Nowy sensor</string>
+    <string name="aod_advanced_protection_enabled_dialog">Funkcja AOD nie może być używana, gdy włączona jest funkcja zaawansowanej ochrony.\nTo ustawienie zostało wyłączone i można je ponownie włączyć w menu ustawień dopiero po wyłączeniu funkcji zaawansowanej ochrony.</string>
+    <string name="aod_advanced_protection_enabled_info">Funkcja zaawansowanej ochrony jest aktywna i blokuje usługi ułatwień dostępu dla tej aplikacji. Aby korzystać z funkcji AOD, proszę wyłączyć funkcję zaawansowanej ochrony w ustawieniach systemu Android.</string>
+    <string name="press_here_to_check">Naciśnij tutaj, aby to sprawdzić.</string>
+    <string name="aod_optional_feature_title">Opcjonalny Always‑On Display</string>
+    <string name="aod_optional_feature_message">Aplikacja oferuje opcjonalną funkcję Always‑On Display (AOD), która wykorzystuje API AccessibilityService systemu Android do wyświetlania poziomu glukozy na AOD.\n\nFunkcja jest domyślnie wyłączona i można ją włączyć w dowolnym momencie w Ustawieniach. AccessibilityService jest używany wyłącznie dla tej funkcji AOD. Nie uzyskuje dostępu ani nie odczytuje zawartości innych aplikacji ani Twoich danych osobowych.</string>
+    <string name="button_got_it">Rozumiem</string>
 </resources>

@@ -1003,6 +1003,21 @@ Puoi gestire queste autorizzazioni in qualsiasi momento nelle impostazioni dell\
     <string name="source_librelinkup_5_info_popup">Abbott ha rilasciato la versione 5, che utilizza una nuova interfaccia crittografata.\nSe Abbott spegne l\'interfaccia precedente, la comunicazione con GDH (e altre app di terze parti) probabilmente verrà interrotta.\nAttualmente non esiste una soluzione tecnica per aggirare questa nuova crittografia.\nLe domande riguardanti il futuro supporto di funzioni essenziali come l\'integrazione smartwatch possono essere risposte solo direttamente dal supporto Abbott.</string>
 
     <string name="accessibility_prominent_disclosure_title">Permesso di accessibilità</string>
-    <string name="accessibility_prominent_disclosure_message">Questa applicazione richiede l\'API AccessibilityService para mostrare i valori del glucosio sullo schermo Always-On-Display (AOD).\n\nScopo:\nRileva lo stato della schermata di blocco per sovrapporre una vista locale personalizzata con i dati correnti del glucosio. Ciò consente di monitorare i livelli senza riattivare il dispositivo.\n\nPrivacy dei dati:\nQuesto servizio è utilizzato esclusivamente per la sovrapposizione visiva. NON accede, raccoglie, memorizza o condivide alcun dato personale, sensibile o sanitario.\n\nConsenso:\nToccando \"Accetta\", accetti di attivare questo servizio e verrai reindirizzato alle impostazioni di Android. Tocca per rifiutare.</string>
+    <string name="accessibility_prominent_disclosure_message">Questa applicazione richiede l\'API AccessibilityService esclusivamente per mostrare i valori del glucosio sullo schermo Always-On-Display (AOD).\n\nScopo:\nRileva quando la schermata di blocco è attiva e sovrappone una piccola vista locale con i tuoi dati di glucosio attuali, consentendoti di monitorare i livelli senza riattivare il dispositivo.\n\nQuesto servizio NON:\n- Legge, accede o interagisce con il contenuto, il testo o gli elementi dell\'interfaccia di altre app\n- Raccoglie, memorizza o trasmette dati personali, sensibili o sanitari\n- Modifica le impostazioni del dispositivo senza il tuo consenso\n\nConsenso:\nToccando \"Accetta\", accetti di attivare questo servizio e verrai reindirizzato alle impostazioni di accessibilità di Android. Tocca \"Annulla\" per rifiutare.</string>
     <string name="button_accept">Accetta</string>
+
+    <!-- v2.5 -->
+    <string name="tile_glucose_value">Valore della glicemia</string>
+    <string name="tile_glucose_graph">Grafico della glicemia</string>
+    <string name="tile_glucose_details">Dettagli della glicemia</string>
+    <string name="info_label_eiob_talkback">I.O.B. effettivo</string>
+    <string name="pref_health_send_last_value">Invia solo l\'ultimo valore</string>
+    <string name="pref_health_send_last_value_summary">Se abilitato, solo il valore glicemico più recente viene inviato a Health Connect. In caso contrario, vengono trasmessi tutti i valori registrati dall\'ultima sincronizzazione.</string>
+    <string name="new_sensor">Nuovo sensore</string>
+    <string name="aod_advanced_protection_enabled_dialog">L\'AOD non può essere utilizzato mentre la Protezione avanzata è attiva.\nL\'impostazione è stata disattivata e può essere riattivata nel menu delle impostazioni solo dopo aver disattivato la Protezione avanzata.</string>
+    <string name="aod_advanced_protection_enabled_info">La Protezione avanzata è attiva e blocca i servizi di accessibilità per questa app. Per utilizzare l\'AOD, disattiva la Protezione avanzata nelle impostazioni di Android.</string>
+    <string name="press_here_to_check">Premi qui per verificare.</string>
+    <string name="aod_optional_feature_title">Always‑On Display opzionale</string>
+    <string name="aod_optional_feature_message">Questa app offre una funzione Always‑On Display (AOD) opzionale che utilizza l\'API AccessibilityService di Android per visualizzare il valore della glicemia sull\'AOD. Questa funzione è disattivata per impostazione predefinita e può essere attivata in qualsiasi momento nelle Impostazioni. AccessibilityService viene utilizzato solo per questa funzione AOD e non accede ai contenuti di altre app o ai tuoi dati personali.</string>
+    <string name="button_got_it">Ricevuto</string>
 </resources>
