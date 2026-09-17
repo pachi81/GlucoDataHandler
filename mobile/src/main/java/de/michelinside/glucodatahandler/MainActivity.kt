@@ -406,7 +406,19 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                         Dialogs.showOkCancelDialog(this,
                             resources.getString(CR.string.permission_missing_title),
                             resources.getString(CR.string.setting_permission_missing_message, resources.getString(CR.string.pref_cat_aod)),
-                            { _, _ -> LockscreenSettingsFragment.requestAccessibilitySettings(this) },
+                            { _, _ ->
+                                Dialogs.showAcceptCancelDialog(this,
+                                CR.string.accessibility_prominent_disclosure_title,
+                                CR.string.accessibility_prominent_disclosure_message,
+                                { _, _ ->
+                                    LockscreenSettingsFragment.requestAccessibilitySettings(this)
+                                },
+                                { _, _ ->
+                                    sharedPref.edit {
+                                        putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)
+                                    }
+                                })
+                            },
                             { _, _ ->
                                 sharedPref.edit {
                                     putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)

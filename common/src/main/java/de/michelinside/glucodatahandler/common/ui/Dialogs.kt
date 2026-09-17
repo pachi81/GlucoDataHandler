@@ -53,6 +53,7 @@ object Dialogs {
             .setMessage(message)
             .setPositiveButton(context.resources.getText(R.string.button_accept), okListener)
             .setNegativeButton(context.resources.getText(R.string.button_cancel), cancelListener)
+            .setCancelable(false)
             .show()
     }
 
