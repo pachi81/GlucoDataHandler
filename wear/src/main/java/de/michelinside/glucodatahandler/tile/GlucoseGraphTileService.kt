@@ -21,7 +21,9 @@ import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.chart.ChartBitmapHandler
 import de.michelinside.glucodatahandler.common.chart.ValueBitmapHandler
+import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.Log
+import java.time.Duration
 import kotlin.concurrent.thread
 
 /**
@@ -274,8 +276,13 @@ class GlucoseGraphTileService : TileService() {
             if (cobText.isNotEmpty()) {
                 iobCobRow.addContent(deltaLine(cobText, IOB_COB_TEXT_SIZE))
             }
-            bottomStack.addContent(spacer(1f))
+            bottomStack.addContent(spacer(4f))
             bottomStack.addContent(iobCobRow.build())
+        } else if (!GlucoDataUtils.isSensorExpired(this)) {
+            val duration = Duration.ofMillis(System.currentTimeMillis() - ReceiveData.sensorStartTime)
+            val sensorAge = "⌛ " + formatSensorAge(duration)
+            bottomStack.addContent(spacer(8f))
+            bottomStack.addContent(deltaLine(sensorAge, 14f))
         }
 
         frame.addContent(

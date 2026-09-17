@@ -14,6 +14,7 @@ import androidx.wear.tiles.TileService
 import com.google.common.util.concurrent.ListenableFuture
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import java.time.Duration
 import de.michelinside.glucodatahandler.common.R as CR
 import java.time.Instant
 
@@ -30,6 +31,12 @@ internal fun immediateVoid(): ListenableFuture<Void> =
         completer.set(null)
         "immediateVoid"
     }
+
+internal fun formatSensorAge(duration: Duration): String {
+    val days = duration.toDays()
+    val hours = duration.toHours() % 24
+    return if (days > 0) "${days}d ${hours}h" else "${hours}h"
+}
 
 internal fun spacer(heightDp: Float): LayoutElementBuilders.Spacer =
     LayoutElementBuilders.Spacer.Builder().setHeight(dp(heightDp)).build()

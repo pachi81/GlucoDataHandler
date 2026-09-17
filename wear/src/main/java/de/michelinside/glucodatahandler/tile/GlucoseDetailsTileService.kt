@@ -220,12 +220,6 @@ class GlucoseDetailsTileService : TileService() {
             .build()
     }
 
-    private fun formatSensorAge(duration: Duration): String {
-        val days = duration.toDays()
-        val hours = duration.toHours() % 24
-        return if (days > 0) "${days}d ${hours}h" else "${hours}h"
-    }
-
     // Value text and trend arrow drawn side by side (inline) rather than stacked. The composited
     // combo bitmap is cached in ValueBitmapHandler itself, so this is just a cache read once the
     // underlying value/arrow bitmaps haven't changed.

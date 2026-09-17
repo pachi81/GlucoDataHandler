@@ -16,9 +16,12 @@ import androidx.wear.tiles.TileService
 import com.google.common.util.concurrent.ListenableFuture
 import de.michelinside.glucodatahandler.GlucoDataServiceWear
 import de.michelinside.glucodatahandler.WearActivity
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.chart.ValueBitmapHandler
+import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.Log
+import java.time.Duration
 
 /**
  * Wear OS Tile showing just the trend arrow and current glucose value (centered, no graph),
@@ -141,8 +144,30 @@ class GlucoseValueTileService : TileService() {
             .setWidth(expand())
             .setHeight(expand())
             .setHorizontalAlignment(LayoutElementBuilders.HORIZONTAL_ALIGN_CENTER)
-            .addContent(spacer(18f))
+            .addContent(spacer(12f))
             .addContent(expandSpacer())
+
+
+        // Top section: Optional items (Sensor Age, Other Unit)
+        val sensorAge = if (!GlucoDataUtils.isSensorExpired(this)) {
+            val duration = Duration.ofMillis(System.currentTimeMillis() - ReceiveData.sensorStartTime)
+            "⌛ " + formatSensorAge(duration)
+        } else ""
+
+        val otherUnit = if (GlucoDataService.sharedPref?.getBoolean(de.michelinside.glucodatahandler.common.Constants.SHARED_PREF_SHOW_OTHER_UNIT, false) == true) {
+            ReceiveData.getGlucoseAsOtherUnit() + " " + ReceiveData.getOtherUnit()
+        } else ""
+
+        if (sensorAge.isNotEmpty() || otherUnit.isNotEmpty()) {
+            if (sensorAge.isNotEmpty()) {
+                frame.addContent(deltaLine(sensorAge, 14f))
+            }
+            if (otherUnit.isNotEmpty()) {
+                if (sensorAge.isNotEmpty())
+                    frame.addContent(spacer(3f))
+                frame.addContent(deltaLine(otherUnit, 16f))
+            }
+        }
 
         // Middle: Glucose Value (Text) + Arrow (Image)
         val valueRow = LayoutElementBuilders.Row.Builder()
