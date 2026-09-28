@@ -243,7 +243,7 @@ object XDripServer : SharedPreferences.OnSharedPreferenceChangeListener {
         val rate = if (ReceiveData.calculatedRate.isNaN()) 0.0f else ReceiveData.calculatedRate
         val trend = GlucoDataUtils.getTrendFromRate(rate)
         val iob = if (ReceiveData.iob.isNaN()) 0.0f else ReceiveData.iob
-
+        val cob = if (ReceiveData.cob.isNaN()) 0.0f else ReceiveData.cob
 
         val status =
             PebbleStatus(now = GlucoDataUtils.getGlucoseTime(System.currentTimeMillis()))
@@ -253,7 +253,8 @@ object XDripServer : SharedPreferences.OnSharedPreferenceChangeListener {
             direction = GlucoDataUtils.getDexcomLabel(rate),
             datetime = glucose.timestamp,
             bgdelta = delta.toString(),
-            iob = iob.toString()
+            iob = iob.toString(),
+            cob = cob.toString()
         )
 
         val entry =
