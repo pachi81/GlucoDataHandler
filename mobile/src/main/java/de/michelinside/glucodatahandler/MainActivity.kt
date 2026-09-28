@@ -73,7 +73,6 @@ import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.healthconnect.HealthConnectManager
 import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.preferences.AlarmGeneralFragment
-import de.michelinside.glucodatahandler.preferences.LockscreenSettingsFragment
 import de.michelinside.glucodatahandler.watch.WatchDrip
 import de.michelinside.glucodatahandler.widget.BatteryLevelWidget
 import de.michelinside.glucodatahandler.xdripserver.XDripServer
@@ -92,6 +91,9 @@ import de.michelinside.glucodatahandler.common.service.WearPhoneManager
 import de.michelinside.glucodatahandler.healthconnect.HealthConnectState
 import de.michelinside.glucodatahandler.transfer.NightscoutUploader
 
+
+// counted once per process, so rotations and other activity recreations do not use up the card
+private var aodCardStartCountedInProcess = false
 
 class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtBgValue: TextView
@@ -112,6 +114,12 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var btnSources: Button
     private lateinit var btnHelp: Button
     private lateinit var btnPatient: Button
+    // the AOD card only exists in the portrait layout (layout-land has none)
+    private var aodCard: View? = null
+    private var txtAodCardTitle: TextView? = null
+    private var txtAodCardText: TextView? = null
+    private var btnAodCardPrimary: Button? = null
+    private var btnAodCardSecondary: Button? = null
     private lateinit var noDataLayout: LinearLayout
     private lateinit var sharedPref: SharedPreferences
     private lateinit var optionsMenu: Menu
@@ -155,6 +163,11 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             btnSources = findViewById(R.id.btnSources)
             btnHelp = findViewById(R.id.btnHelp)
             btnPatient = findViewById(R.id.btnPatient)
+            aodCard = findViewById(R.id.card_aod)
+            txtAodCardTitle = findViewById(R.id.txtAodCardTitle)
+            txtAodCardText = findViewById(R.id.txtAodCardText)
+            btnAodCardPrimary = findViewById(R.id.btnAodCardPrimary)
+            btnAodCardSecondary = findViewById(R.id.btnAodCardSecondary)
             noDataLayout = findViewById(R.id.layout_no_data)
             tableConnections = findViewById(R.id.tableConnections)
             tableAlarms = findViewById(R.id.tableAlarms)
@@ -291,6 +304,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             checkUncaughtException()
             checkMissingPermissions()
             checkNewSettings()
+            updateAodCard()
 
             if (requestNotificationPermission && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
                 Log.i(LOG_ID, "Notification permission granted")
@@ -312,6 +326,13 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         super.onDestroy()
         chartCreator.close()
     }
+
+    private val aodDisclosureLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) {
+            updateAodCard()
+        }
 
     private val requestPermissionLauncher =
         registerForActivityResult(
@@ -388,47 +409,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 )
             }
         }
-        if(!permissionRequested && sharedPref.contains(Constants.SHARED_PREF_AOD_WP_ENABLED) && sharedPref.getBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)) {
-            if (!AODAccessibilityService.isAccessibilitySettingsEnabled(this)) {
-                permissionRequested = true
-                Log.w(LOG_ID, "Missing AOD permission")
-                if(AODAccessibilityService.isAdvancedProtectionActive(this)) {
-                    sharedPref.edit {
-                        putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)
-                    }
-                    Dialogs.showOkDialog(this,
-                        CR.string.permission_missing_title,
-                        CR.string.aod_advanced_protection_enabled_dialog,
-                        null
-                    )
-                } else {
-                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.BAKLAVA) {  // Workaround for Android 17 beta issue, where the system does not retrieve the relevant state
-                        Dialogs.showOkCancelDialog(this,
-                            resources.getString(CR.string.permission_missing_title),
-                            resources.getString(CR.string.setting_permission_missing_message, resources.getString(CR.string.pref_cat_aod)),
-                            { _, _ ->
-                                Dialogs.showAcceptCancelDialog(this,
-                                CR.string.accessibility_prominent_disclosure_title,
-                                CR.string.accessibility_prominent_disclosure_message,
-                                { _, _ ->
-                                    LockscreenSettingsFragment.requestAccessibilitySettings(this)
-                                },
-                                { _, _ ->
-                                    sharedPref.edit {
-                                        putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)
-                                    }
-                                })
-                            },
-                            { _, _ ->
-                                sharedPref.edit {
-                                    putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)
-                                }
-                            }
-                        )
-                    }
-                }
-            }
-        }
+        // Always-On Display: a missing accessibility permission is handled by the AOD card (see updateAodCard)
         if(!permissionRequested && sharedPref.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED) && sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)) {
             if (!ReceiverManager.checkNotificationReceiverPermission(this, false, false)) {
                 Log.w(LOG_ID, "Missing notification reader permission!")
@@ -449,13 +430,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private fun checkNewSettings() {
         try {
             if(!sharedPref.contains(Constants.SHARED_PREF_DISCLAIMER_SHOWN)) {
-                if(!Constants.IS_SECOND) {
-                    Dialogs.showDialog(this,
-                        CR.string.aod_optional_feature_title,
-                        CR.string.aod_optional_feature_message,
-                        CR.string.button_got_it,
-                        null)
-                }
                 Dialogs.showOkDialog(this,
                     CR.string.gdh_disclaimer_title,
                     CR.string.gdh_disclaimer_message,
@@ -500,6 +474,123 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
         } catch (exc: Exception) {
             Log.e(LOG_ID, "checkNewSettings exception: " + exc.message.toString() )
+        }
+    }
+
+    private enum class AodCardState { HIDDEN, SETUP, RECOVERY, ADVANCED_PROTECTION }
+
+    /**
+     * The Always-On Display card on the main screen is the entry point to the optional AOD feature.
+     * It is passive: nothing is asked or changed until the user taps a button. The disclosure and
+     * consent happen in AodDisclosureActivity, the only path into the Android accessibility settings.
+     */
+    private fun updateAodCard() {
+        try {
+            val card = aodCard
+            val title = txtAodCardTitle
+            val text = txtAodCardText
+            val primary = btnAodCardPrimary
+            val secondary = btnAodCardSecondary
+            if (card == null || title == null || text == null || primary == null || secondary == null)
+                return  // layout without the card (landscape)
+            val state = getAodCardState()
+            Log.d(LOG_ID, "AOD card state: " + state.name)
+            if (state == AodCardState.HIDDEN) {
+                card.visibility = View.GONE
+                return
+            }
+            when (state) {
+                AodCardState.SETUP -> {
+                    countAodCardStart()
+                    title.setText(CR.string.aod_card_title)
+                    text.setText(CR.string.aod_card_text)
+                    primary.setText(CR.string.aod_card_setup)
+                    primary.setOnClickListener { openAodDisclosure(false) }
+                    secondary.setText(CR.string.aod_card_hide)
+                    secondary.setOnClickListener {
+                        sharedPref.edit { putBoolean(Constants.SHARED_PREF_AOD_CARD_HIDDEN, true) }
+                        updateAodCard()
+                    }
+                }
+                AodCardState.RECOVERY -> {
+                    title.setText(CR.string.aod_card_paused_title)
+                    text.setText(CR.string.aod_card_paused_text)
+                    primary.setText(CR.string.aod_card_fix)
+                    primary.setOnClickListener { openAodDisclosure(true) }
+                    secondary.setText(CR.string.aod_card_turn_off)
+                    secondary.setOnClickListener {
+                        sharedPref.edit { putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false) }
+                        updateAodCard()
+                    }
+                }
+                AodCardState.ADVANCED_PROTECTION -> {
+                    title.setText(CR.string.aod_card_aapm_title)
+                    text.setText(CR.string.aod_card_aapm_text)
+                    primary.setText(CR.string.aod_card_use_wallpaper)
+                    primary.setOnClickListener {
+                        try {
+                            val intent = Intent(this, SettingsActivity::class.java)
+                            intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.LOCKSCREEN_FRAGMENT.value)
+                            startActivity(intent)
+                        } catch (exc: Exception) {
+                            Log.e(LOG_ID, "Lockscreen settings exception: " + exc.message.toString())
+                        }
+                    }
+                    secondary.setText(CR.string.aod_card_turn_off)
+                    secondary.setOnClickListener {
+                        sharedPref.edit { putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false) }
+                        updateAodCard()
+                    }
+                }
+            }
+            card.visibility = View.VISIBLE
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "updateAodCard exception: " + exc.message.toString())
+        }
+    }
+
+    private fun getAodCardState(): AodCardState {
+        if (Constants.IS_SECOND)
+            return AodCardState.HIDDEN
+        val aodEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)
+        val hidden = sharedPref.getBoolean(Constants.SHARED_PREF_AOD_CARD_HIDDEN, false)
+        if (AODAccessibilityService.isAdvancedProtectionActive(this))
+            return if (aodEnabled) AodCardState.ADVANCED_PROTECTION else AodCardState.HIDDEN
+        if (aodEnabled) {
+            return if (AODAccessibilityService.isAccessibilitySettingsEnabled(this)) AodCardState.HIDDEN else AodCardState.RECOVERY
+        }
+        if (hidden || isAodCardExpired())
+            return AodCardState.HIDDEN
+        return AodCardState.SETUP
+    }
+
+    /** The set-up card goes away by itself after some days or app starts, so normal use never needs a tap. */
+    private fun isAodCardExpired(): Boolean {
+        val firstShown = sharedPref.getLong(Constants.SHARED_PREF_AOD_CARD_FIRST_SHOWN, 0L)
+        val starts = sharedPref.getInt(Constants.SHARED_PREF_AOD_CARD_START_COUNT, 0)
+        if (firstShown > 0L && System.currentTimeMillis() - firstShown > Constants.AOD_CARD_AUTO_HIDE_DAYS * 24L * 60L * 60L * 1000L)
+            return true
+        return starts >= Constants.AOD_CARD_AUTO_HIDE_STARTS
+    }
+
+    private fun countAodCardStart() {
+        if (aodCardStartCountedInProcess)
+            return
+        aodCardStartCountedInProcess = true
+        val starts = sharedPref.getInt(Constants.SHARED_PREF_AOD_CARD_START_COUNT, 0)
+        val firstShownMissing = !sharedPref.contains(Constants.SHARED_PREF_AOD_CARD_FIRST_SHOWN)
+        sharedPref.edit {
+            if (firstShownMissing)
+                putLong(Constants.SHARED_PREF_AOD_CARD_FIRST_SHOWN, System.currentTimeMillis())
+            putInt(Constants.SHARED_PREF_AOD_CARD_START_COUNT, starts + 1)
+        }
+    }
+
+    private fun openAodDisclosure(recovery: Boolean) {
+        try {
+            aodDisclosureLauncher.launch(AodDisclosureActivity.createIntent(this, recovery))
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "openAodDisclosure exception: " + exc.message.toString())
         }
     }
 

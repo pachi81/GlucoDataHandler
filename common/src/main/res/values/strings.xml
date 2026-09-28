@@ -809,12 +809,13 @@
     <string name="pref_switch_use_rate_calculation_summary_on">Use internal trend calculation related to the last values.\nThis will show the trend arrow rotation in 5° intervals.</string>
     <string name="pref_switch_use_rate_calculation_summary_off">Use trend provided by the source.\nIf no trend is available, the internal calculation is used.</string>
     
-   <string name="accessibility_service_description">Display glucose values on the Always-on Display</string>
+   <string name="accessibility_service_description">Shows your glucose value on the Always-On Display. Reads nothing from your screen and collects no data.</string>
 
     <string name="pref_cat_aod">Always on Display</string>
     <string name="pref_cat_aod_summary">Settings for Always on Display.</string>
 
-    <string name="pref_aod_enabled_summary">Show values on the AOD display.</string>
+    <string name="pref_aod_enabled_title">Show glucose on Always-On Display</string>
+    <string name="pref_aod_enabled_summary">Optional. You will see an explanation first and can choose Agree or Not now.</string>
     <string name="pref_aod_size_summary">Change size of the AOD data.</string>
     <string name="pref_aod_coloured">Colored</string>
     <string name="pref_aod_coloured_summary">Show AOD in color.</string>
@@ -1080,9 +1081,6 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="pref_source_librelinkup_5_info_summary">Abbott has switched LibreLinkUp to encrypted communication.\nAs soon as the previous interface is shut down, GDH will likely stop working.\nThere is currently no technical solution in sight.</string>
     <string name="source_librelinkup_5_info_popup_title">Important note regarding LibreLinkUp:</string>
     <string name="source_librelinkup_5_info_popup">Abbott has released version 5, which uses a new, encrypted interface.\nIf Abbott shuts down the previous interface, communication with GDH (and other third-party apps) will likely be interrupted.\nCurrently, there is no technical solution to bypass this new encryption.\nQuestions regarding the future support of essential features like smartwatch integration can only be answered directly by Abbott support.</string>
-
-    <string name="accessibility_prominent_disclosure_title">Accessibility Permission</string>
-    <string name="accessibility_prominent_disclosure_message">This app requests the AccessibilityService API exclusively to display your glucose values on the Always-On-Display (AOD).\n\nPurpose:\nIt detects when the lock screen is active and overlays a small local view showing your current glucose data, so you can monitor your levels without waking the device.\n\nThis service does NOT:\n- Read, access, or interact with the content, text, or UI elements of any other app\n- Collect, store, or transmit any personal, sensitive, or health data\n- Change any device settings without your knowledge\n\nConsent:\nBy tapping \"Accept\", you agree to enable this service and will be redirected to Android Accessibility Settings. Tap \"Cancel\" to decline.</string>
     <string name="button_accept">Accept</string>
 
     <!-- v2.5 -->
@@ -1103,7 +1101,23 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="aod_advanced_protection_enabled_info">Advanced Protection is active and blocks accessibility services for this app. To use AOD, please disable Advanced Protection in your Android settings.</string>
 
     <string name="press_here_to_check">Press here to check it.</string>
-    <string name="aod_optional_feature_title">Optional Always-On Display</string>
-    <string name="aod_optional_feature_message">This app offers an optional Always-On Display (AOD) feature that uses the Android AccessibilityService API to display your glucose value on the AOD.\n\nThis feature is disabled by default and can be enabled at any time in Settings. The AccessibilityService is only used for this AOD feature. It does not access or read content from other apps or your personal data.</string>
-    <string name="button_got_it">Got it</string>
+    <string name="aod_disclosure_title">Show your glucose on the Always-On Display?</string>
+    <string name="aod_disclosure_body">GlucoDataHandler can show your current glucose value on the Always-On Display (the dimmed clock screen you see while your phone is locked). To do this, it uses Android\'s Accessibility service.\n\n<b>Why:</b> Android has no other way for an app to show something on the Always-On Display. This feature is optional and stays off unless you agree.\n\n<b>What:</b> The app only checks whether your screen is on or off. When it is off, the app draws a small box with your glucose value. It does not read your screen, your messages, other apps or what you type. It does not tap or change anything for you.\n\n<b>Your data:</b> This feature does not collect, save or send any data.</string>
+    <string name="aod_disclosure_steps"><b>Next steps:</b> If you tap \"Agree\", Android Settings will open. Switch on GlucoDataHandler. Android will show its own warning. Tap \"Allow\".\nIf you tap \"Not now\", nothing is turned on. You can come back any time from the main screen or Settings &gt; Lockscreen and AOD.</string>
+    <string name="aod_disclosure_recovery_note">Always-On Display is paused because Android turned the service off. To use it again, please read and agree below.</string>
+    <string name="button_agree">Agree</string>
+    <string name="button_not_now">Not now</string>
+    <string name="aod_card_title">Always-On Display (optional)</string>
+    <string name="aod_card_text">See your glucose on the dimmed clock screen while your phone is locked.</string>
+    <string name="aod_card_setup">Set up</string>
+    <string name="aod_card_hide">Hide</string>
+    <string name="aod_card_paused_title">Always-On Display is paused</string>
+    <string name="aod_card_paused_text">Android turned the accessibility service off. Tap Fix to read the explanation and turn it on again.</string>
+    <string name="aod_card_fix">Fix</string>
+    <string name="aod_card_turn_off">Turn off</string>
+    <string name="aod_card_aapm_title">Always-On Display is blocked</string>
+    <string name="aod_card_aapm_text">Advanced Protection blocks accessibility services for this app. You can use the lock screen wallpaper instead.</string>
+    <string name="aod_card_use_wallpaper">Lock screen wallpaper</string>
+    <string name="aod_enabled_message">Always-On Display is on.</string>
+    <string name="aod_not_enabled_message">Always-On Display was not turned on. Nothing was changed.</string>
 </resources>

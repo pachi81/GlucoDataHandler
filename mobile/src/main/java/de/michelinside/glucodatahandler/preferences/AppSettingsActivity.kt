@@ -10,6 +10,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import de.michelinside.glucodatahandler.common.preferences.PreferenceHelper
 import de.michelinside.glucodatahandler.preferences.SettingsFragment
+import de.michelinside.glucodatahandler.preferences.LockscreenSettingsFragment
 import de.michelinside.glucodatahandler.common.preferences.SourceFragment
 import de.michelinside.glucodatahandler.preferences.AlarmFragment
 import de.michelinside.glucodatahandler.common.R as RC
@@ -17,7 +18,8 @@ import de.michelinside.glucodatahandler.common.R as RC
 enum class SettingsFragmentClass(val value: Int, val titleRes: Int) {
     SETTINGS_FRAGMENT(0, RC.string.menu_settings),
     SORUCE_FRAGMENT(1, RC.string.menu_sources),
-    ALARM_FRAGMENT(2, RC.string.menu_alarms)
+    ALARM_FRAGMENT(2, RC.string.menu_alarms),
+    LOCKSCREEN_FRAGMENT(3, RC.string.pref_cat_locksreen_aod)
 }
 class SettingsActivity : AppCompatActivity(),
     PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
@@ -53,6 +55,13 @@ class SettingsActivity : AppCompatActivity(),
                         setTitle(0, this.applicationContext.resources.getText(SettingsFragmentClass.ALARM_FRAGMENT.titleRes))
                         supportFragmentManager.beginTransaction()
                             .replace(R.id.content, AlarmFragment())
+                            .commit()
+                    }
+
+                    SettingsFragmentClass.LOCKSCREEN_FRAGMENT.value -> {
+                        setTitle(0, this.applicationContext.resources.getText(SettingsFragmentClass.LOCKSCREEN_FRAGMENT.titleRes))
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.content, LockscreenSettingsFragment())
                             .commit()
                     }
                 }
