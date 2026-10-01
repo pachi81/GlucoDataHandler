@@ -85,6 +85,7 @@ import kotlin.math.min
 import kotlin.time.Duration.Companion.days
 import de.michelinside.glucodatahandler.common.R as CR
 import androidx.core.net.toUri
+import androidx.preference.SwitchPreferenceCompat
 import de.michelinside.glucodatahandler.common.Command
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 import de.michelinside.glucodatahandler.common.service.ReceiverManager
@@ -449,13 +450,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private fun checkNewSettings() {
         try {
             if(!sharedPref.contains(Constants.SHARED_PREF_DISCLAIMER_SHOWN)) {
-                if(!Constants.IS_SECOND) {
-                    Dialogs.showDialog(this,
-                        CR.string.aod_optional_feature_title,
-                        CR.string.aod_optional_feature_message,
-                        CR.string.button_got_it,
-                        null)
-                }
                 Dialogs.showOkDialog(this,
                     CR.string.gdh_disclaimer_title,
                     CR.string.gdh_disclaimer_message,
@@ -870,8 +864,61 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             }
             tableNotes.addView(createRow(resources.getString(CR.string.battery_optimization_disabled), onClickListener))
         }
+        if(!Constants.IS_SECOND && !sharedPref.getBoolean(Constants.SHARED_PREF_AOD_DISCLAIMER_SHOWN, false)) {
+            Log.v(LOG_ID, "Check AOD disclaimer: permission granted: ${AODAccessibilityService.isAccessibilitySettingsEnabled(this)}, runtime days: ${GlucoDataService.runtimeDays}")
+            if (!AODAccessibilityService.isAccessibilitySettingsEnabled(this) && GlucoDataService.runtimeDays < 1L) {
+                val onClickListener = OnClickListener {
+                    try {
+                        val infoText = getString(
+                            CR.string.aod_optional_feature_info,
+                            getString(CR.string.menu_settings),
+                            getString(CR.string.pref_cat_locksreen_aod)
+                        )
+                        Dialogs.showDialog2(this,
+                            CR.string.aod_optional_feature_title,
+                            infoText,
+                            CR.string.pref_lockscreen_enabled,
+                            CR.string.button_not_now,
+                            {_, _ ->
+                                Dialogs.showAcceptCancelDialog(this,
+                                    CR.string.accessibility_prominent_disclosure_title,
+                                    CR.string.accessibility_prominent_disclosure_message,
+                                    { _, _ ->
+                                        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                                        accessibilitySettingsLauncher.launch(intent)
+                                    }, null
+                                )
+                            },
+                            {_, _ ->
+                                sharedPref.edit {
+                                    putBoolean(Constants.SHARED_PREF_AOD_DISCLAIMER_SHOWN, true)
+                                }
+                                updateNotesTable()
+                            })
+                    } catch (exc: Exception) {
+                        Log.e(LOG_ID, "Schedule exact alarm exception: " + exc.message.toString() )
+                    }
+                }
+                tableNotes.addView(createRow(resources.getString(CR.string.aod_optional_feature_main), onClickListener))
+            } else {
+                sharedPref.edit {
+                    putBoolean(Constants.SHARED_PREF_AOD_DISCLAIMER_SHOWN, true)
+                }
+            }
+        }
         checkTableVisibility(tableNotes)
     }
+
+    private val accessibilitySettingsLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            val enabled = (AODAccessibilityService.isAccessibilitySettingsEnabled(this))
+            Log.i(LOG_ID, "Accessibility permission: $enabled")
+            sharedPref.edit {
+                putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, enabled)
+                putBoolean(Constants.SHARED_PREF_AOD_DISCLAIMER_SHOWN, enabled)
+            }
+            updateNotesTable()
+        }
 
     private fun updateConnectionsTable() {
         tableConnections.removeViews(1, maxOf(0, tableConnections.childCount - 1))

@@ -1029,7 +1029,9 @@ U kunt deze toestemmingen op elk moment beheren in de instellingen van de Health
     <string name="aod_advanced_protection_enabled_dialog">AOD kan niet worden gebruikt terwijl Geavanceerde beveiliging is ingeschakeld.\nDe instelling is uitgeschakeld en kan pas weer worden ingeschakeld in het instellingenmenu nadat Geavanceerde beveiliging is gedeactiveerd.</string>
     <string name="aod_advanced_protection_enabled_info">Geavanceerde beveiliging is actief en blokkeert toegankelijkheidsservices voor deze app. Schakel Geavanceerde beveiliging uit in je Android-instellingen om AOD te gebruiken.</string>
     <string name="press_here_to_check">Tik hier om dit te controleren.</string>
-    <string name="aod_optional_feature_title">Optioneel Always‑On Display</string>
-    <string name="aod_optional_feature_message">Deze app biedt een optionele Always‑On Display (AOD)-functie die de Android AccessibilityService API gebruikt om uw glucosewaarde op de AOD weer te geven.\n\nDeze functie is standaard uitgeschakeld en kan op elk moment in Instellingen worden ingeschakeld. De AccessibilityService wordt alleen voor deze AOD‑functie gebruikt. Deze heeft geen toegang tot of leest inhoud van andere apps of uw persoonlijke gegevens.</string>
-    <string name="button_got_it">Begrepen</string>
+
+    <string name="aod_optional_feature_title">Optionele Always-On Display-functie (AOD)</string>
+    <string name="aod_optional_feature_info">GlucoDataHandler biedt een optionele Always-On Display-functie (AOD) die de Android AccessibilityService-API gebruikt om je glucosewaarde op het AOD-scherm weer te geven zonder het apparaat te activeren.\n\nVolgens het beleid van Google Play moet deze informatie duidelijk worden weergegeven voordat je naar de instellingen gaat.\n\nDeze functie is standaard uitgeschakeld en heeft geen invloed op de kernfunctionaliteit van de app.\n\nJe kunt de functie nu inschakelen of later configureren via %1$s - %2$s.</string>
+    <string name="aod_optional_feature_main">Always-On-Display (AOD)\nTik hier voor meer informatie.</string>
+    <string name="button_not_now">Niet nu</string>
 </resources>

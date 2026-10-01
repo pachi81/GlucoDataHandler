@@ -1017,7 +1017,9 @@ Puoi gestire queste autorizzazioni in qualsiasi momento nelle impostazioni dell\
     <string name="aod_advanced_protection_enabled_dialog">L\'AOD non può essere utilizzato mentre la Protezione avanzata è attiva.\nL\'impostazione è stata disattivata e può essere riattivata nel menu delle impostazioni solo dopo aver disattivato la Protezione avanzata.</string>
     <string name="aod_advanced_protection_enabled_info">La Protezione avanzata è attiva e blocca i servizi di accessibilità per questa app. Per utilizzare l\'AOD, disattiva la Protezione avanzata nelle impostazioni di Android.</string>
     <string name="press_here_to_check">Premi qui per verificare.</string>
-    <string name="aod_optional_feature_title">Always‑On Display opzionale</string>
-    <string name="aod_optional_feature_message">Questa app offre una funzione Always‑On Display (AOD) opzionale che utilizza l\'API AccessibilityService di Android per visualizzare il valore della glicemia sull\'AOD. Questa funzione è disattivata per impostazione predefinita e può essere attivata in qualsiasi momento nelle Impostazioni. AccessibilityService viene utilizzato solo per questa funzione AOD e non accede ai contenuti di altre app o ai tuoi dati personali.</string>
-    <string name="button_got_it">Ricevuto</string>
+
+    <string name="aod_optional_feature_title">Funzione Always-On Display (AOD) opzionale</string>
+    <string name="aod_optional_feature_info">GlucoDataHandler offre una funzione Always-On Display (AOD) opzionale che utilizza l\'API Android AccessibilityService per mostrare il valore della glicemia sullo schermo AOD senza riattivare il dispositivo.\n\nLe norme di Google Play richiedono che queste informazioni siano mostrate in modo evidente prima di accedere alle impostazioni.\n\nQuesta funzione è disattivata per impostazione predefinita e non influisce sulle funzionalità principali dell\'app.\n\nPuoi attivarla ora o configurarla più tardi in %1$s - %2$s.</string>
+    <string name="aod_optional_feature_main">Always-On-Display (AOD)\nTocca qui per ulteriori informazioni.</string>
+    <string name="button_not_now">Non ora</string>
 </resources>

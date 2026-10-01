@@ -286,6 +286,7 @@ object Utils {
             }
         } catch (e: NameNotFoundException) {
         }
+        s += "Runtime: " + if(GlucoDataService.runtimeDays>0L) "${GlucoDataService.runtimeDays} days\n" else "${GlucoDataService.runtimeMin} minutes\n"
         s += "OS Version: ${System.getProperty("os.version")} (${Build.VERSION.INCREMENTAL})\n"
         s += "OS API Level: ${Build.VERSION.SDK_INT}\n"
         s += "Android: ${Build.VERSION.RELEASE}\n"

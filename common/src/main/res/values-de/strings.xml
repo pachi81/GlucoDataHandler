@@ -1021,7 +1021,9 @@ Sie können diese Berechtigungen jederzeit in den Health Connect App-Einstellung
     <string name="aod_advanced_protection_enabled_dialog">AOD kann nicht genutzt werden, da die Erweiterte Sicherheit aktiviert ist.\nDie Einstellung wurde deaktiviert und kann erst wieder im Einstellungsmenü aktiviert werden, wenn die Erweiterte Sicherheit deaktiviert wurde.</string>
     <string name="aod_advanced_protection_enabled_info">Die \"Erweiterte Sicherheit\" ist aktiv und blockiert die AOD-Anzeige. Bitte deaktivieren Sie ihn in den Android-Einstellungen, um diese Funktion nutzen zu können.</string>
     <string name="press_here_to_check">Hier drücken, um dies zu prüfen.</string>
-    <string name="aod_optional_feature_title">Optional Always-On Display</string>
-    <string name="aod_optional_feature_message">Diese App bietet eine optionale Always‑On‑Display (AOD)-Funktion, die die Android AccessibilityService API verwendet, um Ihren Blutzuckerwert auf dem AOD anzuzeigen.\n\nDiese Funktion ist standardmäßig deaktiviert und kann jederzeit in den Einstellungen aktiviert werden. Der AccessibilityService wird ausschließlich für diese AOD‑Funktion verwendet. Er greift nicht auf Inhalte anderer Apps oder persönliche Daten zu.</string>
-    <string name="button_got_it">Verstanden</string>
+
+    <string name="aod_optional_feature_title">Optionale Always-On-Display-Funktion (AOD)</string>
+    <string name="aod_optional_feature_info">GlucoDataHandler bietet eine optionale Always-On-Display-Funktion (AOD), die die Android-AccessibilityService-API verwendet, um deinen Glukosewert auf dem AOD-Bildschirm anzuzeigen, ohne das Gerät aufzuwecken.\n\nDie Google-Play-Richtlinien verlangen, dass diese Informationen deutlich angezeigt werden, bevor zu den Einstellungen navigiert wird.\n\nDiese Funktion ist standardmäßig deaktiviert und beeinträchtigt die Kernfunktionen der App nicht.\n\nDu kannst sie jetzt aktivieren oder später unter %1$s - %2$s konfigurieren.</string>
+    <string name="aod_optional_feature_main">Always-On-Display (AOD)\nTippe hier für weitere Informationen.</string>
+    <string name="button_not_now">Nicht jetzt</string>
 </resources>

@@ -1035,7 +1035,9 @@ GlucoDataHandler само записва данни за кръвната зах
     <string name="aod_advanced_protection_enabled_dialog">AOD не може да се използва, докато е активирана Разширена защита.\nНастройката е деактивирана и може да бъде активирана отново в менюто с настройки само след като Разширената защита бъде деактивирана.</string>
     <string name="aod_advanced_protection_enabled_info">Разширената защита е активна и блокира услугите за достъпност за това приложение. За да използвате AOD, моля, деактивирайте Разширената защита в настройките на Android.</string>
     <string name="press_here_to_check">Hier drücken, um dies zu prüfen.</string>
-    <string name="aod_optional_feature_title">Опционален Always‑On Display</string>
-    <string name="aod_optional_feature_message">Това приложение предлага опционална функция Always‑On Display (AOD), която използва Android AccessibilityService API за показване на нивото ви на глюкоза на AOD.\n\nТази функция е деактивирана по подразбиране и може да бъде активирана по всяко време в Настройки. AccessibilityService се използва само за тази AOD функция. Тя не осъществява достъп или четене на съдържание от други приложения или вашите лични данни.</string>
-    <string name="button_got_it">Разбрах</string>
+
+    <string name="aod_optional_feature_title">Незадължителна функция Always-On Display (AOD)</string>
+    <string name="aod_optional_feature_info">GlucoDataHandler предлага незадължителна функция Always-On Display (AOD), която използва Android AccessibilityService API, за да показва стойността на глюкозата ви на екрана AOD, без да събужда устройството.\n\nПравилата на Google Play изискват тази информация да бъде показана на видно място, преди да отворите настройките.\n\nТази функция е деактивирана по подразбиране и не засяга основната функционалност на приложението.\n\nМожете да я активирате сега или да я конфигурирате по-късно в %1$s - %2$s.</string>
+    <string name="aod_optional_feature_main">Always-On-Display (AOD)\nДокоснете тук за повече информация.</string>
+    <string name="button_not_now">Не сега</string>
 </resources>

@@ -1031,8 +1031,8 @@ Tieto povolenia môžete kedykoľvek spravovať v nastaveniach aplikácie Health
     <string name="aod_advanced_protection_enabled_dialog">AOD nie je možné používať, kým je aktivovaná Rozšírená ochrana.\nNastavenie bolo zakázané a je možné ho znova povoliť v menu nastavení až po deaktivácii Rozšírenej ochrany.</string>
     <string name="aod_advanced_protection_enabled_info">Rozšírená ochrana je aktívna a blokuje služby dostupnosti pre túto aplikáciu. Ak chcete používať AOD, vypnite Rozšírenú ochranu v nastaveniach Androidu.</string>
     <string name="press_here_to_check">Kliknutím sem to skontrolujete.</string>
-    <string name="aod_optional_feature_title">Voliteľné Always‑On Display</string>
-    <string name="aod_optional_feature_message">Aplikácia ponúka voliteľnú funkciu Always‑On Display (AOD), ktorá používa rozhranie Android AccessibilityService API na zobrazenie hodnoty glukózy na AOD.\n\nTáto funkcia je predvolene vypnutá a možno ju kedykoľvek zapnúť v Nastaveniach. AccessibilityService sa používa iba pre túto funkciu AOD. Nepristupuje ani nečíta obsah iných aplikácií ani vaše osobné údaje.</string>
-    <string name="button_got_it">Rozumiem</string>
+    <string name="aod_optional_feature_title">Voliteľná funkcia Always-On Display (AOD)</string>
+    <string name="aod_optional_feature_info">GlucoDataHandler ponúka voliteľnú funkciu Always-On Display (AOD), ktorá pomocou rozhrania Android AccessibilityService API zobrazuje hodnotu glykémie na obrazovke AOD bez prebudenia zariadenia.\n\nPravidlá služby Google Play vyžadujú, aby sa tieto informácie zobrazili na viditeľnom mieste pred prechodom do nastavení.\n\nTáto funkcia je predvolene vypnutá a neovplyvňuje základné funkcie aplikácie.\n\nMôžete ju zapnúť teraz alebo ju nakonfigurovať neskôr v časti %1$s - %2$s.</string>
+    <string name="aod_optional_feature_main">Always-On-Display (AOD)\nViac informácií zobrazíte klepnutím sem.</string>
+    <string name="button_not_now">Teraz nie</string>
 </resources>
-

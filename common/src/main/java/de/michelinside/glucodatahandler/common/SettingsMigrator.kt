@@ -409,6 +409,17 @@ object SettingsMigrator {
                 }
             }
         }
+
+        // AOD message
+        if(isUpgrade && !sharedPref.getBoolean(Constants.SHARED_PREF_AOD_DISCLAIMER_SHOWN, false)) {
+            sharedPref.edit {
+                putBoolean(Constants.SHARED_PREF_AOD_DISCLAIMER_SHOWN, true)  // do not show in upgrade case
+            }
+        } else if(BuildConfig.DEBUG) {  // only for testing, reset flag
+            sharedPref.edit {
+                putBoolean(Constants.SHARED_PREF_AOD_DISCLAIMER_SHOWN, false)
+            }
+        }
     }
 
 

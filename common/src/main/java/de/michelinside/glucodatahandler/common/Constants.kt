@@ -347,6 +347,7 @@ object Constants {
     const val SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE = "phone_wear_screen_off_update"
 
     const val SHARED_PREF_DISCLAIMER_SHOWN = "gdh_disclaimer_shown"
+    const val SHARED_PREF_AOD_DISCLAIMER_SHOWN = "gdh_aod_disclaimer_shown"
 
     // Android Auto
     const val AA_MEDIA_ICON_STYLE_TREND = "trend"

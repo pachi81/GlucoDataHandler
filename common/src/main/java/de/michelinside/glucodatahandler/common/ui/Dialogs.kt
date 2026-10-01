@@ -26,6 +26,14 @@ object Dialogs {
             .setPositiveButton(context.resources.getText(okButtonRes), okListener)
             .show()
     }
+    fun showDialog2(context: Context, titleResId: Int, message: String, okButtonRes: Int, cancelButtonRes: Int, okListener: DialogInterface.OnClickListener?, cancelListener: DialogInterface.OnClickListener? = null) {
+        MaterialAlertDialogBuilder(context)
+            .setTitle(context.resources.getString(titleResId))
+            .setMessage(message)
+            .setPositiveButton(context.resources.getText(okButtonRes), okListener)
+            .setNegativeButton(context.resources.getText(cancelButtonRes), cancelListener)
+            .show()
+    }
     fun showOkDialog(context: Context, titleResId: Int, messageResId: Int, okListener: DialogInterface.OnClickListener?) {
         showDialog(context, titleResId, messageResId, R.string.button_ok, okListener)
     }
