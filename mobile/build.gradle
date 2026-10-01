@@ -25,7 +25,7 @@ android {
     compileSdk rootProject.compileSdk
 
     defaultConfig {
-        applicationId "de.michelinside.glucodatahandler"
+        applicationId rootProject.baseApplicationId
         minSdk rootProject.minSdk
         targetSdk rootProject.targetSdk
         versionCode 1000 + rootProject.versionCode
@@ -58,8 +58,8 @@ android {
             resValue "string", "app_name", "GlucoDataHandler"
         }
         second {
-            applicationIdSuffix '.second'
-            versionNameSuffix '_SECOND'
+            applicationIdSuffix rootProject.secondSuffix
+            versionNameSuffix rootProject.secondSuffix.replace('.', '_').toUpperCase()
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "GDH Second"
