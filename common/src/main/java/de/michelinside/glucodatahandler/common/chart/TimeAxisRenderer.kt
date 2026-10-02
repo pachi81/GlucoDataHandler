@@ -8,7 +8,7 @@ import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.log10
 import kotlin.math.pow
-class TimeAxisRenderer(chart: LineChart) :
+class TimeAxisRenderer(val chart: LineChart) :
     XAxisRenderer(chart.viewPortHandler, chart.xAxis, chart.rendererXAxis.transformer) {
     private val LOG_ID = "GDH.Chart.TimeAxisRenderer"
 
@@ -57,7 +57,14 @@ class TimeAxisRenderer(chart: LineChart) :
     private fun computeNiceAxisValues(xMin: Float, xMax: Float) {
         val labelCount = mAxis.labelCount
         val range = (xMax - xMin).toDouble()
-
+/*
+        if (chart.data == null || chart.data.dataSetCount == 0 || chart.data.getDataSetByIndex(0).entryCount == 0) {
+            mAxis.mEntries = floatArrayOf()
+            mAxis.mCenteredEntries = floatArrayOf()
+            mAxis.mEntryCount = 0
+            return
+        }
+*/
         if (labelCount == 0 || range <= 0 || java.lang.Double.isInfinite(range)) {
             mAxis.mEntries = floatArrayOf()
             mAxis.mCenteredEntries = floatArrayOf()

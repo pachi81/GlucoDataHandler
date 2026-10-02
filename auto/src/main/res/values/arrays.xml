@@ -56,11 +56,13 @@
         <item>"-1"</item>
     </array>
     <array name="pref_aa_media_player_icon_labels">
+        <item>@string/widget_chart_glucose_trend_delta_time_iob_cob</item>
         <item>@string/short_value_arrow</item>
         <item>@string/pref_status_bar_icon_trend</item>
         <item>@string/pref_status_bar_icon_glucose</item>
     </array>
     <array name="pref_aa_media_player_icon_values">
+        <item>"graph"</item>
         <item>"glucose_trend"</item>
         <item>"trend"</item>
         <item>"glucose"</item>

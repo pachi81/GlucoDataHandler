@@ -16,11 +16,14 @@ import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.ScreenEventReceiver
 import de.michelinside.glucodatahandler.common.service.WearPhoneManager
+import de.michelinside.glucodatahandler.tile.GlucoseGraphTileUpdater
+import de.michelinside.glucodatahandler.tile.GlucoseValueTileUpdater
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
+import de.michelinside.glucodatahandler.tile.GlucoseDetailsTileUpdater
 
 
-class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterface {
+class  GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterface {
     companion object {
         private val LOG_ID = "GDH.GlucoDataServiceWear"
         private var starting = false
@@ -55,7 +58,8 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
             NotifySource.MESSAGECLIENT,
             NotifySource.BROADCAST,
             NotifySource.SETTINGS,
-            NotifySource.DISPLAY_STATE_CHANGED
+            NotifySource.DISPLAY_STATE_CHANGED,
+            NotifySource.SENSOR_AGE_CHANGED
         )
 
         if(ActiveComplicationHandler.canUpdateComplications(NotifySource.TIME_VALUE) && (sharedPref == null || sharedPref!!.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, true))) {
@@ -85,6 +89,9 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
             updateComplicationNotifier()
             ActiveComplicationHandler.OnNotifyData(this, NotifySource.CAPILITY_INFO, null)
             ChartComplicationUpdater.init(this)
+            InternalNotifier.addNotifier(this, GlucoseGraphTileUpdater, GlucoseGraphTileUpdater.filter)
+            InternalNotifier.addNotifier(this, GlucoseValueTileUpdater, GlucoseValueTileUpdater.filter)
+            InternalNotifier.addNotifier(this, GlucoseDetailsTileUpdater, GlucoseDetailsTileUpdater.filter)
         } catch (ex: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + ex)
         }

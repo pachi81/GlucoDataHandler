@@ -15,6 +15,7 @@ import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.R
 import androidx.core.content.edit
+import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.HttpRequest
@@ -24,6 +25,8 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 
 object NightscoutUploader: SharedPreferences.OnSharedPreferenceChangeListener, NotifierInterface {
@@ -110,6 +113,34 @@ object NightscoutUploader: SharedPreferences.OnSharedPreferenceChangeListener, N
         return false
     }
 
+    private fun calculateDelta(value: GlucoseValue, prevValue: GlucoseValue?): BigDecimal {
+        if(value.timestamp == ReceiveData.time && !ReceiveData.delta.isNaN()) {
+            return ReceiveData.deltaValueMgDl.toBigDecimal().setScale(3, RoundingMode.HALF_UP)
+        }
+        if (prevValue != null) {
+            val diffTime = kotlin.math.abs(
+                Utils.getTimeDiffMinute(
+                    value.timestamp,
+                    prevValue.timestamp,
+                    RoundingMode.HALF_UP
+                )
+            )
+            if(diffTime in 1..<20) {
+                val newDelta = (value.value - prevValue.value).toDouble()
+                val deltaTime = if(ReceiveData.use5minDelta) 5.0 else 1.0
+                val factor = if(diffTime.toDouble() != deltaTime) {
+                    val factor: Double = diffTime.toDouble() / deltaTime
+                    Log.d(LOG_ID, "Divide delta $newDelta with factor $factor for time diff: $diffTime minute(s)")
+                    factor
+                } else {
+                    1.0
+                }
+                return (newDelta / factor).toBigDecimal().setScale(3, RoundingMode.HALF_UP)
+            }
+        }
+        return BigDecimal.ZERO.setScale(3, RoundingMode.HALF_UP)
+    }
+
     private fun uploadGlucoseData(context: Context, glucoseValues: List<GlucoseValue>): Boolean {
         Log.d(LOG_ID, "Uploading ${glucoseValues.size} values to $url")
         try {
@@ -133,6 +164,7 @@ object NightscoutUploader: SharedPreferences.OnSharedPreferenceChangeListener, N
                             jsonEntry.put("filtered", it.value*1000)
                             jsonEntry.put("unfiltered", it.value*1000)
                             jsonEntry.put("direction", GlucoDataUtils.calculateDirection(it, prevValue))
+                            jsonEntry.put("delta", calculateDelta(it, prevValue))
                             if(Log.isLoggable(LOG_ID, android.util.Log.VERBOSE))
                                 Log.v(LOG_ID, "$jsonEntry")
                             jsonEntries.put(jsonEntry)

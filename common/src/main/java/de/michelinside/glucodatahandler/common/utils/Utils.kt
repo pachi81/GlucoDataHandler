@@ -4,6 +4,7 @@ import android.accessibilityservice.AccessibilityServiceInfo
 import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.pm.PackageManager.NameNotFoundException
@@ -40,6 +41,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
+import androidx.core.content.edit
 
 
 object Utils {
@@ -461,26 +463,28 @@ object Utils {
         try {
             val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             val ois = ObjectInputStream(inputStream)
-            val map = ois.readObject() as HashMap<*, *>
-            with(sharedPref.edit()) {
-                map.forEach { entry ->
-                    putString(entry.key.toString(), entry.value.toString())
-                    when (entry.value) {
-                        is Boolean -> putBoolean(entry.key.toString(), entry.value as Boolean)
-                        is String -> putString(entry.key.toString(), entry.value as String)
-                        is Int -> putInt(entry.key.toString(), entry.value as Int)
-                        is Float -> putFloat(entry.key.toString(), entry.value as Float)
-                        is Long -> putLong(entry.key.toString(), entry.value as Long)
-                        is Set<*> -> putStringSet(entry.key.toString(), entry.value as Set<String>)
-                        else -> throw IllegalArgumentException(
-                            ("Type " + (entry.value?.javaClass?.name ?: "unknown") + " is unknown")
-                        )
-                    }
+            val map = ois.readObject() as? Map<*, *> ?: emptyMap<String, Any>()
+            val enableMap = mutableMapOf<String, Any?>()
+            val editor = sharedPref.edit()
+
+            map.entries.forEach { entry ->
+                val key = entry.key.toString()
+                if (!key.endsWith("_enabled")) {
+                    applySetting(editor, key, entry.value)
+                } else {
+                    Log.v(LOG_ID, "Add to enable map: $key")
+                    enableMap[key] = entry.value
                 }
-                apply()
             }
+            editor.apply()
+            Log.d(LOG_ID, "Applying enable settings: ${enableMap.keys}")
+            enableMap.forEach { entry ->
+                val key = entry.key
+                applySetting(editor, key, entry.value)
+            }
+            editor.apply()
             success = true
-            Log.i(LOG_ID, "Settings red")
+            Log.i(LOG_ID, "Settings sucessfully read")
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Reading settings exception: " + exc.message.toString() )
         }
@@ -491,6 +495,22 @@ object Utils {
         }
         Handler(GlucoDataService.context!!.mainLooper).post {
             Toast.makeText(GlucoDataService.context!!, text, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun applySetting(editor: SharedPreferences.Editor, key: String, value: Any?) {
+        //Log.v(LOG_ID, "Apply setting $key: '$value'")
+        editor.putString(key, value.toString())
+        when (value) {
+            is Boolean -> editor.putBoolean(key, value)
+            is String -> editor.putString(key, value)
+            is Int -> editor.putInt(key, value)
+            is Float -> editor.putFloat(key, value)
+            is Long -> editor.putLong(key, value)
+            is Set<*> -> editor.putStringSet(key, value as? Set<String> ?: emptySet())
+            else -> throw IllegalArgumentException(
+                "Type " + (value?.javaClass?.name ?: "unknown") + " is unknown"
+            )
         }
     }
 

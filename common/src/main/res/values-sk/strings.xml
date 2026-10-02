@@ -1016,8 +1016,18 @@ Tieto povolenia môžete kedykoľvek spravovať v nastaveniach aplikácie Health
     <string name="source_librelinkup_5_info_popup_title">Dôležitá poznámka týkajúca sa LibreLinkUp:</string>
     <string name="source_librelinkup_5_info_popup">Abbott vydal verziu 5, ktorá používa nové šifrované rozhranie.\nAk Abbott vypne predchádzajúce rozhranie, komunikácia s GDH (a ďalšími aplikáciami tretích strán) bude pravdepodobne prerušená.\nV súčasnosti neexistuje technické riešenie na obídenie tohto nového šifrovania.\nOtázky týkajúce sa budúcej podpory základných funkcií, ako je integrácia s chytrými hodinkami, môžu odpovedať iba priamo podporou spoločnosti Abbott.</string>
 
-    <string name="accessibility_prominent_disclosure_title">Oprávnenie na prístupnosť</string>
-    <string name="accessibility_prominent_disclosure_message">Táto aplikácia vyžaduje rozhranie AccessibilityService API na zobrazovanie hodnôt glukózy na obrazovke Always-On-Display (AOD).\n\nÚčel:\nDeteguje stav uzamknutej obrazovky na prekrytie vlastného lokálneho zobrazenia s vašimi aktuálnymi údajmi o glukóze. To vám umožňuje sledovať úroveň bez prebudenia zariadenia.\n\nOchrana údajov:\nTáto služba sa používa výhradne na vizuálne prekrytie. NEPRISTUPUJE k osobným, citlivým alebo zdravotným údajom, nezbiera ich, neukladá ani nezdieľa.\n\nSúhlas:\nKlepnutím na \"Prijať\" súhlasíte s povolením tejto služby a budete presmerovaní do nastavení systému Android. Klepnutím odmietnete.</string>
     <string name="button_accept">Prijať</string>
+
+    <!-- v2.5 -->
+    <string name="tile_glucose_value">Hodnota glukózy</string>
+    <string name="tile_glucose_graph">Graf glukózy</string>
+    <string name="tile_glucose_details">Podrobnosti o glukóze</string>
+    <string name="info_label_eiob_talkback">efektívny I.O.B.</string>
+    <string name="pref_health_send_last_value">Odoslať iba poslednú hodnotu</string>
+    <string name="pref_health_send_last_value_summary">Ak je táto možnosť povolená, do Health Connect sa odošle iba najnovšia hodnota glukózy. V opačnom prípade sa prenesú všetky zaznamenané hodnoty od poslednej synchronizácie.</string>
+    <string name="new_sensor">Nový senzor</string>
+    <string name="aod_advanced_protection_enabled_dialog">AOD nie je možné používať, kým je aktivovaná Rozšírená ochrana.\nNastavenie bolo zakázané a je možné ho znova povoliť v menu nastavení až po deaktivácii Rozšírenej ochrany.</string>
+    <string name="aod_advanced_protection_enabled_info">Rozšírená ochrana je aktívna a blokuje služby dostupnosti pre túto aplikáciu. Ak chcete používať AOD, vypnite Rozšírenú ochranu v nastaveniach Androidu.</string>
+    <string name="press_here_to_check">Kliknutím sem to skontrolujete.</string>
 </resources>
 

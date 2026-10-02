@@ -73,7 +73,6 @@ import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.healthconnect.HealthConnectManager
 import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.preferences.AlarmGeneralFragment
-import de.michelinside.glucodatahandler.preferences.LockscreenSettingsFragment
 import de.michelinside.glucodatahandler.watch.WatchDrip
 import de.michelinside.glucodatahandler.widget.BatteryLevelWidget
 import de.michelinside.glucodatahandler.xdripserver.XDripServer
@@ -85,12 +84,16 @@ import kotlin.math.min
 import kotlin.time.Duration.Companion.days
 import de.michelinside.glucodatahandler.common.R as CR
 import androidx.core.net.toUri
+import de.michelinside.glucodatahandler.common.Command
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 import de.michelinside.glucodatahandler.common.service.ReceiverManager
 import de.michelinside.glucodatahandler.common.service.WearPhoneManager
 import de.michelinside.glucodatahandler.healthconnect.HealthConnectState
 import de.michelinside.glucodatahandler.transfer.NightscoutUploader
 
+
+// counted once per process, so rotations and other activity recreations do not use up the card
+private var aodCardStartCountedInProcess = false
 
 class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtBgValue: TextView
@@ -111,6 +114,12 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var btnSources: Button
     private lateinit var btnHelp: Button
     private lateinit var btnPatient: Button
+    // the AOD card only exists in the portrait layout (layout-land has none)
+    private var aodCard: View? = null
+    private var txtAodCardTitle: TextView? = null
+    private var txtAodCardText: TextView? = null
+    private var btnAodCardPrimary: Button? = null
+    private var btnAodCardSecondary: Button? = null
     private lateinit var noDataLayout: LinearLayout
     private lateinit var sharedPref: SharedPreferences
     private lateinit var optionsMenu: Menu
@@ -154,6 +163,11 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             btnSources = findViewById(R.id.btnSources)
             btnHelp = findViewById(R.id.btnHelp)
             btnPatient = findViewById(R.id.btnPatient)
+            aodCard = findViewById(R.id.card_aod)
+            txtAodCardTitle = findViewById(R.id.txtAodCardTitle)
+            txtAodCardText = findViewById(R.id.txtAodCardText)
+            btnAodCardPrimary = findViewById(R.id.btnAodCardPrimary)
+            btnAodCardSecondary = findViewById(R.id.btnAodCardSecondary)
             noDataLayout = findViewById(R.id.layout_no_data)
             tableConnections = findViewById(R.id.tableConnections)
             tableAlarms = findViewById(R.id.tableAlarms)
@@ -285,10 +299,12 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.TIME_VALUE,
                 NotifySource.ALARM_STATE_CHANGED,
                 NotifySource.SOURCE_STATE_CHANGE,
-                NotifySource.UPDATE_MAIN))
+                NotifySource.UPDATE_MAIN,
+                NotifySource.SENSOR_AGE_CHANGED))
             checkUncaughtException()
             checkMissingPermissions()
             checkNewSettings()
+            updateAodCard()
 
             if (requestNotificationPermission && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
                 Log.i(LOG_ID, "Notification permission granted")
@@ -310,6 +326,13 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         super.onDestroy()
         chartCreator.close()
     }
+
+    private val aodDisclosureLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) {
+            updateAodCard()
+        }
 
     private val requestPermissionLauncher =
         registerForActivityResult(
@@ -386,22 +409,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 )
             }
         }
-        if(!permissionRequested && sharedPref.contains(Constants.SHARED_PREF_AOD_WP_ENABLED) && sharedPref.getBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)) {
-            if (!AODAccessibilityService.isAccessibilitySettingsEnabled(this)) {
-                permissionRequested = true
-                Log.w(LOG_ID, "Missing AOD permission")
-                Dialogs.showOkCancelDialog(this,
-                    resources.getString(CR.string.permission_missing_title),
-                    resources.getString(CR.string.setting_permission_missing_message, resources.getString(CR.string.pref_cat_aod)),
-                    { _, _ -> LockscreenSettingsFragment.requestAccessibilitySettings(this) },
-                    { _, _ ->
-                        sharedPref.edit {
-                            putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)
-                        }
-                    }
-                )
-            }
-        }
+        // Always-On Display: a missing accessibility permission is handled by the AOD card (see updateAodCard)
         if(!permissionRequested && sharedPref.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED) && sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)) {
             if (!ReceiverManager.checkNotificationReceiverPermission(this, false, false)) {
                 Log.w(LOG_ID, "Missing notification reader permission!")
@@ -427,6 +435,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     CR.string.gdh_disclaimer_message,
                     null
                 )
+                // this will prevent showing dialogs more than once!
                 sharedPref.edit {
                     putString(Constants.SHARED_PREF_DISCLAIMER_SHOWN, BuildConfig.VERSION_NAME)
                 }
@@ -468,6 +477,123 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         }
     }
 
+    private enum class AodCardState { HIDDEN, SETUP, RECOVERY, ADVANCED_PROTECTION }
+
+    /**
+     * The Always-On Display card on the main screen is the entry point to the optional AOD feature.
+     * It is passive: nothing is asked or changed until the user taps a button. The disclosure and
+     * consent happen in AodDisclosureActivity, the only path into the Android accessibility settings.
+     */
+    private fun updateAodCard() {
+        try {
+            val card = aodCard
+            val title = txtAodCardTitle
+            val text = txtAodCardText
+            val primary = btnAodCardPrimary
+            val secondary = btnAodCardSecondary
+            if (card == null || title == null || text == null || primary == null || secondary == null)
+                return  // layout without the card (landscape)
+            val state = getAodCardState()
+            Log.d(LOG_ID, "AOD card state: " + state.name)
+            if (state == AodCardState.HIDDEN) {
+                card.visibility = View.GONE
+                return
+            }
+            when (state) {
+                AodCardState.SETUP -> {
+                    countAodCardStart()
+                    title.setText(CR.string.aod_card_title)
+                    text.setText(CR.string.aod_card_text)
+                    primary.setText(CR.string.aod_card_setup)
+                    primary.setOnClickListener { openAodDisclosure(false) }
+                    secondary.setText(CR.string.aod_card_hide)
+                    secondary.setOnClickListener {
+                        sharedPref.edit { putBoolean(Constants.SHARED_PREF_AOD_CARD_HIDDEN, true) }
+                        updateAodCard()
+                    }
+                }
+                AodCardState.RECOVERY -> {
+                    title.setText(CR.string.aod_card_paused_title)
+                    text.setText(CR.string.aod_card_paused_text)
+                    primary.setText(CR.string.aod_card_fix)
+                    primary.setOnClickListener { openAodDisclosure(true) }
+                    secondary.setText(CR.string.aod_card_turn_off)
+                    secondary.setOnClickListener {
+                        sharedPref.edit { putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false) }
+                        updateAodCard()
+                    }
+                }
+                AodCardState.ADVANCED_PROTECTION -> {
+                    title.setText(CR.string.aod_card_aapm_title)
+                    text.setText(CR.string.aod_card_aapm_text)
+                    primary.setText(CR.string.aod_card_use_wallpaper)
+                    primary.setOnClickListener {
+                        try {
+                            val intent = Intent(this, SettingsActivity::class.java)
+                            intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.LOCKSCREEN_FRAGMENT.value)
+                            startActivity(intent)
+                        } catch (exc: Exception) {
+                            Log.e(LOG_ID, "Lockscreen settings exception: " + exc.message.toString())
+                        }
+                    }
+                    secondary.setText(CR.string.aod_card_turn_off)
+                    secondary.setOnClickListener {
+                        sharedPref.edit { putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false) }
+                        updateAodCard()
+                    }
+                }
+            }
+            card.visibility = View.VISIBLE
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "updateAodCard exception: " + exc.message.toString())
+        }
+    }
+
+    private fun getAodCardState(): AodCardState {
+        if (Constants.IS_SECOND)
+            return AodCardState.HIDDEN
+        val aodEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)
+        val hidden = sharedPref.getBoolean(Constants.SHARED_PREF_AOD_CARD_HIDDEN, false)
+        if (AODAccessibilityService.isAdvancedProtectionActive(this))
+            return if (aodEnabled) AodCardState.ADVANCED_PROTECTION else AodCardState.HIDDEN
+        if (aodEnabled) {
+            return if (AODAccessibilityService.isAccessibilitySettingsEnabled(this)) AodCardState.HIDDEN else AodCardState.RECOVERY
+        }
+        if (hidden || isAodCardExpired())
+            return AodCardState.HIDDEN
+        return AodCardState.SETUP
+    }
+
+    /** The set-up card goes away by itself after some days or app starts, so normal use never needs a tap. */
+    private fun isAodCardExpired(): Boolean {
+        val firstShown = sharedPref.getLong(Constants.SHARED_PREF_AOD_CARD_FIRST_SHOWN, 0L)
+        val starts = sharedPref.getInt(Constants.SHARED_PREF_AOD_CARD_START_COUNT, 0)
+        if (firstShown > 0L && System.currentTimeMillis() - firstShown > Constants.AOD_CARD_AUTO_HIDE_DAYS * 24L * 60L * 60L * 1000L)
+            return true
+        return starts >= Constants.AOD_CARD_AUTO_HIDE_STARTS
+    }
+
+    private fun countAodCardStart() {
+        if (aodCardStartCountedInProcess)
+            return
+        aodCardStartCountedInProcess = true
+        val starts = sharedPref.getInt(Constants.SHARED_PREF_AOD_CARD_START_COUNT, 0)
+        val firstShownMissing = !sharedPref.contains(Constants.SHARED_PREF_AOD_CARD_FIRST_SHOWN)
+        sharedPref.edit {
+            if (firstShownMissing)
+                putLong(Constants.SHARED_PREF_AOD_CARD_FIRST_SHOWN, System.currentTimeMillis())
+            putInt(Constants.SHARED_PREF_AOD_CARD_START_COUNT, starts + 1)
+        }
+    }
+
+    private fun openAodDisclosure(recovery: Boolean) {
+        try {
+            aodDisclosureLauncher.launch(AodDisclosureActivity.createIntent(this, recovery))
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "openAodDisclosure exception: " + exc.message.toString())
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         try {
             Log.v(LOG_ID, "onCreateOptionsMenu called")
@@ -502,7 +628,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         try {
-            Log.v(LOG_ID, "onOptionsItemSelected for " + item.itemId.toString())
+            Log.d(LOG_ID, "onOptionsItemSelected for " + item.itemId.toString())
             when(item.itemId) {
                 R.id.action_settings -> {
                     val intent = Intent(this, SettingsActivity::class.java)
@@ -520,6 +646,21 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     val intent = Intent(this, SettingsActivity::class.java)
                     intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.ALARM_FRAGMENT.value)
                     startActivity(intent)
+                    return true
+                }
+                R.id.action_new_sensor -> {
+                    Log.d(LOG_ID, "New sensor action")
+                    val startTime = if(Utils.getElapsedTimeMinute(ReceiveData.sensorStartTime) < (60*24*10) ) ReceiveData.sensorStartTime else System.currentTimeMillis()
+                    Dialogs.showDateTimePicker(this, startTime) { selectedTime ->
+                        val sensorId = if(ReceiveData.sensorID.isNullOrEmpty()) Constants.GDH_MANUAL_SENSOR_ID else ReceiveData.sensorID
+                        Log.d(LOG_ID, "Set sensor start time for $sensorId to ${Utils.getUiTimeStamp(selectedTime)}")
+                        if(ReceiveData.setSensorStartTime(sensorId, selectedTime, true)) {
+                            val extras = Bundle()
+                            extras.putLong(ReceiveData.SENSOR_START_TIME, selectedTime)
+                            extras.putString(ReceiveData.SENSOR_ID, sensorId)
+                            WearPhoneManager.sendCommand(Command.NEW_SENSOR_TIME, extras)
+                        }
+                    }
                     return true
                 }
                 R.id.action_help -> {
@@ -1034,16 +1175,19 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 tableDetails.addView(createRow(ReceiveData.getOtherUnit(), ReceiveData.getGlucoseAsOtherUnit() + " (Δ " + ReceiveData.getDeltaAsOtherUnit() + ")"))
             }
             tableDetails.addView(createRow(CR.string.info_label_timestamp, Utils.getUiTimeStamp(ReceiveData.time)))
+            if (!ReceiveData.eiob.isNaN() && !ReceiveData.isIobCobObsolete())
+                tableDetails.addView(createRow(CR.string.info_label_eiob, ReceiveData.getEiobAsString()))
             if (!ReceiveData.isIobCobObsolete(1.days.inWholeSeconds.toInt()))
                 tableDetails.addView(createRow(CR.string.info_label_iob_cob_timestamp, DateFormat.getTimeInstance(
                     DateFormat.DEFAULT).format(Date(ReceiveData.iobCobTime))))
-            if (ReceiveData.sensorID?.isNotEmpty() == true) {
+            if (ReceiveData.sensorID?.isNotEmpty() == true && ReceiveData.sensorID != Constants.GDH_MANUAL_SENSOR_ID) {
                 if(ReceiveData.source == DataSource.AAPS)
                     tableDetails.addView(createRow(CR.string.label_profile, ReceiveData.sensorID!!))
                 else
                     tableDetails.addView(createRow(CR.string.info_label_sensor_id, if(BuildConfig.DEBUG) "ABCDE12345" else ReceiveData.sensorID!!))
             }
-            if(ReceiveData.sensorStartTime > 0) {
+            Log.d(LOG_ID, "Current sensor ${ReceiveData.sensorID} - start-time: ${Utils.getUiTimeStamp(ReceiveData.sensorStartTime)}")
+            if(ReceiveData.sensorStartTime > 0 && !GlucoDataUtils.isSensorExpired(this)) {
                 val duration = Duration.ofMillis(System.currentTimeMillis() - ReceiveData.sensorStartTime)
                 val days = duration.toDays()
                 val hours = duration.minusDays(days).toHours()
@@ -1051,15 +1195,17 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 if(runtime != null && runtime > 0F) {
                     val max = runtime * 24 * 60 // minutes
                     Log.d(LOG_ID, "Sensor age: ${Utils.formatDuration(duration)} - runtime: ${Utils.formatDurationFromSeconds(max.toLong()*60)}")
-                    val progress = min(duration.toMinutes().toFloat(), max)
-                    val color = if(max - progress <= 60) {
-                        ReceiveData.getAlarmTypeColor(AlarmType.VERY_LOW)
-                    } else if(max - progress <= (24*60)) {
-                        ReceiveData.getAlarmTypeColor(AlarmType.LOW)
-                    } else {
-                        resources.getColor(CR.color.main)
+                    if((max+300) > duration.toMinutes().toFloat()) {  // after 5h the sensor age is removed
+                        val progress = min(duration.toMinutes().toFloat(), max)
+                        val color = if(max - progress <= 60) {
+                            ReceiveData.getAlarmTypeColor(AlarmType.VERY_LOW)
+                        } else if(max - progress <= (24*60)) {
+                            ReceiveData.getAlarmTypeColor(AlarmType.LOW)
+                        } else {
+                            resources.getColor(CR.color.main)
+                        }
+                        tableDetails.addView(createProgressBarRow(CR.string.sensor_age_label, progress*100 / max, color, createSensorAgeColumn(duration, max)/* + "\n-> " + resources.getString(CR.string.sensor_age_value).format(diffDays, diffHours)*/))
                     }
-                    tableDetails.addView(createProgressBarRow(CR.string.sensor_age_label, progress*100 / max, color, createSensorAgeColumn(duration, max)/* + "\n-> " + resources.getString(CR.string.sensor_age_value).format(diffDays, diffHours)*/))
                 } else
                     tableDetails.addView(createRow(CR.string.sensor_age_label, resources.getString(CR.string.sensor_age_value).format(days, hours)))
 

@@ -18,16 +18,22 @@
     <PreferenceCategory
         android:title="@string/advanced_settings"
         app:iconSpaceReserved="false">
-            <androidx.preference.SeekBarPreference
-                app:showSeekBarValue="true"
-                app:seekBarIncrement="1"
-                app:min="1"
-                android:max="30"
-                android:defaultValue="5"
-                android:key="send_to_health_connect_interval"
-                android:title="@string/alarm_interval"
-                android:summary="@string/transfer_values_interval_summary"
-                app:iconSpaceReserved="false" />
+        <androidx.preference.SeekBarPreference
+            app:showSeekBarValue="true"
+            app:seekBarIncrement="1"
+            app:min="1"
+            android:max="30"
+            android:defaultValue="5"
+            android:key="send_to_health_connect_interval"
+            android:title="@string/alarm_interval"
+            android:summary="@string/transfer_values_interval_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="send_to_health_only_last_value"
+            android:summary="@string/pref_health_send_last_value_summary"
+            android:title="@string/pref_health_send_last_value"
+            app:iconSpaceReserved="false" />
         <Preference
             android:key="health_connect_settings"
             android:title="@string/health_connect_settings"
