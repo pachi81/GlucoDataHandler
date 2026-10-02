@@ -1,6 +1,9 @@
 package de.michelinside.glucodatahandler
 
 import android.accessibilityservice.AccessibilityService
+import android.accessibilityservice.AccessibilityServiceInfo
+import android.content.ComponentName
+import android.view.accessibility.AccessibilityManager
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -59,19 +62,29 @@ class AODAccessibilityService : AccessibilityService(), NotifierInterface {
 
     companion object {
         val LOG_ID = "GDH.Aod"
+        /**
+         * True if this service is enabled in the Android accessibility settings.
+         * Asks the AccessibilityManager first (reliable on all versions) and falls back to the
+         * ENABLED_ACCESSIBILITY_SERVICES setting, compared by ComponentName instead of substring.
+         */
         fun isAccessibilitySettingsEnabled(context: Context): Boolean {
             try {
                 if(isAdvancedProtectionActive(context)) {
                     return false
                 }
+                val expected = ComponentName(context, AODAccessibilityService::class.java)
+                val manager = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as? AccessibilityManager
+                val viaManager = manager?.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK)?.any { info ->
+                    val serviceInfo = info.resolveInfo?.serviceInfo
+                    serviceInfo != null && ComponentName(serviceInfo.packageName, serviceInfo.name) == expected
+                } ?: false
                 val prefString =
                     Settings.Secure.getString(context.contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES)
-                Log.d(LOG_ID, "Checking ACCESSIBILITY_SERVICES : ${prefString}")
-                if(prefString.isNullOrEmpty())
-                    return false
-                val enabled = prefString.contains("${context.packageName}/${AODAccessibilityService::class.qualifiedName}")
-                Log.d(LOG_ID, "Checking ACCESSIBILITY_SERVICES : ${enabled}")
-                return enabled
+                val viaSettings = !prefString.isNullOrEmpty() && prefString.split(':').any { entry ->
+                    ComponentName.unflattenFromString(entry.trim()) == expected
+                }
+                Log.d(LOG_ID, "Checking ACCESSIBILITY_SERVICES - manager: " + viaManager + " - settings: " + viaSettings)
+                return viaManager || viaSettings
             } catch (e: Exception) {
                 Log.e(LOG_ID, "Error checking ACCESSIBILITY_SERVICES", e)
                 return false

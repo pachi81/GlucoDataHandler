@@ -265,6 +265,13 @@ object Constants {
     const val SHARED_PREF_AOD_WP_STYLE = "aod_style"
     const val SHARED_PREF_AOD_WP_SIZE = "aod_size"
     const val SHARED_PREF_AOD_WP_COLOURED = "aod_coloured"
+    const val SHARED_PREF_AOD_CARD_HIDDEN = "aod_card_hidden"
+    const val SHARED_PREF_AOD_CARD_FIRST_SHOWN = "aod_card_first_shown"
+    const val SHARED_PREF_AOD_CARD_START_COUNT = "aod_card_start_count"
+    const val SHARED_PREF_AOD_CONSENT_TIME = "aod_consent_time"
+    const val SHARED_PREF_AOD_CONSENT_VERSION = "aod_consent_version"
+    const val AOD_CARD_AUTO_HIDE_DAYS = 14
+    const val AOD_CARD_AUTO_HIDE_STARTS = 10
     const val AOD_COLOUR = Color.LTGRAY
 
     // screensaver

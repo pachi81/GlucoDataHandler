@@ -69,9 +69,9 @@ Our Application accesses and processes health information to provide its core fu
 
 #### Accessibility Service API
 Our Application uses the **AccessibilityService API** to provide the following feature:
-- **Always-On-Display (AOD) Overlay:** The service is used to detect when the device is in lock screen or AOD mode to overlay glucose information. This allows users to view their glucose levels without waking the device.
+- **Always-On-Display (AOD) Overlay:** The service is used only to draw the current glucose value on the Always-On Display while the screen is off. It receives no accessibility events, cannot read the content of the screen or of other apps and performs no actions. This allows users to view their glucose levels without waking the device.
 - **Data Collection:** We do **not** use the AccessibilityService API to collect, store, or share any personal or sensitive user data. All processing occurs locally on your device.
-- **Activation:** The use of this service is optional and must be explicitly enabled by the user in the Android Accessibility settings after a prominent disclosure is shown within the application.
+- **Activation:** The use of this service is optional and off by default. Before the Application opens the Android Accessibility settings, it shows a separate disclosure screen with the options "Agree" and "Not now". This screen can be opened from the main screen of the Application or from Settings > Lockscreen and AOD. The service is only used after the user has agreed and enabled it in the Android Accessibility settings.
 
 #### Usage Data
 

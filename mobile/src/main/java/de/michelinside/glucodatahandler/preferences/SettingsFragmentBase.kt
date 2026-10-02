@@ -19,6 +19,7 @@ import androidx.preference.Preference
 import androidx.preference.SeekBarPreference
 import androidx.preference.SwitchPreferenceCompat
 import de.michelinside.glucodatahandler.AODAccessibilityService
+import de.michelinside.glucodatahandler.AodDisclosureActivity
 import de.michelinside.glucodatahandler.common.ui.Dialogs
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
@@ -393,22 +394,13 @@ class WidgetSettingsFragment: SettingsFragmentBase(R.xml.pref_widgets) {
 }
 
 class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen)  {
-    companion object {
-        fun requestAccessibilitySettings(context: Context) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                intent.putExtra(Settings.EXTRA_APP_PACKAGE,context.packageName)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                context.startActivity(intent)
-            }
-        }
-    }
     override fun initPreferences() {
         Log.v(LOG_ID, "initPreferences called")
         super.initPreferences()
         updateStyleSummary()
         updateEnabledInitial()
         checkPermissions()
+        setupAodSwitch()
 
         if(resources.getBoolean(R.bool.isTablet)) {
             setSeekBarMaxValue(Constants.SHARED_PREF_LOCKSCREEN_WP_SIZE, 100)
@@ -423,7 +415,7 @@ class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen)  {
             Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE -> updateStyleSummary()
             Constants.SHARED_PREF_AOD_WP_STYLE -> updateStyleSummary()
             Constants.SHARED_PREF_AOD_WP_ENABLED -> {
-                checkAccesibilityService()
+                checkPermissions()
             }
         }
     }
@@ -438,33 +430,38 @@ class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen)  {
             aodStylePref.summary = aodStylePref.entry
         }
     }
-    private val accessibilitySettingsLauncher =
+    private val aodDisclosureLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            val enabled = (AODAccessibilityService.isAccessibilitySettingsEnabled(requireContext()))
-            Log.i(LOG_ID, "Accessibility permission: $enabled")
-            preferenceManager.sharedPreferences?.edit {
-                putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, enabled)
-            }
+            // AodDisclosureActivity has written aod_enabled according to the real service state
+            val enabled = preferenceManager.sharedPreferences?.getBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false) ?: false
+            Log.i(LOG_ID, "Back from AOD disclosure - enabled: " + enabled)
             val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_AOD_WP_ENABLED)
             if (pref != null)
                 pref.isChecked = enabled
+            checkPermissions()
         }
+
+    /**
+     * The switch never turns on by itself: switching on opens the disclosure screen and the
+     * listener returns false. The switch is set from the real service state when the user comes back.
+     */
+    private fun setupAodSwitch() {
+        val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_AOD_WP_ENABLED)
+        pref?.setOnPreferenceChangeListener { _, newValue ->
+            if (newValue == true) {
+                aodDisclosureLauncher.launch(AodDisclosureActivity.createIntent(requireContext(), false))
+                false
+            } else {
+                true
+            }
+        }
+    }
 
     private fun updateEnabledInitial() {
         try {
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.BAKLAVA) {  // Workaround for Android 17 beta issue, where the system does not retrieve the relevant state
-                val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_AOD_WP_ENABLED)
-                if (pref != null && pref.isChecked) {
-                    if (!AODAccessibilityService.isAccessibilitySettingsEnabled(requireContext())) {
-                        preferenceManager.sharedPreferences?.edit {
-                            putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)
-                        }
-                        pref.isChecked = false
-                    }
-                }
-            } else {
-                checkPermissions()
-            }
+            // a switched-on setting without the service is shown as "Missing permission" (recovery through the disclosure),
+            // on every Android version, instead of silently resetting the setting
+            checkPermissions()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateEnabledInitial exception: " + exc.toString())
         }
@@ -501,16 +498,12 @@ class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen)  {
                         prefInfo.isVisible = false
                     }
                     val prefPermissionInfo = findPreference<Preference>("aod_missing_permission_info")
-                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.BAKLAVA &&
-                        pref.isChecked && !AODAccessibilityService.isAccessibilitySettingsEnabled(requireContext())) {
+                    if (pref.isChecked && !AODAccessibilityService.isAccessibilitySettingsEnabled(requireContext())) {
                         if(prefPermissionInfo != null) {
                             prefPermissionInfo.isVisible = true
                             prefPermissionInfo.setOnPreferenceClickListener {
                                 try {
-                                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                                    intent.putExtra(Settings.EXTRA_APP_PACKAGE,requireContext().packageName)
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    requireContext().startActivity(intent)
+                                    aodDisclosureLauncher.launch(AodDisclosureActivity.createIntent(requireContext(), true))
                                 } catch (exc: Exception) {
                                     Log.e(LOG_ID, "checkAccessibility exception: " + exc.toString())
                                 }
@@ -527,34 +520,6 @@ class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen)  {
         }
     }
 
-    private fun checkAccesibilityService() {
-        if(preferenceManager.sharedPreferences!!.getBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)) {
-            val enabled = AODAccessibilityService.isAccessibilitySettingsEnabled(requireContext())
-            if (!enabled) {
-                Dialogs.showAcceptCancelDialog(requireContext(),
-                    CR.string.accessibility_prominent_disclosure_title,
-                    CR.string.accessibility_prominent_disclosure_message,
-                    { _, _ ->
-                        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                        accessibilitySettingsLauncher.launch(intent)
-                    },
-                    { _, _ ->
-                        Log.v(LOG_ID, "Accessibility permission canceled!")
-                        preferenceManager.sharedPreferences!!.edit {
-                            putBoolean(
-                                Constants.SHARED_PREF_AOD_WP_ENABLED,
-                                false
-                            )
-                        }
-                        val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_AOD_WP_ENABLED)
-                        if (pref != null)
-                            pref.isChecked = false
-                        updateEnabledInitial()
-                    }
-                )
-            }
-        }
-    }
 }
 
 class NotificationSettingsFragment: SettingsFragmentBase(R.xml.pref_notification) {

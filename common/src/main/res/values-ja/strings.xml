@@ -992,8 +992,6 @@ GlucoDataHandlerは、Health Connectに血糖データのみを書き込み、�
     <string name="source_librelinkup_5_info_popup_title">LibreLinkUpに関する重要なお知らせ：</string>
     <string name="source_librelinkup_5_info_popup">アボット社は、新しい暗号化インターフェースを採用したバージョン5をリリースしました。\nアボット社が従来のインターフェースを停止した場合、GDH（およびその他のサードパーティ製アプリ）との通信は中断される可能性があります。\n現在 この新しい暗号化を回避できる手段は、ありません。\nスマートウォッチ連携など主要機能の今後のサポートに関するご質問は、アボット社にお問い合わせください。</string>
 
-    <string name="accessibility_prominent_disclosure_title">ユーザー補助の権限</string>
-    <string name="accessibility_prominent_disclosure_message">このアプリは、常時点灯ディスプレイ（AOD）に血糖値を表示するためだけに AccessibilityService API を要求します。\n\n目的：\nロック画面がアクティブになったことを検知し、現在の血糖値データを表示する小さなローカルビューを重ねて表示します。これにより、端末を起動せずに血糖値を確認できます。\n\nこのサービスは以下を行いません：\n- 他のアプリのコンテンツ、テキスト、またはUI要素の読み取り・アクセス・操作\n- 個人情報、機密情報、または健康データの収集・保存・送信\n- お客様の知らない間のデバイス設定の変更\n\n同意：\n\"同意する\" をタップすると、このサービスの有効化に同意し、Androidのアクセシビリティ設定に移動します。拒否する場合は \"キャンセル\" をタップしてください。</string>
     <string name="button_accept">同意する</string>
 
     <!-- v2.5 -->
@@ -1012,7 +1010,4 @@ GlucoDataHandlerは、Health Connectに血糖データのみを書き込み、�
     <string name="aod_advanced_protection_enabled_dialog">高度な保護機能が有効な間は、AODを使用できません。\nこの設定は無効化されました。高度な保護機能を無効にした後、設定メニューで再度有効にできます。</string>
     <string name="aod_advanced_protection_enabled_info">高度な保護機能が有効になっており、このアプリのユーザー補助サービスをブロックしています。AODを使用するには、Androidの設定で高度な保護機能を無効にしてください。</string>
     <string name="press_here_to_check">ここをタップして確認してください。</string>
-    <string name="aod_optional_feature_title">オプションの常時表示 (AOD)</string>
-    <string name="aod_optional_feature_message">このアプリは、AndroidのAccessibilityService APIを使用してAODに血糖値を表示するオプションのAlways‑On Display（AOD）機能を提供します。\n\nこの機能はデフォルトで無効になっており、設定でいつでも有効にできます。AccessibilityServiceはこのAOD機能のみに使用され、他のアプリの内容や個人データにアクセスまたは読み取ることはありません。</string>
-    <string name="button_got_it">了解</string>
 </resources>
