@@ -35,7 +35,8 @@ enum class Command {
     FORCE_UPDATE,
     DB_SYNC,
     CLEAN_UP_DB,
-    REQUEST_DB_SYNC
+    REQUEST_DB_SYNC,
+    NEW_SENSOR_TIME
 }
 
 class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityClient.OnCapabilityChangedListener, NotifierInterface {
@@ -400,11 +401,11 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 // Send a message to all nodes in parallel
                 val curNodes = connectedNodes.values
                 curNodes.forEach { node ->
-                    Thread {
+                    GlobalScope.launch(Dispatchers.IO) {
                         try {
                             if ((ignoreReceiverId == null && filterReceiverId == null) || ignoreReceiverId != node.id || filterReceiverId == node.id) {
                                 if (dataSource == NotifySource.CAPILITY_INFO)
-                                    Thread.sleep(1000)  // wait a bit after the connection has changed
+                                    delay(1000)  // wait a bit after the connection has changed
                                 val useJson = dataSource == NotifySource.CAPILITY_INFO || nodeHasJson(node.id)   // force json for request data
                                 sendMessage(node, getPath(dataSource, useJson), Utils.bundleToBytes(extras, useJson), dataSource)
                                 if(dataSource == NotifySource.CAPILITY_INFO) { // also send request data in old format
@@ -414,7 +415,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                         } catch (exc: Exception) {
                             Log.e(LOG_ID, "sendMessage to " + node.toString() + " exception: " + exc.toString())
                         }
-                    }.start()
+                    }
                 }
                 if(dataSource == NotifySource.BROADCAST)
                     lastSendValuesTime = ReceiveData.time
@@ -426,10 +427,10 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         }
     }
 
-    private fun sendMessage(node: Node, path: String, data: ByteArray?, dataSource: NotifySource, retryCount: Long = 0L) {
+    private suspend fun sendMessage(node: Node, path: String, data: ByteArray?, dataSource: NotifySource, retryCount: Long = 0L) {
         if (retryCount > 0) {
             Log.i(LOG_ID, "Sleep " + (retryCount).toString() + " seconds, before retry sending.")
-            Thread.sleep(retryCount * 5000)
+            delay(retryCount * 5000)
         }
         if (connectedNodes.containsKey(node.id)) {
             Wearable.getMessageClient(context).sendMessage(
@@ -453,13 +454,13 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                             LOG_ID,
                             "Failed " + (retryCount+1).toString() + ". time to send " + dataSource.toString() + " data to node " + node.toString() + ": $error"
                         )
-                        Thread {
+                        GlobalScope.launch(Dispatchers.IO) {
                             try {
                                 sendMessage(node, path, data, dataSource, retryCount+1)
                             } catch (exc: Exception) {
                                 Log.e(LOG_ID, "sendMessage to " + node.toString() + " exception: " + exc.toString())
                             }
-                        }.start()
+                        }
                     } else {
                         Log.e(
                             LOG_ID,
@@ -516,13 +517,13 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 }
             }
             connectedNodes.forEach { node ->
-                Thread {
+                GlobalScope.launch(Dispatchers.IO) {
                     try {
                         sendMessage(node.value, getPath(NotifySource.COMMAND, nodeHasJson(node.value.id)), Utils.bundleToBytes(commandBundle, nodeHasJson(node.value.id)), NotifySource.COMMAND)
                     } catch (exc: Exception) {
                         Log.e(LOG_ID, "sendCommand to " + node.value.toString() + " exception: " + exc.toString())
                     }
-                }.start()
+                }
             }
         } else if(command == Command.CLEAN_UP_DB) {
             Log.i(LOG_ID, "Queue command clean up db for next connected watch")
@@ -771,6 +772,11 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                         GlucoDataService.resetDB()
                 }
                 Command.REQUEST_DB_SYNC -> dbSync.requestDbSync(context)
+                Command.NEW_SENSOR_TIME -> {
+                    if(bundle?.containsKey(ReceiveData.SENSOR_START_TIME) == true && bundle?.containsKey(ReceiveData.SENSOR_ID) == true) {
+                        ReceiveData.setSensorStartTime(bundle.getString(ReceiveData.SENSOR_ID), bundle.getLong(ReceiveData.SENSOR_START_TIME), true)
+                    }
+                }
             }
 
         } catch (exc: Exception) {
@@ -784,7 +790,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 val channelTask =
                     channelClient.openChannel(phoneNodeId, Constants.LOGCAT_CHANNEL_PATH)
                 channelTask.addOnSuccessListener { channel ->
-                    Thread {
+                    GlobalScope.launch(Dispatchers.IO) {
                         try {
                             val outputStream = Tasks.await(channelClient.getOutputStream(channel))
                             Log.d(LOG_ID, "sending Logcat")
@@ -794,7 +800,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                         } catch (exc: Exception) {
                             Log.e(LOG_ID, "sendLogcat exception: " + exc.toString())
                         }
-                    }.start()
+                    }
                 }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "sendLogcat exception: " + exc.toString())

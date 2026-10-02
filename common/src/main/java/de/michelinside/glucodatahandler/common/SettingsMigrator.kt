@@ -30,9 +30,9 @@ object SettingsMigrator {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
 
         val oldVersion = sharedPref.getInt(Constants.SHARED_PREF_GDH_VERSION, 0)
-        val isUpgrade = oldVersion < BuildConfig.BASE_VERSION
+        val isUpgrade = oldVersion > 0 && oldVersion < BuildConfig.BASE_VERSION
         if(oldVersion != BuildConfig.BASE_VERSION) {
-            Log.i(LOG_ID, "Migrate settings from version $oldVersion to ${BuildConfig.BASE_VERSION}")
+            Log.i(LOG_ID, "Migrate settings from version $oldVersion to ${BuildConfig.BASE_VERSION} (upgrade: $isUpgrade)")
             sharedPref.edit {
                 putInt(Constants.SHARED_PREF_GDH_VERSION, BuildConfig.BASE_VERSION)
             }
@@ -407,6 +407,14 @@ object SettingsMigrator {
                 sharedPref.edit {
                     putInt(Constants.SHARED_PREF_SEND_TO_HEALTH_CONNECT_INTERVAL, 5)
                 }
+            }
+        }
+
+        // AOD message
+        if(isUpgrade && !sharedPref.getBoolean(Constants.SHARED_PREF_AOD_DISCLAIMER_SHOWN, false)) {
+            Log.i(LOG_ID, "Disable AOD disclaimer for upgrade of old version $oldVersion")
+            sharedPref.edit {
+                putBoolean(Constants.SHARED_PREF_AOD_DISCLAIMER_SHOWN, true)  // do not show in upgrade case
             }
         }
     }

@@ -7,4 +7,4 @@
     android:notificationTimeout="100"
     android:isAccessibilityTool="false"
     android:packageNames="com.android.systemui"
-    android:settingsActivity="com.de.michelinside.glucodatahandler.MainActivity" />
+    android:settingsActivity="de.michelinside.glucodatahandler.MainActivity" />

@@ -1,12 +1,14 @@
 package de.michelinside.glucodatahandler.common.utils
 
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.database.GlucoseValue
 import java.math.RoundingMode
+import java.time.Duration
 import kotlin.math.abs
 import kotlin.random.Random
 
@@ -242,4 +244,21 @@ object GlucoDataUtils {
         }
         return serial
     }
+
+    fun isSensorExpired(context: Context, addTimeMinutes: Long = 120): Boolean {
+        if(ReceiveData.sensorStartTime == 0L)
+            return true
+        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
+        if(!sharedPref.contains(Constants.SHARED_PREF_SENSOR_RUNTIME))
+            return false
+        val runtime = sharedPref.getString(Constants.SHARED_PREF_SENSOR_RUNTIME, "14")?.toFloatOrNull()
+        if(runtime != null && runtime > 0) {
+            val max = (runtime * 24 * 60) + addTimeMinutes // minutes
+            val duration = Duration.ofMillis(System.currentTimeMillis() - ReceiveData.sensorStartTime)
+            Log.d(LOG_ID, "Sensor age: ${Utils.formatDuration(duration)} - runtime: ${Utils.formatDurationFromSeconds(addTimeMinutes*60)}")
+            return duration.toMinutes().toFloat() > max
+        }
+        return false
+    }
+
 }

@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.PixelFormat
+import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import de.michelinside.glucodatahandler.common.utils.Log
@@ -18,6 +19,7 @@ import android.widget.ImageView
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import android.provider.Settings
+import android.security.advancedprotection.AdvancedProtectionManager
 import android.view.Display
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -59,6 +61,9 @@ class AODAccessibilityService : AccessibilityService(), NotifierInterface {
         val LOG_ID = "GDH.Aod"
         fun isAccessibilitySettingsEnabled(context: Context): Boolean {
             try {
+                if(isAdvancedProtectionActive(context)) {
+                    return false
+                }
                 val prefString =
                     Settings.Secure.getString(context.contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES)
                 Log.d(LOG_ID, "Checking ACCESSIBILITY_SERVICES : ${prefString}")
@@ -72,6 +77,19 @@ class AODAccessibilityService : AccessibilityService(), NotifierInterface {
                 return false
             }
         }
+
+        fun isAdvancedProtectionActive(context: Context): Boolean {
+            // From Android 17 (API 37) the advanced protection mode disable AOD usage!
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.BAKLAVA) { // Bzw. die entsprechende API-Stufe für Android 17
+                val manager = context.getSystemService(AdvancedProtectionManager::class.java)
+                if(manager?.isAdvancedProtectionEnabled == true) {
+                    Log.w(LOG_ID, "Advanced Protection is enabled!!!")
+                    return true
+                }
+            }
+            return false
+        }
+
     }
 
 

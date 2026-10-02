@@ -12,16 +12,10 @@ import android.graphics.Paint
 import android.media.session.PlaybackState
 import android.os.Build
 import android.os.Bundle
-import android.os.SystemClock
-import android.support.v4.media.MediaBrowserCompat
-import android.support.v4.media.MediaDescriptionCompat
-import android.support.v4.media.MediaMetadataCompat
-import android.support.v4.media.session.MediaSessionCompat
-import android.support.v4.media.session.PlaybackStateCompat
+import android.os.Looper
 import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
-import androidx.media.MediaBrowserServiceCompat
 import de.michelinside.glucodataauto.GlucoDataServiceAuto
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
@@ -32,11 +26,11 @@ import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
-import android.support.v4.media.session.MediaControllerCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.OptIn
 import de.michelinside.glucodataauto.GlucoDataServiceAuto.Companion.NOTIFICATION_ID
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.chart.ChartBitmapHandler
@@ -44,21 +38,76 @@ import de.michelinside.glucodatahandler.common.utils.BitmapPool
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.R as CR
 import androidx.core.content.edit
+import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
+import androidx.media3.common.Player
+import androidx.media3.common.SimpleBasePlayer
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.session.MediaLibraryService
+import androidx.media3.session.MediaSession
+import androidx.media3.session.LibraryResult
+import com.google.common.util.concurrent.Futures
+import com.google.common.util.concurrent.ListenableFuture
+import com.google.common.collect.ImmutableList
+import java.io.ByteArrayOutputStream
 
-
-class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
+@OptIn(UnstableApi::class)
+class CarMediaBrowserService: MediaLibraryService(), NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private val MEDIA_ROOT_ID = "root"
     private val MEDIA_GLUCOSE_ID = "glucose_value"
     private val MEDIA_NOTIFICATION_TOGGLE_ID = "toggle_notification"
     private val MEDIA_SPEAK_TOGGLE_ID = "toggle_speak"
     private lateinit var  sharedPref: SharedPreferences
-    private lateinit var session: MediaSessionCompat
-    private lateinit var mediaController: MediaControllerCompat
+    private var session: MediaLibrarySession? = null
     private var curMediaItem = MEDIA_ROOT_ID
-    private var playBackState = PlaybackState.STATE_NONE
-    private var lastGlucoseTime = 0L
+    private var playBackState = PlaybackState.STATE_STOPPED
     private var curBitmap: Bitmap? = null
+
+    private val player = object : SimpleBasePlayer(Looper.getMainLooper()) {
+        override fun getState(): State {
+            val items = mutableListOf<MediaItemData>()
+            items.add(MediaItemData.Builder(MEDIA_GLUCOSE_ID)
+                .setMediaItem(createMediaItem())
+                .setDurationUs(this@CarMediaBrowserService.getDuration() * 1000L)
+                .setIsSeekable(true)
+                .build())
+            
+            return State.Builder()
+                .setAvailableCommands(Player.Commands.Builder()
+                    .add(COMMAND_PLAY_PAUSE)
+                    .add(COMMAND_STOP)
+                    .add(COMMAND_GET_METADATA)
+                    .add(COMMAND_GET_TIMELINE)
+                    .add(COMMAND_GET_CURRENT_MEDIA_ITEM)
+                    .build())
+                .setPlaybackState(if (playBackState == PlaybackState.STATE_NONE) STATE_IDLE else STATE_READY)
+                .setPlayWhenReady(playBackState == PlaybackState.STATE_PLAYING, PLAY_WHEN_READY_CHANGE_REASON_USER_REQUEST)
+                .setPlaylist(items)
+                .setContentPositionMs(getPosition())
+                .build()
+        }
+
+        override fun handleSetPlayWhenReady(playWhenReady: Boolean): ListenableFuture<*> {
+            Log.i(LOG_ID, "handleSetPlayWhenReady: $playWhenReady")
+            if (playWhenReady) onPlayAction() else onStopAction()
+            playBackState = if (playWhenReady) PlaybackState.STATE_PLAYING else PlaybackState.STATE_STOPPED
+            invalidateState()
+            return Futures.immediateVoidFuture()
+        }
+        
+        override fun handleStop(): ListenableFuture<*> {
+            Log.i(LOG_ID, "handleStop")
+            onStopAction()
+            playBackState = PlaybackState.STATE_STOPPED
+            invalidateState()
+            return Futures.immediateVoidFuture()
+        }
+
+        fun update() {
+            invalidateState()
+        }
+    }
 
     companion object {
         private var isForegroundService = false
@@ -93,6 +142,10 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         }
     }
 
+    override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaLibrarySession? {
+        return session
+    }
+
     override fun onCreate() {
         Log.i(LOG_ID, "onCreate")
         try {
@@ -101,75 +154,134 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
             sharedPref.registerOnSharedPreferenceChangeListener(this)
 
-            session = MediaSessionCompat(this, "MyMusicService")
-
-            // Callbacks to handle events from the user (play, pause, search)
-            session.setCallback(object : MediaSessionCompat.Callback() {
-                override fun onPlayFromMediaId(mediaId: String, extras: Bundle?) {
-                    Log.i(LOG_ID, "onPlayFromMediaId: " + mediaId)
-                    curMediaItem = mediaId
-                    setItem()
-                }
-
-                override fun onPlay() {
-                    Log.i(LOG_ID, "onPlay called for $curMediaItem")
-                    try {
-                        if(curMediaItem == MEDIA_GLUCOSE_ID) {
-                            // Current song is ready, but paused, so start playing the music.
-                            if(sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_VALUES, false))
-                                CarMediaPlayer.play(applicationContext, !sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_VALUES, false))
-                            else
-                                session.setPlaybackState(buildState(PlaybackState.STATE_PLAYING))
-                        } else if(curMediaItem == MEDIA_NOTIFICATION_TOGGLE_ID) {
-                            Log.d(LOG_ID, "Toggle notification")
-                            sharedPref.edit {
-                                putBoolean(
-                                    Constants.SHARED_PREF_CAR_NOTIFICATION,
-                                    !CarNotification.enable_notification
-                                )
-                            }
-                        } else if(curMediaItem == MEDIA_SPEAK_TOGGLE_ID) {
-                            Log.d(LOG_ID, "Toggle speak")
-                            sharedPref.edit {
-                                putBoolean(
-                                    Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE,
-                                    !sharedPref.getBoolean(
-                                        Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE,
-                                        false
-                                    )
-                                )
-                            }
-                        }
-                    } catch (exc: Exception) {
-                        Log.e(LOG_ID, "onPlay exception: " + exc.message.toString() )
-                    }
-                }
-
-                override fun onStop() {
-                    Log.i(LOG_ID, "onStop called playing")
-                    try {
-                        if(CarMediaPlayer.hasCallback())
-                            CarMediaPlayer.stop()
-                        else
-                            session.setPlaybackState(buildState(PlaybackState.STATE_STOPPED))
-                    } catch (exc: Exception) {
-                        Log.e(LOG_ID, "onStop exception: " + exc.message.toString() )
-                    }
-                }
-            })
-
-            session.isActive = true
-            session.setPlaybackState(buildState(PlaybackState.STATE_STOPPED))
+            session = MediaLibrarySession.Builder(this, player, librarySessionCallback).build()
 
             // set callback depending on the current speak value to prevent speaking for values in background as affect on state!
             onSharedPreferenceChanged(sharedPref, Constants.AA_MEDIA_PLAYER_SPEAK_VALUES)
 
-            sessionToken = session.sessionToken
-            mediaController = MediaControllerCompat(this, session.sessionToken)
             TextToSpeechUtils.initTextToSpeech(this)
             service = this
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
+        }
+    }
+
+    private val librarySessionCallback = object : MediaLibrarySession.Callback {
+        override fun onGetLibraryRoot(
+            session: MediaLibrarySession,
+            browser: MediaSession.ControllerInfo,
+            params: LibraryParams?
+        ): ListenableFuture<LibraryResult<MediaItem>> {
+            Log.d(LOG_ID, "onGetLibraryRoot")
+            val rootItem = MediaItem.Builder()
+                .setMediaId(MEDIA_ROOT_ID)
+                .setMediaMetadata(MediaMetadata.Builder()
+                    .setIsBrowsable(true)
+                    .setIsPlayable(false)
+                    .build())
+                .build()
+            return Futures.immediateFuture(LibraryResult.ofItem(rootItem, params))
+        }
+
+        override fun onGetChildren(
+            session: MediaLibrarySession,
+            browser: MediaSession.ControllerInfo,
+            parentId: String,
+            page: Int,
+            pageSize: Int,
+            params: LibraryParams?
+        ): ListenableFuture<LibraryResult<ImmutableList<MediaItem>>> {
+            Log.d(LOG_ID, "onGetChildren for parent: $parentId")
+            val items = mutableListOf<MediaItem>()
+            if (parentId == MEDIA_ROOT_ID) {
+                if(curMediaItem == MEDIA_ROOT_ID)
+                    curMediaItem = MEDIA_GLUCOSE_ID
+                items.add(createMediaItem())
+                if (Channels.notificationChannelActive(this@CarMediaBrowserService, ChannelType.ANDROID_AUTO)) {
+                    items.add(createNotificationToggleItem())
+                }
+                if(TextToSpeechUtils.isAvailable()) {
+                    items.add(createSpeakToggleItem())
+                }
+            }
+            return Futures.immediateFuture(LibraryResult.ofItemList(items, params))
+        }
+
+        override fun onAddMediaItems(
+            mediaSession: MediaSession,
+            controller: MediaSession.ControllerInfo,
+            mediaItems: MutableList<MediaItem>
+        ): ListenableFuture<MutableList<MediaItem>> {
+            Log.d(LOG_ID, "onAddMediaItems: ${mediaItems.map { it.mediaId }}")
+            val resultItems = mutableListOf<MediaItem>()
+            for (item in mediaItems) {
+                when(item.mediaId) {
+                    MEDIA_NOTIFICATION_TOGGLE_ID -> {
+                        toggleNotification()
+                        curMediaItem = MEDIA_GLUCOSE_ID
+                        resultItems.add(createMediaItem())
+                    }
+                    MEDIA_SPEAK_TOGGLE_ID -> {
+                        toggleSpeak()
+                        curMediaItem = MEDIA_GLUCOSE_ID
+                        resultItems.add(createMediaItem())
+                    }
+                    else -> {
+                        curMediaItem = item.mediaId
+                        resultItems.add(item)
+                    }
+                }
+            }
+            player.update()
+            return Futures.immediateFuture(resultItems)
+        }
+    }
+
+    private fun toggleNotification() {
+        Log.d(LOG_ID, "Toggle notification")
+        sharedPref.edit {
+            putBoolean(
+                Constants.SHARED_PREF_CAR_NOTIFICATION,
+                !CarNotification.enable_notification
+            )
+        }
+        session?.notifyChildrenChanged(MEDIA_ROOT_ID, 0, null)
+    }
+
+    private fun toggleSpeak() {
+        Log.d(LOG_ID, "Toggle speak")
+        sharedPref.edit {
+            putBoolean(
+                Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE,
+                !sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE, false)
+            )
+        }
+        session?.notifyChildrenChanged(MEDIA_ROOT_ID, 0, null)
+    }
+
+    private fun onPlayAction() {
+        Log.i(LOG_ID, "onPlayAction called for $curMediaItem")
+        try {
+            if(curMediaItem == MEDIA_GLUCOSE_ID) {
+                if(sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_VALUES, false))
+                    CarMediaPlayer.play(applicationContext, !sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_VALUES, false))
+                else
+                    playBackState = PlaybackState.STATE_PLAYING
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onPlayAction exception: " + exc.message.toString() )
+        }
+    }
+
+    private fun onStopAction() {
+        Log.i(LOG_ID, "onStopAction called")
+        try {
+            if(CarMediaPlayer.hasCallback())
+                CarMediaPlayer.stop()
+            else
+                playBackState = PlaybackState.STATE_STOPPED
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onStopAction exception: " + exc.message.toString() )
         }
     }
 
@@ -208,7 +320,8 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             CarMediaPlayer.setCallback(null)
             InternalNotifier.remNotifier(this, this)
             sharedPref.unregisterOnSharedPreferenceChangeListener(this)
-            session.release()
+            session?.release()
+            session = null
             super.onDestroy()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.message.toString() )
@@ -232,47 +345,8 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         ChartBitmapHandler.unregister(this.javaClass.simpleName)
         BitmapPool.returnBitmap(curBitmap)
         curBitmap = null
-        session.setPlaybackState(buildState(PlaybackState.STATE_STOPPED))
-    }
-
-    override fun onGetRoot(
-        clientPackageName: String,
-        clientUid: Int,
-        rootHints: Bundle?
-    ): BrowserRoot? {
-        try {
-            Log.d(LOG_ID, "onGetRoot - package: " + clientPackageName + " - UID: " + clientUid.toString())
-            return BrowserRoot(MEDIA_ROOT_ID, null)
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "onGetRoot exception: " + exc.message.toString() )
-        }
-        return null
-    }
-
-    override fun onLoadChildren(
-        parentId: String,
-        result: Result<MutableList<MediaBrowserCompat.MediaItem>>
-    ) {
-        try {
-            Log.d(LOG_ID, "onLoadChildren for parent: " + parentId)
-            if (MEDIA_ROOT_ID == parentId) {
-                if(curMediaItem == MEDIA_ROOT_ID)
-                    curMediaItem = MEDIA_GLUCOSE_ID
-                val items = mutableListOf(createMediaItem())
-                if (Channels.notificationChannelActive(this, ChannelType.ANDROID_AUTO)) {
-                    items.add(createNotificationToggleItem())
-                }
-                if(TextToSpeechUtils.isAvailable()) {
-                    items.add(createSpeakToggleItem())
-                }
-                result.sendResult(items)
-            } else {
-                result.sendResult(null)
-            }
-            setItem()
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "onLoadChildren exception: " + exc.message.toString() )
-        }
+        playBackState = PlaybackState.STATE_STOPPED
+        player.update()
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
@@ -292,7 +366,8 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                     return
                 }
             }
-            notifyChildrenChanged(MEDIA_ROOT_ID)
+            player.update()
+            session?.notifyChildrenChanged(MEDIA_ROOT_ID, 0, null)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() )
         }
@@ -308,37 +383,65 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                 Constants.AA_MEDIA_ICON_STYLE,
                 Constants.AA_MEDIA_PLAYER_COLORED,
                 Constants.AA_MEDIA_SHOW_IOB_COB -> {
-                    notifyChildrenChanged(MEDIA_ROOT_ID)
+                    player.update()
+                    session?.notifyChildrenChanged(MEDIA_ROOT_ID, 0, null)
                 }
                 Constants.AA_MEDIA_PLAYER_SPEAK_VALUES -> {
                     if(sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_VALUES, false)) {
                         CarMediaPlayer.setCallback(object : CarMediaPlayerCallback() {
                             override fun onPlay() {
                                 Log.d(LOG_ID, "callback play called")
-                                setGlucose()  // update duration for playing
-                                session.setPlaybackState(buildState(PlaybackState.STATE_PLAYING))
+                                playBackState = PlaybackState.STATE_PLAYING
+                                player.update()
                             }
                             override fun onStop() {
                                 Log.d(LOG_ID, "callback onStop called")
-                                session.setPlaybackState(buildState(PlaybackState.STATE_STOPPED))
+                                playBackState = PlaybackState.STATE_STOPPED
+                                player.update()
                             }
                         })
-                        session.setPlaybackState(buildState(PlaybackState.STATE_STOPPED))
+                        playBackState = PlaybackState.STATE_STOPPED
+                        player.update()
                     } else {
                         CarMediaPlayer.setCallback(null)
                     }
-                    notifyChildrenChanged(MEDIA_ROOT_ID)
+                    session?.notifyChildrenChanged(MEDIA_ROOT_ID, 0, null)
                 }
                 Constants.AA_MEDIA_PLAYER_DURATION -> {
-                    setGlucose()  // update duration for playing
+                    player.update()
                     if(playBackState==PlaybackState.STATE_PLAYING) {
-                        // reset duration
-                        session.setPlaybackState(buildState(PlaybackState.STATE_PLAYING))
+                        player.update()
                     }
                 }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.message.toString() )
+        }
+    }
+
+    private fun Bitmap.toByteArray(): ByteArray {
+        val stream = ByteArrayOutputStream()
+        this.compress(Bitmap.CompressFormat.PNG, 100, stream)
+        return stream.toByteArray()
+    }
+
+    private fun getIcon(): Bitmap? {
+        val coloredCover = sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_COLORED, true)
+        val width = 600
+        val height = 1000
+        return when(sharedPref.getString(Constants.AA_MEDIA_ICON_STYLE, Constants.AA_MEDIA_ICON_STYLE_GRAPH)) {
+            Constants.AA_MEDIA_ICON_STYLE_TREND -> {
+                BitmapUtils.getRateAsBitmap(color = if(coloredCover) null else Color.WHITE, width = width, height = height)
+            }
+            Constants.AA_MEDIA_ICON_STYLE_GLUCOSE -> {
+                BitmapUtils.getGlucoseAsBitmap(color = if(coloredCover) null else Color.WHITE, width = width, height = height)
+            }
+            Constants.AA_MEDIA_ICON_STYLE_GLUCOSE_TREND -> {
+                BitmapUtils.getGlucoseTrendBitmap( color = if(coloredCover) null else Color.WHITE, width = 400, height = 400)
+            }
+            else -> {
+                getBackgroundImage()
+            }
         }
     }
 
@@ -355,6 +458,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             val lockscreenView = LayoutInflater.from(this).inflate(layoutId, null)
             val txtBgValue: TextView = lockscreenView.findViewById(R.id.glucose)
             val viewIcon: ImageView = lockscreenView.findViewById(R.id.trendImage)
+            lockscreenView.setBackgroundColor(Color.BLACK)
 
             txtBgValue.text = ReceiveData.getGlucoseAsString()
             if(coloredCover)
@@ -390,94 +494,43 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         } catch (e: Exception) {
             Log.e(LOG_ID, "Error creating bitmap", e)
         }
-        return BitmapUtils.getGlucoseTrendBitmap( color = if(coloredCover) null else Color.WHITE, width = width, height = height)
+        return BitmapUtils.getGlucoseTrendBitmap( color = if(coloredCover) null else Color.WHITE, width = height, height = height)
     }
 
-    fun setItem() {
-        try {
-            Log.d(LOG_ID, "set current media: $curMediaItem")
-            when(curMediaItem) {
-                MEDIA_GLUCOSE_ID -> {
-                    setGlucose()
-                }
-                MEDIA_NOTIFICATION_TOGGLE_ID -> {
-                    curMediaItem = MEDIA_GLUCOSE_ID
-                    Log.d(LOG_ID, "Toggle notification")
-                    sharedPref.edit {
-                        putBoolean(
-                            Constants.SHARED_PREF_CAR_NOTIFICATION,
-                            !CarNotification.enable_notification
-                        )
-                    }
-                }
-               MEDIA_SPEAK_TOGGLE_ID -> {
-                   curMediaItem = MEDIA_GLUCOSE_ID
-                    Log.d(LOG_ID, "Toggle speak")
-                   sharedPref.edit {
-                       putBoolean(
-                           Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE,
-                           !sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE, false)
-                       )
-                   }
-                }
+    private fun createMediaMetadata(): MediaMetadata {
+        var title = ReceiveData.getGlucoseAsString() + " (Δ " + ReceiveData.getDeltaAsString() + ")"
+        if (sharedPref.getBoolean(Constants.AA_MEDIA_SHOW_IOB_COB, false) && !ReceiveData.isIobCobObsolete()) {
+            title += "\n"
+            if(!ReceiveData.iob.isNaN()) {
+                title += "💉 " + ReceiveData.getIobAsString(true) + " "
             }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "setItem exception: " + exc.message.toString() )
+            if(!ReceiveData.cob.isNaN()) {
+                title += "🍔 " + ReceiveData.getCobAsString(true)
+            }
+            title = title.trim()
         }
+        var subtitle = ""
+        if(!GlucoDataService.patientName.isNullOrEmpty())
+            subtitle += GlucoDataService.patientName + " - "
+        subtitle += "🕒 " + ReceiveData.getElapsedTimeMinuteAsString(this)
+
+        return MediaMetadata.Builder()
+            .setTitle(title)
+            .setDisplayTitle(title)
+            .setSubtitle(subtitle)
+            .setArtist(subtitle)
+            .setArtworkData(getIcon()?.toByteArray(), MediaMetadata.PICTURE_TYPE_FRONT_COVER)
+            .setIsBrowsable(false)
+            .setIsPlayable(true)
+            .setDurationMs(getDuration())
+            .build()
     }
 
-    private fun setGlucose() {
-        if (sharedPref.getBoolean(Constants.SHARED_PREF_CAR_MEDIA,true)) {
-            Log.i(LOG_ID, "setGlucose called")
-            var title = ReceiveData.getGlucoseAsString() + " (Δ " + ReceiveData.getDeltaAsString() + ")"
-            if (sharedPref.getBoolean(Constants.AA_MEDIA_SHOW_IOB_COB, false) && !ReceiveData.isIobCobObsolete()) {
-                title += "\n"
-                if(!ReceiveData.iob.isNaN()) {
-                    title += "💉 " + ReceiveData.getIobAsString(true) + " "
-                }
-                if(!ReceiveData.cob.isNaN()) {
-                    title += "🍔 " + ReceiveData.getCobAsString(true)
-                }
-                title = title.trim()
-            }
-            var subtitle = ""
-            if(!GlucoDataService.patientName.isNullOrEmpty())
-                subtitle += GlucoDataService.patientName + " - "
-            subtitle += "🕒 " + ReceiveData.getElapsedTimeMinuteAsString(this)
-
-            session.setMetadata(
-                MediaMetadataCompat.Builder()
-                    .putString(
-                        MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE,
-                        title
-                    )
-                    .putString(
-                        MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE,
-                        subtitle
-                    )
-                    .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, getDuration())
-                    .putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, BitmapUtils.getRateAsBitmap()!!)
-                    .putBitmap(MediaMetadataCompat.METADATA_KEY_ART, getBackgroundImage()!!)
-                    .build()
-            )
-            if(playBackState == PlaybackState.STATE_PLAYING && lastGlucoseTime < ReceiveData.time) {
-                // update position
-                session.setPlaybackState(buildState(playBackState))
-            }
-            lastGlucoseTime = ReceiveData.time
-        } else {
-            session.setPlaybackState(buildState(PlaybackState.STATE_NONE))
-        }
-    }
-
-    private fun createMediaItem(): MediaBrowserCompat.MediaItem {
-        val mediaDescriptionBuilder = MediaDescriptionCompat.Builder()
+    private fun createMediaItem(): MediaItem {
+        return MediaItem.Builder()
             .setMediaId(MEDIA_GLUCOSE_ID)
-            .setTitle(ReceiveData.getGlucoseAsString() + " (Δ " + ReceiveData.getDeltaAsString() + ")\n" + ReceiveData.getElapsedTimeMinuteAsString(this))
-            //.setSubtitle(ReceiveData.timeformat.format(Date(ReceiveData.time)))
-            .setIconBitmap(BitmapUtils.getRateAsBitmap())
-        return MediaBrowserCompat.MediaItem(
-            mediaDescriptionBuilder.build(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE)
+            .setMediaMetadata(createMediaMetadata())
+            .build()
     }
 
     private fun getNotificationToggleIcon(): Bitmap? {
@@ -486,36 +539,19 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         }
         return ContextCompat.getDrawable(applicationContext, R.drawable.icon_popup_off_white)?.toBitmap()
     }
-/*
-    private fun setToggle() {
-        if (sharedPref.getBoolean(Constants.SHARED_PREF_CAR_MEDIA,true)) {
-            Log.i(LOG_ID, "setToggle called")
-            session.setPlaybackState(buildState(PlaybackState.STATE_PAUSED))
-            session.setMetadata(
-                MediaMetadataCompat.Builder()
-                    .putString(
-                        MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, resources.getString(if(CarNotification.enable_notification) CR.string.gda_notifications_on else CR.string.gda_notifications_off)
-                    )
-                    .putString(
-                        MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE,
-                        resources.getString(CR.string.gda_media_notification_toggle_action)
-                    )
-                    //.putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, getToggleIcon())
-                    .build()
-            )
-        } else {
-            session.setPlaybackState(buildState(PlaybackState.STATE_NONE))
-        }
-    }
-*/
-    private fun createNotificationToggleItem(): MediaBrowserCompat.MediaItem {
-        val mediaDescriptionBuilder = MediaDescriptionCompat.Builder()
-            .setMediaId(MEDIA_NOTIFICATION_TOGGLE_ID)
+
+    private fun createNotificationToggleItem(): MediaItem {
+        val metadata = MediaMetadata.Builder()
             .setTitle(resources.getString(CR.string.gda_media_notification_toggle_title))
             .setSubtitle(resources.getString(if(CarNotification.enable_notification) CR.string.gda_notifications_on else CR.string.gda_notifications_off))
-            .setIconBitmap(getNotificationToggleIcon())
-        return MediaBrowserCompat.MediaItem(
-            mediaDescriptionBuilder.build(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE)
+            .setArtworkData(getNotificationToggleIcon()?.toByteArray(), MediaMetadata.PICTURE_TYPE_FRONT_COVER)
+            .setIsBrowsable(false)
+            .setIsPlayable(true)
+            .build()
+        return MediaItem.Builder()
+            .setMediaId(MEDIA_NOTIFICATION_TOGGLE_ID)
+            .setMediaMetadata(metadata)
+            .build()
     }
 
     private fun getSpeakToggleIcon(): Bitmap? {
@@ -525,44 +561,18 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             return ContextCompat.getDrawable(applicationContext, CR.drawable.icon_volume_off_white)?.toBitmap()
     }
 
-    private fun createSpeakToggleItem(): MediaBrowserCompat.MediaItem {
-        val mediaDescriptionBuilder = MediaDescriptionCompat.Builder()
-            .setMediaId(MEDIA_SPEAK_TOGGLE_ID)
+    private fun createSpeakToggleItem(): MediaItem {
+        val metadata = MediaMetadata.Builder()
             .setTitle(resources.getString(CR.string.gda_media_speak_toggle_title))
             .setSubtitle(resources.getString(if(sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE, false)) CR.string.gda_speak_on else CR.string.gda_speak_off))
-            .setIconBitmap(getSpeakToggleIcon())
-        return MediaBrowserCompat.MediaItem(
-            mediaDescriptionBuilder.build(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE)
-    }
-
-    private fun buildState(state: Int): PlaybackStateCompat? {
-        try {
-            Log.i(LOG_ID, "buildState called for state $state")
-            val duration = getDuration()
-            if(duration == 0L) {
-                Log.d(LOG_ID, "buildState with duration 0")
-                return PlaybackStateCompat.Builder().setActions(
-                    PlaybackStateCompat.ACTION_PLAY or PlaybackStateCompat.ACTION_STOP).setState(state, 0L, 1f).build()
-            }
-            val position = if(state==PlaybackState.STATE_PLAYING) getPosition() else 0L
-            Log.d(LOG_ID, "buildState called for state $state - pos: ${position}/${duration}")
-            playBackState = state
-            val bundleWithDuration = Bundle().apply {
-                putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration) // duration in Millisekunden
-            }
-            return PlaybackStateCompat.Builder().setActions(
-                PlaybackStateCompat.ACTION_PLAY or PlaybackStateCompat.ACTION_STOP)
-                .setState(
-                    state,
-                    position,
-                    1f,
-                    SystemClock.elapsedRealtime()
-                ).setExtras(bundleWithDuration)
-                .build()
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "buildState exception: " + exc.message.toString() )
-            return null
-        }
+            .setArtworkData(getSpeakToggleIcon()?.toByteArray(), MediaMetadata.PICTURE_TYPE_FRONT_COVER)
+            .setIsBrowsable(false)
+            .setIsPlayable(true)
+            .build()
+        return MediaItem.Builder()
+            .setMediaId(MEDIA_SPEAK_TOGGLE_ID)
+            .setMediaMetadata(metadata)
+            .build()
     }
 
     private fun getPosition(): Long {
@@ -573,11 +583,12 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     }
 
     private fun getDuration(): Long {
-        return if(CarMediaPlayer.hasCallback())
-            CarMediaPlayer.duration
-        else
-            sharedPref.getInt(Constants.AA_MEDIA_PLAYER_DURATION, 0) * 60000L
+        if(CarMediaPlayer.hasCallback()) {
+            val duration = CarMediaPlayer.duration
+            if (duration > 0) return duration
+        }
+        val duration = sharedPref.getInt(Constants.AA_MEDIA_PLAYER_DURATION, 0) * 60000L
+        return if (duration > 0) duration else 600000L // 10 Min Default
     }
 
 }
-

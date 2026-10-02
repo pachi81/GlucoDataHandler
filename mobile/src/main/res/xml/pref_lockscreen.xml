@@ -55,6 +55,20 @@
         <PreferenceCategory
             android:title="@string/pref_cat_aod"
             app:iconSpaceReserved="false">
+            <Preference
+                android:key="aod_advanced_protection_enabled_info"
+                android:icon="@drawable/attention"
+                app:isPreferenceVisible="false"
+                android:title="@string/important"
+                android:summary="@string/aod_advanced_protection_enabled_info"
+                app:iconSpaceReserved="false" />
+            <Preference
+                android:key="aod_missing_permission_info"
+                android:icon="@drawable/attention"
+                app:isPreferenceVisible="false"
+                android:title="@string/permission_missing_title"
+                android:summary="@string/press_here_to_check"
+                app:iconSpaceReserved="false" />
             <androidx.preference.SwitchPreferenceCompat
                 android:defaultValue="false"
                 android:key="aod_enabled"

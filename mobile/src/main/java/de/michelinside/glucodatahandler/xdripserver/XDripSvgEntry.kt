@@ -42,7 +42,8 @@ data class PebbleBg(
     val direction: String,
     val datetime: Long,
     val bgdelta: String,
-    val iob: String
+    val iob: String,
+    val cob: String
 )
 
 @Serializable

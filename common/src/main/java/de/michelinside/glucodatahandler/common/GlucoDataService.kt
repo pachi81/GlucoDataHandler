@@ -32,6 +32,7 @@ import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import de.michelinside.glucodatahandler.common.service.ReceiverManager
 import de.michelinside.glucodatahandler.common.service.StartupTrigger
 import de.michelinside.glucodatahandler.common.service.WearPhoneManager
+import de.michelinside.glucodatahandler.common.utils.Utils
 
 
 enum class AppSource {
@@ -58,6 +59,11 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
         val running get() = isRunning
         private var created = false
         var patientName: String? = null
+        private var startTime: Long = System.currentTimeMillis()
+        val runtimeMin: Long get() = Utils.getElapsedTimeMinute(startTime)
+        val runtimeDays: Long get() {
+            return runtimeMin/1440
+        }
 
         @SuppressLint("StaticFieldLeak")
         var service: GlucoDataService? = null

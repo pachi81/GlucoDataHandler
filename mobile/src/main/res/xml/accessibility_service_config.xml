@@ -6,4 +6,4 @@
     android:description="@string/accessibility_service_description"
     android:notificationTimeout="100"
     android:packageNames="com.android.systemui"
-    android:settingsActivity="com.de.michelinside.glucodatahandler.MainActivity" />
+    android:settingsActivity="de.michelinside.glucodatahandler.MainActivity" />
