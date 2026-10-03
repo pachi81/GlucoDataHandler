@@ -1,9 +1,11 @@
 package de.michelinside.glucodatahandler.healthconnect
 
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import de.michelinside.glucodatahandler.common.utils.Log
 import android.widget.Button
+import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
@@ -30,7 +32,7 @@ class HealthConnectPermissionActivity : AppCompatActivity() {
                 requestPermissionLauncher.launch(HealthConnectManager.WRITE_GLUCOSE_PERMISSIONS)
             }
             "android.intent.action.VIEW_PERMISSION_USAGE" -> {
-                enableEdgeToEdge()
+                enableEdgeToEdge(statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT))
                 setContentView(R.layout.activity_health_connect_permission)
                 if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
                     ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_layout)) { v, insets ->
