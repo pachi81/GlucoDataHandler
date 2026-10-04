@@ -247,7 +247,7 @@ object BitmapUtils {
         canvas.drawText(text, x, y, paint)
     }
 
-    fun textRateToBitmap(text: String, rate: Float, color: Int, obsolete: Boolean = false, strikeThrough: Boolean, width: Int = 100, height: Int = 100, small: Boolean = false, withShadow: Boolean = false): Bitmap? {
+    fun textRateToBitmap(text: String, rate: Float, color: Int, obsolete: Boolean = false, strikeThrough: Boolean, width: Int = 100, height: Int = 100, small: Boolean = false, withShadow: Boolean = false, invertForGDA: Boolean = false): Bitmap? {
         try {
             val padding = if (isShortText(text) || small) 0F else height.toFloat()*0.05F
             val rateFactor = if (isShortText(text)) 0.5F else 0.45F
@@ -265,12 +265,24 @@ object BitmapUtils {
             val comboBitmap = BitmapPool.getBitmap(width,height, Bitmap.Config.ARGB_8888)
             val comboImage = Canvas(comboBitmap)
             if (small) {
-                comboImage.drawBitmap(rateBitmap!!, ((height-rateDimension)/2).toFloat(), topRateSmall, null)
-                Log.w(LOG_ID,topRateSmall.toString() + " - " + ((height/2)).toString() )
-                comboImage.drawBitmap(textBitmap!!, ((width-resizeWidth)/2).toFloat(), (height.toFloat()/2), null)
+                if(invertForGDA) {
+                    comboImage.drawBitmap(textBitmap!!, ((width-resizeWidth)/2).toFloat(), topRateSmall, null)
+                    comboImage.drawBitmap(rateBitmap!!, ((height-rateDimension)/4).toFloat(), (height.toFloat()/2), null)
+                    Log.d(LOG_ID,topRateSmall.toString() + " - " + ((height/2)).toString() )
+                } else {
+                    comboImage.drawBitmap(rateBitmap!!, ((height-rateDimension)/2).toFloat(), topRateSmall, null)
+                    Log.d(LOG_ID,topRateSmall.toString() + " - " + ((height/2)).toString() )
+                    comboImage.drawBitmap(textBitmap!!, ((width-resizeWidth)/2).toFloat(), (height.toFloat()/2), null)
+                }
             } else {
-                comboImage.drawBitmap(rateBitmap!!, ((height-rateDimension)/2).toFloat(), padding, null)
-                comboImage.drawBitmap(textBitmap!!, 0F, rateBitmap.height.toFloat()+padding, null)
+                if(invertForGDA) {
+                    comboImage.drawBitmap(textBitmap!!, 0F, padding, null)
+                    // for GDA, the trend arrow is not in the center, because of the icon on the right site
+                    comboImage.drawBitmap(rateBitmap!!, ((height-rateDimension)/4).toFloat(), textBitmap.height.toFloat()+padding, null)
+                } else {
+                    comboImage.drawBitmap(rateBitmap!!, ((height-rateDimension)/2).toFloat(), padding, null)
+                    comboImage.drawBitmap(textBitmap!!, 0F, rateBitmap.height.toFloat()+padding, null)
+                }
             }
             BitmapPool.returnBitmap(rateBitmap)
             BitmapPool.returnBitmap(textBitmap)
@@ -336,9 +348,9 @@ object BitmapUtils {
         return IconBitmapPool.createIcon(key, getRateAsBitmap(color, resizeFactor, width, height, withShadow))
     }
 
-    fun getGlucoseTrendBitmap(color: Int? = null, width: Int = 100, height: Int = 100, small: Boolean = false, withShadow: Boolean = false): Bitmap? {
+    fun getGlucoseTrendBitmap(color: Int? = null, width: Int = 100, height: Int = 100, small: Boolean = false, withShadow: Boolean = false, invertForGDA: Boolean = false): Bitmap? {
         return textRateToBitmap(
-            ReceiveData.getGlucoseAsString(), ReceiveData.rate, color ?: ReceiveData.getGlucoseColor(), ReceiveData.isObsoleteShort(), ReceiveData.isObsoleteShort() && !ReceiveData.isObsoleteLong(),width, height, small, withShadow)
+            ReceiveData.getGlucoseAsString(), ReceiveData.rate, color ?: ReceiveData.getGlucoseColor(), ReceiveData.isObsoleteShort(), ReceiveData.isObsoleteShort() && !ReceiveData.isObsoleteLong(),width, height, small, withShadow, invertForGDA)
     }
 
     fun getGlucoseTrendIcon(key: String, color: Int? = null, width: Int = 100, height: Int = 100, small: Boolean = false, withShadow: Boolean = false): Icon {

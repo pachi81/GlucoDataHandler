@@ -437,7 +437,7 @@ class CarMediaBrowserService: MediaLibraryService(), NotifierInterface, SharedPr
                 BitmapUtils.getGlucoseAsBitmap(color = if(coloredCover) null else Color.WHITE, width = width, height = height)
             }
             Constants.AA_MEDIA_ICON_STYLE_GLUCOSE_TREND -> {
-                BitmapUtils.getGlucoseTrendBitmap( color = if(coloredCover) null else Color.WHITE, width = 400, height = 400)
+                BitmapUtils.getGlucoseTrendBitmap( color = if(coloredCover) null else Color.WHITE, width = 400, height = 400, invertForGDA = true)
             }
             else -> {
                 getBackgroundImage()
