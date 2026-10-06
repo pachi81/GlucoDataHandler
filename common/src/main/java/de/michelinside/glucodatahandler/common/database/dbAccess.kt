@@ -426,6 +426,20 @@ object dbAccess {
         } else Float.NaN
     }
 
+    fun getGlucoseValueStatistics(minTime: Long): GlucoseValueStatistics? = runBlocking {
+        if(active) {
+            scope.async {
+                try {
+                    Log.v(LOG_ID, "getGlucoseValueStatistics - minTime: ${Utils.getUiTimeStamp(minTime)}")
+                    database!!.glucoseValuesDao().getStatistics(minTime)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "getGlucoseValueStatistics exception: $exc")
+                    null
+                }
+            }.await()
+        } else null
+    }
+
     fun getValuesInRangeCount(minTime: Long, minVal: Int, maxVal: Int): Int = runBlocking {
         if(active) {
             scope.async {

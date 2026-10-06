@@ -1226,6 +1226,15 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             Log.d(LOG_ID, "Create statistics for ${statData.days}d with ${statData.count} data points - hasData: ${statData.hasData}")
             val name = if(btnStat1d.isChecked) resources.getString(CR.string.info_label_average) else resources.getString(CR.string.info_label_average) + " ⌀"
             tableStatistics.addView(createRow(name, GlucoDataUtils.getDisplayGlucoseAsString(statData.averageGlucose, true)))
+            if(statData.glucoseVariabilityPercent.isFinite()) {
+                val cv = statData.glucoseVariabilityPercent
+                val color = when {
+                    cv <= 36F -> ReceiveData.getAlarmTypeColor(AlarmType.OK)
+                    cv <= 50F -> ReceiveData.getAlarmTypeColor(AlarmType.HIGH)
+                    else -> ReceiveData.getAlarmTypeColor(AlarmType.VERY_HIGH)
+                }
+                tableStatistics.addView(createProgressBarRow(CR.string.glucose_variability, cv, color))
+            }
             tableStatistics.addView(createLongValueRow(CR.string.gmi, "${DecimalFormat("#.#").format(statData.gmiPercent)}% (${statData.gmiMmolPerMol} ${resources.getString(CR.string.unit_gmi)})"))
             tableStatistics.addView(createLongValueRow(CR.string.hba1c, "${DecimalFormat("#.#").format(statData.hba1cPercent)}% (${statData.hba1cMmolPerMol} ${resources.getString(CR.string.unit_gmi)})"))
             if(statData.hasData) {

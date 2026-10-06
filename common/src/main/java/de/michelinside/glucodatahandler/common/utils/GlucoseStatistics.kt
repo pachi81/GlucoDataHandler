@@ -7,12 +7,15 @@ import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notification.AlarmType
+import kotlin.math.sqrt
 
 
 class StatisticsData(val days: Int) {
     private val LOG_ID = "GDH.StatisticsData"
     private val MIN_DATA_AGE_HOURS = 5
     var averageGlucose: Float = Float.NaN
+        private set
+    var glucoseVariabilityPercent: Float = Float.NaN
         private set
 
     private var veryLow = 0
@@ -38,6 +41,7 @@ class StatisticsData(val days: Int) {
 
     fun reset() {
         firstTime = 0L
+        glucoseVariabilityPercent = Float.NaN
     }
 
     val hasData: Boolean get() {
@@ -89,7 +93,12 @@ class StatisticsData(val days: Int) {
             firstTime = dbAccess.getFirstTimestamp()
             Log.d(LOG_ID, "update statistics - firstTime: ${Utils.getUiTimeStamp(firstTime)}, days: $days, dataAgeHours: $dataAgeHours")
             if(dataAgeHours >= MIN_DATA_AGE_HOURS) {
-                averageGlucose = dbAccess.getAverageValue(minTime)
+                val glucoseValueStatistics = dbAccess.getGlucoseValueStatistics(minTime)
+                averageGlucose = glucoseValueStatistics?.average?.toFloat() ?: Float.NaN
+                glucoseVariabilityPercent = calculateGlucoseVariabilityPercent(
+                    glucoseValueStatistics?.average,
+                    glucoseValueStatistics?.averageSquared
+                )
                 veryLow = dbAccess.getValuesInRangeCount(minTime, 0, if(standardStats) 53 else ReceiveData.lowRaw.toInt())
                 low = dbAccess.getValuesInRangeCount(minTime, if(standardStats) 54 else ReceiveData.lowRaw.toInt()+1, if(standardStats) 69 else ReceiveData.targetMinRaw.toInt()-1)
                 inRange = dbAccess.getValuesInRangeCount(minTime, if(standardStats) 70 else ReceiveData.targetMinRaw.toInt(), if(standardStats) inRangeUpper else ReceiveData.targetMaxRaw.toInt())
@@ -103,6 +112,13 @@ class StatisticsData(val days: Int) {
     }
 }
 
+internal fun calculateGlucoseVariabilityPercent(average: Double?, averageSquared: Double?): Float {
+    if(average == null || averageSquared == null || average <= 0.0)
+        return Float.NaN
+
+    val variance = (averageSquared - average * average).coerceAtLeast(0.0)
+    return (sqrt(variance) / average * 100.0).toFloat()
+}
 
 object GlucoseStatistics {
     private val LOG_ID = "GDH.Statistics"

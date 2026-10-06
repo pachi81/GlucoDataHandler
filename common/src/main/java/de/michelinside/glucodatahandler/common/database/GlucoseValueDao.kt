@@ -6,6 +6,11 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
+data class GlucoseValueStatistics(
+    val average: Double?,
+    val averageSquared: Double?
+)
+
 @Dao
 interface GlucoseValueDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -61,6 +66,9 @@ interface GlucoseValueDao {
 
     @Query("SELECT AVG(value) FROM glucose_values WHERE timestamp >= :minTime")
     fun getAverageValue(minTime: Long): Float
+
+    @Query("SELECT AVG(value) AS average, AVG(value * value) AS averageSquared FROM glucose_values WHERE timestamp >= :minTime")
+    fun getStatistics(minTime: Long): GlucoseValueStatistics
 
     @Query("SELECT COUNT(*) FROM glucose_values WHERE value >= :minVal AND value <= :maxVal AND timestamp >= :minTime")
     fun getValuesInRangeCount(minTime: Long, minVal: Int, maxVal: Int): Int
