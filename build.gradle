@@ -11,7 +11,7 @@ properties.load(project.rootProject.file('local.properties').newDataInputStream(
 
 project.ext.set("versionCode", 211)
 project.ext.set("devVersion", 1)
-project.ext.set("versionName", "2.5")
+project.ext.set("versionName", "2.5.1")
 project.ext.set("compileSdk", 37)
 project.ext.set("targetSdk", 37)
 project.ext.set("minSdk", 26)
