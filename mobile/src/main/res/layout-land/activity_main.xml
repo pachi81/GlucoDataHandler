@@ -440,31 +440,44 @@
                             android:layout_weight="1"
                             android:accessibilityHeading="true"
                             android:text="@string/table_header_statistics"/>
-                        <RadioGroup
-                            android:id="@+id/statGroup"
-                            android:textStyle="bold"
-                            android:textSize="20sp"
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_weight="1"
                             android:layout_height="match_parent"
-                            android:layout_width="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical|end">
-                            <RadioButton
-                                android:id="@+id/btnStat1d"
+                            android:gravity="end"
+                            android:layout_marginEnd="6dp"
+                            android:orientation="horizontal">
+                            <ImageView
+                                android:id="@+id/btnStatPrevious"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:paddingEnd="5dp"
-                                android:text="1d"
-                                tools:ignore="HardcodedText,RtlSymmetry"/>
-                            <RadioButton
-                                android:id="@+id/btnStat7d"
+                                android:contentDescription="@string/statistics_period_previous"
+                                android:gravity="center"
+                                android:minHeight="48dp"
+                                android:src="@drawable/btn_left"
+                                android:scaleType="center"
+                                android:clickable="true"
+                                android:focusable="true" />
+                            <TextView
+                                android:id="@+id/txtStatisticsPeriod"
+                                android:layout_width="54dp"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:textStyle="bold"
+                                android:textSize="18sp"
+                                tools:text="7d" />
+                            <ImageView
+                                android:id="@+id/btnStatNext"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:checked="true"
-                                android:paddingEnd="5dp"
-                                android:text="7d"
-                                tools:ignore="HardcodedText,RtlSymmetry"/>
-                        </RadioGroup>
+                                android:contentDescription="@string/statistics_period_next"
+                                android:gravity="center"
+                                android:minHeight="48dp"
+                                android:src="@drawable/btn_right"
+                                android:scaleType="center"
+                                android:clickable="true"
+                                android:focusable="true" />
+                        </LinearLayout>
                     </TableRow>
                 </TableLayout>
 

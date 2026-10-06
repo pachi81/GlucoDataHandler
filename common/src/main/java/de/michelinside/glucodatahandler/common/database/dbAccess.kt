@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Handler
 import androidx.room.Room
 import androidx.room.migration.Migration
+import androidx.room.withTransaction
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.google.gson.Gson
 import de.michelinside.glucodatahandler.common.Command
@@ -100,6 +101,22 @@ object dbAccess {
         }
     }
 
+    private val migration_5_6 = object : Migration(5, 6) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL(
+                "CREATE TABLE IF NOT EXISTS `daily_glucose_statistics` (" +
+                    "`dayStart` INTEGER NOT NULL, `sampleCount` INTEGER NOT NULL, " +
+                    "`glucoseSum` INTEGER NOT NULL, `glucoseSquaredSum` INTEGER NOT NULL, " +
+                    "`veryLowCount` INTEGER NOT NULL, `lowCount` INTEGER NOT NULL, " +
+                    "`titrCount` INTEGER NOT NULL, `aboveTitrCount` INTEGER NOT NULL, " +
+                    "`highCount` INTEGER NOT NULL, `veryHighCount` INTEGER NOT NULL, " +
+                    "`customVeryLowCount` INTEGER NOT NULL, `customLowCount` INTEGER NOT NULL, " +
+                    "`customInRangeCount` INTEGER NOT NULL, `customHighCount` INTEGER NOT NULL, " +
+                    "`customVeryHighCount` INTEGER NOT NULL, PRIMARY KEY(`dayStart`))"
+            )
+        }
+    }
+
     fun init(context: Context) {
         Log.v(LOG_ID, "init")
         try {
@@ -125,7 +142,8 @@ object dbAccess {
                     migration_1_2,
                     migration_2_3,
                     migration_3_4,
-                    migration_4_5
+                    migration_4_5,
+                    migration_5_6
                 )
                 .build()
             Log.flushLogBuffer()
@@ -313,6 +331,8 @@ object dbAccess {
                 try {
                     Log.d(LOG_ID, "Add new value $value at ${Utils.getUiTimeStamp(time)} ($time)")
                     database!!.glucoseValuesDao().insertValue(GlucoseValue(GlucoDataUtils.getGlucoseTime(time), value, rate))
+                    if(time < getGlucoseDayStart(System.currentTimeMillis()))
+                        aggregateCompletedDays()
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "addGlucoseValue exception: $exc")
                 }
@@ -325,7 +345,10 @@ object dbAccess {
             scope.launch {
                 try {
                     Log.d(LOG_ID, "Add ${values.size} values from ${values.first().timestamp} to ${values.last().timestamp}")
-                    database!!.glucoseValuesDao().insertValues(updateTimestamps(values))
+                    val valuesToInsert = updateTimestamps(values)
+                    database!!.glucoseValuesDao().insertValues(valuesToInsert)
+                    if(valuesToInsert.any { it.timestamp < getGlucoseDayStart(System.currentTimeMillis()) })
+                        aggregateCompletedDays()
                     Handler(GlucoDataService.context!!.mainLooper).post {
                         if(Utils.getElapsedTimeMinute(values.last().timestamp) < 20 && GlucoDataService.context != null) {
                             ReceiveData.triggerRecalculateDeltaAndTime()
@@ -367,9 +390,31 @@ object dbAccess {
         if (active) {
             scope.async {
                 try {
-                    database!!.glucoseValuesDao().getFirstTimestamp()
+                    database!!.glucoseValuesDao().getFirstTimestamp() ?: 0L
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "getFirstTimestamp exception: $exc")
+                    0L
+                }
+            }.await()
+        } else {
+            0L
+        }
+    }
+
+    fun getFirstStatisticsTimestamp(): Long = runBlocking {
+        if(active) {
+            scope.async {
+                try {
+                    val dao = database!!.glucoseValuesDao()
+                    val firstRaw = dao.getFirstTimestamp() ?: 0L
+                    val firstDaily = dao.getFirstDailyStatisticsDay() ?: 0L
+                    when {
+                        firstRaw <= 0L -> firstDaily
+                        firstDaily <= 0L -> firstRaw
+                        else -> minOf(firstRaw, firstDaily)
+                    }
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "getFirstStatisticsTimestamp exception: $exc")
                     0L
                 }
             }.await()
@@ -382,7 +427,7 @@ object dbAccess {
         if(active) {
             scope.async {
                 try {
-                    val first = database!!.glucoseValuesDao().getFirstTimestamp()
+                    val first = database!!.glucoseValuesDao().getFirstTimestamp() ?: 0L
                     val last = database!!.glucoseValuesDao().getLastTimestamp()
                     Pair(first, last)
                 } catch (exc: Exception) {
@@ -474,7 +519,10 @@ object dbAccess {
             scope.launch {
                 try {
                     Log.i(LOG_ID, "deleteAllValues")
-                    database!!.glucoseValuesDao().deleteAllValues()
+                    database!!.withTransaction {
+                        database!!.glucoseValuesDao().deleteAllValues()
+                        database!!.glucoseValuesDao().deleteAllDailyStatistics()
+                    }
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "deleteAllValues exception: $exc")
                 }
@@ -484,11 +532,11 @@ object dbAccess {
 
     fun deleteOldValues(minTime: Long) {
         if(active) {
-            GlucoseStatistics.reset()  // trigger re-calculation!
             scope.launch {
                 try {
                     Log.i(LOG_ID, "deleteOldValues - minTime: ${Utils.getUiTimeStamp(minTime)}")
                     database!!.glucoseValuesDao().deleteOldValues(minTime)
+                    GlucoseStatistics.reset()
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "deleteOldValues exception: $exc")
                 }
@@ -497,7 +545,82 @@ object dbAccess {
     }
 
     fun cleanUpOldData() {
-        deleteOldValues(System.currentTimeMillis()-Constants.DB_MAX_DATA_TIME_MS)
+        if(active) {
+            scope.launch {
+                try {
+                    aggregateAndDeleteOldValues()
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "cleanUpOldData exception: $exc")
+                }
+            }
+        }
+    }
+
+    private suspend fun aggregateCompletedDays() {
+        val db = database ?: return
+        db.withTransaction {
+            aggregateCompletedDays(
+                db.glucoseValuesDao(),
+                getGlucoseDayStart(System.currentTimeMillis())
+            )
+        }
+        GlucoseStatistics.reset()
+    }
+
+    fun getDailyStatistics(minTime: Long, todayStart: Long): DailyGlucoseStatisticsSummary? = runBlocking {
+        if(active) {
+            scope.async {
+                try {
+                    database!!.glucoseValuesDao().getDailyStatistics(
+                        minTime,
+                        todayStart,
+                        ReceiveData.lowRaw.toInt(),
+                        ReceiveData.targetMinRaw.toInt(),
+                        ReceiveData.targetMaxRaw.toInt(),
+                        ReceiveData.highRaw.toInt()
+                    )
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "getDailyStatistics exception: $exc")
+                    null
+                }
+            }.await()
+        } else {
+            null
+        }
+    }
+
+    private suspend fun aggregateAndDeleteOldValues() {
+        val db = database ?: return
+        val now = System.currentTimeMillis()
+        val todayStart = getGlucoseDayStart(now)
+        val deleteBefore = getGlucoseDayStart(now, Constants.DB_MAX_DATA_DAYS)
+        Log.i(LOG_ID, "aggregate and clean up old values - delete before: ${Utils.getUiTimeStamp(deleteBefore)}")
+        db.withTransaction {
+            val dao = db.glucoseValuesDao()
+            aggregateCompletedDays(dao, todayStart)
+            dao.deleteOldValues(deleteBefore)
+            dao.deleteOldDailyStatistics(
+                getGlucoseDayStart(now, Constants.DB_MAX_STATISTICS_DAYS - 1)
+            )
+        }
+        GlucoseStatistics.reset()
+    }
+
+    private fun aggregateCompletedDays(dao: GlucoseValueDao, todayStart: Long) {
+        val completedValuesByDay = dao.getValuesBefore(todayStart).groupBy {
+            getGlucoseDayStart(it.timestamp)
+        }
+        completedValuesByDay.forEach { (dayStart, values) ->
+            val dailyValues = DailyGlucoseStatistics.fromValues(
+                dayStart,
+                values,
+                ReceiveData.lowRaw.toInt(),
+                ReceiveData.targetMinRaw.toInt(),
+                ReceiveData.targetMaxRaw.toInt(),
+                ReceiveData.highRaw.toInt()
+            )
+            dao.insertDailyStatistics(dailyValues)
+        }
     }
 
     fun getGlucoseValuesAsJson(minTime: Long): String {
