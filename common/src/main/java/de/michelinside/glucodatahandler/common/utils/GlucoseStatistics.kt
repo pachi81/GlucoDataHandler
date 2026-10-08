@@ -11,7 +11,7 @@ import de.michelinside.glucodatahandler.common.notification.AlarmType
 import kotlin.math.sqrt
 
 
-class StatisticsData(val days: Int) {
+class StatisticsData(val days: Int, val minDays: Int) {
     private val LOG_ID = "GDH.StatisticsData"
     private val MIN_DATA_AGE_HOURS = 5
     var averageGlucose: Float = Float.NaN
@@ -34,6 +34,9 @@ class StatisticsData(val days: Int) {
         return 0L
     }
 
+    var dataAgeDays: Int = 0
+        private set
+
     val needUpdate: Boolean get() {
         if(firstTime==0L)
             return true
@@ -52,10 +55,11 @@ class StatisticsData(val days: Int) {
         high = 0
         veryHigh = 0
         usesStandardRanges = true
+        dataAgeDays = 0
     }
 
     val hasData: Boolean get() {
-        return dataAgeHours >= MIN_DATA_AGE_HOURS && count > 50 && averageGlucose > 0F // at least needed to calculate average values
+        return dataAgeHours >= MIN_DATA_AGE_HOURS && dataAgeDays >= minDays && count > 50 && averageGlucose > 0F // at least needed to calculate average values
     }
 
     val count: Int get() {
@@ -102,7 +106,7 @@ class StatisticsData(val days: Int) {
             val useDailyValues = days > 1
             val todayStart = getGlucoseDayStart(now)
             val minTime = if(useDailyValues) {
-                getGlucoseDayStart(now, days - 1)
+                getGlucoseDayStart(now, days)
             } else {
                 now - (days*24*60*60*1000)
             }
@@ -113,6 +117,7 @@ class StatisticsData(val days: Int) {
             if(dataAgeHours >= MIN_DATA_AGE_HOURS) {
                 if(useDailyValues) {
                     val dailyStatistics = dbAccess.getDailyStatistics(minTime, todayStart)
+                    dataAgeDays = dbAccess.getDailyStatisticsCount(minTime)
                     val count = dailyStatistics?.sampleCount ?: 0L
                     val average = dailyStatistics?.takeIf { count > 0L }?.glucoseSum?.toDouble()?.div(count)
                     val averageSquared = dailyStatistics?.takeIf { count > 0L }?.glucoseSquaredSum?.toDouble()?.div(count)
@@ -167,10 +172,10 @@ object GlucoseStatistics {
     private var lastUpdate = 0L
     private var useStandard = true
     private var useTITR = false
-    val statData1d = StatisticsData(1)
-    val statData7d = StatisticsData(7)
-    val statData30d = StatisticsData(30)
-    val statData90d = StatisticsData(90)
+    val statData1d = StatisticsData(1, 0)
+    val statData7d = StatisticsData(7, 2)
+    val statData30d = StatisticsData(30, 8)
+    val statData90d = StatisticsData(90, 31)
 
     fun reset() {
         lastUpdate = 0

@@ -436,13 +436,13 @@
                             android:textStyle="bold"
                             android:textSize="20sp"
                             android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_weight="3"
                             android:accessibilityHeading="true"
                             android:text="@string/table_header_statistics"/>
                         <LinearLayout
                             android:layout_width="0dp"
-                            android:layout_weight="1"
+                            android:layout_weight="2"
                             android:layout_height="match_parent"
                             android:gravity="end"
                             android:layout_marginEnd="6dp"
@@ -460,7 +460,7 @@
                                 android:focusable="true" />
                             <TextView
                                 android:id="@+id/txtStatisticsPeriod"
-                                android:layout_width="54dp"
+                                android:layout_width="50dp"
                                 android:layout_height="match_parent"
                                 android:gravity="center"
                                 android:textStyle="bold"

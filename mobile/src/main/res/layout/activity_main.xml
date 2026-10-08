@@ -270,20 +270,20 @@
         android:showDividers="middle">
 
         <TableRow android:background="@drawable/layout_table_header" android:padding="5dp"
-            tools:ignore="UselessParent" android:weightSum="2">
+            tools:ignore="UselessParent" android:weightSum="5">
                 <TextView
                     android:textStyle="bold"
                     android:textSize="20sp"
-                    android:layout_weight="1"
+                    android:layout_weight="3"
                     android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:gravity="center_vertical"
                     android:accessibilityHeading="true"
                     android:text="@string/table_header_statistics"/>
                 <LinearLayout
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:gravity="end"
                     android:layout_marginEnd="6dp"
                     android:orientation="horizontal">
@@ -302,7 +302,7 @@
 
                     <TextView
                         android:id="@+id/txtStatisticsPeriod"
-                        android:layout_width="54dp"
+                        android:layout_width="50dp"
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:textStyle="bold"

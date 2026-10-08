@@ -1209,7 +1209,10 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             val selectedDays = sharedPref.getInt(Constants.SHARED_PREF_MAIN_STATISTICS_DAYS, 7)
             val statData = GlucoseStatistics.getStatistics(selectedDays)
             Log.d(LOG_ID, "Create statistics for ${statData.days}d with ${statData.count} data points - hasData: ${statData.hasData}")
-            val name = if(statData.days == 1) resources.getString(CR.string.info_label_average) else resources.getString(CR.string.info_label_average) + " ⌀"
+            if(!statData.hasData) {
+                changeStatisticsPeriod(-1)
+            }
+            val name = if(statData.days == 7) resources.getString(CR.string.info_label_average) + " ⌀" else resources.getString(CR.string.info_label_average)
             tableStatistics.addView(createRow(name, GlucoDataUtils.getDisplayGlucoseAsString(statData.averageGlucose, true)))
             if(statData.glucoseVariabilityPercent.isFinite()) {
                 val cv = statData.glucoseVariabilityPercent
@@ -1251,16 +1254,30 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private fun updateStatisticsPeriodDisplay() {
         val selectedDays = sharedPref.getInt(Constants.SHARED_PREF_MAIN_STATISTICS_DAYS, 7)
         val supportedPeriods = setOf(1, 7, 30, 90)
-        val days = selectedDays.takeIf { it in supportedPeriods } ?: 7
+        var days = selectedDays.takeIf { it in supportedPeriods } ?: 7
+        var index = listOf(1, 7, 30, 90).indexOf(days)
+        GlucoseStatistics.update()
+        var statData = GlucoseStatistics.getStatistics(days)
+        while(!statData.hasData && index > 0) {
+            index -= 1
+            days = supportedPeriods.toIntArray()[index]
+            statData = GlucoseStatistics.getStatistics(days)
+        }
         if(days != selectedDays) {
             sharedPref.edit {
                 putInt(Constants.SHARED_PREF_MAIN_STATISTICS_DAYS, days)
             }
         }
         txtStatisticsPeriod.text = resources.getQuantityString(CR.plurals.duration_days_short, days, days)
-        val index = listOf(1, 7, 30, 90).indexOf(days)
+        if(statData.dataAgeDays > 0)
+            txtStatisticsPeriod.setOnClickListener {
+                Toast.makeText(this, "${statData.dataAgeDays}d / ${days}d", Toast.LENGTH_SHORT).show()
+            }
+        else
+            txtStatisticsPeriod.setOnClickListener(null)
+
         btnStatPrevious.isEnabled = index > 0
-        btnStatNext.isEnabled = index < 3
+        btnStatNext.isEnabled = statData.hasData && index < 3 && GlucoseStatistics.getStatistics(supportedPeriods.toIntArray()[index + 1]).hasData
         btnStatPrevious.alpha = if(btnStatPrevious.isEnabled) 1F else 0.4F
         btnStatNext.alpha = if(btnStatNext.isEnabled) 1F else 0.4F
     }

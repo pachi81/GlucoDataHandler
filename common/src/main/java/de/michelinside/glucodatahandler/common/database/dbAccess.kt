@@ -589,6 +589,21 @@ object dbAccess {
         }
     }
 
+
+    fun getDailyStatisticsCount(minTime: Long): Int = runBlocking {
+        if(active) {
+            scope.async {
+                try {
+                    Log.v(LOG_ID, "getDailyStatisticsCount - minTime: ${Utils.getUiTimeStamp(minTime)}")
+                    database!!.glucoseValuesDao().getDailyStatisticsCount(minTime)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "getDailyStatisticsCount exception: $exc")
+                    0
+                }
+            }.await()
+        } else 0
+    }
+
     private suspend fun aggregateAndDeleteOldValues() {
         val db = database ?: return
         val now = System.currentTimeMillis()
