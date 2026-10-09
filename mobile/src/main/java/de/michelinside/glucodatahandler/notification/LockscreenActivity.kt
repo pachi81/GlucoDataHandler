@@ -2,6 +2,7 @@ package de.michelinside.glucodatahandler.notification
 
 import android.app.KeyguardManager
 import android.content.Context
+import android.graphics.Color
 import android.graphics.Paint
 import android.os.Build
 import android.os.Bundle
@@ -14,6 +15,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -86,7 +88,7 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             showWhenLockedAndTurnScreenOn()
             super.onCreate(savedInstanceState)
             if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P)
-                enableEdgeToEdge()
+                enableEdgeToEdge(statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT))
             setContentView(R.layout.activity_lockscreen)
 
             if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {

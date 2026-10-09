@@ -826,6 +826,8 @@
     <string name="runtime_15_days">15 Tage</string>
     <string name="runtime_24_days">24 Tage</string>
     <string name="table_header_statistics">Statistiken</string>
+    <string name="statistics_period_previous">Kürzerer Zeitraum</string>
+    <string name="statistics_period_next">Längerer Zeitraum</string>
     <string name="info_label_average">Durchschnitt</string>
     <string name="time_in_range">TIR</string>
     <string name="src_webserver">Webserver</string>
