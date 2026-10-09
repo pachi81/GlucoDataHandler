@@ -1269,11 +1269,15 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             }
         }
         txtStatisticsPeriod.text = resources.getQuantityString(CR.plurals.duration_days_short, days, days)
-        if(statData.dataAgeDays > 0)
+        if(statData.dataAgeDays in 1..< days) {
+            txtStatisticsPeriod.text = buildString {
+                append(txtStatisticsPeriod.text.toString())
+                append("*")
+            }
             txtStatisticsPeriod.setOnClickListener {
                 Toast.makeText(this, "${statData.dataAgeDays}d / ${days}d", Toast.LENGTH_SHORT).show()
             }
-        else
+        } else
             txtStatisticsPeriod.setOnClickListener(null)
 
         btnStatPrevious.isEnabled = index > 0
