@@ -264,4 +264,43 @@ object GlucoseStatistics {
         }
     }
 
+    fun getStatisticsDescription(context: Context, statType: AlarmType, standardStats: Boolean = useStandard): String {
+        if(!standardStats) {
+            if(statType == AlarmType.OK)
+                return context.getString(R.string.tts_time_in_range)
+            return getStatisticsTitle(context, statType, false)
+        }
+
+        when(statType) {
+            AlarmType.VERY_LOW -> {
+                return context.getString(R.string.tts_less_than, if(ReceiveData.isMmol) "3.0" else "54")
+            }
+            AlarmType.LOW -> {
+                return context.getString(R.string.tts_range_format, if(ReceiveData.isMmol) "3.0" else "54", if(ReceiveData.isMmol) "3.8" else "69")
+            }
+            AlarmType.OK -> {
+                return if(ReceiveData.isMmol)
+                {
+                    context.getString(R.string.tts_range_format, "3.9", if(useTITR) "7.8" else "10.0")
+                } else
+                {
+                    context.getString(R.string.tts_range_format,  "70", if(useTITR) "140" else "180")
+                }
+            }
+            AlarmType.HIGH -> {
+                return if(ReceiveData.isMmol)
+                {
+                    context.getString(R.string.tts_range_format, if(useTITR) "7.9" else "10.1", "13.9")
+                } else
+                {
+                    context.getString(R.string.tts_range_format, if(useTITR) "141" else "181",  "250")
+                }
+            }
+            AlarmType.VERY_HIGH -> {
+                return context.getString(R.string.tts_more_than, if(ReceiveData.isMmol) "13.9" else "250")
+            }
+            else -> return ""
+        }
+    }
+
 }

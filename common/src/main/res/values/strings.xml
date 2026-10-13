@@ -1109,5 +1109,13 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="aod_optional_feature_info">GlucoDataHandler offers an optional Always-On-Display (AOD) feature that uses the Android AccessibilityService API to display your glucose value on the AOD screen without waking the device.\n\nGoogle Play policies require this information to be shown prominently before navigating to settings.\n\nThis feature is disabled by default and does not affect the core functionality of the app.\n\nYou can enable it now or configure it later in %1$s - %2$s.</string>
     <string name="aod_optional_feature_main">Always-On-Display (AOD)\nTap here for more information.</string>
     <string name="button_not_now">Not now</string>
-    <string name="glucose_variability" translatable="false">CV</string>
+
+    <!-- v2.5.1 -->
+
+    <string name="glucose_variability_short" translatable="false">CV</string>
+    <string name="glucose_variability">Glucose variability</string>
+    <string name="tts_less_than">less than %s</string>
+    <string name="tts_range_format">from %s to %s</string>
+    <string name="tts_more_than">more than %s</string>
+    <string name="tts_time_in_range">Time in range</string>
 </resources>

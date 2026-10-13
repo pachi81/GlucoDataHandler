@@ -23,8 +23,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import android.widget.RadioButton
-import android.widget.RadioGroup
 import android.widget.RelativeLayout
 import android.widget.ScrollView
 import android.widget.TableLayout
@@ -87,7 +85,6 @@ import kotlin.math.min
 import kotlin.time.Duration.Companion.days
 import de.michelinside.glucodatahandler.common.R as CR
 import androidx.core.net.toUri
-import androidx.preference.SwitchPreferenceCompat
 import de.michelinside.glucodatahandler.common.Command
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 import de.michelinside.glucodatahandler.common.service.ReceiverManager
@@ -1222,16 +1219,85 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     else -> ReceiveData.getAlarmTypeColor(AlarmType.VERY_HIGH)
                 }
 
-                tableStatistics.addView(createProgressBarRow(CR.string.glucose_variability, cv, color))
+                tableStatistics.addView(createProgressBarRow(CR.string.glucose_variability_short, cv, color, keyContentDesc = resources.getString(CR.string.glucose_variability)))
             }
             tableStatistics.addView(createLongValueRow(CR.string.gmi, "${DecimalFormat("#.#").format(statData.gmiPercent)}% (${statData.gmiMmolPerMol} ${resources.getString(CR.string.unit_gmi)})"))
             tableStatistics.addView(createLongValueRow(CR.string.hba1c, "${DecimalFormat("#.#").format(statData.hba1cPercent)}% (${statData.hba1cMmolPerMol} ${resources.getString(CR.string.unit_gmi)})"))
             if(statData.hasData) {
-                tableStatistics.addView(createProgressBarRow(GlucoseStatistics.getStatisticsTitle(this, AlarmType.VERY_HIGH, statData.usesStandardRanges), statData.percentVeryHigh, ReceiveData.getAlarmTypeColor(AlarmType.VERY_HIGH)))
-                tableStatistics.addView(createProgressBarRow(GlucoseStatistics.getStatisticsTitle(this, AlarmType.HIGH, statData.usesStandardRanges), statData.percentHigh, ReceiveData.getAlarmTypeColor(AlarmType.HIGH)))
-                tableStatistics.addView(createProgressBarRow(GlucoseStatistics.getStatisticsTitle(this, AlarmType.OK, statData.usesStandardRanges), statData.percentInRange, ReceiveData.getAlarmTypeColor(AlarmType.OK)))
-                tableStatistics.addView(createProgressBarRow(GlucoseStatistics.getStatisticsTitle(this, AlarmType.LOW, statData.usesStandardRanges), statData.percentLow, ReceiveData.getAlarmTypeColor(AlarmType.LOW)))
-                tableStatistics.addView(createProgressBarRow(GlucoseStatistics.getStatisticsTitle(this, AlarmType.VERY_LOW, statData.usesStandardRanges), statData.percentVeryLow, ReceiveData.getAlarmTypeColor(AlarmType.VERY_LOW)))
+                tableStatistics.addView(
+                    createProgressBarRow(
+                        GlucoseStatistics.getStatisticsTitle(
+                            this,
+                            AlarmType.VERY_HIGH,
+                            statData.usesStandardRanges
+                        ),
+                        statData.percentVeryHigh,
+                        ReceiveData.getAlarmTypeColor(AlarmType.VERY_HIGH),
+                        keyContentDesc = GlucoseStatistics.getStatisticsDescription(
+                            this,
+                            AlarmType.VERY_HIGH,
+                            statData.usesStandardRanges
+                        )
+                    )
+                )
+                tableStatistics.addView(
+                    createProgressBarRow(
+                        GlucoseStatistics.getStatisticsTitle(
+                            this,
+                            AlarmType.HIGH,
+                            statData.usesStandardRanges
+                        ), statData.percentHigh, ReceiveData.getAlarmTypeColor(AlarmType.HIGH),
+                        keyContentDesc = GlucoseStatistics.getStatisticsDescription(
+                            this,
+                            AlarmType.HIGH,
+                            statData.usesStandardRanges
+                        )
+                    )
+                )
+                tableStatistics.addView(
+                    createProgressBarRow(
+                        GlucoseStatistics.getStatisticsTitle(
+                            this,
+                            AlarmType.OK,
+                            statData.usesStandardRanges
+                        ), statData.percentInRange, ReceiveData.getAlarmTypeColor(AlarmType.OK),
+                        keyContentDesc = GlucoseStatistics.getStatisticsDescription(
+                            this,
+                            AlarmType.OK,
+                            statData.usesStandardRanges
+                        )
+                    )
+                )
+                tableStatistics.addView(
+                    createProgressBarRow(
+                        GlucoseStatistics.getStatisticsTitle(
+                            this,
+                            AlarmType.LOW,
+                            statData.usesStandardRanges
+                        ), statData.percentLow, ReceiveData.getAlarmTypeColor(AlarmType.LOW),
+                        keyContentDesc = GlucoseStatistics.getStatisticsDescription(
+                            this,
+                            AlarmType.LOW,
+                            statData.usesStandardRanges
+                        )
+                    )
+                )
+                tableStatistics.addView(
+                    createProgressBarRow(
+                        GlucoseStatistics.getStatisticsTitle(
+                            this,
+                            AlarmType.VERY_LOW,
+                            statData.usesStandardRanges
+                        ),
+                        statData.percentVeryLow,
+                        ReceiveData.getAlarmTypeColor(AlarmType.VERY_LOW),
+                        keyContentDesc = GlucoseStatistics.getStatisticsDescription(
+                            this,
+                            AlarmType.VERY_LOW,
+                            statData.usesStandardRanges
+                        )
+                    )
+                )
             }
         }
         checkTableVisibility(tableStatistics)
@@ -1269,6 +1335,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             }
         }
         txtStatisticsPeriod.text = resources.getQuantityString(CR.plurals.duration_days_short, days, days)
+        txtStatisticsPeriod.contentDescription = resources.getQuantityString(CR.plurals.days_long, days, days)
         if(statData.dataAgeDays in 1..< days) {
             txtStatisticsPeriod.text = buildString {
                 append(txtStatisticsPeriod.text.toString())
@@ -1290,12 +1357,14 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         table.visibility = if(table.childCount <= 1) View.GONE else View.VISIBLE
     }
 
-    private fun createColumn(text: String, end: Boolean, onClickListener: OnClickListener? = null, initWeight: Float = 1F) : TextView {
+    private fun createColumn(text: String, end: Boolean, onClickListener: OnClickListener? = null, initWeight: Float = 1F, keyContentDesc: String? = null) : TextView {
         val textView = TextView(this)
         textView.layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, initWeight)
         textView.text = text
         textView.isFocusable = false
         textView.textSize = 18F
+        if (keyContentDesc != null)
+            textView.contentDescription = keyContentDesc
         if (end)
             textView.gravity = Gravity.CENTER_VERTICAL or Gravity.END
         else
@@ -1349,17 +1418,17 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         return progressBar
     }
 
-    private fun createProgressBarRow(keyResId: Int, percentage: Float, color: Int, valueView: TextView? = null) : TableRow {
-        return createProgressBarRow(resources.getString(keyResId), percentage, color, valueView)
+    private fun createProgressBarRow(keyResId: Int, percentage: Float, color: Int, valueView: TextView? = null, keyContentDesc: String? = null) : TableRow {
+        return createProgressBarRow(resources.getString(keyResId), percentage, color, valueView, keyContentDesc)
     }
-    private fun createProgressBarRow(key: String, percentage: Float, color: Int, valueView: TextView? = null) : TableRow {
+    private fun createProgressBarRow(key: String, percentage: Float, color: Int, valueView: TextView? = null, keyContentDesc: String? = null) : TableRow {
         val row = TableRow(this)
         row.weightSum = 11f
         row.gravity = Gravity.CENTER_VERTICAL
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
             row.isScreenReaderFocusable = true
         row.setPadding(Utils.dpToPx(5F, this))
-        row.addView(createColumn(key, false, null, 4F))
+        row.addView(createColumn(key, false, null, 4F, keyContentDesc))
         row.addView(createProgressBar(percentage.toInt(), 100, color, key))
         if(valueView == null)
             row.addView(createColumn("${DecimalFormat("#.#").format(percentage)}%", true, null, 3F))
