@@ -1071,7 +1071,7 @@ Ezeket az engedélyeket bármikor kezelheti a Health Connect alkalmazás beáll�
     <string name="pref_switch_standard_children_statistics">TITR használata gyermekeknél</string>
     <string name="pref_switch_standard_children_statistics_summary">A „szűkebb céltartományban töltött idő” (TITR) használata 70–140 mg/dl (3,9–7,8 mmol/l) célértékekkel egyes régiókban kisgyermekek számára ajánlott.</string>
 
-    <string name="pref_source_librelinkup_5_info_summary">Az Abbott titkosított kommunikációra váltott a LibreLinkUp-ban.\nAhogy az előző interfész leállítódik, a GDH valószínűleg nem fog működni.\nJelenleg nincs technikai megoldás.</string>
+    <string name="pref_source_librelinkup_5_info_summary">Az Abbott titkosított kommunikációra váltott a LibreLinkUp-ban.\nAhogy az előző interfész leállítódik, a GDH valószínűleg nem fog működni.\nJelenleg nincs technikai megoldás.\nKattintson ide az aktuális állapothoz.</string>
     <string name="source_librelinkup_5_info_popup_title">Fontos megjegyzés a LibreLinkUp-ról:</string>
     <string name="source_librelinkup_5_info_popup">Az Abbott kiadta az 5-ös verziót, amely új, titkosított interfészt használ.\nHa az Abbott leállítja az előző interfészt, a GDH-val (és más harmadik féltől származó alkalmazásokkal) való kommunikáció valószínűleg megszakad.\nJelenleg nincs technikai megoldás az új titkosítás megkerülésére.\nAz intelligens óra integrációja például alapvető funkciók jövőbeli támogatásával kapcsolatos kérdéseket csak közvetlenül az Abbott támogatása válaszolhatja meg.</string>
 

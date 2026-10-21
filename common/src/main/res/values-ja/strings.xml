@@ -988,7 +988,7 @@ GlucoDataHandlerは、Health Connectに血糖データのみを書き込み、�
     <string name="pref_switch_standard_children_statistics">TITR（Time in Tighter Range）の使用</string>
     <string name="pref_switch_standard_children_statistics_summary">一部の国と地域では、幼児に対して70～140 mg/dl（3.9～7.8 mmol/l）を目標値とする「タイトレンジ内時間（Time in Tighter Range：TITR）」が、推奨されています。</string>
 
-    <string name="pref_source_librelinkup_5_info_summary">アボット社は、LibreLinkUpの通信を暗号化方式に変更しました。\n従来のインターフェースが停止され次第、GDHは動作しなくなる可能性があります。\n現時点では、この問題を解決できる手段は見当たりません。</string>
+    <string name="pref_source_librelinkup_5_info_summary">アボット社は、LibreLinkUpの通信を暗号化方式に変更しました。\n従来のインターフェースが停止され次第、GDHは動作しなくなる可能性があります。\n現時点では、この問題を解決できる手段は見当たりません。\n現在の状況についてはここをタップしてください。</string>
     <string name="source_librelinkup_5_info_popup_title">LibreLinkUpに関する重要なお知らせ：</string>
     <string name="source_librelinkup_5_info_popup">アボット社は、新しい暗号化インターフェースを採用したバージョン5をリリースしました。\nアボット社が従来のインターフェースを停止した場合、GDH（およびその他のサードパーティ製アプリ）との通信は中断される可能性があります。\n現在 この新しい暗号化を回避できる手段は、ありません。\nスマートウォッチ連携など主要機能の今後のサポートに関するご質問は、アボット社にお問い合わせください。</string>
 

@@ -1015,7 +1015,7 @@ GlucoDataHandler только записывает данные об уровн�
     <string name="pref_switch_standard_children_statistics">Использование TITR для детей</string>
     <string name="pref_switch_standard_children_statistics_summary">Использование \"Time in Tighter Range\" (TITR) с целевыми показателями 70–140 мг/дл (3,9–7,8 ммоль/л) рекомендуется для маленьких детей в некоторых регионах.</string>
 
-    <string name="pref_source_librelinkup_5_info_summary">Abbott перевел LibreLinkUp на зашифрованную коммуникацию.\nКогда предыдущий интерфейс будет отключен, GDH, вероятно, перестанет работать.\nВ настоящее время технического решения нет.</string>
+    <string name="pref_source_librelinkup_5_info_summary">Abbott перевел LibreLinkUp на зашифрованную коммуникацию.\nКогда предыдущий интерфейс будет отключен, GDH, вероятно, перестанет работать.\nВ настоящее время технического решения нет.\nНажмите здесь для просмотра текущего состояния.</string>
     <string name="source_librelinkup_5_info_popup_title">Важное примечание о LibreLinkUp:</string>
     <string name="source_librelinkup_5_info_popup">Abbott выпустил версию 5, которая использует новый зашифрованный интерфейс.\nЕсли Abbott отключит предыдущий интерфейс, коммуникация с GDH (и другими приложениями третьих сторон) будет прервана.\nВ настоящее время нет технического решения для обхода этого нового шифрования.\nВопросы о будущей поддержке важных функций, таких как интеграция со смарт-часами, могут быть предоставлены только службой поддержки Abbott.</string>
 

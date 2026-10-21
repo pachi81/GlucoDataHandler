@@ -1016,7 +1016,7 @@ GlucoDataHandler 只会将血糖数据写入健康连接，除非您明确授予
     <string name="pref_switch_standard_children_statistics">对儿童使用 TITR</string>
     <string name="pref_switch_standard_children_statistics_summary">在某些地区，建议幼童使用目标范围为 70–140 mg/dl (3.9–7.8 mmol/l) 的“更窄目标范围时间”(TITR)。</string>
 
-    <string name="pref_source_librelinkup_5_info_summary">Abbott 已将 LibreLinkUp 切换至加密通讯。\n一旦先前的界面关闭，GDH 将可能无法运作。\n目前尚无技术解决方案。</string>
+    <string name="pref_source_librelinkup_5_info_summary">Abbott 已将 LibreLinkUp 切换至加密通讯。\n一旦先前的界面关闭，GDH 将可能无法运作。\n目前尚无技术解决方案。\n点击此处查看当前状态。</string>
     <string name="source_librelinkup_5_info_popup_title">关于 LibreLinkUp 的重要提示：</string>
     <string name="source_librelinkup_5_info_popup">Abbott 发布了版本 5，采用新的加密界面。\n如果 Abbott 关闭先前的界面，与 GDH（及其他第三方应用程序）的通讯将可能中断。\n目前尚无技术方案可绕过此新加密。\n关于未来是否支持必要功能（例如智慧手表整合）的问题，只能由 Abbott 支持团队直接回答。</string>
 
