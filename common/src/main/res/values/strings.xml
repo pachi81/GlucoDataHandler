@@ -904,8 +904,6 @@
     <string name="runtime_15_days">15 days</string>
     <string name="runtime_24_days">24 days</string>
     <string name="table_header_statistics">Statistics</string>
-    <string name="statistics_period_previous">Shorter period</string>
-    <string name="statistics_period_next">Longer period</string>
     <string name="info_label_average">Average</string>
     <string name="time_in_range">TIR</string>
     <string name="src_webserver">Webserver</string>
@@ -1088,6 +1086,7 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="button_accept">Accept</string>
 
     <!-- v2.5 -->
+
     <string name="unit_second_short" translatable="false">s</string>
     <string name="unit_minute_short" translatable="false">min</string>
     <plurals name="minutes_short" translatable="false">
@@ -1114,6 +1113,8 @@ You can manage these permissions at any time in the Health Connect app settings.
 
     <string name="glucose_variability_short" translatable="false">CV</string>
     <string name="glucose_variability">Glucose variability</string>
+    <string name="statistics_period_previous">Shorter period</string>
+    <string name="statistics_period_next">Longer period</string>
     <string name="tts_less_than">less than %s</string>
     <string name="tts_range_format">from %s to %s</string>
     <string name="tts_more_than">more than %s</string>

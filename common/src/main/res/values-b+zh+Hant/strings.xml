@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="locale">zh-rTW</string>
+    <string name="locale">zh-TW</string>
 
     <string name="info_label_sensor_id">感測器</string>
     <string name="info_label_value">血糖值</string>

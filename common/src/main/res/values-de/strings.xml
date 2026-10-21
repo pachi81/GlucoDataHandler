@@ -826,8 +826,6 @@
     <string name="runtime_15_days">15 Tage</string>
     <string name="runtime_24_days">24 Tage</string>
     <string name="table_header_statistics">Statistiken</string>
-    <string name="statistics_period_previous">Kürzerer Zeitraum</string>
-    <string name="statistics_period_next">Längerer Zeitraum</string>
     <string name="info_label_average">Durchschnitt</string>
     <string name="time_in_range">TIR</string>
     <string name="src_webserver">Webserver</string>
@@ -1028,4 +1026,9 @@ Sie können diese Berechtigungen jederzeit in den Health Connect App-Einstellung
     <string name="aod_optional_feature_info">GlucoDataHandler bietet eine optionale Always-On-Display-Funktion (AOD), die die Android-AccessibilityService-API verwendet, um deinen Glukosewert auf dem AOD-Bildschirm anzuzeigen, ohne das Gerät aufzuwecken.\n\nDie Google-Play-Richtlinien verlangen, dass diese Informationen deutlich angezeigt werden, bevor zu den Einstellungen navigiert wird.\n\nDiese Funktion ist standardmäßig deaktiviert und beeinträchtigt die Kernfunktionen der App nicht.\n\nDu kannst sie jetzt aktivieren oder später unter %1$s - %2$s konfigurieren.</string>
     <string name="aod_optional_feature_main">Always-On-Display (AOD)\nTippe hier für weitere Informationen.</string>
     <string name="button_not_now">Nicht jetzt</string>
+
+    <!-- v2.5.1 -->
+
+    <string name="statistics_period_previous">Kürzerer Zeitraum</string>
+    <string name="statistics_period_next">Längerer Zeitraum</string>
 </resources>
