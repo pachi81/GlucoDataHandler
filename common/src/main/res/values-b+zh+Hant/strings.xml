@@ -1030,4 +1030,13 @@ GlucoDataHandler 只會將血糖數據寫入健康連結，除非您明確授予
     <string name="aod_optional_feature_info">GlucoDataHandler 提供選用的 Always-On Display（AOD）功能，使用 Android AccessibilityService API 在 AOD 螢幕上顯示您的血糖值，而不會喚醒裝置。\n\nGoogle Play 政策要求在前往設定之前醒目顯示這項資訊。\n\n此功能預設為停用，且不會影響應用程式的核心功能。\n\n您可以立即啟用，或稍後在 %1$s - %2$s 中設定。</string>
     <string name="aod_optional_feature_main">Always-On-Display（AOD）\n點選此處以取得更多資訊。</string>
     <string name="button_not_now">暫不</string>
+    <!-- v2.5.1 -->
+
+    <string name="glucose_variability">血糖變異率</string>
+    <string name="statistics_period_previous">較短時間段</string>
+    <string name="statistics_period_next">較長時間段</string>
+    <string name="tts_less_than">小於 %s</string>
+    <string name="tts_range_format">從 %s 到 %s</string>
+    <string name="tts_more_than">大於 %s</string>
+    <string name="tts_time_in_range">目標範圍內時間</string>
 </resources>

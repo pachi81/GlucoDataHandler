@@ -1030,4 +1030,13 @@ Puedes gestionar estos permisos en cualquier momento en la configuración de la 
     <string name="aod_optional_feature_info">GlucoDataHandler ofrece una función opcional Always-On Display (AOD) que utiliza la API Android AccessibilityService para mostrar tu nivel de glucosa en la pantalla AOD sin activar el dispositivo.\n\nLas políticas de Google Play exigen que esta información se muestre de forma destacada antes de acceder a los ajustes.\n\nEsta función está desactivada de forma predeterminada y no afecta a las funciones principales de la aplicación.\n\nPuedes activarla ahora o configurarla más tarde en %1$s - %2$s.</string>
     <string name="aod_optional_feature_main">Always-On-Display (AOD)\nToca aquí para obtener más información.</string>
     <string name="button_not_now">Ahora no</string>
+    <!-- v2.5.1 -->
+
+    <string name="glucose_variability">Variabilidad de la glucosa</string>
+    <string name="statistics_period_previous">Período más corto</string>
+    <string name="statistics_period_next">Período más largo</string>
+    <string name="tts_less_than">menos de %s</string>
+    <string name="tts_range_format">de %s a %s</string>
+    <string name="tts_more_than">más de %s</string>
+    <string name="tts_time_in_range">Tiempo en rango</string>
 </resources>

@@ -1031,4 +1031,13 @@ Vous pouvez gérer ces autorisations à tout moment dans les paramètres de l\'a
     <string name="aod_optional_feature_info">GlucoDataHandler propose une fonction Always-On Display (AOD) facultative qui utilise l\'API Android AccessibilityService pour afficher votre glycémie sur l\'écran AOD sans sortir l\'appareil du mode veille.\n\nLes règles de Google Play exigent que ces informations soient affichées de manière visible avant d\'accéder aux paramètres.\n\nCette fonction est désactivée par défaut et n\'affecte pas les fonctionnalités essentielles de l\'application.\n\nVous pouvez l\'activer maintenant ou la configurer plus tard dans %1$s - %2$s.</string>
     <string name="aod_optional_feature_main">Always-On-Display (AOD)\nAppuyez ici pour en savoir plus.</string>
     <string name="button_not_now">Pas maintenant</string>
+    <!-- v2.5.1 -->
+
+    <string name="glucose_variability">Variabilité de la glycémie</string>
+    <string name="statistics_period_previous">Période plus courte</string>
+    <string name="statistics_period_next">Période plus longue</string>
+    <string name="tts_less_than">moins de %s</string>
+    <string name="tts_range_format">de %s à %s</string>
+    <string name="tts_more_than">plus de %s</string>
+    <string name="tts_time_in_range">Temps dans la cible</string>
 </resources>

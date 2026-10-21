@@ -1023,4 +1023,13 @@ GlucoDataHandler 只会将血糖数据写入健康连接，除非您明确授予
     <string name="accessibility_prominent_disclosure_title">辅助功能权限</string>
     <string name="accessibility_prominent_disclosure_message">此应用程序需要使用 AccessibilityService API，以便在您的息屏显示（Always-On-Display, AOD）上显示血糖值。\n\n用途：\n系统会检测锁定画面状态，并在 AOD 画面上覆盖显示含有您当前血糖数据的自定义本机画面。这能让您在不唤醒设备的情况下监控血糖状态。\n\n数据隐私：\n此服务仅严格用于画面覆盖显示。它绝不会访问、收集、储存或分享任何个人、敏感或健康数据。\n\n同意：\n点击 \"接受\" 即表示您同意启用此服务，系统随后将引导您前往 Android 设置画面。点击取消可拒绝启用。</string>
     <string name="button_accept">接受</string>
+    <!-- v2.5.1 -->
+
+    <string name="glucose_variability">血糖变异率</string>
+    <string name="statistics_period_previous">较短时间段</string>
+    <string name="statistics_period_next">较长时间段</string>
+    <string name="tts_less_than">小于 %s</string>
+    <string name="tts_range_format">从 %s 到 %s</string>
+    <string name="tts_more_than">大于 %s</string>
+    <string name="tts_time_in_range">目标范围内时间</string>
 </resources>

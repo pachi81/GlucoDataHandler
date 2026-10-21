@@ -1029,6 +1029,11 @@ Sie können diese Berechtigungen jederzeit in den Health Connect App-Einstellung
 
     <!-- v2.5.1 -->
 
+    <string name="glucose_variability">Glukosevariabilität</string>
     <string name="statistics_period_previous">Kürzerer Zeitraum</string>
     <string name="statistics_period_next">Längerer Zeitraum</string>
+    <string name="tts_less_than">weniger als %s</string>
+    <string name="tts_range_format">von %s bis %s</string>
+    <string name="tts_more_than">mehr als %s</string>
+    <string name="tts_time_in_range">Zeit im Zielbereich</string>
 </resources>

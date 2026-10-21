@@ -1017,4 +1017,13 @@ GlucoDataHandlerは、Health Connectに血糖データのみを書き込み、�
     <string name="aod_optional_feature_info">GlucoDataHandlerには、Android AccessibilityService APIを使用して、端末を起動せずにAOD画面へ血糖値を表示するオプションのAlways-On Display（AOD）機能があります。\n\nGoogle Playのポリシーにより、設定画面に移動する前にこの情報を目立つように表示する必要があります。\n\nこの機能は初期設定では無効で、アプリの基本機能には影響しません。\n\n今すぐ有効にするか、後で%1$s - %2$sから設定できます。</string>
     <string name="aod_optional_feature_main">Always-On-Display（AOD）\n詳細を確認するにはここをタップしてください。</string>
     <string name="button_not_now">今はしない</string>
+    <!-- v2.5.1 -->
+
+    <string name="glucose_variability">血糖変動性</string>
+    <string name="statistics_period_previous">より短い期間</string>
+    <string name="statistics_period_next">より長い期間</string>
+    <string name="tts_less_than">%s 未満</string>
+    <string name="tts_range_format">%s から %s</string>
+    <string name="tts_more_than">%s 超</string>
+    <string name="tts_time_in_range">目標範囲内時間</string>
 </resources>

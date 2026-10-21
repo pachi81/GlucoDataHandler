@@ -1040,4 +1040,13 @@ GlucoDataHandler само записва данни за кръвната зах
     <string name="aod_optional_feature_info">GlucoDataHandler предлага незадължителна функция Always-On Display (AOD), която използва Android AccessibilityService API, за да показва стойността на глюкозата ви на екрана AOD, без да събужда устройството.\n\nПравилата на Google Play изискват тази информация да бъде показана на видно място, преди да отворите настройките.\n\nТази функция е деактивирана по подразбиране и не засяга основната функционалност на приложението.\n\nМожете да я активирате сега или да я конфигурирате по-късно в %1$s - %2$s.</string>
     <string name="aod_optional_feature_main">Always-On-Display (AOD)\nДокоснете тук за повече информация.</string>
     <string name="button_not_now">Не сега</string>
+    <!-- v2.5.1 -->
+
+    <string name="glucose_variability">Вариабилност на гликемията</string>
+    <string name="statistics_period_previous">По-кратък период</string>
+    <string name="statistics_period_next">По-дълъг период</string>
+    <string name="tts_less_than">по-малко от %s</string>
+    <string name="tts_range_format">от %s до %s</string>
+    <string name="tts_more_than">повече от %s</string>
+    <string name="tts_time_in_range">Време в целевия обхват</string>
 </resources>
