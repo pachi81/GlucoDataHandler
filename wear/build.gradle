@@ -35,19 +35,21 @@ android {
         viewBinding true
     }
 
+    def releaseSigning = (properties.getProperty('keystore.file')?.trim() && file(properties.getProperty('keystore.file')).isFile()) ? signingConfigs.release : signingConfigs.debug
+
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "GlucoDataHandler"
-            signingConfig signingConfigs.release
+            signingConfig releaseSigning
         }
         dev_release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             versionNameSuffix '-dev.' + rootProject.devVersion
             resValue "string", "app_name", "GlucoDataHandler"
-            signingConfig signingConfigs.release
+            signingConfig releaseSigning
         }
         debug {
             minifyEnabled false
@@ -59,7 +61,7 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "GDH Second"
-            signingConfig signingConfigs.release
+            signingConfig releaseSigning
         }
         applicationVariants.all {
             variant ->
@@ -108,7 +110,8 @@ dependencies {
 // --- Dynamic Post-Build Copy Logic (Groovy Version - Configuration Cache Compatible) ---
 
 // Pre-calculate global values to avoid project state access in closures
-def globalReleasePath = rootProject.ext.releasePath.toString()
+def releasePathObj = rootProject.ext.has("releasePath") ? rootProject.ext.get("releasePath") : null
+def globalReleasePath = (releasePathObj != null && releasePathObj.toString() != "null" && !releasePathObj.toString().isEmpty()) ? releasePathObj.toString() : null
 def globalVersionCode = rootProject.versionCode.toString()
 def wearProjectDir = projectDir
 def wearBuildDir = project.layout.buildDirectory
@@ -148,15 +151,19 @@ android.applicationVariants.configureEach { variant ->
         group = "delivery"
         description = "Copies the generated Wear APK for $vName to the global release path."
 
-        from apkSourceFolder
-        include "*.apk"
-        into file(globalReleasePath)
+        if (globalReleasePath != null) {
+            from apkSourceFolder
+            include "*.apk"
+            into file(globalReleasePath)
 
-        // Flatten structure: put .apk directly into target
-        eachFile { details -> details.path = details.name }
+            // Flatten structure: put .apk directly into target
+            eachFile { details -> details.path = details.name }
 
-        doLast {
-            println "DEBUG: Wear APK copy finished for ${vNameCap} to ${globalReleasePath}"
+            doLast {
+                println "DEBUG: Wear APK copy finished for ${vNameCap} to ${globalReleasePath}"
+            }
+        } else {
+            enabled = false
         }
     }
 
@@ -166,39 +173,47 @@ android.applicationVariants.configureEach { variant ->
         group = "delivery"
         description = "Copies the generated Wear Bundle for $vName to the Playstore folder."
 
-        // Use a closure to defer evaluation until execution time
-        from({
-            def paths = [
-                    new File(wearProjectDir, vName),
-                    new File(wearBuildDir.asFile.get(), "outputs/bundle/${vName}")
-            ]
-            return paths
-        })
+        if (globalReleasePath != null) {
+            // Use a closure to defer evaluation until execution time
+            from({
+                def paths = [
+                        new File(wearProjectDir, vName),
+                        new File(wearBuildDir.asFile.get(), "outputs/bundle/${vName}")
+                ]
+                return paths
+            })
 
-        include "*.aab"
-        into file("${globalReleasePath}/Playstore/${globalVersionCode}")
+            include "*.aab"
+            into file("${globalReleasePath}/Playstore/${globalVersionCode}")
 
-        // Flatten structure
-        eachFile { details ->
-            details.path = details.name
-            println "DEBUG: Copying Wear AAB: ${details.file.absolutePath}"
+            // Flatten structure
+            eachFile { details ->
+                details.path = details.name
+                println "DEBUG: Copying Wear AAB: ${details.file.absolutePath}"
+            }
+
+            // Prevent task failure if one source is missing (e.g. IDE path vs CLI path)
+            includeEmptyDirs = false
+            duplicatesStrategy = DuplicatesStrategy.INCLUDE
+        } else {
+            enabled = false
         }
-
-        // Prevent task failure if one source is missing (e.g. IDE path vs CLI path)
-        includeEmptyDirs = false
-        duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
 
     // 4. Task Wiring (Safe and Specific)
     tasks.named("assemble${vNameCap}").configure {
         dependsOn cleanTaskName
-        finalizedBy copyApkTaskName
+        if (globalReleasePath != null) {
+            finalizedBy copyApkTaskName
+        }
     }
 
     try {
         tasks.named("bundle${vNameCap}").configure {
             dependsOn cleanTaskName
-            finalizedBy copyBundleTaskName
+            if (globalReleasePath != null) {
+                finalizedBy copyBundleTaskName
+            }
         }
     } catch (Exception ignored) {
         // Task might not exist for some variants (like debug)

@@ -39,19 +39,21 @@ android {
         viewBinding true
     }
 
+    def releaseSigning = (properties.getProperty('keystore.file')?.trim() && file(properties.getProperty('keystore.file')).isFile()) ? signingConfigs.release : signingConfigs.debug
+
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "GlucoDataHandler"
-            signingConfig signingConfigs.release
+            signingConfig releaseSigning
         }
         dev_release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             versionNameSuffix '-dev.' + rootProject.devVersion
             resValue "string", "app_name", "GlucoDataHandler"
-            signingConfig signingConfigs.release
+            signingConfig releaseSigning
         }
         debug {
             minifyEnabled false
@@ -63,7 +65,7 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "GDH Second"
-            signingConfig signingConfigs.release
+            signingConfig releaseSigning
         }
         applicationVariants.all {
             variant ->
@@ -121,7 +123,8 @@ dependencies {
 // --- Dynamic Post-Build Copy Logic (Groovy Version - Configuration Cache Compatible) ---
 
 // Pre-calculate global values to avoid project state access in closures
-def globalReleasePath = rootProject.ext.releasePath.toString()
+def releasePathObj = rootProject.ext.has("releasePath") ? rootProject.ext.get("releasePath") : null
+def globalReleasePath = (releasePathObj != null && releasePathObj.toString() != "null" && !releasePathObj.toString().isEmpty()) ? releasePathObj.toString() : null
 def globalVersionCode = rootProject.versionCode.toString()
 def mobileProjectDir = projectDir
 def mobileBuildDir = project.layout.buildDirectory
@@ -159,37 +162,44 @@ android.applicationVariants.configureEach { variant ->
     def copyApkTaskName = "copy${vNameCap}ApkToGlobal"
     tasks.register(copyApkTaskName, Copy) {
         group = "delivery"
-        from apkSourceFolder
-        include "*.apk"
-        into file(globalReleasePath)
-        eachFile { details -> details.path = details.name }
+        if (globalReleasePath != null) {
+            from apkSourceFolder
+            include "*.apk"
+            into file(globalReleasePath)
+            eachFile { details -> details.path = details.name }
+        } else {
+            enabled = false
+        }
     }
 
     // 3. Register Bundle (AAB) Copy Task
     def copyBundleTaskName = "copy${vNameCap}AabToGlobal"
     tasks.register(copyBundleTaskName, Copy) {
         group = "delivery"
+        if (globalReleasePath != null) {
+            // We use a closure to defer evaluation until execution time
+            from({
+                // Return both paths. Gradle will skip them automatically if they are empty
+                // at the moment the copy starts, without failing the whole task.
+                return [
+                        new File(mobileProjectDir, vName),
+                        new File(mobileBuildDir.asFile.get(), "outputs/bundle/${vName}")
+                ]
+            })
 
-        // We use a closure to defer evaluation until execution time
-        from({
-            // Return both paths. Gradle will skip them automatically if they are empty
-            // at the moment the copy starts, without failing the whole task.
-            return [
-                    new File(mobileProjectDir, vName),
-                    new File(mobileBuildDir.asFile.get(), "outputs/bundle/${vName}")
-            ]
-        })
+            // This prevents Gradle from failing if one of the source folders is missing
+            includeEmptyDirs = false
+            duplicatesStrategy = DuplicatesStrategy.INCLUDE
 
-        // This prevents Gradle from failing if one of the source folders is missing
-        includeEmptyDirs = false
-        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+            include "*.aab"
+            into file("${globalReleasePath}/Playstore/${globalVersionCode}")
 
-        include "*.aab"
-        into file("${globalReleasePath}/Playstore/${globalVersionCode}")
-
-        eachFile { details ->
-            details.path = details.name // Flatten: put .aab directly into the target folder
-            println("DEBUG: Copying AAB: ${details.file.absolutePath}")
+            eachFile { details ->
+                details.path = details.name // Flatten: put .aab directly into the target folder
+                println("DEBUG: Copying AAB: ${details.file.absolutePath}")
+            }
+        } else {
+            enabled = false
         }
     }
 
@@ -197,14 +207,18 @@ android.applicationVariants.configureEach { variant ->
     // We target only the main assemble and bundle tasks for the specific variant
     tasks.named("assemble${vNameCap}").configure {
         dependsOn cleanTaskName
-        finalizedBy copyApkTaskName
+        if (globalReleasePath != null) {
+            finalizedBy copyApkTaskName
+        }
     }
 
     // AAB tasks are only created if the variant is not a debug build usually
     try {
         tasks.named("bundle${vNameCap}").configure {
             dependsOn cleanTaskName
-            finalizedBy copyBundleTaskName
+            if (globalReleasePath != null) {
+                finalizedBy copyBundleTaskName
+            }
         }
     } catch (Exception ignored) {
         // Task might not exist for this variant (e.g. debug)
