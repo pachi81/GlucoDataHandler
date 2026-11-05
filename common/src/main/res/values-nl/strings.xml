@@ -1010,7 +1010,7 @@ U kunt deze toestemmingen op elk moment beheren in de instellingen van de Health
     <string name="pref_switch_standard_children_statistics">TITR gebruiken voor kinderen</string>
     <string name="pref_switch_standard_children_statistics_summary">Het gebruik van \"Time in Tighter Range\" (TITR) met streefwaarden van 70–140 mg/dl (3,9–7,8 mmol/l) wordt in sommige regio\'s aanbevolen voor kleine kinderen.</string>
 
-    <string name="pref_source_librelinkup_5_info_summary">Abbott heeft LibreLinkUp overgeschakeld naar versleutelde communicatie.\nZodra de vorige interface wordt uitgeschakeld, zal GDH waarschijnlijk niet meer werken.\nEr is momenteel geen technische oplossing in zicht.</string>
+    <string name="pref_source_librelinkup_5_info_summary">Abbott heeft LibreLinkUp overgeschakeld naar versleutelde communicatie.\nZodra de vorige interface wordt uitgeschakeld, zal GDH waarschijnlijk niet meer werken.\nEr is momenteel geen technische oplossing in zicht.\nTik hier voor de huidige status.</string>
     <string name="source_librelinkup_5_info_popup_title">Belangrijke opmerking over LibreLinkUp:</string>
     <string name="source_librelinkup_5_info_popup">Abbott heeft versie 5 uitgebracht, die een nieuwe, versleutelde interface gebruikt.\nAls Abbott de vorige interface uitschakelt, zal de communicatie met GDH (en andere apps van derden) waarschijnlijk worden onderbroken.\nEr is momenteel geen technische oplossing om deze nieuwe versleuteling te omzeilen.\nVragen over toekomstige ondersteuning van essentiële functies zoals smartwatch-integratie kunnen alleen rechtstreeks door Abbott-ondersteuning worden beantwoord.</string>
 
@@ -1034,4 +1034,13 @@ U kunt deze toestemmingen op elk moment beheren in de instellingen van de Health
     <string name="aod_optional_feature_info">GlucoDataHandler biedt een optionele Always-On Display-functie (AOD) die de Android AccessibilityService-API gebruikt om je glucosewaarde op het AOD-scherm weer te geven zonder het apparaat te activeren.\n\nVolgens het beleid van Google Play moet deze informatie duidelijk worden weergegeven voordat je naar de instellingen gaat.\n\nDeze functie is standaard uitgeschakeld en heeft geen invloed op de kernfunctionaliteit van de app.\n\nJe kunt de functie nu inschakelen of later configureren via %1$s - %2$s.</string>
     <string name="aod_optional_feature_main">Always-On-Display (AOD)\nTik hier voor meer informatie.</string>
     <string name="button_not_now">Niet nu</string>
+    <!-- v2.5.1 -->
+
+    <string name="glucose_variability">Glucosevariabiliteit</string>
+    <string name="statistics_period_previous">Kortere periode</string>
+    <string name="statistics_period_next">Langere periode</string>
+    <string name="tts_less_than">minder dan %s</string>
+    <string name="tts_range_format">van %s tot %s</string>
+    <string name="tts_more_than">meer dan %s</string>
+    <string name="tts_time_in_range">Tijd binnen bereik</string>
 </resources>

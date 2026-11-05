@@ -1001,7 +1001,7 @@ Du kan hantera dessa behörigheter när som helst i Health Connect-appens instä
     <string name="pref_switch_standard_children_statistics">Använd TITR för barn</string>
     <string name="pref_switch_standard_children_statistics_summary">Användning av \"Time in Tighter Range\" (TITR) med målvärden på 70–140 mg/dl (3,9–7,8 mmol/l) rekommenderas för små barn i vissa regioner.</string>
 
-    <string name="pref_source_librelinkup_5_info_summary">Abbott har växlat LibreLinkUp till krypterad kommunikation.\nNär det tidigare gränssnittet stängs av kommer GDH förmodligen att sluta fungera.\nDet finns för närvarande ingen teknisk lösning i sikte.</string>
+    <string name="pref_source_librelinkup_5_info_summary">Abbott har växlat LibreLinkUp till krypterad kommunikation.\nNär det tidigare gränssnittet stängs av kommer GDH förmodligen att sluta fungera.\nDet finns för närvarande ingen teknisk lösning i sikte.\nTryck här för aktuell status.</string>
     <string name="source_librelinkup_5_info_popup_title">Viktigt meddelande angående LibreLinkUp:</string>
     <string name="source_librelinkup_5_info_popup">Abbott har släppt version 5, som använder ett nytt, krypterat gränssnitt.\nOm Abbott stänger av det tidigare gränssnittet kommer kommunikationen med GDH (och andra tredjepartsappar) förmodligen att avbrytas.\nFör närvarande finns det ingen teknisk lösning för att kringgå denna nya kryptering.\nFrågor angående framtida stöd för viktiga funktioner som smartwatch-integrering kan endast besvaras direkt av Abbotts support.</string>
 
@@ -1025,4 +1025,13 @@ Du kan hantera dessa behörigheter när som helst i Health Connect-appens instä
     <string name="aod_optional_feature_info">GlucoDataHandler erbjuder en valfri Always-On Display-funktion (AOD) som använder Android AccessibilityService-API:t för att visa ditt glukosvärde på AOD-skärmen utan att väcka enheten.\n\nGoogle Plays policy kräver att den här informationen visas tydligt innan du går till inställningarna.\n\nFunktionen är inaktiverad som standard och påverkar inte appens grundläggande funktioner.\n\nDu kan aktivera den nu eller konfigurera den senare under %1$s - %2$s.</string>
     <string name="aod_optional_feature_main">Always-On-Display (AOD)\nTryck här för mer information.</string>
     <string name="button_not_now">Inte nu</string>
+    <!-- v2.5.1 -->
+
+    <string name="glucose_variability">Glukosvariabilitet</string>
+    <string name="statistics_period_previous">Kortare period</string>
+    <string name="statistics_period_next">Längre period</string>
+    <string name="tts_less_than">mindre än %s</string>
+    <string name="tts_range_format">från %s till %s</string>
+    <string name="tts_more_than">mer än %s</string>
+    <string name="tts_time_in_range">Tid i målområde</string>
 </resources>

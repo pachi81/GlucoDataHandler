@@ -10,10 +10,12 @@ import androidx.room.migration.Migration
 import androidx.room.withTransaction
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.google.gson.Gson
+import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.Command
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.receiver.InternalActionReceiver
@@ -103,17 +105,22 @@ object dbAccess {
 
     private val migration_5_6 = object : Migration(5, 6) {
         override fun migrate(db: SupportSQLiteDatabase) {
-            db.execSQL(
-                "CREATE TABLE IF NOT EXISTS `daily_glucose_statistics` (" +
-                    "`dayStart` INTEGER NOT NULL, `sampleCount` INTEGER NOT NULL, " +
-                    "`glucoseSum` INTEGER NOT NULL, `glucoseSquaredSum` INTEGER NOT NULL, " +
-                    "`veryLowCount` INTEGER NOT NULL, `lowCount` INTEGER NOT NULL, " +
-                    "`titrCount` INTEGER NOT NULL, `aboveTitrCount` INTEGER NOT NULL, " +
-                    "`highCount` INTEGER NOT NULL, `veryHighCount` INTEGER NOT NULL, " +
-                    "`customVeryLowCount` INTEGER NOT NULL, `customLowCount` INTEGER NOT NULL, " +
-                    "`customInRangeCount` INTEGER NOT NULL, `customHighCount` INTEGER NOT NULL, " +
-                    "`customVeryHighCount` INTEGER NOT NULL, PRIMARY KEY(`dayStart`))"
-            )
+            try {
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `daily_glucose_statistics` (" +
+                        "`dayStart` INTEGER NOT NULL, `sampleCount` INTEGER NOT NULL, " +
+                        "`glucoseSum` INTEGER NOT NULL, `glucoseSquaredSum` INTEGER NOT NULL, " +
+                        "`veryLowCount` INTEGER NOT NULL, `lowCount` INTEGER NOT NULL, " +
+                        "`titrCount` INTEGER NOT NULL, `aboveTitrCount` INTEGER NOT NULL, " +
+                        "`highCount` INTEGER NOT NULL, `veryHighCount` INTEGER NOT NULL, " +
+                        "`customVeryLowCount` INTEGER NOT NULL, `customLowCount` INTEGER NOT NULL, " +
+                        "`customInRangeCount` INTEGER NOT NULL, `customHighCount` INTEGER NOT NULL, " +
+                        "`customVeryHighCount` INTEGER NOT NULL, PRIMARY KEY(`dayStart`))"
+                )
+                Log.i(LOG_ID, "migration from 5 to 6")
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "migration exception 5-6: $exc")
+            }
         }
     }
 
@@ -622,6 +629,10 @@ object dbAccess {
     }
 
     private fun aggregateCompletedDays(dao: GlucoseValueDao, todayStart: Long) {
+        if (GlucoDataService.appSource != AppSource.PHONE_APP) {
+            Log.d(LOG_ID, "Skipping daily statistics aggregation for ${GlucoDataService.appSource}")
+            return
+        }
         val completedValuesByDay = dao.getValuesBefore(todayStart).groupBy {
             getGlucoseDayStart(it.timestamp)
         }

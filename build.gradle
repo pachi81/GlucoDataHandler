@@ -9,8 +9,8 @@ plugins {
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
-project.ext.set("versionCode", 212)
-project.ext.set("devVersion", 1)
+project.ext.set("versionCode", 213)
+project.ext.set("devVersion", 2)
 project.ext.set("versionName", "2.5.1")
 project.ext.set("compileSdk", 37)
 project.ext.set("targetSdk", 37)

@@ -144,6 +144,7 @@ abstract class SourceOnlineFragmentBase(val preferenceResId: Int) : PreferenceFr
             setPreferencesFromResource(preferenceResId, rootKey)
             setPasswordPref(getPasswordPref())
 
+            PreferenceHelper.setLinkOnClick(findPreference("source_librelinkup_5_info"), R.string.librelinkup_state_link, requireContext())
             PreferenceHelper.setLinkOnClick(findPreference("source_librelinkup_video"), R.string.video_tutorial_librelinkup, requireContext())
 
             setupPatientData()

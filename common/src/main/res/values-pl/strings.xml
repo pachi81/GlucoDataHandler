@@ -1013,7 +1013,7 @@
     <string name="pref_switch_standard_children_statistics">Używanie wskaźnika TITR dla dzieci</string>
     <string name="pref_switch_standard_children_statistics_summary">W niektórych miejscach dla małych dzieci zaleca się używanie wskaźnika TITR - czasu w wąskim zakresie, gdzie wartości docelowe to 70–140 mg/dl (3,9–7,8 mmol/l).</string>
 
-    <string name="pref_source_librelinkup_5_info_summary">Firma Abbott przestawiła serwis LibreLinkUp na komunikację szyfrowaną.\nGdy tylko poprzedni interfejs zostanie wyłączony, aplikacja GDH prawdopodobnie przestanie działać.\nObecnie nie ma perspektyw na jakiekolwiek rozwiązanie techniczne.</string>
+    <string name="pref_source_librelinkup_5_info_summary">Firma Abbott przestawiła serwis LibreLinkUp na komunikację szyfrowaną.\nGdy tylko poprzedni interfejs zostanie wyłączony, aplikacja GDH prawdopodobnie przestanie działać.\nObecnie nie ma perspektyw na jakiekolwiek rozwiązanie techniczne.\nNaciśnij tutaj, aby sprawdzić aktualny stan.</string>
     <string name="source_librelinkup_5_info_popup_title">Ważna uwaga dot. LibreLinkUp:</string>
     <string name="source_librelinkup_5_info_popup">Firma Abbott udostępniła wersję 5, która wykorzystuje nowy, szyfrowany interfejs.\nJeśli firma Abbott wyłączy poprzedni interfejs, komunikacja z aplikacją GDH (oraz innymi aplikacjami innych producentów) zostanie prawdopodobnie przerwana.\nObecnie nie ma technicznego rozwiązania pozwalającego na obejście tego nowego szyfrowania.\nNa pytania dotyczące przyszłej obsługi kluczowych funkcji, takich jak integracja ze smartwatchami, może odpowiedzieć wyłącznie dział pomocy technicznej firmy Abbott.</string>
 
@@ -1037,4 +1037,13 @@
     <string name="aod_optional_feature_info">GlucoDataHandler oferuje opcjonalną funkcję Always-On Display (AOD), która używa interfejsu Android AccessibilityService API, aby wyświetlać poziom glukozy na ekranie AOD bez wybudzania urządzenia.\n\nZasady Google Play wymagają, aby te informacje były wyraźnie widoczne przed przejściem do ustawień.\n\nTa funkcja jest domyślnie wyłączona i nie wpływa na podstawowe działanie aplikacji.\n\nMożesz ją włączyć teraz lub skonfigurować później w %1$s - %2$s.</string>
     <string name="aod_optional_feature_main">Always-On-Display (AOD)\nDotknij tutaj, aby uzyskać więcej informacji.</string>
     <string name="button_not_now">Nie teraz</string>
+    <!-- v2.5.1 -->
+
+    <string name="glucose_variability">Zmienność glikemii</string>
+    <string name="statistics_period_previous">Krótszy okres</string>
+    <string name="statistics_period_next">Dłuższy okres</string>
+    <string name="tts_less_than">mniej niż %s</string>
+    <string name="tts_range_format">od %s do %s</string>
+    <string name="tts_more_than">więcej niż %s</string>
+    <string name="tts_time_in_range">Czas w zakresie</string>
 </resources>

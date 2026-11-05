@@ -1006,7 +1006,7 @@ Puedes gestionar estos permisos en cualquier momento en la configuración de la 
     <string name="export_settings_info">Estás a punto de exportar tus ajustes.\nPor favor, no compartas este archivo con nadie, ya que puede contener información sensible como nombres de usuario y contraseñas.\nNota: Incluso si el desarrollador solicita ayuda, normalmente solo necesita tus registros (logs), no tus ajustes.\n¿Quieres continuar con la exportación?</string>
     <string name="pref_switch_standard_children_statistics">Usar TITR para niños</string>
     <string name="pref_switch_standard_children_statistics_summary">El uso de "Tiempo en Rango más Estrecho" (TITR) con objetivos de 70–140 mg/dl (3.9–7.8 mmol/l) se recomienda para niños pequeños en algunas regiones.</string>
-    <string name="pref_source_librelinkup_5_info_summary">Abbott ha cambiado LibreLinkUp a comunicación cifrada.\nUna vez que la interfaz anterior se cierre, GDH probablemente dejará de funcionar.\nActualmente no hay solución técnica a la vista.</string>
+    <string name="pref_source_librelinkup_5_info_summary">Abbott ha cambiado LibreLinkUp a comunicación cifrada.\nUna vez que la interfaz anterior se cierre, GDH probablemente dejará de funcionar.\nActualmente no hay solución técnica a la vista.\nPulse aquí para ver el estado actual.</string>
     <string name="source_librelinkup_5_info_popup_title">Nota importante sobre LibreLinkUp:</string>
     <string name="source_librelinkup_5_info_popup">Abbott ha lanzado la versión 5, que utiliza una nueva interfaz cifrada.\nSi Abbott cierra la interfaz anterior, la comunicación con GDH (y otras aplicaciones de terceros) probablemente se interrumpirá.\nActualmente, no hay solución técnica para eludir este nuevo cifrado.\nLas preguntas sobre la compatibilidad futura de características esenciales como la integración con smartwatch solo pueden ser respondidas directamente por el soporte de Abbott.</string>
 
@@ -1030,4 +1030,13 @@ Puedes gestionar estos permisos en cualquier momento en la configuración de la 
     <string name="aod_optional_feature_info">GlucoDataHandler ofrece una función opcional Always-On Display (AOD) que utiliza la API Android AccessibilityService para mostrar tu nivel de glucosa en la pantalla AOD sin activar el dispositivo.\n\nLas políticas de Google Play exigen que esta información se muestre de forma destacada antes de acceder a los ajustes.\n\nEsta función está desactivada de forma predeterminada y no afecta a las funciones principales de la aplicación.\n\nPuedes activarla ahora o configurarla más tarde en %1$s - %2$s.</string>
     <string name="aod_optional_feature_main">Always-On-Display (AOD)\nToca aquí para obtener más información.</string>
     <string name="button_not_now">Ahora no</string>
+    <!-- v2.5.1 -->
+
+    <string name="glucose_variability">Variabilidad de la glucosa</string>
+    <string name="statistics_period_previous">Período más corto</string>
+    <string name="statistics_period_next">Período más largo</string>
+    <string name="tts_less_than">menos de %s</string>
+    <string name="tts_range_format">de %s a %s</string>
+    <string name="tts_more_than">más de %s</string>
+    <string name="tts_time_in_range">Tiempo en rango</string>
 </resources>
