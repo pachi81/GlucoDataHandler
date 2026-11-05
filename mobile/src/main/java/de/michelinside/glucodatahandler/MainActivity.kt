@@ -1225,11 +1225,80 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             tableStatistics.addView(createLongValueRow(CR.string.gmi, "${DecimalFormat("#.#").format(statData.gmiPercent)}% (${statData.gmiMmolPerMol} ${resources.getString(CR.string.unit_gmi)})"))
             tableStatistics.addView(createLongValueRow(CR.string.hba1c, "${DecimalFormat("#.#").format(statData.hba1cPercent)}% (${statData.hba1cMmolPerMol} ${resources.getString(CR.string.unit_gmi)})"))
             if(statData.hasData) {
-                tableStatistics.addView(createProgressBarRow(GlucoseStatistics.getStatisticsTitle(this, AlarmType.VERY_HIGH), statData.percentVeryHigh, ReceiveData.getAlarmTypeColor(AlarmType.VERY_HIGH)))
-                tableStatistics.addView(createProgressBarRow(GlucoseStatistics.getStatisticsTitle(this, AlarmType.HIGH), statData.percentHigh, ReceiveData.getAlarmTypeColor(AlarmType.HIGH)))
-                tableStatistics.addView(createProgressBarRow(GlucoseStatistics.getStatisticsTitle(this, AlarmType.OK), statData.percentInRange, ReceiveData.getAlarmTypeColor(AlarmType.OK)))
-                tableStatistics.addView(createProgressBarRow(GlucoseStatistics.getStatisticsTitle(this, AlarmType.LOW), statData.percentLow, ReceiveData.getAlarmTypeColor(AlarmType.LOW)))
-                tableStatistics.addView(createProgressBarRow(GlucoseStatistics.getStatisticsTitle(this, AlarmType.VERY_LOW), statData.percentVeryLow, ReceiveData.getAlarmTypeColor(AlarmType.VERY_LOW)))
+                tableStatistics.addView(
+                    createProgressBarRow(
+                        GlucoseStatistics.getStatisticsTitle(
+                            this,
+                            AlarmType.VERY_HIGH,
+                            statData.usesStandardRanges
+                        ),
+                        statData.percentVeryHigh,
+                        ReceiveData.getAlarmTypeColor(AlarmType.VERY_HIGH),
+                        keyContentDesc = GlucoseStatistics.getStatisticsDescription(
+                            this,
+                            AlarmType.VERY_HIGH,
+                            statData.usesStandardRanges
+                        )
+                    )
+                )
+                tableStatistics.addView(
+                    createProgressBarRow(
+                        GlucoseStatistics.getStatisticsTitle(
+                            this,
+                            AlarmType.HIGH,
+                            statData.usesStandardRanges
+                        ), statData.percentHigh, ReceiveData.getAlarmTypeColor(AlarmType.HIGH),
+                        keyContentDesc = GlucoseStatistics.getStatisticsDescription(
+                            this,
+                            AlarmType.HIGH,
+                            statData.usesStandardRanges
+                        )
+                    )
+                )
+                tableStatistics.addView(
+                    createProgressBarRow(
+                        GlucoseStatistics.getStatisticsTitle(
+                            this,
+                            AlarmType.OK,
+                            statData.usesStandardRanges
+                        ), statData.percentInRange, ReceiveData.getAlarmTypeColor(AlarmType.OK),
+                        keyContentDesc = GlucoseStatistics.getStatisticsDescription(
+                            this,
+                            AlarmType.OK,
+                            statData.usesStandardRanges
+                        )
+                    )
+                )
+                tableStatistics.addView(
+                    createProgressBarRow(
+                        GlucoseStatistics.getStatisticsTitle(
+                            this,
+                            AlarmType.LOW,
+                            statData.usesStandardRanges
+                        ), statData.percentLow, ReceiveData.getAlarmTypeColor(AlarmType.LOW),
+                        keyContentDesc = GlucoseStatistics.getStatisticsDescription(
+                            this,
+                            AlarmType.LOW,
+                            statData.usesStandardRanges
+                        )
+                    )
+                )
+                tableStatistics.addView(
+                    createProgressBarRow(
+                        GlucoseStatistics.getStatisticsTitle(
+                            this,
+                            AlarmType.VERY_LOW,
+                            statData.usesStandardRanges
+                        ),
+                        statData.percentVeryLow,
+                        ReceiveData.getAlarmTypeColor(AlarmType.VERY_LOW),
+                        keyContentDesc = GlucoseStatistics.getStatisticsDescription(
+                            this,
+                            AlarmType.VERY_LOW,
+                            statData.usesStandardRanges
+                        )
+                    )
+                )
             }
         }
         checkTableVisibility(tableStatistics)
