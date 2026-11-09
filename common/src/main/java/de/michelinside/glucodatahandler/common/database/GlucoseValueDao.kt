@@ -151,8 +151,8 @@ interface GlucoseValueDao {
     @Query("SELECT * FROM daily_glucose_statistics WHERE dayStart = :dayStart")
     fun getDailyStatisticsForDay(dayStart: Long): DailyGlucoseStatistics?
 
-    @Query("SELECT COUNT(*) FROM daily_glucose_statistics WHERE dayStart >= :minTime")
-    fun getDailyStatisticsCount(minTime: Long): Int
+    @Query("SELECT COUNT(*) FROM daily_glucose_statistics WHERE dayStart >= :minTime AND dayStart < :todayStart")
+    fun getDailyStatisticsCount(minTime: Long, todayStart: Long): Int
 
     @Query("SELECT * FROM glucose_values WHERE timestamp < :timestamp ORDER BY timestamp DESC LIMIT 1")
     fun getPreviousValue(timestamp: Long): GlucoseValue?

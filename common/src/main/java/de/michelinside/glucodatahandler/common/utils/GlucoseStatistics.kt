@@ -108,7 +108,7 @@ class StatisticsData(val days: Int, val minDays: Int) {
             val minTime = if(useDailyValues) {
                 getGlucoseDayStart(now, days)
             } else {
-                now - (days*24*60*60*1000)
+                now - (days * 24L * 60L * 60L * 1000L)
             }
             val inRangeUpper = if(useTITR) 140 else 180
             firstTime = dbAccess.getFirstStatisticsTimestamp()
@@ -117,7 +117,7 @@ class StatisticsData(val days: Int, val minDays: Int) {
             if(dataAgeHours >= MIN_DATA_AGE_HOURS) {
                 if(useDailyValues) {
                     val dailyStatistics = dbAccess.getDailyStatistics(minTime, todayStart)
-                    dataAgeDays = dbAccess.getDailyStatisticsCount(minTime)
+                    dataAgeDays = dbAccess.getDailyStatisticsCount(minTime, todayStart)
                     val count = dailyStatistics?.sampleCount ?: 0L
                     val average = dailyStatistics?.takeIf { count > 0L }?.glucoseSum?.toDouble()?.div(count)
                     val averageSquared = dailyStatistics?.takeIf { count > 0L }?.glucoseSquaredSum?.toDouble()?.div(count)
@@ -169,6 +169,7 @@ internal fun calculateGlucoseVariabilityPercent(average: Double?, averageSquared
 
 object GlucoseStatistics {
     private val LOG_ID = "GDH.Statistics"
+    val SUPPORTED_PERIODS = listOf(1, 7, 30, 90)
     private var lastUpdate = 0L
     private var useStandard = true
     private var useTITR = false
@@ -193,6 +194,23 @@ object GlucoseStatistics {
             90 -> statData90d
             else -> statData7d
         }
+    }
+
+    fun resolveActivePeriodDays(
+        selectedDays: Int,
+        hasDataForPeriod: (Int) -> Boolean = { getStatistics(it).hasData }
+    ): Int {
+        var index = SUPPORTED_PERIODS.indexOf(selectedDays).takeIf { it >= 0 } ?: 1
+        while(!hasDataForPeriod(SUPPORTED_PERIODS[index]) && index > 0) {
+            index -= 1
+        }
+        return SUPPORTED_PERIODS[index]
+    }
+
+    fun stepPeriodDays(selectedDays: Int, direction: Int): Int {
+        val selectedIndex = SUPPORTED_PERIODS.indexOf(selectedDays).takeIf { it >= 0 } ?: 1
+        val nextIndex = (selectedIndex + direction).coerceIn(SUPPORTED_PERIODS.indices)
+        return SUPPORTED_PERIODS[nextIndex]
     }
 
     fun update() {

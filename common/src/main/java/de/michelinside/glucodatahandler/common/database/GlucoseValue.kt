@@ -1,6 +1,7 @@
 package de.michelinside.glucodatahandler.common.database
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import de.michelinside.glucodatahandler.common.Constants
 import java.util.Calendar
 
 @Entity(tableName = "glucose_values")
@@ -88,4 +89,11 @@ fun getGlucoseDayStart(timestamp: Long, daysAgo: Int = 0): Long {
         set(Calendar.SECOND, 0)
         set(Calendar.MILLISECOND, 0)
     }.timeInMillis
+}
+
+fun getDailyStatisticsRetentionStart(
+    timestamp: Long,
+    maxDays: Int = Constants.DB_MAX_STATISTICS_DAYS
+): Long {
+    return getGlucoseDayStart(timestamp, maxDays)
 }

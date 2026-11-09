@@ -2,6 +2,9 @@ package de.michelinside.glucodatahandler.common
 
 import de.michelinside.glucodatahandler.common.database.DailyGlucoseStatistics
 import de.michelinside.glucodatahandler.common.database.GlucoseValue
+import de.michelinside.glucodatahandler.common.database.getDailyStatisticsRetentionStart
+import de.michelinside.glucodatahandler.common.database.getGlucoseDayStart
+import de.michelinside.glucodatahandler.common.utils.GlucoseStatistics
 import de.michelinside.glucodatahandler.common.utils.calculateGlucoseVariabilityPercent
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -53,5 +56,36 @@ class GlucoseStatisticsUnitTest {
         assertEquals(2L, stats.customInRangeCount)
         assertEquals(2L, stats.customHighCount)
         assertEquals(2L, stats.customVeryHighCount)
+    }
+
+    @Test
+    fun retainsFullNinetyCompletedDaysForNinetyDayStatistics() {
+        val now = 1_793_016_000_000L
+        val ninetyDaysMinTime = getGlucoseDayStart(now, GlucoseStatistics.statData90d.days)
+        val retentionCutoff = getDailyStatisticsRetentionStart(now, Constants.DB_MAX_STATISTICS_DAYS)
+
+        assertEquals(ninetyDaysMinTime, retentionCutoff)
+        val completedDaysRetained = (1..91).count { daysAgo ->
+            getGlucoseDayStart(now, daysAgo) >= retentionCutoff
+        }
+        assertEquals(90, completedDaysRetained)
+    }
+
+    @Test
+    fun resolvesActivePeriodBySteppingDownUntilDataIsAvailable() {
+        assertEquals(1, GlucoseStatistics.resolveActivePeriodDays(90) { it == 1 })
+        assertEquals(7, GlucoseStatistics.resolveActivePeriodDays(30) { it <= 7 })
+        assertEquals(30, GlucoseStatistics.resolveActivePeriodDays(30) { it <= 30 })
+        assertEquals(1, GlucoseStatistics.resolveActivePeriodDays(14) { false })
+    }
+
+    @Test
+    fun stepsBetweenSupportedStatisticsPeriodsWithinBounds() {
+        assertEquals(1, GlucoseStatistics.stepPeriodDays(1, -1))
+        assertEquals(7, GlucoseStatistics.stepPeriodDays(1, 1))
+        assertEquals(30, GlucoseStatistics.stepPeriodDays(7, 1))
+        assertEquals(90, GlucoseStatistics.stepPeriodDays(30, 1))
+        assertEquals(90, GlucoseStatistics.stepPeriodDays(90, 1))
+        assertEquals(30, GlucoseStatistics.stepPeriodDays(90, -1))
     }
 }

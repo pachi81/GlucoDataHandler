@@ -597,12 +597,12 @@ object dbAccess {
     }
 
 
-    fun getDailyStatisticsCount(minTime: Long): Int = runBlocking {
+    fun getDailyStatisticsCount(minTime: Long, todayStart: Long): Int = runBlocking {
         if(active) {
             scope.async {
                 try {
-                    Log.v(LOG_ID, "getDailyStatisticsCount - minTime: ${Utils.getUiTimeStamp(minTime)}")
-                    database!!.glucoseValuesDao().getDailyStatisticsCount(minTime)
+                    Log.v(LOG_ID, "getDailyStatisticsCount - minTime: ${Utils.getUiTimeStamp(minTime)}, todayStart: ${Utils.getUiTimeStamp(todayStart)}")
+                    database!!.glucoseValuesDao().getDailyStatisticsCount(minTime, todayStart)
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "getDailyStatisticsCount exception: $exc")
                     0
@@ -622,7 +622,7 @@ object dbAccess {
             aggregateCompletedDays(dao, todayStart)
             dao.deleteOldValues(deleteBefore)
             dao.deleteOldDailyStatistics(
-                getGlucoseDayStart(now, Constants.DB_MAX_STATISTICS_DAYS - 1)
+                getDailyStatisticsRetentionStart(now)
             )
         }
         GlucoseStatistics.reset()
