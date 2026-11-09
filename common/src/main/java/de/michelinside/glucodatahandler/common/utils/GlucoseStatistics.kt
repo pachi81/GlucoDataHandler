@@ -59,6 +59,7 @@ class StatisticsData(val days: Int, val minDays: Int) {
     }
 
     val hasData: Boolean get() {
+        Log.v(LOG_ID, "hasData ($days): days: $dataAgeDays >= $minDays, count: $count, averageGlucose: $averageGlucose")
         return dataAgeHours >= MIN_DATA_AGE_HOURS && dataAgeDays >= minDays && count > 50 && averageGlucose > 0F // at least needed to calculate average values
     }
 
@@ -103,8 +104,7 @@ class StatisticsData(val days: Int, val minDays: Int) {
                 very low: < 54
             */
             val now = System.currentTimeMillis()
-            val useDailyValues = days > 1
-            val todayStart = getGlucoseDayStart(now)
+            val useDailyValues = days > 7  // up to 7 days, raw data can be used
             val minTime = if(useDailyValues) {
                 getGlucoseDayStart(now, days)
             } else {
@@ -113,11 +113,11 @@ class StatisticsData(val days: Int, val minDays: Int) {
             val inRangeUpper = if(useTITR) 140 else 180
             firstTime = dbAccess.getFirstStatisticsTimestamp()
             usesStandardRanges = standardStats
-            Log.d(LOG_ID, "update statistics - firstTime: ${Utils.getUiTimeStamp(firstTime)}, days: $days, dataAgeHours: $dataAgeHours")
+            Log.d(LOG_ID, "update statistics ($days) - firstTime: ${Utils.getUiTimeStamp(firstTime)}, minTime: ${Utils.getUiTimeStamp(minTime)}, days: $days, dataAgeHours: $dataAgeHours, useDailyValues: $useDailyValues, standardStats: $standardStats, useTITR: $useTITR, useDailyValues: $useDailyValues")
             if(dataAgeHours >= MIN_DATA_AGE_HOURS) {
                 if(useDailyValues) {
-                    val dailyStatistics = dbAccess.getDailyStatistics(minTime, todayStart)
-                    dataAgeDays = dbAccess.getDailyStatisticsCount(minTime, todayStart)
+                    val dailyStatistics = dbAccess.getDailyStatistics(minTime)
+                    dataAgeDays = dbAccess.getDailyStatisticsCount(minTime)
                     val count = dailyStatistics?.sampleCount ?: 0L
                     val average = dailyStatistics?.takeIf { count > 0L }?.glucoseSum?.toDouble()?.div(count)
                     val averageSquared = dailyStatistics?.takeIf { count > 0L }?.glucoseSquaredSum?.toDouble()?.div(count)
@@ -140,6 +140,18 @@ class StatisticsData(val days: Int, val minDays: Int) {
                     }
                 } else {
                     val glucoseValueStatistics = dbAccess.getGlucoseValueStatistics(minTime)
+                    val firstTimestamp = dbAccess.getFirstTimestamp()
+                    val ageMs = now - firstTimestamp
+                    val dayMs = 24L * 60L * 60L * 1000L
+                    dataAgeDays = if (firstTimestamp > 0L) {
+                        ((ageMs.coerceAtLeast(0L) + dayMs - 1L) / dayMs)
+                            .toInt()
+                            .coerceAtMost(days)
+                    } else {
+                        0
+                    }
+                    Log.d(LOG_ID, "data age: firstTimestamp=$firstTimestamp (${Utils.getUiTimeStamp(firstTimestamp)}), ageMs=$ageMs, dataAgeDays=$dataAgeDays")
+                    Log.v(LOG_ID, "First timestamp ${Utils.getUiTimeStamp(firstTimestamp)}, dataAgeDays: $dataAgeDays")
                     averageGlucose = glucoseValueStatistics?.average?.toFloat() ?: Float.NaN
                     glucoseVariabilityPercent = calculateGlucoseVariabilityPercent(
                         glucoseValueStatistics?.average,
@@ -174,7 +186,7 @@ object GlucoseStatistics {
     private var useStandard = true
     private var useTITR = false
     val statData1d = StatisticsData(1, 0)
-    val statData7d = StatisticsData(7, 2)
+    val statData7d = StatisticsData(7, 1)
     val statData30d = StatisticsData(30, 8)
     val statData90d = StatisticsData(90, 31)
 

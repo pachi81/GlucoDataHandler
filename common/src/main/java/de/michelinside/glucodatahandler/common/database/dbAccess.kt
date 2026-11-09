@@ -574,17 +574,12 @@ object dbAccess {
         GlucoseStatistics.reset()
     }
 
-    fun getDailyStatistics(minTime: Long, todayStart: Long): DailyGlucoseStatisticsSummary? = runBlocking {
+    fun getDailyStatistics(minTime: Long): DailyGlucoseStatisticsSummary? = runBlocking {
         if(active) {
             scope.async {
                 try {
                     database!!.glucoseValuesDao().getDailyStatistics(
-                        minTime,
-                        todayStart,
-                        ReceiveData.lowRaw.toInt(),
-                        ReceiveData.targetMinRaw.toInt(),
-                        ReceiveData.targetMaxRaw.toInt(),
-                        ReceiveData.highRaw.toInt()
+                        minTime
                     )
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "getDailyStatistics exception: $exc")
@@ -597,12 +592,12 @@ object dbAccess {
     }
 
 
-    fun getDailyStatisticsCount(minTime: Long, todayStart: Long): Int = runBlocking {
+    fun getDailyStatisticsCount(minTime: Long): Int = runBlocking {
         if(active) {
             scope.async {
                 try {
-                    Log.v(LOG_ID, "getDailyStatisticsCount - minTime: ${Utils.getUiTimeStamp(minTime)}, todayStart: ${Utils.getUiTimeStamp(todayStart)}")
-                    database!!.glucoseValuesDao().getDailyStatisticsCount(minTime, todayStart)
+                    Log.v(LOG_ID, "getDailyStatisticsCount - minTime: ${Utils.getUiTimeStamp(minTime)}")
+                    database!!.glucoseValuesDao().getDailyStatisticsCount(minTime)
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "getDailyStatisticsCount exception: $exc")
                     0
