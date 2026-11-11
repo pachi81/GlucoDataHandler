@@ -165,6 +165,13 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         saveExtras()
     }
 
+    fun resetAlarmState() {
+        Log.i(LOG_ID, "Reset alarm state so next out-of-range reading retriggers immediately")
+        lastAlarmTime = 0L
+        lastAlarmType = AlarmType.NONE
+        saveExtras()
+    }
+
     fun setSnooze(minutes: Long) {
         Log.v(LOG_ID, "Set snooze to $minutes minutes")
         if(minutes > 0)
