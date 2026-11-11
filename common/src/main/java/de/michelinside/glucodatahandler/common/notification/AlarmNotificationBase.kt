@@ -999,7 +999,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     }
 
     private fun checkAutoDismissOnRangeReturn(context: Context) {
-        if (!notificationActive) return
+        if (!notificationActive || ReceiveData.getAlarmType() != AlarmType.OK) return
         val activeLevelAlarm = curNotification == VERY_LOW_NOTIFICATION_ID ||
                 curNotification == LOW_NOTIFICATION_ID ||
                 curNotification == HIGH_NOTIFICATION_ID ||
