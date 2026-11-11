@@ -6,13 +6,17 @@ import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.database.dbAccess
+import de.michelinside.glucodatahandler.common.database.getGlucoseDayStart
 import de.michelinside.glucodatahandler.common.notification.AlarmType
+import kotlin.math.sqrt
 
 
-class StatisticsData(val days: Int) {
+class StatisticsData(val days: Int, val minDays: Int) {
     private val LOG_ID = "GDH.StatisticsData"
     private val MIN_DATA_AGE_HOURS = 5
     var averageGlucose: Float = Float.NaN
+        private set
+    var glucoseVariabilityPercent: Float = Float.NaN
         private set
 
     private var veryLow = 0
@@ -20,6 +24,8 @@ class StatisticsData(val days: Int) {
     private var inRange = 0
     private var high = 0
     private var veryHigh = 0
+    var usesStandardRanges = true
+        private set
     private var firstTime = 0L
     private val dataAgeHours: Long get() {
         if(firstTime > 0L) {
@@ -27,6 +33,9 @@ class StatisticsData(val days: Int) {
         }
         return 0L
     }
+
+    var dataAgeDays: Int = 0
+        private set
 
     val needUpdate: Boolean get() {
         if(firstTime==0L)
@@ -38,10 +47,20 @@ class StatisticsData(val days: Int) {
 
     fun reset() {
         firstTime = 0L
+        averageGlucose = Float.NaN
+        glucoseVariabilityPercent = Float.NaN
+        veryLow = 0
+        low = 0
+        inRange = 0
+        high = 0
+        veryHigh = 0
+        usesStandardRanges = true
+        dataAgeDays = 0
     }
 
     val hasData: Boolean get() {
-        return dataAgeHours >= MIN_DATA_AGE_HOURS && count > 50 && averageGlucose > 0F // at least needed to calculate average values
+        Log.v(LOG_ID, "hasData ($days): days: $dataAgeDays >= $minDays, count: $count, averageGlucose: $averageGlucose")
+        return dataAgeHours >= MIN_DATA_AGE_HOURS && dataAgeDays >= minDays && count > 50 && averageGlucose > 0F // at least needed to calculate average values
     }
 
     val count: Int get() {
@@ -84,17 +103,66 @@ class StatisticsData(val days: Int) {
                 low: 54 - 69
                 very low: < 54
             */
-            val minTime = System.currentTimeMillis() - (days*24*60*60*1000)
+            val now = System.currentTimeMillis()
+            val useDailyValues = days > 7  // up to 7 days, raw data can be used
+            val minTime = if(useDailyValues) {
+                getGlucoseDayStart(now, days)
+            } else {
+                now - (days * 24L * 60L * 60L * 1000L)
+            }
             val inRangeUpper = if(useTITR) 140 else 180
-            firstTime = dbAccess.getFirstTimestamp()
-            Log.d(LOG_ID, "update statistics - firstTime: ${Utils.getUiTimeStamp(firstTime)}, days: $days, dataAgeHours: $dataAgeHours")
+            firstTime = dbAccess.getFirstStatisticsTimestamp()
+            usesStandardRanges = standardStats
+            Log.d(LOG_ID, "update statistics ($days) - firstTime: ${Utils.getUiTimeStamp(firstTime)}, minTime: ${Utils.getUiTimeStamp(minTime)}, days: $days, dataAgeHours: $dataAgeHours, useDailyValues: $useDailyValues, standardStats: $standardStats, useTITR: $useTITR, useDailyValues: $useDailyValues")
             if(dataAgeHours >= MIN_DATA_AGE_HOURS) {
-                averageGlucose = dbAccess.getAverageValue(minTime)
-                veryLow = dbAccess.getValuesInRangeCount(minTime, 0, if(standardStats) 53 else ReceiveData.lowRaw.toInt())
-                low = dbAccess.getValuesInRangeCount(minTime, if(standardStats) 54 else ReceiveData.lowRaw.toInt()+1, if(standardStats) 69 else ReceiveData.targetMinRaw.toInt()-1)
-                inRange = dbAccess.getValuesInRangeCount(minTime, if(standardStats) 70 else ReceiveData.targetMinRaw.toInt(), if(standardStats) inRangeUpper else ReceiveData.targetMaxRaw.toInt())
-                high = dbAccess.getValuesInRangeCount(minTime, if(standardStats) inRangeUpper+1 else ReceiveData.targetMaxRaw.toInt()+1, if(standardStats) 250 else ReceiveData.highRaw.toInt()-1)
-                veryHigh = dbAccess.getValuesInRangeCount(minTime, if(standardStats) 251 else ReceiveData.highRaw.toInt(), Int.MAX_VALUE)
+                if(useDailyValues) {
+                    val dailyStatistics = dbAccess.getDailyStatistics(minTime)
+                    dataAgeDays = dbAccess.getDailyStatisticsCount(minTime)
+                    val count = dailyStatistics?.sampleCount ?: 0L
+                    val average = dailyStatistics?.takeIf { count > 0L }?.glucoseSum?.toDouble()?.div(count)
+                    val averageSquared = dailyStatistics?.takeIf { count > 0L }?.glucoseSquaredSum?.toDouble()?.div(count)
+                    averageGlucose = average?.toFloat() ?: Float.NaN
+                    glucoseVariabilityPercent = calculateGlucoseVariabilityPercent(average, averageSquared)
+                    if(standardStats) {
+                        veryLow = (dailyStatistics?.veryLowCount ?: 0L).toInt()
+                        low = (dailyStatistics?.lowCount ?: 0L).toInt()
+                        val titrCount = (dailyStatistics?.titrCount ?: 0L).toInt()
+                        val aboveTitrCount = (dailyStatistics?.aboveTitrCount ?: 0L).toInt()
+                        inRange = titrCount + if(useTITR) 0 else aboveTitrCount
+                        high = (dailyStatistics?.highCount ?: 0L).toInt() + if(useTITR) aboveTitrCount else 0
+                        veryHigh = (dailyStatistics?.veryHighCount ?: 0L).toInt()
+                    } else {
+                        veryLow = (dailyStatistics?.customVeryLowCount ?: 0L).toInt()
+                        low = (dailyStatistics?.customLowCount ?: 0L).toInt()
+                        inRange = (dailyStatistics?.customInRangeCount ?: 0L).toInt()
+                        high = (dailyStatistics?.customHighCount ?: 0L).toInt()
+                        veryHigh = (dailyStatistics?.customVeryHighCount ?: 0L).toInt()
+                    }
+                } else {
+                    val glucoseValueStatistics = dbAccess.getGlucoseValueStatistics(minTime)
+                    val firstTimestamp = dbAccess.getFirstTimestamp()
+                    val ageMs = now - firstTimestamp
+                    val dayMs = 24L * 60L * 60L * 1000L
+                    dataAgeDays = if (firstTimestamp > 0L) {
+                        ((ageMs.coerceAtLeast(0L) + dayMs - 1L) / dayMs)
+                            .toInt()
+                            .coerceAtMost(days)
+                    } else {
+                        0
+                    }
+                    Log.d(LOG_ID, "data age: firstTimestamp=$firstTimestamp (${Utils.getUiTimeStamp(firstTimestamp)}), ageMs=$ageMs, dataAgeDays=$dataAgeDays")
+                    Log.v(LOG_ID, "First timestamp ${Utils.getUiTimeStamp(firstTimestamp)}, dataAgeDays: $dataAgeDays")
+                    averageGlucose = glucoseValueStatistics?.average?.toFloat() ?: Float.NaN
+                    glucoseVariabilityPercent = calculateGlucoseVariabilityPercent(
+                        glucoseValueStatistics?.average,
+                        glucoseValueStatistics?.averageSquared
+                    )
+                    veryLow = dbAccess.getValuesInRangeCount(minTime, 0, if(standardStats) 53 else ReceiveData.lowRaw.toInt())
+                    low = dbAccess.getValuesInRangeCount(minTime, if(standardStats) 54 else ReceiveData.lowRaw.toInt()+1, if(standardStats) 69 else ReceiveData.targetMinRaw.toInt()-1)
+                    inRange = dbAccess.getValuesInRangeCount(minTime, if(standardStats) 70 else ReceiveData.targetMinRaw.toInt(), if(standardStats) inRangeUpper else ReceiveData.targetMaxRaw.toInt())
+                    high = dbAccess.getValuesInRangeCount(minTime, if(standardStats) inRangeUpper+1 else ReceiveData.targetMaxRaw.toInt()+1, if(standardStats) 250 else ReceiveData.highRaw.toInt()-1)
+                    veryHigh = dbAccess.getValuesInRangeCount(minTime, if(standardStats) 251 else ReceiveData.highRaw.toInt(), Int.MAX_VALUE)
+                }
                 Log.i(LOG_ID, "statistics (standard: $standardStats - upper range: $inRangeUpper) updated for $days days: average: $averageGlucose, count: $count, veryLow: $veryLow, low: $low, inRange: $inRange, high: $high, veryHigh: $veryHigh")
             }
         } catch (exc: Exception) {
@@ -103,34 +171,74 @@ class StatisticsData(val days: Int) {
     }
 }
 
+internal fun calculateGlucoseVariabilityPercent(average: Double?, averageSquared: Double?): Float {
+    if(average == null || averageSquared == null || average <= 0.0)
+        return Float.NaN
+
+    val variance = (averageSquared - average * average).coerceAtLeast(0.0)
+    return (sqrt(variance) / average * 100.0).toFloat()
+}
 
 object GlucoseStatistics {
     private val LOG_ID = "GDH.Statistics"
+    val SUPPORTED_PERIODS = listOf(1, 7, 30, 90)
     private var lastUpdate = 0L
     private var useStandard = true
     private var useTITR = false
-    val statData1d = StatisticsData(1)
-    val statData7d = StatisticsData(7)
+    val statData1d = StatisticsData(1, 0)
+    val statData7d = StatisticsData(7, 1)
+    val statData30d = StatisticsData(30, 8)
+    val statData90d = StatisticsData(90, 31)
 
     fun reset() {
         lastUpdate = 0
         statData1d.reset()
         statData7d.reset()
+        statData30d.reset()
+        statData90d.reset()
     }
 
+    fun getStatistics(days: Int): StatisticsData {
+        return when(days) {
+            1 -> statData1d
+            7 -> statData7d
+            30 -> statData30d
+            90 -> statData90d
+            else -> statData7d
+        }
+    }
+
+    fun resolveActivePeriodDays(
+        selectedDays: Int,
+        hasDataForPeriod: (Int) -> Boolean = { getStatistics(it).hasData }
+    ): Int {
+        var index = SUPPORTED_PERIODS.indexOf(selectedDays).takeIf { it >= 0 } ?: 1
+        while(!hasDataForPeriod(SUPPORTED_PERIODS[index]) && index > 0) {
+            index -= 1
+        }
+        return SUPPORTED_PERIODS[index]
+    }
+
+    fun stepPeriodDays(selectedDays: Int, direction: Int): Int {
+        val selectedIndex = SUPPORTED_PERIODS.indexOf(selectedDays).takeIf { it >= 0 } ?: 1
+        val nextIndex = (selectedIndex + direction).coerceIn(SUPPORTED_PERIODS.indices)
+        return SUPPORTED_PERIODS[nextIndex]
+    }
 
     fun update() {
         try {
             val newUseStandard = GlucoDataService.sharedPref?.getBoolean(Constants.SHARED_PREF_STANDARD_STATISTICS, true)?: true
             val newUseTITR =  GlucoDataService.sharedPref?.getBoolean(Constants.SHARED_PREF_STANDARD_CHILDREN_STATISTICS, false)?: false
-            if(Utils.getElapsedTimeMinute(lastUpdate) >= 30 || useTITR != newUseTITR || useStandard != newUseStandard || statData1d.needUpdate || statData7d.needUpdate) {
-                Log.d(LOG_ID, "update statistics - lastUpdate: ${Utils.getUiTimeStamp(lastUpdate)}, standard: $newUseStandard ($useStandard), TITR: $newUseTITR ($useTITR), needUpdate: ${statData1d.needUpdate || statData7d.needUpdate}")
+            if(Utils.getElapsedTimeMinute(lastUpdate) >= 30 || useTITR != newUseTITR || useStandard != newUseStandard || statData1d.needUpdate || statData7d.needUpdate || statData30d.needUpdate || statData90d.needUpdate) {
+                Log.d(LOG_ID, "update statistics - lastUpdate: ${Utils.getUiTimeStamp(lastUpdate)}, standard: $newUseStandard ($useStandard), TITR: $newUseTITR ($useTITR), needUpdate: ${statData1d.needUpdate || statData7d.needUpdate || statData30d.needUpdate || statData90d.needUpdate}")
                 // recalculate statistics data
                 useStandard = newUseStandard
                 useTITR = newUseTITR
                 lastUpdate = System.currentTimeMillis()
                 statData1d.update(useStandard, useTITR)
                 statData7d.update(useStandard, useTITR)
+                statData30d.update(useStandard, useTITR)
+                statData90d.update(useStandard, useTITR)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: $exc")
@@ -138,23 +246,23 @@ object GlucoseStatistics {
     }
 
     val hasStatistics: Boolean get() {
-        return statData1d.hasData || statData7d.hasData
+        return statData1d.hasData || statData7d.hasData || statData30d.hasData || statData90d.hasData
     }
 
-    fun getStatisticsTitle(context: Context, statType: AlarmType): String {
+    fun getStatisticsTitle(context: Context, statType: AlarmType, standardStats: Boolean = useStandard): String {
         when(statType) {
             AlarmType.VERY_LOW -> {
-                if(useStandard)
+                if(standardStats)
                     return if(ReceiveData.isMmol) "< 3.0" else "< 54"
                 return context.getString(R.string.very_low)
             }
             AlarmType.LOW -> {
-                if(useStandard)
+                if(standardStats)
                     return if(ReceiveData.isMmol) "3.0 - 3.8" else "54 - 69"
                 return context.getString(R.string.low)
             }
             AlarmType.OK -> {
-                if(useStandard) {
+                if(standardStats) {
                     return if(ReceiveData.isMmol)
                     {
                         if(useTITR) "3.9 - 7.8" else "3.9 - 10.0"
@@ -166,7 +274,7 @@ object GlucoseStatistics {
                 return context.getString(R.string.time_in_range)
             }
             AlarmType.HIGH -> {
-                if(useStandard) {
+                if(standardStats) {
                     return if(ReceiveData.isMmol)
                     {
                         if(useTITR) "7.9 - 13.9" else "10.1 - 13.9"
@@ -178,9 +286,48 @@ object GlucoseStatistics {
                 return context.getString(R.string.high)
             }
             AlarmType.VERY_HIGH -> {
-                if(useStandard)
+                if(standardStats)
                     return if(ReceiveData.isMmol) "> 13.9" else "> 250"
                 return context.getString(R.string.very_high)
+            }
+            else -> return ""
+        }
+    }
+
+    fun getStatisticsDescription(context: Context, statType: AlarmType, standardStats: Boolean = useStandard): String {
+        if(!standardStats) {
+            if(statType == AlarmType.OK)
+                return context.getString(R.string.tts_time_in_range)
+            return getStatisticsTitle(context, statType, false)
+        }
+
+        when(statType) {
+            AlarmType.VERY_LOW -> {
+                return context.getString(R.string.tts_less_than, if(ReceiveData.isMmol) "3.0" else "54")
+            }
+            AlarmType.LOW -> {
+                return context.getString(R.string.tts_range_format, if(ReceiveData.isMmol) "3.0" else "54", if(ReceiveData.isMmol) "3.8" else "69")
+            }
+            AlarmType.OK -> {
+                return if(ReceiveData.isMmol)
+                {
+                    context.getString(R.string.tts_range_format, "3.9", if(useTITR) "7.8" else "10.0")
+                } else
+                {
+                    context.getString(R.string.tts_range_format,  "70", if(useTITR) "140" else "180")
+                }
+            }
+            AlarmType.HIGH -> {
+                return if(ReceiveData.isMmol)
+                {
+                    context.getString(R.string.tts_range_format, if(useTITR) "7.9" else "10.1", "13.9")
+                } else
+                {
+                    context.getString(R.string.tts_range_format, if(useTITR) "141" else "181",  "250")
+                }
+            }
+            AlarmType.VERY_HIGH -> {
+                return context.getString(R.string.tts_more_than, if(ReceiveData.isMmol) "13.9" else "250")
             }
             else -> return ""
         }

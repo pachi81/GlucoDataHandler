@@ -1012,7 +1012,7 @@ Tieto povolenia môžete kedykoľvek spravovať v nastaveniach aplikácie Health
     <string name="pref_switch_standard_children_statistics">Použiť TITR pre deti</string>
     <string name="pref_switch_standard_children_statistics_summary">Používanie \"času v užšom rozsahu\" (TITR) s cieľovými hodnotami 70 – 140 mg/dl (3,9 – 7,8 mmol/l) sa v niektorých regiónoch odporúča pre malé deti.</string>
 
-    <string name="pref_source_librelinkup_5_info_summary">Abbott prepol LibreLinkUp na šifrovanú komunikáciu.\nAhľad ako sa predchádzajúce rozhranie vypne, GDH bude pravdepodobne prestávať fungovať.\nV súčasnosti nie je technické riešenie v dohľade.</string>
+    <string name="pref_source_librelinkup_5_info_summary">Abbott prepol LibreLinkUp na šifrovanú komunikáciu.\nAhľad ako sa predchádzajúce rozhranie vypne, GDH bude pravdepodobne prestávať fungovať.\nV súčasnosti nie je technické riešenie v dohľade.\nKliknutím sem zobrazíte aktuálny stav.</string>
     <string name="source_librelinkup_5_info_popup_title">Dôležitá poznámka týkajúca sa LibreLinkUp:</string>
     <string name="source_librelinkup_5_info_popup">Abbott vydal verziu 5, ktorá používa nové šifrované rozhranie.\nAk Abbott vypne predchádzajúce rozhranie, komunikácia s GDH (a ďalšími aplikáciami tretích strán) bude pravdepodobne prerušená.\nV súčasnosti neexistuje technické riešenie na obídenie tohto nového šifrovania.\nOtázky týkajúce sa budúcej podpory základných funkcií, ako je integrácia s chytrými hodinkami, môžu odpovedať iba priamo podporou spoločnosti Abbott.</string>
 
@@ -1035,4 +1035,13 @@ Tieto povolenia môžete kedykoľvek spravovať v nastaveniach aplikácie Health
     <string name="aod_optional_feature_info">GlucoDataHandler ponúka voliteľnú funkciu Always-On Display (AOD), ktorá pomocou rozhrania Android AccessibilityService API zobrazuje hodnotu glykémie na obrazovke AOD bez prebudenia zariadenia.\n\nPravidlá služby Google Play vyžadujú, aby sa tieto informácie zobrazili na viditeľnom mieste pred prechodom do nastavení.\n\nTáto funkcia je predvolene vypnutá a neovplyvňuje základné funkcie aplikácie.\n\nMôžete ju zapnúť teraz alebo ju nakonfigurovať neskôr v časti %1$s - %2$s.</string>
     <string name="aod_optional_feature_main">Always-On-Display (AOD)\nViac informácií zobrazíte klepnutím sem.</string>
     <string name="button_not_now">Teraz nie</string>
+    <!-- v2.5.1 -->
+
+    <string name="glucose_variability">Variabilita glukózy</string>
+    <string name="statistics_period_previous">Kratšie obdobie</string>
+    <string name="statistics_period_next">Dlhšie obdobie</string>
+    <string name="tts_less_than">menej ako %s</string>
+    <string name="tts_range_format">od %s do %s</string>
+    <string name="tts_more_than">viac ako %s</string>
+    <string name="tts_time_in_range">Čas v cieľovom rozsahu</string>
 </resources>

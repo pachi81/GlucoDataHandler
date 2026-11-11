@@ -87,11 +87,11 @@ android {
 
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '11'
     }
     dependenciesInfo {
         // Disables dependency metadata when building APKs.
@@ -102,8 +102,8 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.core:core-ktx:1.18.0'
-    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'androidx.core:core-ktx:1.19.1'
+    implementation 'androidx.appcompat:appcompat:1.8.0'
     implementation 'com.google.android.material:material:1.14.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.2'
     implementation 'com.joaomgcd:taskerpluginlibrary:0.4.10'
@@ -111,9 +111,9 @@ dependencies {
     implementation "androidx.car.app:app:1.7.0"
     implementation "androidx.preference:preference-ktx:1.2.1"
     implementation "com.jaredrummler:colorpicker:1.1.0"
-    implementation "androidx.media3:media3-session:1.11.0"
-    implementation "androidx.media3:media3-exoplayer:1.11.0"
-    implementation 'androidx.work:work-runtime:2.11.2'
+    implementation "androidx.media3:media3-session:1.11.1"
+    implementation "androidx.media3:media3-exoplayer:1.11.1"
+    implementation 'androidx.work:work-runtime:2.12.0'
 }
 
 // --- Dynamic Post-Build Copy Logic (Groovy Version - Configuration Cache Compatible) ---

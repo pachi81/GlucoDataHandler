@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="locale">zh-rTW</string>
+    <string name="locale">zh-TW</string>
 
     <string name="info_label_sensor_id">感測器</string>
     <string name="info_label_value">血糖值</string>
@@ -1002,7 +1002,7 @@ GlucoDataHandler 只會將血糖數據寫入健康連結，除非您明確授予
     <string name="pref_switch_standard_children_statistics">對兒童使用 TITR</string>
     <string name="pref_switch_standard_children_statistics_summary">在某些地區，建議幼童使用目標範圍為 70–140 mg/dl (3.9–7.8 mmol/l) 的「更窄目標範圍時間」(TITR)。</string>
 
-    <string name="pref_source_librelinkup_5_info_summary">Abbott 已將 LibreLinkUp 切換至加密通訊。\n一旦先前的介面關閉，GDH 將可能無法運作。\n目前尚無技術解決方案。</string>
+    <string name="pref_source_librelinkup_5_info_summary">Abbott 已將 LibreLinkUp 切換至加密通訊。\n一旦先前的介面關閉，GDH 將可能無法運作。\n目前尚無技術解決方案。\n點擊此處查看當前狀態。</string>
     <string name="source_librelinkup_5_info_popup_title">關於 LibreLinkUp 的重要提示：</string>
     <string name="source_librelinkup_5_info_popup">Abbott 發佈了版本 5，採用新的加密介面。\n如果 Abbott 關閉先前的介面，與 GDH（及其他第三方應用程式）的通訊將可能中斷。\n目前尚無技術方案可繞過此新加密。\n關於未來是否支援必要功能（例如智慧手錶整合）的問題，只能由 Abbott 支援團隊直接回答。</string>
 
@@ -1030,4 +1030,13 @@ GlucoDataHandler 只會將血糖數據寫入健康連結，除非您明確授予
     <string name="aod_optional_feature_info">GlucoDataHandler 提供選用的 Always-On Display（AOD）功能，使用 Android AccessibilityService API 在 AOD 螢幕上顯示您的血糖值，而不會喚醒裝置。\n\nGoogle Play 政策要求在前往設定之前醒目顯示這項資訊。\n\n此功能預設為停用，且不會影響應用程式的核心功能。\n\n您可以立即啟用，或稍後在 %1$s - %2$s 中設定。</string>
     <string name="aod_optional_feature_main">Always-On-Display（AOD）\n點選此處以取得更多資訊。</string>
     <string name="button_not_now">暫不</string>
+    <!-- v2.5.1 -->
+
+    <string name="glucose_variability">血糖變異率</string>
+    <string name="statistics_period_previous">較短時間段</string>
+    <string name="statistics_period_next">較長時間段</string>
+    <string name="tts_less_than">小於 %s</string>
+    <string name="tts_range_format">從 %s 到 %s</string>
+    <string name="tts_more_than">大於 %s</string>
+    <string name="tts_time_in_range">目標範圍內時間</string>
 </resources>

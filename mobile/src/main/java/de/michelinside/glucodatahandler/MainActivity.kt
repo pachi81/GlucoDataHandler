@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.graphics.Paint
 import android.net.Uri
 import android.os.Build
@@ -22,14 +23,13 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import android.widget.RadioButton
-import android.widget.RadioGroup
 import android.widget.RelativeLayout
 import android.widget.ScrollView
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -85,7 +85,6 @@ import kotlin.math.min
 import kotlin.time.Duration.Companion.days
 import de.michelinside.glucodatahandler.common.R as CR
 import androidx.core.net.toUri
-import androidx.preference.SwitchPreferenceCompat
 import de.michelinside.glucodatahandler.common.Command
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 import de.michelinside.glucodatahandler.common.service.ReceiverManager
@@ -117,9 +116,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var sharedPref: SharedPreferences
     private lateinit var optionsMenu: Menu
     private lateinit var chart: GlucoseChart
-    private lateinit var statGroup: RadioGroup
-    private lateinit var btnStat1d: RadioButton
-    private lateinit var btnStat7d: RadioButton
+    private lateinit var btnStatPrevious: ImageView
+    private lateinit var btnStatNext: ImageView
+    private lateinit var txtStatisticsPeriod: TextView
 
     private var layoutWithGraph: LinearLayout? = null
     private var layoutWithoutGraph: LinearLayout? = null
@@ -138,7 +137,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
             super.onCreate(savedInstanceState)
-            enableEdgeToEdge()
+            enableEdgeToEdge(statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT))
             setContentView(R.layout.activity_main)
             Log.v(LOG_ID, "onCreate called")
 
@@ -166,9 +165,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             chart = findViewById(R.id.chart)
             layoutWithGraph = findViewById(R.id.glucose_with_graph)
             layoutWithoutGraph = findViewById(R.id.glucose_without_graph)
-            statGroup = findViewById(R.id.statGroup)
-            btnStat1d = findViewById(R.id.btnStat1d)
-            btnStat7d = findViewById(R.id.btnStat7d)
+            btnStatPrevious = findViewById(R.id.btnStatPrevious)
+            btnStatNext = findViewById(R.id.btnStatNext)
+            txtStatisticsPeriod = findViewById(R.id.txtStatisticsPeriod)
 
             expandCollapseView = findViewById(R.id.expandCollapseView)
             ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.root)) { v, insets ->
@@ -224,25 +223,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     toggleFullscreenLandMode()
             }
 
-            btnStat1d.text = resources.getQuantityString(CR.plurals.duration_days_short, 1, 1)
-            btnStat7d.text = resources.getQuantityString(CR.plurals.duration_days_short, 7, 7)
-
-            if(sharedPref.getInt(Constants.SHARED_PREF_MAIN_STATISTICS_DAYS, 7) == 1) {
-                btnStat1d.isChecked = true
-            } else {
-                btnStat7d.isChecked = true
-            }
-
-            statGroup.setOnCheckedChangeListener { _, _ ->
-                Log.d(LOG_ID, "statGroup changed")
-                sharedPref.edit {
-                    putInt(
-                        Constants.SHARED_PREF_MAIN_STATISTICS_DAYS,
-                        if (btnStat1d.isChecked) 1 else 7
-                    )
-                }
-                updateStatisticsTable()
-            }
+            btnStatPrevious.setOnClickListener { changeStatisticsPeriod(-1) }
+            btnStatNext.setOnClickListener { changeStatisticsPeriod(1) }
+            updateStatisticsPeriodDisplay()
 
 
             Dialogs.updateColorScheme(this)
@@ -1218,35 +1201,162 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     private fun updateStatisticsTable() {
         tableStatistics.removeViews(1, maxOf(0, tableStatistics.childCount - 1))
-        GlucoseStatistics.update()
+        updateStatisticsPeriodDisplay()
         if(GlucoseStatistics.hasStatistics) {
-            val statData = if(btnStat1d.isChecked) GlucoseStatistics.statData1d else GlucoseStatistics.statData7d
+            val selectedDays = sharedPref.getInt(Constants.SHARED_PREF_MAIN_STATISTICS_DAYS, 7)
+            val statData = GlucoseStatistics.getStatistics(selectedDays)
             Log.d(LOG_ID, "Create statistics for ${statData.days}d with ${statData.count} data points - hasData: ${statData.hasData}")
-            val name = if(btnStat1d.isChecked) resources.getString(CR.string.info_label_average) else resources.getString(CR.string.info_label_average) + " ⌀"
+            if(!statData.hasData) {
+                checkTableVisibility(tableStatistics)
+                return
+            }
+            val name = if(statData.days == 7) resources.getString(CR.string.info_label_average) + " ⌀" else resources.getString(CR.string.info_label_average)
             tableStatistics.addView(createRow(name, GlucoDataUtils.getDisplayGlucoseAsString(statData.averageGlucose, true)))
+            if(statData.glucoseVariabilityPercent.isFinite()) {
+                val cv = statData.glucoseVariabilityPercent
+                val color = when {
+                    cv <= 36F -> ReceiveData.getAlarmTypeColor(AlarmType.OK)
+                    cv <= 50F -> ReceiveData.getAlarmTypeColor(AlarmType.HIGH)
+                    else -> ReceiveData.getAlarmTypeColor(AlarmType.VERY_HIGH)
+                }
+
+                tableStatistics.addView(createProgressBarRow(CR.string.glucose_variability_short, cv, color, keyContentDesc = resources.getString(CR.string.glucose_variability)))
+            }
             tableStatistics.addView(createLongValueRow(CR.string.gmi, "${DecimalFormat("#.#").format(statData.gmiPercent)}% (${statData.gmiMmolPerMol} ${resources.getString(CR.string.unit_gmi)})"))
             tableStatistics.addView(createLongValueRow(CR.string.hba1c, "${DecimalFormat("#.#").format(statData.hba1cPercent)}% (${statData.hba1cMmolPerMol} ${resources.getString(CR.string.unit_gmi)})"))
             if(statData.hasData) {
-                tableStatistics.addView(createProgressBarRow(GlucoseStatistics.getStatisticsTitle(this, AlarmType.VERY_HIGH), statData.percentVeryHigh, ReceiveData.getAlarmTypeColor(AlarmType.VERY_HIGH)))
-                tableStatistics.addView(createProgressBarRow(GlucoseStatistics.getStatisticsTitle(this, AlarmType.HIGH), statData.percentHigh, ReceiveData.getAlarmTypeColor(AlarmType.HIGH)))
-                tableStatistics.addView(createProgressBarRow(GlucoseStatistics.getStatisticsTitle(this, AlarmType.OK), statData.percentInRange, ReceiveData.getAlarmTypeColor(AlarmType.OK)))
-                tableStatistics.addView(createProgressBarRow(GlucoseStatistics.getStatisticsTitle(this, AlarmType.LOW), statData.percentLow, ReceiveData.getAlarmTypeColor(AlarmType.LOW)))
-                tableStatistics.addView(createProgressBarRow(GlucoseStatistics.getStatisticsTitle(this, AlarmType.VERY_LOW), statData.percentVeryLow, ReceiveData.getAlarmTypeColor(AlarmType.VERY_LOW)))
+                tableStatistics.addView(
+                    createProgressBarRow(
+                        GlucoseStatistics.getStatisticsTitle(
+                            this,
+                            AlarmType.VERY_HIGH,
+                            statData.usesStandardRanges
+                        ),
+                        statData.percentVeryHigh,
+                        ReceiveData.getAlarmTypeColor(AlarmType.VERY_HIGH),
+                        keyContentDesc = GlucoseStatistics.getStatisticsDescription(
+                            this,
+                            AlarmType.VERY_HIGH,
+                            statData.usesStandardRanges
+                        )
+                    )
+                )
+                tableStatistics.addView(
+                    createProgressBarRow(
+                        GlucoseStatistics.getStatisticsTitle(
+                            this,
+                            AlarmType.HIGH,
+                            statData.usesStandardRanges
+                        ), statData.percentHigh, ReceiveData.getAlarmTypeColor(AlarmType.HIGH),
+                        keyContentDesc = GlucoseStatistics.getStatisticsDescription(
+                            this,
+                            AlarmType.HIGH,
+                            statData.usesStandardRanges
+                        )
+                    )
+                )
+                tableStatistics.addView(
+                    createProgressBarRow(
+                        GlucoseStatistics.getStatisticsTitle(
+                            this,
+                            AlarmType.OK,
+                            statData.usesStandardRanges
+                        ), statData.percentInRange, ReceiveData.getAlarmTypeColor(AlarmType.OK),
+                        keyContentDesc = GlucoseStatistics.getStatisticsDescription(
+                            this,
+                            AlarmType.OK,
+                            statData.usesStandardRanges
+                        )
+                    )
+                )
+                tableStatistics.addView(
+                    createProgressBarRow(
+                        GlucoseStatistics.getStatisticsTitle(
+                            this,
+                            AlarmType.LOW,
+                            statData.usesStandardRanges
+                        ), statData.percentLow, ReceiveData.getAlarmTypeColor(AlarmType.LOW),
+                        keyContentDesc = GlucoseStatistics.getStatisticsDescription(
+                            this,
+                            AlarmType.LOW,
+                            statData.usesStandardRanges
+                        )
+                    )
+                )
+                tableStatistics.addView(
+                    createProgressBarRow(
+                        GlucoseStatistics.getStatisticsTitle(
+                            this,
+                            AlarmType.VERY_LOW,
+                            statData.usesStandardRanges
+                        ),
+                        statData.percentVeryLow,
+                        ReceiveData.getAlarmTypeColor(AlarmType.VERY_LOW),
+                        keyContentDesc = GlucoseStatistics.getStatisticsDescription(
+                            this,
+                            AlarmType.VERY_LOW,
+                            statData.usesStandardRanges
+                        )
+                    )
+                )
             }
         }
         checkTableVisibility(tableStatistics)
+    }
+
+    private fun changeStatisticsPeriod(direction: Int) {
+        val selectedDays = sharedPref.getInt(Constants.SHARED_PREF_MAIN_STATISTICS_DAYS, 7)
+        val nextDays = GlucoseStatistics.stepPeriodDays(selectedDays, direction)
+        if(nextDays == selectedDays)
+            return
+        sharedPref.edit {
+            putInt(Constants.SHARED_PREF_MAIN_STATISTICS_DAYS, nextDays)
+        }
+        updateStatisticsTable()
+    }
+
+    private fun updateStatisticsPeriodDisplay() {
+        val selectedDays = sharedPref.getInt(Constants.SHARED_PREF_MAIN_STATISTICS_DAYS, 7)
+        GlucoseStatistics.update()
+        val days = GlucoseStatistics.resolveActivePeriodDays(selectedDays)
+        val index = GlucoseStatistics.SUPPORTED_PERIODS.indexOf(days)
+        val statData = GlucoseStatistics.getStatistics(days)
+        if(days != selectedDays) {
+            sharedPref.edit {
+                putInt(Constants.SHARED_PREF_MAIN_STATISTICS_DAYS, days)
+            }
+        }
+        txtStatisticsPeriod.text = resources.getQuantityString(CR.plurals.duration_days_short, days, days)
+        txtStatisticsPeriod.contentDescription = resources.getQuantityString(CR.plurals.days_long, days, days)
+        if(statData.dataAgeDays in 1..< days) {
+            txtStatisticsPeriod.text = buildString {
+                append(txtStatisticsPeriod.text.toString())
+                append("*")
+            }
+            txtStatisticsPeriod.setOnClickListener {
+                Toast.makeText(this, "${statData.dataAgeDays}d / ${days}d", Toast.LENGTH_SHORT).show()
+            }
+        } else
+            txtStatisticsPeriod.setOnClickListener(null)
+
+        btnStatPrevious.isEnabled = index > 0
+        btnStatNext.isEnabled = statData.hasData && index < GlucoseStatistics.SUPPORTED_PERIODS.lastIndex && GlucoseStatistics.getStatistics(GlucoseStatistics.SUPPORTED_PERIODS[index + 1]).hasData
+        btnStatPrevious.alpha = if(btnStatPrevious.isEnabled) 1F else 0.4F
+        btnStatNext.alpha = if(btnStatNext.isEnabled) 1F else 0.4F
     }
 
     private fun checkTableVisibility(table: TableLayout) {
         table.visibility = if(table.childCount <= 1) View.GONE else View.VISIBLE
     }
 
-    private fun createColumn(text: String, end: Boolean, onClickListener: OnClickListener? = null, initWeight: Float = 1F) : TextView {
+    private fun createColumn(text: String, end: Boolean, onClickListener: OnClickListener? = null, initWeight: Float = 1F, keyContentDesc: String? = null) : TextView {
         val textView = TextView(this)
         textView.layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, initWeight)
         textView.text = text
         textView.isFocusable = false
         textView.textSize = 18F
+        if (keyContentDesc != null)
+            textView.contentDescription = keyContentDesc
         if (end)
             textView.gravity = Gravity.CENTER_VERTICAL or Gravity.END
         else
@@ -1300,17 +1410,17 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         return progressBar
     }
 
-    private fun createProgressBarRow(keyResId: Int, percentage: Float, color: Int, valueView: TextView? = null) : TableRow {
-        return createProgressBarRow(resources.getString(keyResId), percentage, color, valueView)
+    private fun createProgressBarRow(keyResId: Int, percentage: Float, color: Int, valueView: TextView? = null, keyContentDesc: String? = null) : TableRow {
+        return createProgressBarRow(resources.getString(keyResId), percentage, color, valueView, keyContentDesc)
     }
-    private fun createProgressBarRow(key: String, percentage: Float, color: Int, valueView: TextView? = null) : TableRow {
+    private fun createProgressBarRow(key: String, percentage: Float, color: Int, valueView: TextView? = null, keyContentDesc: String? = null) : TableRow {
         val row = TableRow(this)
         row.weightSum = 11f
         row.gravity = Gravity.CENTER_VERTICAL
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
             row.isScreenReaderFocusable = true
         row.setPadding(Utils.dpToPx(5F, this))
-        row.addView(createColumn(key, false, null, 4F))
+        row.addView(createColumn(key, false, null, 4F, keyContentDesc))
         row.addView(createProgressBar(percentage.toInt(), 100, color, key))
         if(valueView == null)
             row.addView(createColumn("${DecimalFormat("#.#").format(percentage)}%", true, null, 3F))
