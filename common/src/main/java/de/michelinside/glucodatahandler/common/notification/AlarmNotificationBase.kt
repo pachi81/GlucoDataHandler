@@ -1007,6 +1007,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         if (!activeLevelAlarm) return
         if (ReceiveData.getAlarmType() != AlarmType.OK) return
         Log.i(LOG_ID, "Auto-dismissing alarm notification: glucose returned to range")
+        AlarmHandler.resetAlarmState()
         stopCurrentNotification(context)
     }
 
