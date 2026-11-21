@@ -473,6 +473,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
             sharedPref.registerOnSharedPreferenceChangeListener(this)
             GlucoDataService.patientName = GlucoDataService.sharedPref!!.getString(Constants.PATIENT_NAME, "")
             CarConnection(applicationContext).type.observeForever(GlucoDataServiceAuto::onConnectionStateUpdated)
+            CarNotification.init(applicationContext)
             InternalNotifier.notify(this, NotifySource.SERVICE_STARTED, null)
             if(dataSyncCount > 0)
                 startDataSync(true)
