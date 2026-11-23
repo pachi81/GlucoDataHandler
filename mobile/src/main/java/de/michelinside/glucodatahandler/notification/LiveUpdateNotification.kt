@@ -18,7 +18,6 @@ import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.Log
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
-import java.time.Instant
 import de.michelinside.glucodatahandler.common.R as CR
 
 object LiveUpdateNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -55,13 +54,16 @@ object LiveUpdateNotification: NotifierInterface, SharedPreferences.OnSharedPref
         Log.i(LOG_ID, "update - enabled=$enabled sdk=${Build.VERSION.SDK_INT}")
         if (enabled && Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
             Channels.createNotificationChannel(appContext, ChannelType.MOBILE_LIVE_UPDATE)
-            InternalNotifier.addNotifier(appContext, this, mutableSetOf(
+            val filter = mutableSetOf(
                 NotifySource.BROADCAST,
                 NotifySource.MESSAGECLIENT,
                 NotifySource.OBSOLETE_VALUE,
                 NotifySource.IOB_COB_CHANGE,
                 NotifySource.SETTINGS
-            ))
+            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.CINNAMON_BUN)
+                filter.add(NotifySource.TIME_VALUE)  // age metric
+            InternalNotifier.addNotifier(appContext, this, filter)
             show()
         } else {
             InternalNotifier.remNotifier(appContext, this)
@@ -140,12 +142,20 @@ object LiveUpdateNotification: NotifierInterface, SharedPreferences.OnSharedPref
                 Notification.Metric.FixedText(ReceiveData.getDeltaAsString()),
                 appContext.getString(CR.string.info_label_delta)))
         if (ReceiveData.time > 0) {
+            // fixed text instead of a system stopwatch, which ticks seconds on the AOD
             style.addMetric(Notification.Metric(
-                Notification.Metric.TimeDifference.forStopwatch(
-                    Instant.ofEpochMilli(ReceiveData.time),
-                    Notification.Metric.TimeDifference.FORMAT_ADAPTIVE),
+                Notification.Metric.FixedText(getAge()),
                 appContext.getString(CR.string.live_update_metric_age)))
         }
         return style
+    }
+
+    private fun getAge(): String {
+        val minutes = ReceiveData.getElapsedTimeMinute()
+        return when {
+            minutes < 1 -> "<1m"
+            minutes > 60 -> ">1h"
+            else -> "${minutes}m"
+        }
     }
 }
