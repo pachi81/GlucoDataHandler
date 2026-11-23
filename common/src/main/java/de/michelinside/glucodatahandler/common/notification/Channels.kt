@@ -15,6 +15,7 @@ enum class ChannelType(val channelId: String, val nameResId: Int, val descrResId
     MOBILE_FOREGROUND("GDH_foreground", R.string.mobile_foreground_notification_name, R.string.mobile_foreground_notification_descr ),
     MOBILE_SECOND("GlucoDataNotify_permanent", R.string.mobile_second_notification_name, R.string.mobile_second_notification_descr ),
     MOBILE_THIRD("GlucoDataNotify_third", R.string.mobile_third_notification_name, R.string.mobile_second_notification_descr ),
+    MOBILE_LIVE_UPDATE("GDH_live_update", R.string.live_update, R.string.live_update_summary ),
     WORKER("worker_notification_01", R.string.worker_notification_name, R.string.worker_notification_descr, NotificationManager.IMPORTANCE_LOW ),
     WEAR_FOREGROUND("glucodatahandler_service_01", R.string.wear_foreground_notification_name, R.string.wear_foreground_notification_descr, NotificationManager.IMPORTANCE_LOW),
     ANDROID_AUTO("GlucoDataNotify_Car", R.string.android_auto_notification_name, R.string.android_auto_notification_descr ),
