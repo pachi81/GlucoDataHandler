@@ -258,7 +258,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
 
     private fun hasOngoingNotification(packageName: String): Boolean {
         if(PackageUtils.isDexcomG7App(packageName)) // G7 foreground has disabled ongoing flag
-            return false
+            return (onGoingNotificationPackage == packageName)  // new app versions provide an ongoing notification
         if(packageName.lowercase().startsWith("com.senseonics."))  // Eversense 365 CGM has no ongoing
             return false
 

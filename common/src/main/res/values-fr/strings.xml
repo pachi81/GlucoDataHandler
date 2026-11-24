@@ -1007,7 +1007,7 @@ Vous pouvez gérer ces autorisations à tout moment dans les paramètres de l\'a
     <string name="pref_switch_standard_children_statistics">Utiliser le TITR pour les enfants</string>
     <string name="pref_switch_standard_children_statistics_summary">L\'utilisation du \"Time in Tighter Range\" (TITR) avec des cibles de 70–140 mg/dl (3,9–7,8 mmol/l) est recommandée pour les jeunes enfants dans certaines régions.</string>
 
-    <string name="pref_source_librelinkup_5_info_summary">Abbott a basculé LibreLinkUp vers une communication chiffrée.\nDès que l\'interface précédente sera arrêtée, GDH cessera probablement de fonctionner.\nIl n\'y a actuellement aucune solution technique en vue.</string>
+    <string name="pref_source_librelinkup_5_info_summary">Abbott a basculé LibreLinkUp vers une communication chiffrée.\nDès que l\'interface précédente sera arrêtée, GDH cessera probablement de fonctionner.\nIl n\'y a actuellement aucune solution technique en vue.\nAppuyez ici pour voir l\'état actuel.</string>
     <string name="source_librelinkup_5_info_popup_title">Remarque importante concernant LibreLinkUp :</string>
     <string name="source_librelinkup_5_info_popup">Abbott a lancé la version 5, qui utilise une nouvelle interface chiffrée.\nSi Abbott arrête l\'interface précédente, la communication avec GDH (et les autres applications tierces) sera probablement interrompue.\nActuellement, il n\'existe aucune solution technique pour contourner ce nouveau chiffrement.\nLes questions concernant le support futur des fonctionnalités essentielles comme l\'intégration avec les montres intelligentes ne peuvent être répondues directement que par le support Abbott.</string>
 
@@ -1031,4 +1031,13 @@ Vous pouvez gérer ces autorisations à tout moment dans les paramètres de l\'a
     <string name="aod_optional_feature_info">GlucoDataHandler propose une fonction Always-On Display (AOD) facultative qui utilise l\'API Android AccessibilityService pour afficher votre glycémie sur l\'écran AOD sans sortir l\'appareil du mode veille.\n\nLes règles de Google Play exigent que ces informations soient affichées de manière visible avant d\'accéder aux paramètres.\n\nCette fonction est désactivée par défaut et n\'affecte pas les fonctionnalités essentielles de l\'application.\n\nVous pouvez l\'activer maintenant ou la configurer plus tard dans %1$s - %2$s.</string>
     <string name="aod_optional_feature_main">Always-On-Display (AOD)\nAppuyez ici pour en savoir plus.</string>
     <string name="button_not_now">Pas maintenant</string>
+    <!-- v2.5.1 -->
+
+    <string name="glucose_variability">Variabilité de la glycémie</string>
+    <string name="statistics_period_previous">Période plus courte</string>
+    <string name="statistics_period_next">Période plus longue</string>
+    <string name="tts_less_than">moins de %s</string>
+    <string name="tts_range_format">de %s à %s</string>
+    <string name="tts_more_than">plus de %s</string>
+    <string name="tts_time_in_range">Temps dans la cible</string>
 </resources>

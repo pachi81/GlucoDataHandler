@@ -1,8 +1,10 @@
 package de.michelinside.glucodatahandler.tasker
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import androidx.activity.SystemBarStyle
 import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -47,7 +49,7 @@ class WriteSettingConfigureActivity : AppCompatActivity(),
             super.onCreate(savedInstanceState)
             helper.onCreate()
             if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P)
-                enableEdgeToEdge()
+                enableEdgeToEdge(statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT))
             setContentView(binding.root)
 
             if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {

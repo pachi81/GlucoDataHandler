@@ -87,20 +87,13 @@
         android:theme="@style/Theme.GlucoDataHandler"
         android:usesCleartextTraffic="true">
 
-        <!-- Health Connect Permission Rationale and Request Activity -->
-        <!-- This activity handles ACTION_REQUEST_PERMISSIONS (for all supported versions) -->
-        <!-- and ACTION_SHOW_PERMISSIONS_RATIONALE (for Android 13 and below, or if HC falls back to it) -->
+        <!-- For Android 13 and below, show the rationale when the user opens the privacy policy from Health Connect. -->
         <activity
             android:name=".healthconnect.HealthConnectPermissionActivity"
             android:exported="true"
             tools:ignore="DiscouragedApi">
             <intent-filter>
-                <action android:name="androidx.health.connect.client.ACTION_REQUEST_PERMISSIONS" />
-                <category android:name="android.intent.category.DEFAULT" /> 
-            </intent-filter>
-            <intent-filter>
-                <action android:name="androidx.health.connect.client.ACTION_SHOW_PERMISSIONS_RATIONALE" />
-                <category android:name="android.intent.category.DEFAULT" /> 
+                <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
             </intent-filter>
         </activity>
 

@@ -2,7 +2,9 @@ package de.michelinside.glucodatahandler
 
 //noinspection SuspiciousImport
 import android.R
+import android.graphics.Color
 import android.os.Bundle
+import androidx.activity.SystemBarStyle
 import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -31,7 +33,7 @@ class SettingsActivity : AppCompatActivity(),
             Log.v(LOG_ID, "onCreate called for fragment ${intent.getIntExtra(FRAGMENT_EXTRA, -1)} with instance: ${(savedInstanceState!=null)} count=${supportFragmentManager.backStackEntryCount}" )
             super.onCreate(savedInstanceState)
             PreferenceHelper.resetViewPadding()
-            enableEdgeToEdge()
+            enableEdgeToEdge(statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT))
             if(savedInstanceState==null) {
                 titleMap.clear()
                 when (intent.getIntExtra(FRAGMENT_EXTRA, 0)) {
