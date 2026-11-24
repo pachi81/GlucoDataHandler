@@ -3,9 +3,9 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
-project.ext.set("versionCode", 1034)
-project.ext.set("devVersion", 2)
-project.ext.set("versionName", "2.1")
+project.ext.set("versionCode", 1036)
+project.ext.set("devVersion", 1)
+project.ext.set("versionName", "2.2.1")
 
 
 Properties properties = new Properties()

@@ -19,10 +19,83 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--dontwarn **
--keep class **
--keepclassmembers class *{*;}
--keepattributes *
+#-dontwarn **
+#-keep class **
+#-keepclassmembers class *{*;}
+#-keepattributes *
+-dontwarn de.michelinside.glucodatahandler.common.**
+# --------------------------------------------------------------------
+# Internal Common Module Classes
+# --------------------------------------------------------------------
+# This prevents R8 from stripping away your core logic classes
+-keep class de.michelinside.glucodatahandler.common.** { *; }
+# ProGuard rule to preserve BleMessage for Java Serialization
+-keep class com.microtechmd.blecomm.entity.BleMessage { *; }
+# Broadcast service API
+-keep class com.eveningoutpost.dexdrip.services.broadcastservice.**
+# Also keep the mobile specific classes to ensure services and receivers
+# are not renamed, which would break Android system callbacks
+-keep class de.michelinside.glucodatahandler.** { *; }
+-keep class de.michelinside.glucodataauto.** { *; }
+
+# --------------------------------------------------------------------
+# Kotlin Serialization
+# --------------------------------------------------------------------
+# Keep the serializable classes to prevent stripping of names/fields
+-keepattributes *Annotation*, EnclosingMethod, Signature
+-keepclassmembers class * {
+    @kotlinx.serialization.Serializable *;
+}
+
+# --------------------------------------------------------------------
+# MPAndroidChart
+# --------------------------------------------------------------------
+-keep class com.github.mikephil.charting.** { *; }
+-dontwarn com.github.mikephil.charting.**
+
+# --------------------------------------------------------------------
+# Ktor (CIO Server)
+# --------------------------------------------------------------------
+-keepattributes Signature, RuntimeVisibleAnnotations, AnnotationDefault
+-keep class io.ktor.** { *; }
+-dontwarn io.ktor.**
+
+# --------------------------------------------------------------------
+# General View Handling (for ViewBinding/Custom Views)
+# --------------------------------------------------------------------
+-keepclassmembers class * extends android.view.View {
+   public <init>(android.content.Context);
+   public <init>(android.content.Context, android.util.AttributeSet);
+   public <init>(android.content.Context, android.util.AttributeSet, int);
+   public void set*(***);
+}
+
+# --------------------------------------------------------------------
+# Android Auto (Car App Library)
+#--------------------------------------------------------------------
+-keep class androidx.car.app.** { *; }
+-keep class * extends androidx.car.app.CarAppService { *; }
+
+# --------------------------------------------------------------------
+# WorkManager
+# --------------------------------------------------------------------
+-keep class * extends androidx.work.ListenableWorker { *; }
+-keep class * extends androidx.work.Worker { *; }
+
+# --------------------------------------------------------------------
+# Slidetoact & ColorPicker (UI Libraries often use reflection)
+# --------------------------------------------------------------------
+-keep class com.ncorti.slidetoact.** { *; }
+-keep class com.jaredrummler.colorpicker.** { *; }
+
+# --------------------------------------------------------------------
+# Kotlin Coroutines (Used by Ktor and WorkManager)
+# --------------------------------------------------------------------
+-keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
+-keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
+-keepclassmembernames class kotlinx.coroutines.android.HandlerContext {
+    volatile <fields>;
+}
 
 # --------------------------------------------------------------------
 # REMOVE all debug log messages

@@ -164,6 +164,11 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         return filter
     }
 
+    fun init(context: Context) {
+        Log.d(LOG_ID, "init called")
+        initNotification(context)
+    }
+
     fun enable(context: Context) {
         Log.d(LOG_ID, "enable called")
         initNotification(context)
