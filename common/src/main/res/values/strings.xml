@@ -20,6 +20,7 @@
 
     <string name="glucodataauto_link" translatable="false">https://github.com/pachi81/GlucoDataAuto/blob/main/README.md</string>
     <string name="help_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/wiki</string>
+    <string name="librelinkup_state_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/wiki/LibreLinkUp#status</string>
     <string name="update_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/releases</string>
     <string name="support_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/issues</string>
     <string name="gda_support_link" translatable="false">https://github.com/pachi81/GlucoDataAuto/issues</string>
@@ -1077,7 +1078,7 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="pref_switch_standard_children_statistics">Using TITR for children</string>
     <string name="pref_switch_standard_children_statistics_summary">Using Time in Tighter Range (TITR) with targets of 70–140 mg/dl (3.9–7.8 mmol/l) is recommended for small children in some regions.</string>
 
-    <string name="pref_source_librelinkup_5_info_summary">Abbott has switched LibreLinkUp to encrypted communication.\nAs soon as the previous interface is shut down, GDH will likely stop working.\nThere is currently no technical solution in sight.</string>
+    <string name="pref_source_librelinkup_5_info_summary">Abbott has switched LibreLinkUp to encrypted communication.\nAs soon as the previous interface is shut down, GDH will likely stop working.\nThere is currently no technical solution in sight.\nPress here for the current state.</string>
     <string name="source_librelinkup_5_info_popup_title">Important note regarding LibreLinkUp:</string>
     <string name="source_librelinkup_5_info_popup">Abbott has released version 5, which uses a new, encrypted interface.\nIf Abbott shuts down the previous interface, communication with GDH (and other third-party apps) will likely be interrupted.\nCurrently, there is no technical solution to bypass this new encryption.\nQuestions regarding the future support of essential features like smartwatch integration can only be answered directly by Abbott support.</string>
 
@@ -1086,6 +1087,7 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="button_accept">Accept</string>
 
     <!-- v2.5 -->
+
     <string name="unit_second_short" translatable="false">s</string>
     <string name="unit_minute_short" translatable="false">min</string>
     <plurals name="minutes_short" translatable="false">
@@ -1107,4 +1109,15 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="aod_optional_feature_info">GlucoDataHandler offers an optional Always-On-Display (AOD) feature that uses the Android AccessibilityService API to display your glucose value on the AOD screen without waking the device.\n\nGoogle Play policies require this information to be shown prominently before navigating to settings.\n\nThis feature is disabled by default and does not affect the core functionality of the app.\n\nYou can enable it now or configure it later in %1$s - %2$s.</string>
     <string name="aod_optional_feature_main">Always-On-Display (AOD)\nTap here for more information.</string>
     <string name="button_not_now">Not now</string>
+
+    <!-- v2.5.1 -->
+
+    <string name="glucose_variability_short" translatable="false">CV</string>
+    <string name="glucose_variability">Glucose variability</string>
+    <string name="statistics_period_previous">Shorter period</string>
+    <string name="statistics_period_next">Longer period</string>
+    <string name="tts_less_than">less than %s</string>
+    <string name="tts_range_format">from %s to %s</string>
+    <string name="tts_more_than">more than %s</string>
+    <string name="tts_time_in_range">Time in range</string>
 </resources>
