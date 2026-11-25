@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import androidx.annotation.RequiresApi
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
@@ -24,14 +25,12 @@ object LiveUpdateNotification: NotifierInterface, SharedPreferences.OnSharedPref
     private const val LOG_ID = "GDH.LiveUpdate"
     private const val NOTIFICATION_ID = 345
     private lateinit var sharedPref: SharedPreferences
-    private lateinit var appContext: Context
 
     fun create(context: Context) {
         try {
-            appContext = context.applicationContext
-            sharedPref = appContext.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             sharedPref.registerOnSharedPreferenceChangeListener(this)
-            update()
+            update(context)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "create exception: $exc")
         }
@@ -41,19 +40,19 @@ object LiveUpdateNotification: NotifierInterface, SharedPreferences.OnSharedPref
         try {
             if (!::sharedPref.isInitialized)
                 return
-            InternalNotifier.remNotifier(appContext, this)
+            InternalNotifier.remNotifier(GlucoDataService.context!!, this)
             sharedPref.unregisterOnSharedPreferenceChangeListener(this)
-            Channels.getNotificationManager(appContext).cancel(NOTIFICATION_ID)
+            Channels.getNotificationManager().cancel(NOTIFICATION_ID)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "destroy exception: $exc")
         }
     }
 
-    private fun update() {
+    private fun update(context: Context) {
         val enabled = sharedPref.getBoolean(Constants.SHARED_PREF_LIVE_UPDATE_ENABLED, false)
         Log.i(LOG_ID, "update - enabled=$enabled sdk=${Build.VERSION.SDK_INT}")
         if (enabled && Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
-            Channels.createNotificationChannel(appContext, ChannelType.MOBILE_LIVE_UPDATE)
+            Channels.createNotificationChannel(context, ChannelType.MOBILE_LIVE_UPDATE)
             val filter = mutableSetOf(
                 NotifySource.BROADCAST,
                 NotifySource.MESSAGECLIENT,
@@ -63,30 +62,30 @@ object LiveUpdateNotification: NotifierInterface, SharedPreferences.OnSharedPref
             )
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.CINNAMON_BUN)
                 filter.add(NotifySource.TIME_VALUE)  // age metric
-            InternalNotifier.addNotifier(appContext, this, filter)
-            show()
+            InternalNotifier.addNotifier(context, this, filter)
+            show(context)
         } else {
-            InternalNotifier.remNotifier(appContext, this)
-            Channels.getNotificationManager(appContext).cancel(NOTIFICATION_ID)
+            InternalNotifier.remNotifier(context, this)
+            Channels.getNotificationManager(context).cancel(NOTIFICATION_ID)
         }
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         Log.d(LOG_ID, "OnNotifyData called for $dataSource")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA)
-            show()
+            show(context)
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         if (key == Constants.SHARED_PREF_LIVE_UPDATE_ENABLED)
-            update()
+            update(GlucoDataService.context!!)
     }
 
     @RequiresApi(Build.VERSION_CODES.BAKLAVA)
-    private fun show() {
+    private fun show(context: Context) {
         try {
-            val notificationManager = Channels.getNotificationManager(appContext)
-            val notification = buildNotification()
+            val notificationManager = Channels.getNotificationManager(context)
+            val notification = buildNotification(context)
             notificationManager.notify(NOTIFICATION_ID, notification)
             Log.i(LOG_ID, "posted - canPostPromoted=${notificationManager.canPostPromotedNotifications()}" +
                     " promotable=${notification.hasPromotableCharacteristics()}")
@@ -96,14 +95,14 @@ object LiveUpdateNotification: NotifierInterface, SharedPreferences.OnSharedPref
     }
 
     @RequiresApi(Build.VERSION_CODES.BAKLAVA)
-    private fun buildNotification(): Notification {
+    private fun buildNotification(context: Context): Notification {
         val glucose = ReceiveData.getGlucoseAsString()
         val trend = if (ReceiveData.isObsoleteShort()) "" else GlucoDataUtils.getRateSymbol(ReceiveData.rate).toString()
-        val builder = Notification.Builder(appContext, ChannelType.MOBILE_LIVE_UPDATE.channelId)
+        val builder = Notification.Builder(context, ChannelType.MOBILE_LIVE_UPDATE.channelId)
             .setSmallIcon(BitmapUtils.getRateAsIcon("live_update_trend", color = Color.WHITE))
             .setContentTitle("$glucose ${ReceiveData.getUnit()} $trend".trim())
             .setContentText(getDetails())
-            .setContentIntent(PackageUtils.getTapActionIntent(appContext, appContext.packageName, NOTIFICATION_ID))
+            .setContentIntent(PackageUtils.getTapActionIntent(context, context.packageName, NOTIFICATION_ID))
             .setOngoing(true)
             .setOnlyAlertOnce(true)
             .setShowWhen(ReceiveData.time > 0)
@@ -117,7 +116,7 @@ object LiveUpdateNotification: NotifierInterface, SharedPreferences.OnSharedPref
             builder.setRequestPromotedOngoing(true)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.CINNAMON_BUN)
-            builder.setStyle(getMetricStyle(glucose, trend))
+            builder.setStyle(getMetricStyle(context, glucose, trend))
         return builder.build()
     }
 
@@ -132,7 +131,7 @@ object LiveUpdateNotification: NotifierInterface, SharedPreferences.OnSharedPref
     }
 
     @RequiresApi(Build.VERSION_CODES.CINNAMON_BUN)
-    private fun getMetricStyle(glucose: String, trend: String): Notification.MetricStyle {
+    private fun getMetricStyle(context: Context, glucose: String, trend: String): Notification.MetricStyle {
         // value column is narrow: keep only the number there, unit and trend go into the label
         val style = Notification.MetricStyle()
             .addMetric(Notification.Metric(
@@ -140,12 +139,12 @@ object LiveUpdateNotification: NotifierInterface, SharedPreferences.OnSharedPref
                 "${ReceiveData.getUnit()} $trend".trim()))
             .addMetric(Notification.Metric(
                 Notification.Metric.FixedText(ReceiveData.getDeltaAsString()),
-                appContext.getString(CR.string.info_label_delta)))
+                context.getString(CR.string.info_label_delta)))
         if (ReceiveData.time > 0) {
             // fixed text instead of a system stopwatch, which ticks seconds on the AOD
             style.addMetric(Notification.Metric(
                 Notification.Metric.FixedText(getAge()),
-                appContext.getString(CR.string.live_update_metric_age)))
+                context.getString(CR.string.live_update_metric_age)))
         }
         return style
     }
