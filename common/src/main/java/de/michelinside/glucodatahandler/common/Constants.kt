@@ -120,6 +120,7 @@ object Constants {
     const val SHARED_PREF_THIRD_PERMANENT_NOTIFICATION_TAP_ACTION = "third_permanent_notification_tap_action"
     const val SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON = "status_bar_notification_big_icon"
     const val SHARED_PREF_API_36_NOTIFICATION_INFO = "api_36_notification_info"
+    const val SHARED_PREF_LIVE_UPDATE_ENABLED = "live_update_enabled"
     const val SHARED_PREF_LARGE_ARROW_ICON = "large_arrow_icon"
     const val SHARED_PREF_FLOATING_WIDGET = "floating_widget"
     const val SHARED_PREF_FLOATING_WIDGET_STYLE = "floating_widget_style"

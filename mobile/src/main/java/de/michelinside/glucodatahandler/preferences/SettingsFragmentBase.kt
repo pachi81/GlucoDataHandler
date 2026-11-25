@@ -563,6 +563,7 @@ class NotificationSettingsFragment: SettingsFragmentBase(R.xml.pref_notification
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
             val prefApi36Info = findPreference<Preference>(Constants.SHARED_PREF_API_36_NOTIFICATION_INFO)
             prefApi36Info?.isVisible = true
+            findPreference<Preference>(Constants.SHARED_PREF_LIVE_UPDATE_ENABLED)?.isVisible = true
         }
     }
 }

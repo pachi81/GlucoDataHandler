@@ -1120,4 +1120,7 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="tts_range_format">from %s to %s</string>
     <string name="tts_more_than">more than %s</string>
     <string name="tts_time_in_range">Time in range</string>
+    <string name="live_update">Live Update</string>
+    <string name="live_update_summary">Show the glucose value as Live Update on lock screen, Always-on Display and as status bar chip (Android 16 QPR2+). While the chip is shown, Android hides all other notification icons in the status bar.</string>
+    <string name="live_update_metric_age">Age</string>
 </resources>
