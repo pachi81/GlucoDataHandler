@@ -363,9 +363,6 @@
     <string name="mobile_second_notification_name">Second notification</string>
     <string name="mobile_third_notification_name">Third notification</string>
     <string name="mobile_second_notification_descr">Additional notification to show an extra icon in the statusbar.</string>
-    <string name="live_update">Live Update</string>
-    <string name="live_update_summary">Show the glucose value as Live Update on lock screen, Always-on Display and as status bar chip (Android 16 QPR2+). While the chip is shown, Android hides all other notification icons in the status bar.</string>
-    <string name="live_update_metric_age">Age</string>
     <string name="worker_notification_name">Worker notification</string>
     <string name="worker_notification_descr">Worker notification shown while running tasks in the background.</string>
     <string name="wear_foreground_notification_name">Foreground notification</string>
@@ -1123,4 +1120,7 @@ You can manage these permissions at any time in the Health Connect app settings.
     <string name="tts_range_format">from %s to %s</string>
     <string name="tts_more_than">more than %s</string>
     <string name="tts_time_in_range">Time in range</string>
+    <string name="live_update">Live Update</string>
+    <string name="live_update_summary">Show the glucose value as Live Update on lock screen, Always-on Display and as status bar chip (Android 16 QPR2+). While the chip is shown, Android hides all other notification icons in the status bar.</string>
+    <string name="live_update_metric_age">Age</string>
 </resources>
