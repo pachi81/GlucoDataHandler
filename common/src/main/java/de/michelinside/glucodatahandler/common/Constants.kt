@@ -44,8 +44,8 @@ object Constants {
     const val IS_SECOND = BuildConfig.BUILD_TYPE == "second"
     const val RELEASE = (BuildConfig.BUILD_TYPE == "release" || BuildConfig.BUILD_TYPE == "second")
 
-    val PACKAGE_GLUCODATAHANDLER = if (IS_SECOND) "de.michelinside.glucodatahandler.second" else "de.michelinside.glucodatahandler"
-    val PACKAGE_GLUCODATAAUTO = if (IS_SECOND) "de.michelinside.glucodataauto.second" else "de.michelinside.glucodataauto"
+    val PACKAGE_GLUCODATAHANDLER = BuildConfig.BASE_PACKAGE + BuildConfig.PACKAGE_SUFFIX
+    val PACKAGE_GLUCODATAAUTO = "de.michelinside.glucodataauto" + BuildConfig.PACKAGE_SUFFIX
     const val PACKAGE_JUGGLUCO = "tk.glucodata"
 
     const val EXTRA_SOURCE_PACKAGE = "gdh.source_package"

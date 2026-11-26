@@ -63,8 +63,8 @@ android {
             resValue "string", "app_name", "GlucoDataAuto Debug"
         }
         second {
-            applicationIdSuffix '.second'
-            versionNameSuffix '_SECOND'
+            applicationIdSuffix rootProject.secondSuffix
+            versionNameSuffix rootProject.secondSuffix.replace('.', '_').toUpperCase()
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "GDA Second"

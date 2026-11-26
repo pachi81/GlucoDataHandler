@@ -19,6 +19,8 @@ android {
         buildConfigField("String", "DEXCOM_APPLICATION_ID_APAC", rootProject.DEXCOM_APPLICATION_ID_APAC)
         buildConfigField("String", "NIGHTSCOUT_DEBUG_SERVER", rootProject.NIGHTSCOUT_DEBUG_SERVER)
         buildConfigField("int", "BASE_VERSION", rootProject.versionCode.toString())
+        buildConfigField("String", "BASE_PACKAGE", "\"${rootProject.baseApplicationId}\"")
+        buildConfigField("String", "PACKAGE_SUFFIX", "\"\"")
     }
 
     buildFeatures {
@@ -33,6 +35,7 @@ android {
         second {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField("String", "PACKAGE_SUFFIX", "\"${rootProject.secondSuffix}\"")
         }
         dev_release {
             minifyEnabled false
