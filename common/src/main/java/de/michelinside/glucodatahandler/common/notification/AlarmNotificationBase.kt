@@ -165,6 +165,8 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         filter.add(NotifySource.ALARM_TRIGGER)
         filter.add(NotifySource.OBSOLETE_ALARM_TRIGGER)
         filter.add(NotifySource.DELTA_ALARM_TRIGGER)
+        filter.add(NotifySource.BROADCAST)
+        filter.add(NotifySource.MESSAGECLIENT)
         filter.addAll(getNotifierFilter())
         InternalNotifier.addNotifier(context, this, filter)
     }
@@ -985,11 +987,27 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                         stopCurrentNotification(context)
                     }
                 }
+                NotifySource.BROADCAST,
+                NotifySource.MESSAGECLIENT -> {
+                    checkAutoDismissOnRangeReturn(context)
+                }
                 else -> Log.w(LOG_ID, "Unsupported source $dataSource")
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.toString())
         }
+    }
+
+    private fun checkAutoDismissOnRangeReturn(context: Context) {
+        if (!notificationActive || ReceiveData.getAlarmType() != AlarmType.OK) return
+        val activeLevelAlarm = curNotification == VERY_LOW_NOTIFICATION_ID ||
+                curNotification == LOW_NOTIFICATION_ID ||
+                curNotification == HIGH_NOTIFICATION_ID ||
+                curNotification == VERY_HIGH_NOTIFICATION_ID
+        if (!activeLevelAlarm) return
+        Log.i(LOG_ID, "Auto-dismissing alarm notification: glucose returned to range")
+        AlarmHandler.resetAlarmState()
+        stopCurrentNotification(context)
     }
 
     private fun isTriggerActive(): Boolean {
